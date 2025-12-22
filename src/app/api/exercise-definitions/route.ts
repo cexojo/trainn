@@ -5,39 +5,79 @@ const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
-  const userId = searchParams.get("userId");
+  if (searchParams.get("distinct")) {
+    // Return all unique exercises for selection
+    const exercises = await prisma.exercise.findMany({
+      select: { id: true, name: true, group: true },
+      orderBy: { name: "asc" },
+    });
+    return NextResponse.json(exercises);
+  }
 
-  let userWhere = {};
-  if (userId && !isNaN(Number(userId))) {
-    userWhere = { userId: Number(userId) };
-  } else {
+  let userId = searchParams.get("userId");
+
+  if (!userId) {
     // fallback to demo user "John Doe"
     const demo = await prisma.user.findFirst({ where: { name: "John Doe" } });
     if (!demo) return NextResponse.json({}, { status: 404 });
-    userWhere = { userId: demo.id };
+    userId = demo.id;
   }
-  
-  // Group by day and exercise for the user, sorted for easy rendering
-  const definitions = await prisma.exerciseDefinition.findMany({
-    where: userWhere,
-    include: { exercise: true, user: true },
-    orderBy: [{ day: "asc" }, { exerciseId: "asc" }, { seriesNumber: "asc" }],
+
+  // Find all day exercise series for the user, expanding links
+  const seriesList = await prisma.dayExerciseSeries.findMany({
+    where: { userId },
+    include: {
+      dayExercise: {
+        include: {
+          exercise: true,
+          trainingDay: true,
+        },
+      },
+    },
+    orderBy: [
+      { dayExercise: { day: "asc" } },
+      { dayExercise: { exerciseId: "asc" } },
+      { seriesNumber: "asc" },
+    ],
   });
 
-  // Create a grouped structure { day: [{def...}, ...] }
+  // Group by day string for frontend compatibility
   const byDay: Record<string, any[]> = {};
-  for (const def of definitions) {
-    if (!byDay[def.day]) byDay[def.day] = [];
-    byDay[def.day].push(def);
+  for (const series of seriesList) {
+    const day = series.dayExercise?.day || "Day ?";
+    if (!byDay[day]) byDay[day] = [];
+    byDay[day].push({
+      ...series,
+      athleteNotes: series.dayExercise?.athleteNotes ?? "",
+      trainerNotes: series.dayExercise?.trainerNotes ?? "",
+      exercise: series.dayExercise?.exercise,
+      trainingDay: series.dayExercise?.trainingDay,
+      dayNumber: series.dayExercise?.dayNumber,
+    });
   }
 
   return NextResponse.json(byDay);
 }
 
+// PATCH effective fields in DayExerciseSeries or notes in DayExercise
 export async function PATCH(req: NextRequest) {
   const data = await req.json();
-  // expects: { id, field, value }
-  const { id, field, value } = data;
+  // expects: { id, field, value, dayExerciseId (optional for notes) }
+  const { id, field, value, dayExerciseId } = data;
+
+  if (field === "notes") {
+    // Update notes in DayExercise
+    if (!dayExerciseId) {
+      return NextResponse.json({ error: "No dayExerciseId" }, { status: 400 });
+    }
+    const update = await prisma.dayExercise.update({
+      where: { id: dayExerciseId },
+      data: { notes: String(value ?? "") },
+    });
+    return NextResponse.json(update);
+  }
+
+  // Only allow series fields to update on series
   if (
     !id ||
     !["effectiveReps", "effectiveWeight", "effectiveRir"].includes(field)
@@ -47,10 +87,11 @@ export async function PATCH(req: NextRequest) {
 
   // Convert value to number (if possible) or null
   let parsed: number | null = null;
-  if (value !== "" && value !== null && value !== undefined) {
+  if (value === "" || value === null || value === undefined) {
+    parsed = null;
+  } else {
     parsed = Number(value);
     if (isNaN(parsed)) parsed = null;
-    // Optional: further clamp by field type
     if (field === "effectiveReps" || field === "effectiveRir") {
       parsed = parsed !== null ? Math.max(0, Math.floor(parsed)) : null;
     }
@@ -59,7 +100,7 @@ export async function PATCH(req: NextRequest) {
     }
   }
 
-  const update = await prisma.exerciseDefinition.update({
+  const update = await prisma.dayExerciseSeries.update({
     where: { id },
     data: { [field]: parsed },
   });
