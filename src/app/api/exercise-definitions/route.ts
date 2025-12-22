@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
 
   // Find all day exercise series for the user, expanding links
   const seriesList = await prisma.dayExerciseSeries.findMany({
-    where: { userId },
+    
     include: {
       dayExercise: {
         include: {
@@ -41,15 +41,19 @@ export async function GET(req: NextRequest) {
     ],
   });
 
+  // Only return series belonging to this user (filter in-memory)
+  const filteredList = (seriesList as any[]).filter(series =>
+    series?.dayExercise?.trainingDay?.trainingWeek?.trainingBlock?.userId === userId
+  );
+
   // Group by day string for frontend compatibility
   const byDay: Record<string, any[]> = {};
-  for (const series of seriesList) {
+  for (const series of filteredList) {
     const day = series.dayExercise?.day || "Day ?";
     if (!byDay[day]) byDay[day] = [];
     byDay[day].push({
       ...series,
-      athleteNotes: series.dayExercise?.athleteNotes ?? "",
-      trainerNotes: series.dayExercise?.trainerNotes ?? "",
+      notes: series.dayExercise?.notes ?? "",
       exercise: series.dayExercise?.exercise,
       trainingDay: series.dayExercise?.trainingDay,
       dayNumber: series.dayExercise?.dayNumber,
