@@ -51,7 +51,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Load exercise definitions for selectedWeek, and for previous week if exists
-    let exerciseDefs = [];
+    let exerciseDefs: any[] = [];
     let trainingDays = [];
     let debugObj: any = {};
     // If filtering by block, gather all related week IDs
