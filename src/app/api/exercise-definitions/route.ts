@@ -70,15 +70,8 @@ export async function PATCH(req: NextRequest) {
   const { id, field, value, dayExerciseId } = data;
 
   if (field === "notes") {
-    // Update notes in DayExercise
-    if (!dayExerciseId) {
-      return NextResponse.json({ error: "No dayExerciseId" }, { status: 400 });
-    }
-    const update = await prisma.dayExercise.update({
-      where: { id: dayExerciseId },
-      data: { notes: String(value ?? "") },
-    });
-    return NextResponse.json(update);
+    // Notes editing is not supported on DayExercise in this schema.
+    return NextResponse.json({ error: "Notes editing not supported." }, { status: 400 });
   }
 
   // Only allow series fields to update on series
