@@ -6,7 +6,7 @@ import { Line } from "react-chartjs-2";
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-import type { ExerciseDef } from "../types/ExerciseDef";
+import type { ExerciseDef } from "../../types/ExerciseDef";
 
 function formatDateEu(dateStr: string): string {
   if (!dateStr) return "";
@@ -14,7 +14,9 @@ function formatDateEu(dateStr: string): string {
   return [d, m, y].join("/");
 }
 
-export default function ReportPage() {
+import { Suspense } from "react";
+
+function ReportPageInner() {
   const [defs, setDefs] = useState<ExerciseDef[]>([]);
   const [userInfo, setUserInfo] = useState<{ id: string, name: string, isocode: string } | null>(null);
   const [lang, setLang] = useState<Lang>("en");
@@ -223,5 +225,13 @@ export default function ReportPage() {
         })}
       </div>
     </div>
+  );
+}
+
+export default function ReportPage() {
+  return (
+    <Suspense>
+      <ReportPageInner />
+    </Suspense>
   );
 }

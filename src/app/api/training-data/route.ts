@@ -97,9 +97,9 @@ export async function GET(req: NextRequest) {
         ? { id: selectedWeek.id, weekNumber: selectedWeek.weekNumber }
         : null;
 
-      const prevWeek = selectedBlock.weeks
-        .filter((w: { id: any; weekNumber: number; weekStart: Date; weekEnd: Date }) => w.weekNumber < selectedWeek.weekNumber)
-        .sort((a: { weekNumber: number }, b: { weekNumber: number }) => b.weekNumber - a.weekNumber)[0];
+      const prevWeek = selectedBlock!.weeks
+        .filter((w: { id: any; weekNumber: number; weekStart: Date; weekEnd: Date }) => w.weekNumber < selectedWeek!.weekNumber)
+        .sort((a: { weekNumber: number }, b: { weekNumber: number }): number => b.weekNumber - a.weekNumber)[0];
 
       debugObj.prevWeek = prevWeek
         ? { id: prevWeek.id, weekNumber: prevWeek.weekNumber }

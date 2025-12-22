@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import { translations, Lang } from "../i18n";
 import { Progress } from "./Progress";
 
-import type { ExerciseDef } from "../types/ExerciseDef";
+import type { ExerciseDef } from "../../types/ExerciseDef";
 
 type DefByDay = Record<string, ExerciseDef[]>;
 

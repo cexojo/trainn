@@ -11,7 +11,7 @@ const prisma = new PrismaClient();
  */
 export async function PATCH(req: NextRequest) {
   try {
-    const { trainingDayId, weekId, date, dayLabel } = await req.json();
+    const { trainingDayId, weekId, date, dayLabel, dayNumber } = await req.json();
     if (trainingDayId) {
       // Direct update by ID
       const trainingDay = await prisma.trainingDay.update({
@@ -20,8 +20,8 @@ export async function PATCH(req: NextRequest) {
       });
       return NextResponse.json({ trainingDay });
     }
-    if (!weekId || !dayLabel || !date) {
-      return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
+    if (!weekId || !dayLabel || !date || typeof dayNumber !== "number") {
+      return NextResponse.json({ error: "Missing parameters (need weekId, date, dayLabel, dayNumber)" }, { status: 400 });
     }
     // Try to find existing training day (fallback for legacy clients)
     let trainingDay = await prisma.trainingDay.findFirst({
@@ -32,7 +32,8 @@ export async function PATCH(req: NextRequest) {
         data: {
           date: new Date(date),
           weekId,
-          dayLabel
+          dayLabel,
+          dayNumber
         }
       });
     } else {
