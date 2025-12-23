@@ -1,7 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import prisma from '@/prisma/client';
 
-const prisma = new PrismaClient();
+type BlockWithWeeks = {
+  id: string;
+  isVisible: boolean;
+  blockNumber: number;
+  description: string;
+  userId: string;
+  weeks: {
+    id: string;
+    weekNumber: number;
+  }[];
+};
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -15,7 +25,7 @@ export async function GET(req: NextRequest) {
     where: { userId },
     orderBy: { blockNumber: "desc" },
     include: { weeks: true }
-  });
+  }) as BlockWithWeeks | null;
 
   if (!block) {
     return NextResponse.json({ error: "No blocks for user" }, { status: 404 });
@@ -42,7 +52,7 @@ export async function GET(req: NextRequest) {
   let chosenWeek = null;
   let maxWeekNumber = -1;
   for (const wk of block.weeks) {
-    if (allSeries.some(s => s.trainingWeekId === wk.id) && wk.weekNumber > maxWeekNumber) {
+    if (allSeries.some((s: { trainingWeekId: string; }) => s.trainingWeekId === wk.id) && wk.weekNumber > maxWeekNumber) {
       chosenWeek = wk;
       maxWeekNumber = wk.weekNumber;
     }

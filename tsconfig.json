@@ -24,7 +24,8 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ]
+      ],
+      "generated-prisma-client": ["./generated/prisma-client"]
     },
     "noEmit": true
   },

@@ -492,7 +492,7 @@ export default function Home() {
       <main className="max-w-2xl mx-auto mt-4">
         {Object.entries(byDay).map(([dayName, defs], dayIdx) => (
           <div className="border-b border-zinc-200 dark:border-zinc-700 mb-8 pb-2" key={dayName}>
-            <h2 className="text-md font-bold text-zinc-600 dark:text-zinc-300 mt-6 mb-2 flex items-center gap-2">
+            <h2 className="sticky top-[150px] z-20 bg-zinc-50 dark:bg-black text-md font-bold text-zinc-600 dark:text-zinc-300 mt-6 mb-2 flex items-center gap-2 border-b border-zinc-200 dark:border-zinc-700 shadow-sm">
               <span>{`${translations[lang].day} ${dayIdx + 1}`}</span>
               <EditableDayDate
                 dayIdx={dayIdx}

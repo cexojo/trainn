@@ -1,7 +1,7 @@
-import { PrismaClient } from ".prisma/client";
+import prisma from '@/prisma/client';
 import { NextRequest, NextResponse } from "next/server";
 
-const prisma = new PrismaClient();
+
 
 /**
  * PATCH /api/training-day

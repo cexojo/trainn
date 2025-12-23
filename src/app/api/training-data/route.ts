@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from '@/prisma/client';
 import { NextRequest, NextResponse } from "next/server";
-
-const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
@@ -32,14 +30,14 @@ export async function GET(req: NextRequest) {
     let blockForFilter = null;
     if (blocks.length > 0) {
       if (blockId) {
-        blockForFilter = blocks.find(b => String(b.id) === String(blockId));
+        blockForFilter = blocks.find((b: { id: any; }) => String(b.id) === String(blockId));
         selectedBlock = blockForFilter ?? blocks[blocks.length - 1];
       } else {
         selectedBlock = blocks[blocks.length - 1];
       }
       if (weekId) {
         for (const block of blocks) {
-          const wk = block.weeks.find((w: { id: any; weekNumber: number; weekStart: Date; weekEnd: Date }) => String(w.id) === String(weekId));
+          const wk = (block as any).weeks.find((w: { id: any; weekNumber: number; weekStart: Date; weekEnd: Date }) => String(w.id) === String(weekId));
           if (wk) {
             selectedBlock = block;
             selectedWeek = wk;
@@ -47,7 +45,7 @@ export async function GET(req: NextRequest) {
           }
         }
       }
-      if (!selectedWeek) selectedWeek = selectedBlock.weeks[selectedBlock.weeks.length - 1];
+      if (!selectedWeek) selectedWeek = (selectedBlock as any).weeks[(selectedBlock as any).weeks.length - 1];
     }
 
     // Load exercise definitions for selectedWeek, and for previous week if exists
@@ -58,7 +56,7 @@ export async function GET(req: NextRequest) {
     if ((blockId && blockForFilter) || (selectedWeek && selectedBlock)) {
       let weekIds: any[] = [];
       if (blockId && blockForFilter) {
-        weekIds = blockForFilter.weeks.map((w: any) => w.id);
+        weekIds = (blockForFilter as any).weeks.map((w: any) => w.id);
       } else if (selectedWeek && selectedBlock) {
         weekIds = [selectedWeek.id];
       }
@@ -91,13 +89,13 @@ export async function GET(req: NextRequest) {
 
       // Gather debug info in debugObj for API response (not console)
       debugObj.selectedBlock = selectedBlock
-        ? { id: selectedBlock.id, blockNumber: selectedBlock.blockNumber, weeks: selectedBlock.weeks.map((w: any) => ({ id: w.id, weekNumber: w.weekNumber })) }
+        ? { id: (selectedBlock as any).id, blockNumber: (selectedBlock as any).blockNumber, weeks: (selectedBlock as any).weeks.map((w: any) => ({ id: w.id, weekNumber: w.weekNumber })) }
         : null;
       debugObj.selectedWeek = selectedWeek
         ? { id: selectedWeek.id, weekNumber: selectedWeek.weekNumber }
         : null;
 
-      const prevWeek = selectedBlock!.weeks
+      const prevWeek = (selectedBlock as any)!.weeks
         .filter((w: { id: any; weekNumber: number; weekStart: Date; weekEnd: Date }) => w.weekNumber < selectedWeek!.weekNumber)
         .sort((a: { weekNumber: number }, b: { weekNumber: number }): number => b.weekNumber - a.weekNumber)[0];
 
@@ -212,7 +210,7 @@ export async function GET(req: NextRequest) {
     }
 
     const responseObj: any = {
-      blocks: blocks.map((b: { id: any; blockNumber: number; description: string; weeks: any[] }) => ({
+      blocks: blocks.map((b: any) => ({
         id: b.id,
         blockNumber: b.blockNumber,
         description: b.description,
