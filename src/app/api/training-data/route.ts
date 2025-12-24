@@ -131,9 +131,10 @@ export async function GET(req: NextRequest) {
         }));
 
         prevWeekDefs.forEach((def: any) => {
-          const dayNum = def.dayExercise?.trainingDay?.dayNumber ?? "NA";
+          // Use the exerciseNumber for DayExercise (not dayNumber)
+          const exerciseNum = def.dayExercise?.exerciseNumber ?? "NA";
           const exId = def.dayExercise?.exercise?.id ?? def.dayExerciseId ?? "NA";
-          const k = `${dayNum}|${exId}|${def.seriesNumber}`;
+          const k = `${exerciseNum}|${exId}|${def.seriesNumber}`;
           prevDefsByKey[k] = def;
         });
         debugObj.prevDefsByKey = Object.entries(prevDefsByKey).reduce((acc: Record<string, any>, [k, v]) => {
@@ -156,12 +157,10 @@ export async function GET(req: NextRequest) {
       debugObj.debugPlaceholders = [];
       exerciseDefs = exerciseDefs.map((def: any) => {
         let lastValues = null;
-        const dayNum =
-          def.dayExercise?.trainingDay && typeof def.dayExercise.trainingDay.dayNumber === "number"
-            ? def.dayExercise.trainingDay.dayNumber
-            : "NA";
+        const exerciseNum =
+          def.dayExercise?.exerciseNumber ?? "NA";
         const exId = def.dayExercise?.exercise?.id ?? def.dayExerciseId ?? "NA";
-        const k = dayNum + "|" + exId + "|" + def.seriesNumber;
+        const k = exerciseNum + "|" + exId + "|" + def.seriesNumber;
         if (prevDefsByKey[k]) {
           const pv = prevDefsByKey[k];
           lastValues = {
@@ -189,7 +188,7 @@ export async function GET(req: NextRequest) {
         return {
           id: def.id,
           day: def.dayExercise?.day ?? "",
-          dayNumber: def.dayExercise?.dayNumber ?? null,
+          exerciseNumber: def.dayExercise?.exerciseNumber ?? null,
           athleteNotes: def.dayExercise?.athleteNotes ?? "",
           trainerNotes: def.dayExercise?.trainerNotes ?? "",
           dayExerciseId: def.dayExercise?.id ?? "",

@@ -153,8 +153,12 @@ exports.Prisma.ExerciseScalarFieldEnum = {
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  username: 'username',
+  email: 'email',
+  password: 'password',
   isocode: 'isocode',
-  lastVisitedWeek: 'lastVisitedWeek'
+  lastVisitedWeek: 'lastVisitedWeek',
+  role: 'role'
 };
 
 exports.Prisma.DayExerciseScalarFieldEnum = {
@@ -164,7 +168,7 @@ exports.Prisma.DayExerciseScalarFieldEnum = {
   athleteNotes: 'athleteNotes',
   trainerNotes: 'trainerNotes',
   day: 'day',
-  dayNumber: 'dayNumber'
+  exerciseNumber: 'exerciseNumber'
 };
 
 exports.Prisma.DayExerciseSeriesScalarFieldEnum = {
@@ -182,6 +186,14 @@ exports.Prisma.DayExerciseSeriesScalarFieldEnum = {
   isDropset: 'isDropset'
 };
 
+exports.Prisma.PaymentScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  dueDate: 'dueDate',
+  amount: 'amount',
+  isPayed: 'isPayed'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -196,7 +208,10 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-
+exports.Role = exports.$Enums.Role = {
+  admin: 'admin',
+  athlete: 'athlete'
+};
 
 exports.Prisma.ModelName = {
   TrainingBlock: 'TrainingBlock',
@@ -205,7 +220,8 @@ exports.Prisma.ModelName = {
   Exercise: 'Exercise',
   User: 'User',
   DayExercise: 'DayExercise',
-  DayExerciseSeries: 'DayExerciseSeries'
+  DayExerciseSeries: 'DayExerciseSeries',
+  Payment: 'Payment'
 };
 
 /**

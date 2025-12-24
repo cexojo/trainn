@@ -48,12 +48,22 @@ model Exercise {
   dayExercises DayExercise[]
 }
 
+enum Role {
+  admin
+  athlete
+}
+
 model User {
   id                String   @id @default(uuid())
   name              String
+  username          String   @unique
+  email             String   @unique
+  password          String?
   isocode           String?
   lastVisitedWeek   String?  // weekId of last visited week
   blocks            TrainingBlock[]
+  role              Role     @default(athlete)
+  payments          Payment[]
 }
 
 // New middle entity between TrainingDay and Exercise
@@ -65,8 +75,8 @@ model DayExercise {
   exerciseId     String
   athleteNotes   String?
   trainerNotes   String?
-  day            String      // could be day label
-  dayNumber      Int
+  day            String
+  exerciseNumber Int?
   series         DayExerciseSeries[]
 }
 
@@ -86,4 +96,13 @@ model DayExerciseSeries {
   trainingWeek      TrainingWeek @relation(fields: [trainingWeekId], references: [id])
   trainingWeekId    String
   isDropset         Boolean      @default(false)
+}
+
+model Payment {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  dueDate   DateTime
+  amount    Float
+  isPayed   Boolean  @default(false)
 }

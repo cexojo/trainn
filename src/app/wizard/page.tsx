@@ -1,8 +1,9 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import AthleteAutocomplete from "../components/AthleteAutocomplete";
 
-type User = { id: string; name: string; };
+type User = { id: string; name: string; role: string; };
 type Exercise = { id: string; name: string; group: string; };
 
 export default function BlockWizard() {
@@ -133,16 +134,12 @@ export default function BlockWizard() {
         <>
           <h2 className="font-semibold mb-4">Step 1: Select Athlete</h2>
           {users.length === 0 && <div>Loading athletes...</div>}
-          <select
-            className="p-2 mb-6 rounded border"
-            value={selectedUser?.id || ""}
-            onChange={e => setSelectedUser(users.find(u => u.id === e.target.value) || null)}
-          >
-            <option value="">Select an athlete...</option>
-            {users.map(u => (
-              <option key={u.id} value={u.id}>{u.name}</option>
-            ))}
-          </select>
+          {/* Autocomplete Athlete Selector */}
+          <AthleteAutocomplete
+            users={users.filter(u => u.role === "athlete")}
+            selectedUser={selectedUser}
+            setSelectedUser={setSelectedUser}
+          />
           <button
             disabled={!selectedUser}
             className="px-4 py-1 rounded bg-blue-500 text-white font-semibold disabled:opacity-60"
@@ -152,6 +149,7 @@ export default function BlockWizard() {
           </button>
         </>
       )}
+
 
       {step === 1 && (
         <>

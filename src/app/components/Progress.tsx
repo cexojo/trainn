@@ -1,4 +1,3 @@
-import React from "react";
 import { translations, Lang } from "../i18n";
 
 type ProgressProps = {

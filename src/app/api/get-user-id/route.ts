@@ -1,26 +1,56 @@
 import prisma from '@/prisma/client';
 import { NextRequest, NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
 
+const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-for-local";
 
+function getTokenPayload(req: NextRequest) {
+  // Next.js API route: get token from cookies
+  const token = req.cookies.get("token")?.value;
+  if (!token) return null;
+  try {
+    return jwt.verify(token, JWT_SECRET) as any;
+  } catch {
+    return null;
+  }
+}
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const list = searchParams.get("list");
+  const userIdQuery = searchParams.get("userId");
 
-  if (list) {
-    // Return all users as array of { id, name, lastVisitedWeek }
+  // Require authentication for all operations
+  const tokenPayload = getTokenPayload(req);
+
+  if (!tokenPayload) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // If admin and wants all users
+  if (list && tokenPayload.role === "admin") {
+    // Return all users as array of { id, name, username, lastVisitedWeek, role }
     const users = await prisma.user.findMany({
-      select: { id: true, name: true, lastVisitedWeek: true }
+      select: { id: true, name: true, username: true, email: true, lastVisitedWeek: true, role: true }
     });
     return NextResponse.json(users);
   }
 
-  const name = searchParams.get("name");
-  if (!name)
-    return NextResponse.json({ error: "No name" }, { status: 400 });
+  // All other cases: return info for the authenticated user (by username from token)
+  // Or if "username" param matches your own username, allow it, otherwise 403
+  let qUserId = tokenPayload.id;
+  // If an explicit userId param is given (for admin view)
+  if (userIdQuery && userIdQuery !== String(tokenPayload.id) && tokenPayload.role !== "admin") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+  if (userIdQuery && tokenPayload.role === "admin") {
+    qUserId = userIdQuery;
+  }
+  if (!qUserId)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const user = await prisma.user.findFirst({
-    where: { name }
+    where: { id: qUserId }
   });
 
   if (!user)
@@ -29,8 +59,10 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({
     id: user.id,
     name: user.name,
+    username: user.username,
     lastVisitedWeek: user.lastVisitedWeek ?? null,
-    isocode: (user as any).isocode ?? null, // Defensive for possible extra fields
+    isocode: (user as any).isocode ?? null,
+    role: user.role
   });
 }
 

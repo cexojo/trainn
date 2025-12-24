@@ -25,7 +25,7 @@ function ReportPageInner() {
   const blockId = searchParams?.get("blockId");
 
   useEffect(() => {
-    fetch("/api/get-user-id?name=John%20Doe")
+    fetch("/api/get-user-id")
       .then(r => r.json())
       .then((d) => {
         setUserInfo({

@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
               exerciseId: ex.exerciseId,
               trainerNotes: ex.trainerNotes ?? "",
               day: trainingDayLabel,
-              dayNumber: dayIdx + 1
+              exerciseNumber: ex.exerciseNumber ?? (ex.exerciseIdx != null ? ex.exerciseIdx + 1 : dayIdx + 1)
             }
           });
 

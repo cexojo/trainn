@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
       notes: series.dayExercise?.notes ?? "",
       exercise: series.dayExercise?.exercise,
       trainingDay: series.dayExercise?.trainingDay,
-      dayNumber: series.dayExercise?.dayNumber,
+      exerciseNumber: series.dayExercise?.exerciseNumber,
     });
   }
 

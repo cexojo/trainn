@@ -5,9 +5,10 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 
 import { translations, Lang } from "../i18n";
-import { Progress } from "./Progress";
+import { Progress } from "../components/Progress";
 
 import type { ExerciseDef } from "../../types/ExerciseDef";
+import StatusModal from "../components/StatusModal";
 
 type DefByDay = Record<string, ExerciseDef[]>;
 
@@ -181,20 +182,22 @@ export default function Home() {
   const [exerciseDefs, setExerciseDefs] = useState<any[]>([]);
   const [changed, setChanged] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
-  const [lang, setLang] = useState<Lang>("en");
+  const [creatingBlock, setCreatingBlock] = useState(false);
+  const [blockCreated, setBlockCreated] = useState(false);
+  const [lang, setLang] = useState<Lang>("es");
 
   // Load user info (including isocode) once on mount
   useEffect(() => {
-    fetch("/api/get-user-id?name=John%20Doe")
+    fetch("/api/get-user-id")
       .then(r => r.json())
       .then((d) => {
         setUserInfo({
           id: d.id,
-          name: translations[d.isocode as Lang]?.nameDefault || d.name || "John Doe",
+          name: translations[d.isocode as Lang]?.nameDefault || d.name,
           isocode: d.isocode || "en",
           lastVisitedWeek: d.lastVisitedWeek || null,
         });
-        setLang((d.isocode || "en") as Lang);
+        setLang((d.isocode || "es") as Lang);
 
         // If user has lastVisitedWeek, use it
         if (d.lastVisitedWeek) {
@@ -394,7 +397,15 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-zinc-50 dark:bg-black min-h-screen font-sans">
+    <>
+      {/* Blocking modals for loading, creating, success */}
+      <StatusModal
+        open={loading}
+        icon={<span role="img" aria-label="info">ℹ️</span>}
+        message={translations[lang].loadingScheduledTraining ?? "Cargando entrenamiento..."}
+        color="blue"
+      />
+      <div className="bg-zinc-50 dark:bg-black min-h-screen font-sans">
       {/* Banner with Logo & Language selector */}
       <div className="w-full bg-white dark:bg-zinc-900 flex items-center justify-center py-4 shadow-lg mb-4 relative">
         <Image src="/globe.svg" alt="Logo" width={48} height={48} />
@@ -709,6 +720,7 @@ export default function Home() {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 }

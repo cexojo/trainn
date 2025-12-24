@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import prisma from '@/prisma/client';
+import bcrypt from "bcryptjs";
 
 async function main() {
   // Wipe all data in proper order due to FKs
@@ -12,8 +13,15 @@ async function main() {
   await prisma.user.deleteMany({});
 
   // Create sample user
+  const johnDoePasswordHash = await bcrypt.hash("JohnDoe2026", 10);
   const user = await prisma.user.create({
-    data: { name: "John Doe" },
+    data: {
+      name: "John Doe",
+      username: "johndoe",
+      email: "johndoe@example.com",
+      password: johnDoePasswordHash,
+      role: "athlete"
+    },
   });
 
   // Create exercises
@@ -331,6 +339,7 @@ async function main() {
   globalDate.setHours(0, 0, 0, 0);
 
   for (let b = 1; b <= 3; b++) {
+    console.log(`Creating block ${b}...`);
     const block = await prisma.trainingBlock.create({
       data: {
         blockNumber: b,
@@ -350,6 +359,7 @@ async function main() {
     );
 
     for (let w = 1; w <= 6; w++) {
+      console.log(` Creating week ${w} (block ${b})...`);
       const weekStart = new Date(globalDate);
       weekStart.setDate(globalDate.getDate() + ((b - 1) * 6 + (w - 1)) * 7);
 
@@ -367,6 +377,7 @@ async function main() {
 
       // 3 training days per week
       for (let d = 1; d <= 3; d++) {
+        console.log(`  Creating day ${d} (week ${w}, block ${b})...`);
         const dayDate = new Date(weekStart);
         dayDate.setDate(weekStart.getDate() + (d - 1));
 
@@ -390,7 +401,7 @@ async function main() {
               trainingDayId: trainingDay.id,
               exerciseId: ex.id,
               day: `Day ${d}`,
-              dayNumber: d,
+              exerciseNumber: e + 1, // Sequential for exercises within the block, stable per exercise
               athleteNotes: "",
               trainerNotes: "",
             }
@@ -418,6 +429,7 @@ async function main() {
         }
       }
     }
+    console.log(`Block ${b} created.`);
   }
 }
 

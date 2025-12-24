@@ -1,7 +1,7 @@
 export type ExerciseDef = {
   id: string;
   day: string;
-  dayNumber?: number;
+  exerciseNumber?: number;
   athleteNotes?: string | null;
   trainerNotes?: string | null;
   exercise: {
