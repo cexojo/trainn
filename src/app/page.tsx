@@ -194,10 +194,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     return isValid;
   };
 
-  setMode('dark');
-
   return (
-    <AppTheme {...props} defaultColorScheme="dark">
+    <AppTheme {...props}>
       <CssBaseline enableColorScheme />
       <SignInContainer direction="column" justifyContent="space-between">
         

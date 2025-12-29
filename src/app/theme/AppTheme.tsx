@@ -21,36 +21,24 @@ interface AppThemeProps {
 export default function AppTheme(props: AppThemeProps) {
   const { children, disableCustomTheme, themeComponents, defaultColorScheme } = props;
   const theme = React.useMemo(() => {
-    return createTheme(
-      disableCustomTheme
-        ? {}
-        : {
-            cssVariables: {
-              colorSchemeSelector: 'data-mui-color-scheme',
-              cssVarPrefix: 'template',
-            },
-            colorSchemes,
-            defaultColorScheme: defaultColorScheme || "dark",
-            palette: { mode: (defaultColorScheme || "dark") },
-            typography,
-            shadows,
-            shape,
-            components: {
-              ...inputsCustomizations,
-              ...dataDisplayCustomizations,
-              ...feedbackCustomizations,
-              ...navigationCustomizations,
-              ...surfacesCustomizations,
-              ...themeComponents,
-            },
-          }
-    );
-  }, [disableCustomTheme, themeComponents, defaultColorScheme]);
-  if (disableCustomTheme) {
-    return <React.Fragment>{children}</React.Fragment>;
-  }
+    return createTheme({
+      palette: { mode: 'dark' },
+      typography,
+      shadows,
+      shape,
+      components: {
+        ...inputsCustomizations,
+        ...dataDisplayCustomizations,
+        ...feedbackCustomizations,
+        ...navigationCustomizations,
+        ...surfacesCustomizations,
+        ...themeComponents,
+      },
+    });
+  }, [themeComponents]);
+
   return (
-    <ThemeProvider theme={theme} disableTransitionOnChange>
+    <ThemeProvider theme={theme}>
       {children}
     </ThemeProvider>
   );
