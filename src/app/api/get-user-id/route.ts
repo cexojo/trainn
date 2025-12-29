@@ -5,8 +5,8 @@ import jwt from "jsonwebtoken";
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-for-local";
 
 function getTokenPayload(req: NextRequest) {
-  // Next.js API route: get token from cookies
-  const token = req.cookies.get("token")?.value;
+  // Next.js API route: get token from dedicated cookie
+  const token = req.cookies.get("elena_auth_token")?.value;
   if (!token) return null;
   try {
     return jwt.verify(token, JWT_SECRET) as any;

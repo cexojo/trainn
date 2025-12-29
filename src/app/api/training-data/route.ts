@@ -64,11 +64,12 @@ export async function GET(req: NextRequest) {
       // Fetch training days for all included weeks
       trainingDays = await prisma.trainingDay.findMany({
         where: { weekId: { in: weekIds } },
-        orderBy: { dayLabel: "asc" },
+        orderBy: { dayNumber: "asc" },
         select: {
           id: true,
           date: true,
-          dayLabel: true
+          dayLabel: true,
+          dayNumber: true
         }
       });
 
@@ -205,6 +206,14 @@ export async function GET(req: NextRequest) {
           lastWeekValues: lastValues,
           isDropset: def.isDropset
         };
+      });
+      // ---- Ensure deterministic order by day, exerciseNumber, and seriesNumber ----
+      exerciseDefs = exerciseDefs.sort((a, b) => {
+        if (a.day > b.day) return 1;
+        if (a.day < b.day) return -1;
+        if ((a.exerciseNumber ?? 0) > (b.exerciseNumber ?? 0)) return 1;
+        if ((a.exerciseNumber ?? 0) < (b.exerciseNumber ?? 0)) return -1;
+        return (a.seriesNumber ?? 0) - (b.seriesNumber ?? 0);
       });
     }
 

@@ -61,9 +61,14 @@ model User {
   password          String?
   isocode           String?
   lastVisitedWeek   String?  // weekId of last visited week
+  registrationDate  DateTime @default(now())
+  hidingDate        DateTime?
+  subscriptionAmount  Float?
+  subscriptionFrequency String?
   blocks            TrainingBlock[]
   role              Role     @default(athlete)
   payments          Payment[]
+  hidden            Boolean  @default(false)
 }
 
 // New middle entity between TrainingDay and Exercise

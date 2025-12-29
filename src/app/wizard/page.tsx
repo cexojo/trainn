@@ -25,6 +25,7 @@ export default function BlockWizard() {
     Array.from({ length: 3 }, () => [])
   );
   const [status, setStatus] = useState<string | null>(null);
+  const [creationLogs, setCreationLogs] = useState<any[] | null>(null);
   const router = useRouter();
 
   // Adapt on daysPerWeek change (add/remove days)
@@ -108,6 +109,7 @@ export default function BlockWizard() {
 
   async function handleSubmit() {
     setStatus("Creating block...");
+    setCreationLogs(null);
     const res = await fetch("/api/wizard-create-block", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -120,8 +122,10 @@ export default function BlockWizard() {
       })
     });
     if (res.ok) {
+      const result = await res.json();
       setStatus("Created block!");
-      setTimeout(() => router.push("/"), 2000);
+      setCreationLogs(Array.isArray(result.logs) ? result.logs : null);
+      setTimeout(() => router.push("/menu"), 3500);
     } else {
       setStatus("Failed to create block. " + (await res.text()));
     }
@@ -136,7 +140,7 @@ export default function BlockWizard() {
           {users.length === 0 && <div>Loading athletes...</div>}
           {/* Autocomplete Athlete Selector */}
           <AthleteAutocomplete
-            users={users.filter(u => u.role === "athlete")}
+            users={users.filter(u => u.role === "athlete").sort((a, b) => a.name.localeCompare(b.name))}
             selectedUser={selectedUser}
             setSelectedUser={setSelectedUser}
           />
@@ -441,6 +445,39 @@ export default function BlockWizard() {
             onClick={handleSubmit}
           >Create Block</button>
           {status && <div className="mt-3">{status}</div>}
+          {creationLogs && (
+            <div className="mt-6">
+              <div className="font-semibold mb-2">Creation Log</div>
+              <div className="overflow-x-auto">
+                <table className="text-xs border border-zinc-300 bg-white">
+                  <thead>
+                    <tr>
+                      <th className="border px-2">Day #</th>
+                      <th className="border px-2">Day ID</th>
+                      <th className="border px-2">Exercise #</th>
+                      <th className="border px-2">Exercise ID</th>
+                      <th className="border px-2">Exercise Name</th>
+                      <th className="border px-2">Series #</th>
+                      <th className="border px-2">Series ID</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {creationLogs.map((log, idx) => (
+                      <tr key={idx}>
+                        <td className="border px-2">{log.dayNumber}</td>
+                        <td className="border px-2">{log.dayId}</td>
+                        <td className="border px-2">{log.exerciseNumber}</td>
+                        <td className="border px-2">{log.exerciseId}</td>
+                        <td className="border px-2">{log.exerciseName}</td>
+                        <td className="border px-2">{log.seriesNumber}</td>
+                        <td className="border px-2">{log.seriesId}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </>
       )}
 

@@ -2,6 +2,42 @@ export type Lang = "en" | "es";
 
 export type Translations = {
   [K in Lang]: {
+    loginTitle: string;
+    loginUsernameLabel: string;
+    athletes: string;
+
+    // Stat cards/dashboard
+    activeAthletesTitle: string;
+    activeAthletesInterval: string;
+    actualRevenueTitle: string;
+    actualRevenueInterval: string;
+    futureRevenueTitle: string;
+    futureRevenueInterval: string;
+    overviewTitle: string;
+    detailsTitle: string;
+    unpaidRevenueTitle: string;
+    unpaidRevenueLabel: string;
+    loginUsernamePlaceholder: string;
+    loginPasswordLabel: string;
+    loginPasswordPlaceholder: string;
+    loginLoading: string;
+    loginFailed: string;
+
+    // Sign in page
+    signinTitle: string;
+    signinEmailLabel: string;
+    signinEmailPlaceholder: string;
+    signinPasswordLabel: string;
+    signinPasswordPlaceholder: string;
+    signinRememberMe: string;
+    signinButton: string;
+    signinForgotPassword: string;
+    signinDividerOr: string;
+    signinWithGoogle: string;
+    signinWithFacebook: string;
+    signinNoAccount: string;
+    signinSignup: string;
+
     dashboardTitle: string;
     adminMenu: string;
     manageUsers: string;
@@ -60,6 +96,8 @@ export type Translations = {
     paymentsTableDate: string;
     paymentsTableAmount: string;
     paymentsTablePaid: string;
+    paymentsTablePaidHeader: string;
+    paymentsTableUnpaid: string;
     paymentsTableActions: string;
     infoTab: string;
     paymentsTab: string;
@@ -83,14 +121,53 @@ export type Translations = {
     manageUsersQuickFilterAll: string;
     manageUsersQuickFilterDue: string;
     manageUsersQuickFilterNoFuture: string;
+    manageUsersQuickFilterAllActive: string;
     manageUsersTableEmpty: string;
     manageUsersTableShowing: string;
+    hideUser: string;
+    unhideUser: string;
   };
 };
 
 // Export translations used in front-end
 export const translations: Translations = {
   en: {
+    athletes: "Athletes",
+    loginTitle: "Login",
+    loginUsernameLabel: "Username",
+
+    // Stat cards/dashboard
+    activeAthletesTitle: "Active athletes",
+    activeAthletesInterval: "Active athletes per month",
+    actualRevenueTitle: "Actual revenue",
+    actualRevenueInterval: "Monthly revenue (last 12 months)",
+    futureRevenueTitle: "Future revenue",
+    futureRevenueInterval: "Expected unpaid revenue (next 12 months)",
+    overviewTitle: "Overview",
+    detailsTitle: "Details",
+    unpaidRevenueTitle: "Unpaid revenue",
+    unpaidRevenueLabel: "Total overdue (unpaid) revenue",
+    loginUsernamePlaceholder: "Enter your username",
+    loginPasswordLabel: "Password",
+    loginPasswordPlaceholder: "Enter your password",
+    loginLoading: "Logging in...",
+    loginFailed: "Login failed",
+
+    // Sign in page translations
+    signinTitle: "Sign in",
+    signinEmailLabel: "Email",
+    signinEmailPlaceholder: "your@email.com",
+    signinPasswordLabel: "Password",
+    signinPasswordPlaceholder: "••••••",
+    signinRememberMe: "Remember me",
+    signinButton: "Sign in",
+    signinForgotPassword: "Forgot your password?",
+    signinDividerOr: "or",
+    signinWithGoogle: "Sign in with Google",
+    signinWithFacebook: "Sign in with Facebook",
+    signinNoAccount: "Don't have an account?",
+    signinSignup: "Sign up",
+
     dashboardTitle: "Athlete Dashboard",
     adminMenu: "Admin Menu",
     manageUsers: "Manage Users",
@@ -150,6 +227,8 @@ export const translations: Translations = {
     paymentsTableDate: "Date",
     paymentsTableAmount: "Amount",
     paymentsTablePaid: "Paid",
+    paymentsTablePaidHeader: "Paid",
+    paymentsTableUnpaid: "Unpaid",
     paymentsTableActions: "Actions",
     infoTab: "Info",
     paymentsTab: "Payments",
@@ -172,15 +251,54 @@ export const translations: Translations = {
     manageUsersQuickFilterAll: "All",
     manageUsersQuickFilterDue: "Payments due",
     manageUsersQuickFilterNoFuture: "No future payments",
+    manageUsersQuickFilterAllActive: "All active users",
     manageUsersTableEmpty: "No users.",
     manageUsersTableShowing: "Showing {from}–{to} of {total} users",
+    hideUser: "Hide user",
+    unhideUser: "Unhide user",
   },
   es: {
-    dashboardTitle: "Panel del Atleta",
-    adminMenu: "Menú de Administrador",
-    manageUsers: "Gestionar Usuarios",
-    manageExercises: "Gestionar Ejercicios",
-    createTrainingBlocks: "Crear Bloques de Entrenamiento",
+    athletes: "Atletas",
+    loginTitle: "Iniciar sesión",
+    loginUsernameLabel: "Usuario",
+
+    // Stat cards/dashboard
+    activeAthletesTitle: "Atletas activos",
+    activeAthletesInterval: "Atletas activos por mes",
+    actualRevenueTitle: "Ingresos reales",
+    actualRevenueInterval: "Ingresos mensuales (últimos 12 meses)",
+    futureRevenueTitle: "Ingresos futuros",
+    futureRevenueInterval: "Ingresos esperados (próximos 12 meses)",
+    overviewTitle: "Resumen",
+    detailsTitle: "Detalles",
+    unpaidRevenueTitle: "Ingresos pendientes",
+    unpaidRevenueLabel: "Total de ingresos vencidos no cobrados",
+    loginUsernamePlaceholder: "Introduce tu usuario",
+    loginPasswordLabel: "Contraseña",
+    loginPasswordPlaceholder: "Introduce tu contraseña",
+    loginLoading: "Iniciando sesión...",
+    loginFailed: "Error al iniciar sesión",
+
+    // Sign in page translations
+    signinTitle: "Iniciar sesión",
+    signinEmailLabel: "Correo electrónico",
+    signinEmailPlaceholder: "tucorreo@correo.com",
+    signinPasswordLabel: "Contraseña",
+    signinPasswordPlaceholder: "••••••",
+    signinRememberMe: "Recuérdame",
+    signinButton: "Iniciar sesión",
+    signinForgotPassword: "¿Olvidaste tu contraseña?",
+    signinDividerOr: "o",
+    signinWithGoogle: "Iniciar sesión con Google",
+    signinWithFacebook: "Iniciar sesión con Facebook",
+    signinNoAccount: "¿No tienes una cuenta?",
+    signinSignup: "Regístrate",
+
+    dashboardTitle: "Panel del atleta",
+    adminMenu: "Menú de administrador",
+    manageUsers: "Gestionar usuarios",
+    manageExercises: "Gestionar ejercicios",
+    createTrainingBlocks: "Crear bloques de entrenamiento",
     previousWeek: "Semana anterior",
     ds: "DS",
     nextWeek: "Semana siguiente",
@@ -220,7 +338,7 @@ export const translations: Translations = {
     manageUsersTableEmail: "Correo",
     manageUsersTableStatus: "Estado",
     manageUsersTableActions: "Acciones",
-    manageUsersModalHeader: "Detalles del Atleta",
+    manageUsersModalHeader: "Detalles del atleta",
     manageUsersModalName: "Nombre",
     manageUsersModalUsername: "Usuario",
     manageUsersModalEmail: "Correo",
@@ -234,7 +352,9 @@ export const translations: Translations = {
     manageUsersFilterOnlyUnpaid: "Solo impagados",
     paymentsTableDate: "Fecha",
     paymentsTableAmount: "Importe",
-    paymentsTablePaid: "Pagado",
+    paymentsTablePaid: "Pagos al corriente",
+    paymentsTablePaidHeader: "Pagos",
+    paymentsTableUnpaid: "Pagos pendientes",
     paymentsTableActions: "Acciones",
     infoTab: "Información",
     paymentsTab: "Pagos",
@@ -257,7 +377,10 @@ export const translations: Translations = {
     manageUsersQuickFilterAll: "Todos",
     manageUsersQuickFilterDue: "Pagos pendientes",
     manageUsersQuickFilterNoFuture: "Sin pagos futuros",
+    manageUsersQuickFilterAllActive: "Usuarios activos",
     manageUsersTableEmpty: "No hay usuarios.",
     manageUsersTableShowing: "Mostrando {from}–{to} de {total} usuarios",
+    hideUser: "Ocultar usuario",
+    unhideUser: "Mostrar usuario",
   }
 };

@@ -34,12 +34,5 @@ export async function POST(req: NextRequest) {
     { expiresIn: "7d" }
   );
 
-  const res = NextResponse.json({ ok: true, userId: user.id, role: user.role }, { status: 200 });
-  res.cookies.set("token", token, {
-    httpOnly: true,
-    path: "/",
-    sameSite: "lax",
-    maxAge: 7 * 24 * 60 * 60
-  });
-  return res;
+  return NextResponse.json({ ok: true, userId: user.id, role: user.role, token }, { status: 200 });
 }

@@ -1,75 +1,304 @@
-"use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+"use client"
 
-export default function LoginPage() {
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import CssBaseline from '@mui/material/CssBaseline';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Divider from '@mui/material/Divider';
+import FormLabel from '@mui/material/FormLabel';
+import FormControl from '@mui/material/FormControl';
+import Link from '@mui/material/Link';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
+import MuiCard from '@mui/material/Card';
+import { styled } from '@mui/material/styles';
+import AppTheme from './theme/AppTheme';
+import ColorModeSelect from './theme/ColorModeSelect';
+import { GoogleIcon, FacebookIcon } from './components/CustomIcons';
+import Image from 'next/image';
+import { translations, Lang } from './i18n';
+import { useRouter } from 'next/navigation';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useColorScheme } from '@mui/material/styles';
+
+const Card = styled(MuiCard)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignSelf: 'center',
+  width: '100%',
+  padding: theme.spacing(4),
+  gap: theme.spacing(2),
+  margin: 'auto',
+  [theme.breakpoints.up('sm')]: {
+    maxWidth: '450px',
+  },
+  boxShadow:
+    'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
+  ...theme.applyStyles('dark', {
+    boxShadow:
+      'hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px',
+  }),
+}));
+
+const SignInContainer = styled(Stack)(({ theme }) => ({
+  height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
+  minHeight: '100%',
+  padding: theme.spacing(2),
+  [theme.breakpoints.up('sm')]: {
+    padding: theme.spacing(4),
+  },
+  '&::before': {
+    content: '""',
+    display: 'block',
+    position: 'absolute',
+    zIndex: -1,
+    inset: 0,
+    backgroundImage:
+      'radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))',
+    backgroundRepeat: 'no-repeat',
+    ...theme.applyStyles('dark', {
+      backgroundImage:
+        'radial-gradient(at 50% 50%, hsla(210, 100%, 16%, 0.5), hsl(220, 30%, 5%))',
+    }),
+  },
+}));
+
+export default function SignIn(props: { disableCustomTheme?: boolean }) {
+  // Set language, could be extended for dynamic usage
+  const lang: Lang = "es";
+  const [usernameError, setUsernameError] = React.useState(false);
+  const [usernameErrorMessage, setUsernameErrorMessage] = React.useState('');
+  const [passwordError, setPasswordError] = React.useState(false);
+  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
+  const [open, setOpen] = React.useState(false);
+  const [loginError, setLoginError] = React.useState('');
   const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [snackbarMsg, setSnackbarMsg] = React.useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = React.useState<'success' | 'error'>('success');
+  const [loading, setLoading] = React.useState(false);
+  const { mode, setMode } = useColorScheme();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setLoginError('');
     setLoading(true);
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
-    });
-    const data = await res.json();
-    setLoading(false);
-    if (res.ok && data.ok) {
-      if (data.role === "admin") {
-        router.push("/menu");
-      } else {
-        router.push("/training_schedule");
+    const formData = new FormData(event.currentTarget);
+    const username = formData.get('username') as string;
+    const password = formData.get('password') as string;
+    // front end validate again for safety
+    if (!username || username.trim().length === 0) {
+      setUsernameError(true);
+      setUsernameErrorMessage('Por favor introduce un usuario.');
+      setLoading(false);
+      return;
+    }
+    if (!password || password.length < 6) {
+      setPasswordError(true);
+      setPasswordErrorMessage('La contraseña debe tener al menos 6 caracteres.');
+      return;
+    }
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        setLoginError(data.error || 'Error de autenticación');
+        setSnackbarSeverity('error');
+        setSnackbarMsg(data.error || 'Error de autenticación');
+        setSnackbarOpen(true);
+        setLoading(false);
+        return;
       }
-    } else {
-      setError(data.error || "Login failed");
+      if (data && data.role) {
+        // Remove existing auth cookie before storing new one (all paths/common variants)
+        document.cookie = "elena_auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        document.cookie = "elena_auth_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        document.cookie = "elena_auth_token=; path=/training_schedule; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        document.cookie = "elena_auth_token=; path=/menu; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        if (data.token) {
+          document.cookie = `elena_auth_token=${data.token}; path=/; secure; samesite=lax`;
+        }
+        setSnackbarSeverity('success');
+        setSnackbarMsg('Inicio de sesión exitoso. Redirigiendo...');
+        setSnackbarOpen(true);
+        setTimeout(() => {
+          if (data.role === 'admin') {
+            router.push('/admin_dashboard');
+          } else if (data.role === 'athlete') {
+            router.push('/training_schedule');
+          } else {
+            setLoginError('Rol desconocido');
+            setSnackbarSeverity('error');
+            setSnackbarMsg('Rol desconocido');
+            setSnackbarOpen(true);
+          }
+          setLoading(false);
+        }, 1200);
+      } else {
+        setLoginError('Respuesta inesperada.');
+        setSnackbarSeverity('error');
+        setSnackbarMsg('Respuesta inesperada.');
+        setSnackbarOpen(true);
+        setLoading(false);
+      }
+    } catch (err) {
+      setLoginError('No se pudo conectar al servidor.');
+      setSnackbarSeverity('error');
+      setSnackbarMsg('No se pudo conectar al servidor.');
+      setSnackbarOpen(true);
+      setLoading(false);
     }
   };
 
+  const validateInputs = () => {
+    const username = document.getElementById('username') as HTMLInputElement;
+    const password = document.getElementById('password') as HTMLInputElement;
+
+    let isValid = true;
+
+    if (!username.value || username.value.trim().length === 0) {
+      setUsernameError(true);
+      setUsernameErrorMessage('Por favor introduce un usuario.');
+      isValid = false;
+    } else {
+      setUsernameError(false);
+      setUsernameErrorMessage('');
+    }
+
+    if (!password.value || password.value.length < 6) {
+      setPasswordError(true);
+      setPasswordErrorMessage('Password must be at least 6 characters long.');
+      isValid = false;
+    } else {
+      setPasswordError(false);
+      setPasswordErrorMessage('');
+    }
+
+    return isValid;
+  };
+
+  setMode('dark');
+
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-zinc-100 dark:bg-black">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white dark:bg-zinc-900 rounded shadow-md p-8 w-full max-w-xs flex flex-col gap-4 border border-zinc-200 dark:border-zinc-700"
+    <AppTheme {...props} defaultColorScheme="dark">
+      <CssBaseline enableColorScheme />
+      <SignInContainer direction="column" justifyContent="space-between">
+        
+        <Card variant="outlined">
+          <img
+            src="/elena_logo.png"
+            alt="Elena Logo"
+            width={160}
+            height={80}
+            style={{
+              alignSelf: 'center',
+              marginTop: 4,
+              marginBottom: 4,
+              border: '3px solid #fff',
+              borderRadius: '12px',
+              background: '#fff',
+              objectFit: 'contain'
+            }}
+            loading="eager"
+          />
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              width: '100%',
+              gap: 2,
+            }}
+          >
+            {loginError && (
+              <Typography color="error" sx={{ mb: 1, fontWeight: 500, textAlign: 'center' }}>
+                {loginError}
+              </Typography>
+            )}
+            <FormControl>
+              <FormLabel htmlFor="username">{translations[lang].loginUsernameLabel}</FormLabel>
+              <TextField
+                error={usernameError}
+                helperText={usernameErrorMessage}
+                id="username"
+                name="username"
+                placeholder={translations[lang].loginUsernamePlaceholder}
+                autoComplete="username"
+                autoFocus
+                required
+                fullWidth
+                variant="outlined"
+                color={usernameError ? 'error' : 'primary'}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel htmlFor="password">{translations[lang].signinPasswordLabel}</FormLabel>
+              <TextField
+                error={passwordError}
+                helperText={passwordErrorMessage}
+                name="password"
+                placeholder={translations[lang].signinPasswordPlaceholder}
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                autoFocus
+                required
+                fullWidth
+                variant="outlined"
+                color={passwordError ? 'error' : 'primary'}
+              />
+            </FormControl>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              onClick={validateInputs}
+              disabled={loading}
+              sx={{ position: 'relative', minHeight: 36 }}
+            >
+              {loading
+                ? <CircularProgress size={24} color="inherit" sx={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }} />
+                : translations[lang].signinButton
+              }
+            </Button>
+          </Box>
+        </Card>
+      </SignInContainer>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3500}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <h2 className="text-center text-2xl font-bold text-zinc-700 dark:text-white mb-2">Login</h2>
-        <label className="flex flex-col gap-1">
-          <span className="text-xs text-zinc-600 dark:text-zinc-300">Username</span>
-          <input
-            type="text"
-            className="rounded border border-zinc-300 dark:border-zinc-600 px-3 py-2 text-zinc-800 dark:text-white bg-white dark:bg-zinc-800"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-            autoFocus
-            required
-          />
-        </label>
-        <label className="flex flex-col gap-1">
-          <span className="text-xs text-zinc-600 dark:text-zinc-300">Password</span>
-          <input
-            type="password"
-            className="rounded border border-zinc-300 dark:border-zinc-600 px-3 py-2 text-zinc-800 dark:text-white bg-white dark:bg-zinc-800"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        {error && <div className="text-red-500 text-sm">{error}</div>}
-        <button
-          type="submit"
-          className={`mt-2 py-2 px-4 rounded bg-blue-600 text-white font-semibold hover:bg-blue-700 transition ${
-            loading ? "opacity-60 cursor-wait" : ""
-          }`}
-          disabled={loading}
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          severity={snackbarSeverity}
+          onClose={() => setSnackbarOpen(false)}
+          sx={{ width: '100%' }}
         >
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
-    </div>
+          {snackbarMsg}
+        </MuiAlert>
+      </Snackbar>
+    </AppTheme>
   );
 }

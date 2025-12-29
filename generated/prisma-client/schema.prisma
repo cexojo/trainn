@@ -54,16 +54,21 @@ enum Role {
 }
 
 model User {
-  id              String          @id @default(uuid())
-  name            String
-  username        String          @unique
-  email           String          @unique
-  password        String?
-  isocode         String?
-  lastVisitedWeek String? // weekId of last visited week
-  blocks          TrainingBlock[]
-  role            Role            @default(athlete)
-  payments        Payment[]
+  id                    String          @id @default(uuid())
+  name                  String
+  username              String          @unique
+  email                 String          @unique
+  password              String?
+  isocode               String?
+  lastVisitedWeek       String? // weekId of last visited week
+  registrationDate      DateTime        @default(now())
+  hidingDate            DateTime?
+  subscriptionAmount    Float?
+  subscriptionFrequency String?
+  blocks                TrainingBlock[]
+  role                  Role            @default(athlete)
+  payments              Payment[]
+  hidden                Boolean         @default(false)
 }
 
 // New middle entity between TrainingDay and Exercise

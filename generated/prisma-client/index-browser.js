@@ -158,7 +158,12 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   isocode: 'isocode',
   lastVisitedWeek: 'lastVisitedWeek',
-  role: 'role'
+  registrationDate: 'registrationDate',
+  hidingDate: 'hidingDate',
+  subscriptionAmount: 'subscriptionAmount',
+  subscriptionFrequency: 'subscriptionFrequency',
+  role: 'role',
+  hidden: 'hidden'
 };
 
 exports.Prisma.DayExerciseScalarFieldEnum = {

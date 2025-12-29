@@ -49,6 +49,7 @@ export async function POST(req: NextRequest) {
     }
 
     // For each week, create each day, then each exercise for that day
+    const creationLogs = [];
     for (const week of weeks) {
       for (let dayIdx = 0; dayIdx < daysPerWeek; ++dayIdx) {
         const trainingDayLabel = `Day ${dayIdx + 1}`;
@@ -62,20 +63,20 @@ export async function POST(req: NextRequest) {
         });
 
         const exercises = exercisesByDay[dayIdx];
-        for (const ex of exercises) {
+        for (const [exIdx, ex] of exercises.entries()) {
           const dayExercise = await prisma.dayExercise.create({
             data: {
               trainingDayId: day.id,
               exerciseId: ex.exerciseId,
               trainerNotes: ex.trainerNotes ?? "",
               day: trainingDayLabel,
-              exerciseNumber: ex.exerciseNumber ?? (ex.exerciseIdx != null ? ex.exerciseIdx + 1 : dayIdx + 1)
+              exerciseNumber: ex.exerciseNumber ?? exIdx + 1
             }
           });
 
           for (let sIdx = 0; sIdx < ex.numSeries; ++sIdx) {
             const ser = ex.series[sIdx] || {};
-            await prisma.dayExerciseSeries.create({
+            const series = await prisma.dayExerciseSeries.create({
               data: {
                 dayExercise: { connect: { id: dayExercise.id } },
                 trainingWeek: { connect: { id: week.id } },
@@ -87,12 +88,33 @@ export async function POST(req: NextRequest) {
                 isDropset: !!ser.isDropset,
               }
             });
+            let exerciseName = '';
+            if (ex.exerciseName) {
+              exerciseName = ex.exerciseName;
+            } else {
+              try {
+                const exerciseObj = await prisma.exercise.findUnique({
+                  where: { id: ex.exerciseId },
+                  select: { name: true }
+                });
+                exerciseName = exerciseObj?.name || '';
+              } catch { exerciseName = ''; }
+            }
+            creationLogs.push({
+              dayNumber: day.dayNumber,
+              dayId: day.id,
+              exerciseNumber: dayExercise.exerciseNumber,
+              exerciseId: ex.exerciseId,
+              exerciseName,
+              seriesNumber: series.seriesNumber,
+              seriesId: series.id
+            });
           }
         }
       }
     }
 
-    return NextResponse.json({ success: true, blockId: block.id });
+    return NextResponse.json({ success: true, blockId: block.id, logs: creationLogs });
   } catch (err) {
     return NextResponse.json({ error: "Failed to create block", detail: "" + err }, { status: 500 });
   }
