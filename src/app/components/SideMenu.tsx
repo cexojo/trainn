@@ -23,7 +23,17 @@ const Drawer = styled(MuiDrawer)({
   },
 });
 
+import React, { useState } from 'react';
+// ...rest of imports
+
 export default function SideMenu({ setSection }: { setSection: (section: string) => void }) {
+  const [selectedSection, setSelectedSection] = useState<string | null>(null);
+
+  const handleSectionSelect = (section: string) => {
+    setSelectedSection(section);
+    setSection(section);
+  };
+
   return (
     <Drawer
       variant="permanent"
@@ -52,7 +62,7 @@ export default function SideMenu({ setSection }: { setSection: (section: string)
           flexDirection: 'column',
         }}
       >
-        <MenuContent setSection={setSection} />
+        <MenuContent setSection={handleSectionSelect} selectedSection={selectedSection} />
         <CardAlert />
       </Box>
       <Stack

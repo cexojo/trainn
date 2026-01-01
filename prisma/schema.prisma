@@ -41,10 +41,19 @@ model TrainingDay {
   dayExercises DayExercise[]
 }
 
+model ExerciseGroup {
+  id   String @id @default(uuid())
+  name String @unique
+  exercises Exercise[]
+}
+
 model Exercise {
   id           String   @id @default(uuid())
   name         String   @unique
-  group        String
+  exerciseGroup   ExerciseGroup @relation(fields: [exerciseGroupId], references: [id])
+  exerciseGroupId String
+  recommendedMinReps Int?
+  recommendedMaxReps Int?
   dayExercises DayExercise[]
 }
 
@@ -69,6 +78,8 @@ model User {
   role              Role     @default(athlete)
   payments          Payment[]
   hidden            Boolean  @default(false)
+  lastOKLogin       DateTime?
+  lastKOLogin       DateTime?
 }
 
 // New middle entity between TrainingDay and Exercise

@@ -78,7 +78,7 @@ export async function GET(req: NextRequest) {
         include: {
           dayExercise: {
             include: {
-              exercise: true,
+              exercise: { include: { exerciseGroup: true } },
               trainingDay: { select: { id: true, dayNumber: true, dayLabel: true, date: true } }
             }
           }

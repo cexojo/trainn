@@ -1,3 +1,4 @@
+"use client";
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -45,6 +46,7 @@ const data: StatCardProps[] = [
 
 import Button from "@mui/material/Button";
 import UserTable from "../menu/users/UserTable";
+import ExerciseTable from "../menu/exercises/ExerciseTable";
 import { useState } from "react";
 
 export default function MainGrid({ section }: { section?: string | null }) {
@@ -78,6 +80,14 @@ export default function MainGrid({ section }: { section?: string | null }) {
             {translations[lang].athletes}
           </Typography>
           <UserTable lang={lang} />
+        </Box>
+      )}
+      {section === "exercises" && (
+        <Box sx={{ mt: 3, mb: 3 }}>
+          <Typography variant="h5" sx={{ mb: 2 }}>
+            Ejercicios
+          </Typography>
+          <ExerciseTable lang={lang} />
         </Box>
       )}
     </Box>

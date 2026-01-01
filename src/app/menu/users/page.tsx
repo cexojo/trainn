@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import { translations, Lang, type Translations } from "../../i18n";
-import AdminRestricted from "../../components/AdminRestricted";
+import { redirect } from "next/navigation";
 import UserTable from "./UserTable";
 
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-for-local";
@@ -23,7 +23,7 @@ export default async function ManageUsersPage() {
   } catch (e) {}
 
   if (role !== "admin") {
-    return <AdminRestricted lang={lang} />;
+    redirect("/");
   }
 
   // Render the client component for table and modal handling

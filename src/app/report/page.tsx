@@ -64,11 +64,11 @@ function ReportPageInner() {
       typeof def.effectiveWeight === "number" ||
       typeof def.effectiveReps === "number"
     ) {
-      const exKey = def.exercise.name + "|" + def.exercise.group;
+      const exKey = def.exercise.name + "|" + (def.exercise.group ?? "");
       if (!groupedByExercise[exKey]) {
         groupedByExercise[exKey] = {
           name: def.exercise.name,
-          group: def.exercise.group,
+          group: def.exercise.group ?? "",
           byDate: {}
         };
       }

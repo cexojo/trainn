@@ -5,8 +5,8 @@ import jwt from "jsonwebtoken";
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-for-local";
 
 function getTokenPayload(req: NextRequest) {
-  // Next.js API route: get token from cookies
-  const token = req.cookies.get("token")?.value;
+  // Only use the "elena_auth_token" cookie for JWT authentication
+  const token = req.cookies.get("elena_auth_token")?.value;
   if (!token) return null;
   try {
     return jwt.verify(token, JWT_SECRET) as any;
@@ -33,6 +33,7 @@ export async function GET(req: NextRequest) {
       username: true,
       email: true,
       lastVisitedWeek: true,
+      lastOKLogin: true,
       role: true,
       payments: {
         orderBy: { dueDate: "desc" },
@@ -46,5 +47,61 @@ export async function GET(req: NextRequest) {
     }
   });
 
-  return NextResponse.json(users);
+  // Compute noPlan flag for each athlete: minimal block/week/exercise fetch (hybrid approach)
+  const usersWithNoPlan = await Promise.all(users.map(async (u: typeof users[number]) => {
+    // 1. Find the last block (highest blockNumber)
+    const lastBlock = await prisma.trainingBlock.findFirst({
+      where: { userId: u.id },
+      orderBy: { blockNumber: "desc" },
+      select: {
+        id: true,
+        blockNumber: true,
+        weeks: {
+          orderBy: { weekNumber: "desc" },
+          take: 1,
+          select: {
+            id: true,
+            weekNumber: true,
+            dayExerciseSeries: {
+              where: {
+                OR: [
+                  { effectiveRir: { not: null } },
+                  { effectiveWeight: { not: null } },
+                  { effectiveReps: { not: null } }
+                ]
+              },
+              select: {
+                id: true,
+                effectiveRir: true,
+                effectiveWeight: true,
+                effectiveReps: true,
+              }
+            }
+          }
+        }
+      }
+    });
+
+    let noPlan = false;
+    if (!lastBlock) {
+      // No block at all
+      noPlan = true;
+    } else if (!lastBlock.weeks || lastBlock.weeks.length === 0) {
+      // Last block has no weeks
+      noPlan = true;
+    } else {
+      // Get last week (highest weekNumber)
+      const lastWeek = lastBlock.weeks[0];
+      if (!lastWeek || !lastWeek.dayExerciseSeries || lastWeek.dayExerciseSeries.length === 0) {
+        // No series (inputs) in last week
+        noPlan = true;
+      } else {
+        // There is at least one relevant input in dayExerciseSeries (filtered in query)
+        noPlan = false;
+      }
+    }
+    return { ...u, noPlan };
+  }));
+
+  return NextResponse.json(usersWithNoPlan);
 }

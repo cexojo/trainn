@@ -144,10 +144,17 @@ exports.Prisma.TrainingDayScalarFieldEnum = {
   weekId: 'weekId'
 };
 
+exports.Prisma.ExerciseGroupScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+};
+
 exports.Prisma.ExerciseScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  group: 'group'
+  exerciseGroupId: 'exerciseGroupId',
+  recommendedMinReps: 'recommendedMinReps',
+  recommendedMaxReps: 'recommendedMaxReps'
 };
 
 exports.Prisma.UserScalarFieldEnum = {
@@ -163,7 +170,9 @@ exports.Prisma.UserScalarFieldEnum = {
   subscriptionAmount: 'subscriptionAmount',
   subscriptionFrequency: 'subscriptionFrequency',
   role: 'role',
-  hidden: 'hidden'
+  hidden: 'hidden',
+  lastOKLogin: 'lastOKLogin',
+  lastKOLogin: 'lastKOLogin'
 };
 
 exports.Prisma.DayExerciseScalarFieldEnum = {
@@ -222,6 +231,7 @@ exports.Prisma.ModelName = {
   TrainingBlock: 'TrainingBlock',
   TrainingWeek: 'TrainingWeek',
   TrainingDay: 'TrainingDay',
+  ExerciseGroup: 'ExerciseGroup',
   Exercise: 'Exercise',
   User: 'User',
   DayExercise: 'DayExercise',

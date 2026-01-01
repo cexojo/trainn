@@ -20,13 +20,25 @@ export async function POST(req: NextRequest) {
   });
 
   if (!user || !user.password) {
+    // Username/email not found, do NOT log KO login to avoid leaking valid usernames.
     return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
   }
 
   const valid = await bcrypt.compare(password, user.password);
   if (!valid) {
+    // Incorrect password for known user: log KO
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { lastKOLogin: new Date() },
+    });
     return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
   }
+
+  // Mark success login
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { lastOKLogin: new Date() },
+  });
 
   const token = jwt.sign(
     { id: user.id, username: user.username, role: user.role },

@@ -87,7 +87,7 @@ export type Translations = {
     manageUsersModalUsername: string;
     manageUsersModalEmail: string;
     manageUsersModalId: string;
-    manageUsersModalLastVisitedWeek: string;
+    manageUsersModalLastLogin: string;
     manageUsersModalRole: string;
     manageUsersStatusEmpty: string;
     manageUsersActionsEmpty: string;
@@ -126,12 +126,47 @@ export type Translations = {
     manageUsersTableShowing: string;
     hideUser: string;
     unhideUser: string;
+    adminMenuHome: string;
+    adminMenuAthletes: string;
+    adminMenuSettings: string;
+    adminMenuAbout: string;
+    adminMenuFeedback: string;
+    editFieldTooltip: string;
+
+    // Training tab and table headers
+    trainingTab: string;
+    trainingTableExercise: string;
+    trainingTableSeries: string;
+    trainingTableDS: string;
+    trainingTableWeight: string;
+    trainingTableReps: string;
+    trainingTableMinMaxReps: string;
+    trainingTableRIR: string;
+    trainingTableMinMaxRIR: string;
+    trainingTableProgress: string;
   };
 };
 
 // Export translations used in front-end
 export const translations: Translations = {
   en: {
+    // Training tab and table headers
+    trainingTab: "Training",
+    trainingTableExercise: "Exercise",
+    trainingTableSeries: "Series",
+    trainingTableDS: "DS",
+    trainingTableWeight: "Weight",
+    trainingTableReps: "Reps",
+    trainingTableMinMaxReps: "Min-Max Reps",
+    trainingTableRIR: "RIR",
+    trainingTableMinMaxRIR: "Min-Max RIR",
+    trainingTableProgress: "Progress",
+
+    adminMenuHome: "Home",
+    adminMenuAthletes: "Athletes",
+    adminMenuSettings: "Settings",
+    adminMenuAbout: "About",
+    adminMenuFeedback: "Feedback",
     athletes: "Athletes",
     loginTitle: "Login",
     loginUsernameLabel: "Username",
@@ -217,7 +252,7 @@ export const translations: Translations = {
     manageUsersModalUsername: "Username",
     manageUsersModalEmail: "Email",
     manageUsersModalId: "ID",
-    manageUsersModalLastVisitedWeek: "Last Visited Week",
+    manageUsersModalLastLogin: "Last access",
     manageUsersModalRole: "Role",
     manageUsersStatusEmpty: "",
     manageUsersActionsEmpty: "",
@@ -256,8 +291,21 @@ export const translations: Translations = {
     manageUsersTableShowing: "Showing {from}–{to} of {total} users",
     hideUser: "Hide user",
     unhideUser: "Unhide user",
+    editFieldTooltip: "Click to edit",
   },
   es: {
+    // Training tab and table headers
+    trainingTab: "Entrenamiento",
+    trainingTableExercise: "Ejercicio",
+    trainingTableSeries: "Serie",
+    trainingTableDS: "DS",
+    trainingTableWeight: "Peso",
+    trainingTableReps: "Reps",
+    trainingTableMinMaxReps: "Rango Reps",
+    trainingTableRIR: "RIR",
+    trainingTableMinMaxRIR: "Rango RIR",
+    trainingTableProgress: "Progreso",
+
     athletes: "Atletas",
     loginTitle: "Iniciar sesión",
     loginUsernameLabel: "Usuario",
@@ -343,7 +391,7 @@ export const translations: Translations = {
     manageUsersModalUsername: "Usuario",
     manageUsersModalEmail: "Correo",
     manageUsersModalId: "ID",
-    manageUsersModalLastVisitedWeek: "Último acceso semana",
+    manageUsersModalLastLogin: "Último acceso",
     manageUsersModalRole: "Rol",
     manageUsersStatusEmpty: "",
     manageUsersActionsEmpty: "",
@@ -382,5 +430,11 @@ export const translations: Translations = {
     manageUsersTableShowing: "Mostrando {from}–{to} de {total} usuarios",
     hideUser: "Ocultar usuario",
     unhideUser: "Mostrar usuario",
+    adminMenuHome: "Inicio",
+    adminMenuAthletes: "Atletas",
+    adminMenuSettings: "Ajustes",
+    adminMenuAbout: "Acerca de",
+    adminMenuFeedback: "Comentarios",
+    editFieldTooltip: "Haz clic para editar",
   }
 };
