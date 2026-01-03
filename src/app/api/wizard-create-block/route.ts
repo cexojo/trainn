@@ -5,31 +5,31 @@ import prisma from '@/prisma/client';
 export async function POST(req: NextRequest) {
   // Expects: { userId, name, numWeeks, exercises }
   const data = await req.json();
-  const { userId, name, numWeeks, daysPerWeek, exercisesByDay } = data;
+  const { userId, name, numWeeks, daysPerWeek, exercisesByDay, visible } = data;
 
   if (!userId || !name || !numWeeks || !daysPerWeek || !Array.isArray(exercisesByDay) || exercisesByDay.length !== daysPerWeek) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
   try {
-    // 1. Determine next blockNumber for user
+    // Determine next blockNumber for user
     const lastBlock = await prisma.trainingBlock.findFirst({
       where: { userId },
       orderBy: { blockNumber: "desc" }
     });
     const nextBlockNumber = lastBlock ? lastBlock.blockNumber + 1 : 1;
 
-    // 2. Create the training block
+    // Create the training block
     const block = await prisma.trainingBlock.create({
       data: {
         userId,
-        isVisible: true,
+        isVisible: typeof visible === "boolean" ? visible : true,
         blockNumber: nextBlockNumber,
         description: name
       }
     });
 
-    // 2. Create weeks for the block
+    // Create weeks for the block
     const weeks: any[] = [];
     for (let i = 1; i <= Number(numWeeks); ++i) {
       // Set weekStart and weekEnd to today + (i-1) weeks, as example placeholders
@@ -74,17 +74,17 @@ export async function POST(req: NextRequest) {
             }
           });
 
-          for (let sIdx = 0; sIdx < ex.numSeries; ++sIdx) {
+          for (let sIdx = 0; sIdx < (ex.series?.length || 0); ++sIdx) {
             const ser = ex.series[sIdx] || {};
             const series = await prisma.dayExerciseSeries.create({
               data: {
                 dayExercise: { connect: { id: dayExercise.id } },
                 trainingWeek: { connect: { id: week.id } },
                 seriesNumber: sIdx + 1,
-                minReps: ser.minReps || 8,
-                maxReps: ser.maxReps || 12,
-                minRir: 0,
-                maxRir: 3,
+                minReps: ser.minReps !== undefined && ser.minReps !== "" ? ser.minReps : null,
+                maxReps: ser.maxReps !== undefined && ser.maxReps !== "" ? ser.maxReps : null,
+                minRir: ser.minRIR !== undefined && ser.minRIR !== "" ? ser.minRIR : null,
+                maxRir: ser.maxRIR !== undefined && ser.maxRIR !== "" ? ser.maxRIR : null,
                 isDropset: !!ser.isDropset,
               }
             });

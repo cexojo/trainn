@@ -109,6 +109,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     if (!password || password.length < 6) {
       setPasswordError(true);
       setPasswordErrorMessage('La contraseña debe tener al menos 6 caracteres.');
+      setLoading(false);
       return;
     }
     try {
@@ -269,6 +270,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               type="submit"
               fullWidth
               variant="contained"
+              color="primary"
               onClick={validateInputs}
               disabled={loading}
               sx={{ position: 'relative', minHeight: 36 }}

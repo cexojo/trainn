@@ -22,7 +22,13 @@ export default function AppTheme(props: AppThemeProps) {
   const { children, disableCustomTheme, themeComponents, defaultColorScheme } = props;
   const theme = React.useMemo(() => {
     return createTheme({
-      palette: { mode: 'dark' },
+      palette: {
+        mode: 'dark',
+        background: {
+          default: '#0a0a0a', // Match your dark mode CSS variable
+          paper: '#171717'
+        }
+      },
       typography,
       shadows,
       shape,

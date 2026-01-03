@@ -13,9 +13,9 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Missing userId" }, { status: 400 });
     }
 
-    // Fetch all training blocks for the user, include their weeks
+    // Fetch all training blocks for the user, include their weeks (no isVisible filter: admin can see all)
     const blocks = await prisma.trainingBlock.findMany({
-      where: { userId, isVisible: true },
+      where: { userId },
       orderBy: { blockNumber: "asc" },
       include: {
         weeks: {
@@ -67,6 +67,7 @@ export async function GET(req: NextRequest) {
         orderBy: { dayNumber: "asc" },
         select: {
           id: true,
+          weekId: true,
           date: true,
           dayLabel: true,
           dayNumber: true
@@ -185,16 +186,34 @@ export async function GET(req: NextRequest) {
             currentDefId: def.id,
           });
         }
+        // Compute trainingWeek based on matching trainingDay.weekId with selectedBlock.weeks (if possible)
+        let trainingWeek = null;
+        if (
+          def.dayExercise?.trainingDay?.id &&
+          selectedBlock &&
+          selectedBlock.weeks &&
+          Array.isArray(selectedBlock.weeks)
+        ) {
+          const trainingDayId = def.dayExercise.trainingDay.id;
+          // Try to pull weekId from trainingDays array (if present)
+          const td = trainingDays.find((td: any) => td.id === trainingDayId);
+          const weekId = td ? td.weekId : def.trainingWeekId;
+          if (weekId) {
+            const weekMatch = selectedBlock.weeks.find((w: any) => w.id === weekId);
+            if (weekMatch) trainingWeek = weekMatch;
+          }
+        }
         // Remap so the frontend gets root-level fields as before
         return {
           id: def.id,
           day: def.dayExercise?.day ?? "",
           exerciseNumber: def.dayExercise?.exerciseNumber ?? null,
-          athleteNotes: def.dayExercise?.athleteNotes ?? "",
-          trainerNotes: def.dayExercise?.trainerNotes ?? "",
+          athleteNotes: def.athleteNotes ?? "",
+          trainerNotes: def.trainerNotes ?? "",
           dayExerciseId: def.dayExercise?.id ?? "",
           exercise: def.dayExercise?.exercise ?? {},
           trainingDay: def.dayExercise?.trainingDay ?? {},
+          trainingWeek,
           seriesNumber: def.seriesNumber,
           minReps: def.minReps,
           maxReps: def.maxReps,

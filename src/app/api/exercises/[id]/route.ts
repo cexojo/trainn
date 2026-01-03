@@ -1,25 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma/client";
-import jwt from "jsonwebtoken";
+import { getTokenPayload } from "@/app/api/utils/auth";
 
-const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-for-local";
-
-function getTokenPayload(req: NextRequest) {
-  const token = req.cookies.get("elena_auth_token")?.value;
-  if (!token) return null;
-  try {
-    return jwt.verify(token, JWT_SECRET) as { id: string; username: string; role: string };
-  } catch {
-    return null;
-  }
-}
-
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   const payload = getTokenPayload(req);
   if (!payload || payload.role !== "admin") {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
-  const { id } = await params;
+  const { id } = await context.params;
   if (!id) {
     return NextResponse.json({ error: "ID is required" }, { status: 400 });
   }

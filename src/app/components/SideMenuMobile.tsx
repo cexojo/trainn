@@ -1,3 +1,4 @@
+import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -8,15 +9,31 @@ import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import MenuButton from './MenuButton';
 import MenuContent from './MenuContent';
-import CardAlert from './CardAlert';
 
 interface SideMenuMobileProps {
   open: boolean | undefined;
   toggleDrawer: (newOpen: boolean) => () => void;
-  setSection: (section: string) => void;
+  setSection: (section: string | null) => void;
 }
 
 export default function SideMenuMobile({ open, toggleDrawer, setSection }: SideMenuMobileProps) {
+  const [userRole, setUserRole] = React.useState<"admin" | "athlete" | null>(null);
+
+  React.useEffect(() => {
+    fetch("/api/get-user-id")
+      .then(res => res.json())
+      .then(data => {
+        if (data.role === "admin") setUserRole("admin");
+        else setUserRole("athlete");
+      })
+      .catch(() => setUserRole("athlete"));
+  }, []);
+
+  if (!userRole) {
+    // Optionally show a loader while the role is not determined
+    return null;
+  }
+
   return (
     <Drawer
       anchor="right"
@@ -41,12 +58,6 @@ export default function SideMenuMobile({ open, toggleDrawer, setSection }: SideM
             direction="row"
             sx={{ gap: 1, alignItems: 'center', flexGrow: 1, p: 1 }}
           >
-            <Avatar
-              sizes="small"
-              alt="Riley Carter"
-              src="/static/images/avatar/7.jpg"
-              sx={{ width: 24, height: 24 }}
-            />
             <Typography component="p" variant="h6">
               Riley Carter
             </Typography>
@@ -57,10 +68,9 @@ export default function SideMenuMobile({ open, toggleDrawer, setSection }: SideM
         </Stack>
         <Divider />
         <Stack sx={{ flexGrow: 1 }}>
-          <MenuContent setSection={setSection} />
+          <MenuContent setSection={setSection} role={userRole} onMenuItemClick={() => toggleDrawer(false)()} />
           <Divider />
         </Stack>
-        <CardAlert />
         <Stack sx={{ p: 2 }}>
           <Button variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />}>
             Logout

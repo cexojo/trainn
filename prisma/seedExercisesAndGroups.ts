@@ -324,6 +324,7 @@ async function main() {
         console.log(`Group exists: ${group}`);
       }
       groupId = dbGroup.id;
+      if (!groupId) throw new Error("Missing groupId for group " + group);
       groupIds.set(group, groupId);
     }
 

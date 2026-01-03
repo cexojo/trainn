@@ -29,12 +29,28 @@ const xThemeComponents = {
 
 export default function DashboardClient(props: { disableCustomTheme?: boolean }) {
   const [currentSection, setCurrentSection] = React.useState<string | null>(null);
+  const [userRole, setUserRole] = React.useState<"admin" | "athlete" | null>(null);
+
+  React.useEffect(() => {
+    fetch("/api/get-user-id")
+      .then(res => res.json())
+      .then(data => {
+        if (data.role === "admin") setUserRole("admin");
+        else setUserRole("athlete");
+      })
+      .catch(() => setUserRole("athlete"));
+  }, []);
+
+  if (!userRole) {
+    // Optionally show a loader while the role is not determined.
+    return null;
+  }
 
   return (
     <AppTheme themeComponents={xThemeComponents}>
       <CssBaseline enableColorScheme />
       <Box sx={{ display: 'flex' }}>
-        <SideMenu setSection={section => setCurrentSection(section)} />
+        <SideMenu setSection={section => setCurrentSection(section)} role={userRole} />
         <AppNavbar setSection={section => setCurrentSection(section)} />
         {/* Main content */}
         <Box
@@ -56,7 +72,7 @@ export default function DashboardClient(props: { disableCustomTheme?: boolean })
               mt: { xs: 8, md: 0 },
             }}
           >
-            <Header />
+            <Header showBreadcrumbs={false} showSearchAndAlerts={false} />
             <MainGrid section={currentSection} />
           </Stack>
         </Box>

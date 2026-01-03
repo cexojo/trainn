@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, Tooltip, TextField, MenuItem, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { translations, type Lang } from "../../i18n";
+import { translations, type Lang } from "@/app/i18n";
 
 type ExerciseGroup = {
   id: string;
@@ -14,6 +14,7 @@ type Exercise = {
   id: string;
   name: string;
   exerciseGroup: ExerciseGroup;
+  measurementType: "REPS" | "TIME";
   recommendedMinReps?: number | null;
   recommendedMaxReps?: number | null;
 };
@@ -26,6 +27,7 @@ export default function ExerciseTable({ lang }: { lang: Lang }) {
   const [form, setForm] = useState({
     name: "",
     groupId: "",
+    measurementType: "REPS",
     recommendedMinReps: "",
     recommendedMaxReps: "",
   });
@@ -55,7 +57,7 @@ export default function ExerciseTable({ lang }: { lang: Lang }) {
   }, []);
 
   const handleOpenAddForm = () => {
-    setForm({ name: "", groupId: "", recommendedMinReps: "", recommendedMaxReps: "" });
+    setForm({ name: "", groupId: "", measurementType: "REPS", recommendedMinReps: "", recommendedMaxReps: "" });
     setError(null);
     setShowAddForm(true);
   };
@@ -78,6 +80,7 @@ export default function ExerciseTable({ lang }: { lang: Lang }) {
     const payload = {
       name: form.name.trim(),
       exerciseGroupId: form.groupId,
+      measurementType: form.measurementType,
       recommendedMinReps: form.recommendedMinReps ? Number(form.recommendedMinReps) : null,
       recommendedMaxReps: form.recommendedMaxReps ? Number(form.recommendedMaxReps) : null,
     };
@@ -98,7 +101,7 @@ export default function ExerciseTable({ lang }: { lang: Lang }) {
     }
   };
 
-  const columns: GridColDef[] = [
+  const columns: GridColDef<Exercise>[] = [
     { 
       field: "name", 
       headerName: "Nombre",
@@ -116,19 +119,33 @@ export default function ExerciseTable({ lang }: { lang: Lang }) {
       disableColumnMenu: true
     },
     {
-      field: "recommendedMinReps",
-      headerName: "Reps mínimas",
-      type: "number",
-      flex: 0.5,
+      field: "measurementType",
+      headerName: "Tipo",
+      flex: 0.6,
       minWidth: 100,
       sortable: false,
       disableColumnMenu: true,
+      valueGetter: (params) => (params as any).row?.measurementType === "TIME" ? "Segundos" : "Repeticiones"
+    },
+    {
+      field: "recommendedMinReps",
+      headerName: "Min",
+      type: "number",
+      flex: 0.7,
+      minWidth: 110,
+      sortable: false,
+      disableColumnMenu: true,
       editable: true,
-      renderCell: (params) => (
-        params.value === undefined || params.value === null || params.value === ''
-          ? <span>-</span>
-          : <span>{params.value}</span>
-      ),
+      renderCell: (params) => {
+        const row = (params as any).row as Exercise;
+        return (
+          params.value === undefined || params.value === null || params.value === ''
+            ? <span>-</span>
+            : <span>
+              {row.measurementType === "TIME" ? `${params.value} s` : params.value}
+            </span>
+        );
+      },
       valueParser: (value) => {
         if (value === '' || value === undefined || value === null) return null;
         const intVal = Number(value);
@@ -138,18 +155,23 @@ export default function ExerciseTable({ lang }: { lang: Lang }) {
     },
     {
       field: "recommendedMaxReps",
-      headerName: "Reps máximas",
+      headerName: "Max",
       type: "number",
-      flex: 0.5,
-      minWidth: 100,
+      flex: 0.7,
+      minWidth: 110,
       sortable: false,
       disableColumnMenu: true,
       editable: true,
-      renderCell: (params) => (
-        params.value === undefined || params.value === null || params.value === ''
-          ? <span>-</span>
-          : <span>{params.value}</span>
-      ),
+      renderCell: (params) => {
+        const row = (params as any).row as Exercise;
+        return (
+          params.value === undefined || params.value === null || params.value === ''
+            ? <span>-</span>
+            : <span>
+              {row.measurementType === "TIME" ? `${params.value} s` : params.value}
+            </span>
+        );
+      },
       valueParser: (value) => {
         if (value === '' || value === undefined || value === null) return null;
         const intVal = Number(value);
@@ -211,7 +233,7 @@ export default function ExerciseTable({ lang }: { lang: Lang }) {
         </Box>
       </Box>
       <Box sx={{ height: 500, width: "100%" }}>
-        <DataGrid
+        <DataGrid<Exercise>
           rows={filteredExercises}
           columns={columns}
           getRowId={row => row.id}
@@ -306,7 +328,22 @@ export default function ExerciseTable({ lang }: { lang: Lang }) {
                 ))}
               </TextField>
               <TextField
-                label="Repeticiones mínimas recomendadas"
+                select
+                label="Tipo de ejercicio"
+                name="measurementType"
+                value={form.measurementType}
+                onChange={handleFormChange}
+                fullWidth
+              >
+                <MenuItem value="REPS">Medido en repeticiones</MenuItem>
+                <MenuItem value="TIME">Medido en segundos</MenuItem>
+              </TextField>
+              <TextField
+                label={
+                  form.measurementType === "TIME"
+                    ? "Segundos mínimos recomendados"
+                    : "Repeticiones mínimas recomendadas"
+                }
                 name="recommendedMinReps"
                 type="number"
                 value={form.recommendedMinReps}
@@ -314,7 +351,11 @@ export default function ExerciseTable({ lang }: { lang: Lang }) {
                 fullWidth
               />
               <TextField
-                label="Repeticiones máximas recomendadas"
+                label={
+                  form.measurementType === "TIME"
+                    ? "Segundos máximos recomendados"
+                    : "Repeticiones máximas recomendadas"
+                }
                 name="recommendedMaxReps"
                 type="number"
                 value={form.recommendedMaxReps}

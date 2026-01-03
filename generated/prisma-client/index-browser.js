@@ -125,7 +125,8 @@ exports.Prisma.TrainingBlockScalarFieldEnum = {
   id: 'id',
   blockNumber: 'blockNumber',
   description: 'description',
-  userId: 'userId'
+  userId: 'userId',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.TrainingWeekScalarFieldEnum = {
@@ -154,7 +155,8 @@ exports.Prisma.ExerciseScalarFieldEnum = {
   name: 'name',
   exerciseGroupId: 'exerciseGroupId',
   recommendedMinReps: 'recommendedMinReps',
-  recommendedMaxReps: 'recommendedMaxReps'
+  recommendedMaxReps: 'recommendedMaxReps',
+  measurementType: 'measurementType'
 };
 
 exports.Prisma.UserScalarFieldEnum = {
@@ -197,7 +199,9 @@ exports.Prisma.DayExerciseSeriesScalarFieldEnum = {
   effectiveWeight: 'effectiveWeight',
   effectiveRir: 'effectiveRir',
   trainingWeekId: 'trainingWeekId',
-  isDropset: 'isDropset'
+  isDropset: 'isDropset',
+  athleteNotes: 'athleteNotes',
+  trainerNotes: 'trainerNotes'
 };
 
 exports.Prisma.PaymentScalarFieldEnum = {
@@ -222,6 +226,11 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.MeasurementType = exports.$Enums.MeasurementType = {
+  REPS: 'REPS',
+  TIME: 'TIME'
+};
+
 exports.Role = exports.$Enums.Role = {
   admin: 'admin',
   athlete: 'athlete'

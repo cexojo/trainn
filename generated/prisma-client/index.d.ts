@@ -63,7 +63,15 @@ export type Payment = $Result.DefaultSelection<Prisma.$PaymentPayload>
  * Enums
  */
 export namespace $Enums {
-  export const Role: {
+  export const MeasurementType: {
+  REPS: 'REPS',
+  TIME: 'TIME'
+};
+
+export type MeasurementType = (typeof MeasurementType)[keyof typeof MeasurementType]
+
+
+export const Role: {
   admin: 'admin',
   athlete: 'athlete'
 };
@@ -71,6 +79,10 @@ export namespace $Enums {
 export type Role = (typeof Role)[keyof typeof Role]
 
 }
+
+export type MeasurementType = $Enums.MeasurementType
+
+export const MeasurementType: typeof $Enums.MeasurementType
 
 export type Role = $Enums.Role
 
@@ -1867,6 +1879,7 @@ export namespace Prisma {
     blockNumber: number | null
     description: string | null
     userId: string | null
+    createdAt: Date | null
   }
 
   export type TrainingBlockMaxAggregateOutputType = {
@@ -1875,6 +1888,7 @@ export namespace Prisma {
     blockNumber: number | null
     description: string | null
     userId: string | null
+    createdAt: Date | null
   }
 
   export type TrainingBlockCountAggregateOutputType = {
@@ -1883,6 +1897,7 @@ export namespace Prisma {
     blockNumber: number
     description: number
     userId: number
+    createdAt: number
     _all: number
   }
 
@@ -1901,6 +1916,7 @@ export namespace Prisma {
     blockNumber?: true
     description?: true
     userId?: true
+    createdAt?: true
   }
 
   export type TrainingBlockMaxAggregateInputType = {
@@ -1909,6 +1925,7 @@ export namespace Prisma {
     blockNumber?: true
     description?: true
     userId?: true
+    createdAt?: true
   }
 
   export type TrainingBlockCountAggregateInputType = {
@@ -1917,6 +1934,7 @@ export namespace Prisma {
     blockNumber?: true
     description?: true
     userId?: true
+    createdAt?: true
     _all?: true
   }
 
@@ -2012,6 +2030,7 @@ export namespace Prisma {
     blockNumber: number
     description: string
     userId: string
+    createdAt: Date
     _count: TrainingBlockCountAggregateOutputType | null
     _avg: TrainingBlockAvgAggregateOutputType | null
     _sum: TrainingBlockSumAggregateOutputType | null
@@ -2039,6 +2058,7 @@ export namespace Prisma {
     blockNumber?: boolean
     description?: boolean
     userId?: boolean
+    createdAt?: boolean
     weeks?: boolean | TrainingBlock$weeksArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     _count?: boolean | TrainingBlockCountOutputTypeDefaultArgs<ExtArgs>
@@ -2050,6 +2070,7 @@ export namespace Prisma {
     blockNumber?: boolean
     description?: boolean
     userId?: boolean
+    createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["trainingBlock"]>
 
@@ -2059,6 +2080,7 @@ export namespace Prisma {
     blockNumber?: boolean
     description?: boolean
     userId?: boolean
+    createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["trainingBlock"]>
 
@@ -2068,9 +2090,10 @@ export namespace Prisma {
     blockNumber?: boolean
     description?: boolean
     userId?: boolean
+    createdAt?: boolean
   }
 
-  export type TrainingBlockOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"isVisible" | "id" | "blockNumber" | "description" | "userId", ExtArgs["result"]["trainingBlock"]>
+  export type TrainingBlockOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"isVisible" | "id" | "blockNumber" | "description" | "userId" | "createdAt", ExtArgs["result"]["trainingBlock"]>
   export type TrainingBlockInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     weeks?: boolean | TrainingBlock$weeksArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -2095,6 +2118,7 @@ export namespace Prisma {
       blockNumber: number
       description: string
       userId: string
+      createdAt: Date
     }, ExtArgs["result"]["trainingBlock"]>
     composites: {}
   }
@@ -2525,6 +2549,7 @@ export namespace Prisma {
     readonly blockNumber: FieldRef<"TrainingBlock", 'Int'>
     readonly description: FieldRef<"TrainingBlock", 'String'>
     readonly userId: FieldRef<"TrainingBlock", 'String'>
+    readonly createdAt: FieldRef<"TrainingBlock", 'DateTime'>
   }
     
 
@@ -6294,6 +6319,7 @@ export namespace Prisma {
     exerciseGroupId: string | null
     recommendedMinReps: number | null
     recommendedMaxReps: number | null
+    measurementType: $Enums.MeasurementType | null
   }
 
   export type ExerciseMaxAggregateOutputType = {
@@ -6302,6 +6328,7 @@ export namespace Prisma {
     exerciseGroupId: string | null
     recommendedMinReps: number | null
     recommendedMaxReps: number | null
+    measurementType: $Enums.MeasurementType | null
   }
 
   export type ExerciseCountAggregateOutputType = {
@@ -6310,6 +6337,7 @@ export namespace Prisma {
     exerciseGroupId: number
     recommendedMinReps: number
     recommendedMaxReps: number
+    measurementType: number
     _all: number
   }
 
@@ -6330,6 +6358,7 @@ export namespace Prisma {
     exerciseGroupId?: true
     recommendedMinReps?: true
     recommendedMaxReps?: true
+    measurementType?: true
   }
 
   export type ExerciseMaxAggregateInputType = {
@@ -6338,6 +6367,7 @@ export namespace Prisma {
     exerciseGroupId?: true
     recommendedMinReps?: true
     recommendedMaxReps?: true
+    measurementType?: true
   }
 
   export type ExerciseCountAggregateInputType = {
@@ -6346,6 +6376,7 @@ export namespace Prisma {
     exerciseGroupId?: true
     recommendedMinReps?: true
     recommendedMaxReps?: true
+    measurementType?: true
     _all?: true
   }
 
@@ -6441,6 +6472,7 @@ export namespace Prisma {
     exerciseGroupId: string
     recommendedMinReps: number | null
     recommendedMaxReps: number | null
+    measurementType: $Enums.MeasurementType
     _count: ExerciseCountAggregateOutputType | null
     _avg: ExerciseAvgAggregateOutputType | null
     _sum: ExerciseSumAggregateOutputType | null
@@ -6468,6 +6500,7 @@ export namespace Prisma {
     exerciseGroupId?: boolean
     recommendedMinReps?: boolean
     recommendedMaxReps?: boolean
+    measurementType?: boolean
     exerciseGroup?: boolean | ExerciseGroupDefaultArgs<ExtArgs>
     dayExercises?: boolean | Exercise$dayExercisesArgs<ExtArgs>
     _count?: boolean | ExerciseCountOutputTypeDefaultArgs<ExtArgs>
@@ -6479,6 +6512,7 @@ export namespace Prisma {
     exerciseGroupId?: boolean
     recommendedMinReps?: boolean
     recommendedMaxReps?: boolean
+    measurementType?: boolean
     exerciseGroup?: boolean | ExerciseGroupDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["exercise"]>
 
@@ -6488,6 +6522,7 @@ export namespace Prisma {
     exerciseGroupId?: boolean
     recommendedMinReps?: boolean
     recommendedMaxReps?: boolean
+    measurementType?: boolean
     exerciseGroup?: boolean | ExerciseGroupDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["exercise"]>
 
@@ -6497,9 +6532,10 @@ export namespace Prisma {
     exerciseGroupId?: boolean
     recommendedMinReps?: boolean
     recommendedMaxReps?: boolean
+    measurementType?: boolean
   }
 
-  export type ExerciseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "exerciseGroupId" | "recommendedMinReps" | "recommendedMaxReps", ExtArgs["result"]["exercise"]>
+  export type ExerciseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "exerciseGroupId" | "recommendedMinReps" | "recommendedMaxReps" | "measurementType", ExtArgs["result"]["exercise"]>
   export type ExerciseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     exerciseGroup?: boolean | ExerciseGroupDefaultArgs<ExtArgs>
     dayExercises?: boolean | Exercise$dayExercisesArgs<ExtArgs>
@@ -6524,6 +6560,7 @@ export namespace Prisma {
       exerciseGroupId: string
       recommendedMinReps: number | null
       recommendedMaxReps: number | null
+      measurementType: $Enums.MeasurementType
     }, ExtArgs["result"]["exercise"]>
     composites: {}
   }
@@ -6954,6 +6991,7 @@ export namespace Prisma {
     readonly exerciseGroupId: FieldRef<"Exercise", 'String'>
     readonly recommendedMinReps: FieldRef<"Exercise", 'Int'>
     readonly recommendedMaxReps: FieldRef<"Exercise", 'Int'>
+    readonly measurementType: FieldRef<"Exercise", 'MeasurementType'>
   }
     
 
@@ -9857,6 +9895,8 @@ export namespace Prisma {
     effectiveRir: number | null
     trainingWeekId: string | null
     isDropset: boolean | null
+    athleteNotes: string | null
+    trainerNotes: string | null
   }
 
   export type DayExerciseSeriesMaxAggregateOutputType = {
@@ -9872,6 +9912,8 @@ export namespace Prisma {
     effectiveRir: number | null
     trainingWeekId: string | null
     isDropset: boolean | null
+    athleteNotes: string | null
+    trainerNotes: string | null
   }
 
   export type DayExerciseSeriesCountAggregateOutputType = {
@@ -9887,6 +9929,8 @@ export namespace Prisma {
     effectiveRir: number
     trainingWeekId: number
     isDropset: number
+    athleteNotes: number
+    trainerNotes: number
     _all: number
   }
 
@@ -9926,6 +9970,8 @@ export namespace Prisma {
     effectiveRir?: true
     trainingWeekId?: true
     isDropset?: true
+    athleteNotes?: true
+    trainerNotes?: true
   }
 
   export type DayExerciseSeriesMaxAggregateInputType = {
@@ -9941,6 +9987,8 @@ export namespace Prisma {
     effectiveRir?: true
     trainingWeekId?: true
     isDropset?: true
+    athleteNotes?: true
+    trainerNotes?: true
   }
 
   export type DayExerciseSeriesCountAggregateInputType = {
@@ -9956,6 +10004,8 @@ export namespace Prisma {
     effectiveRir?: true
     trainingWeekId?: true
     isDropset?: true
+    athleteNotes?: true
+    trainerNotes?: true
     _all?: true
   }
 
@@ -10049,15 +10099,17 @@ export namespace Prisma {
     id: string
     dayExerciseId: string
     seriesNumber: number
-    minReps: number
-    maxReps: number
-    minRir: number
-    maxRir: number
+    minReps: number | null
+    maxReps: number | null
+    minRir: number | null
+    maxRir: number | null
     effectiveReps: number | null
     effectiveWeight: number | null
     effectiveRir: number | null
     trainingWeekId: string
     isDropset: boolean
+    athleteNotes: string | null
+    trainerNotes: string | null
     _count: DayExerciseSeriesCountAggregateOutputType | null
     _avg: DayExerciseSeriesAvgAggregateOutputType | null
     _sum: DayExerciseSeriesSumAggregateOutputType | null
@@ -10092,6 +10144,8 @@ export namespace Prisma {
     effectiveRir?: boolean
     trainingWeekId?: boolean
     isDropset?: boolean
+    athleteNotes?: boolean
+    trainerNotes?: boolean
     dayExercise?: boolean | DayExerciseDefaultArgs<ExtArgs>
     trainingWeek?: boolean | TrainingWeekDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dayExerciseSeries"]>
@@ -10109,6 +10163,8 @@ export namespace Prisma {
     effectiveRir?: boolean
     trainingWeekId?: boolean
     isDropset?: boolean
+    athleteNotes?: boolean
+    trainerNotes?: boolean
     dayExercise?: boolean | DayExerciseDefaultArgs<ExtArgs>
     trainingWeek?: boolean | TrainingWeekDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dayExerciseSeries"]>
@@ -10126,6 +10182,8 @@ export namespace Prisma {
     effectiveRir?: boolean
     trainingWeekId?: boolean
     isDropset?: boolean
+    athleteNotes?: boolean
+    trainerNotes?: boolean
     dayExercise?: boolean | DayExerciseDefaultArgs<ExtArgs>
     trainingWeek?: boolean | TrainingWeekDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dayExerciseSeries"]>
@@ -10143,9 +10201,11 @@ export namespace Prisma {
     effectiveRir?: boolean
     trainingWeekId?: boolean
     isDropset?: boolean
+    athleteNotes?: boolean
+    trainerNotes?: boolean
   }
 
-  export type DayExerciseSeriesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dayExerciseId" | "seriesNumber" | "minReps" | "maxReps" | "minRir" | "maxRir" | "effectiveReps" | "effectiveWeight" | "effectiveRir" | "trainingWeekId" | "isDropset", ExtArgs["result"]["dayExerciseSeries"]>
+  export type DayExerciseSeriesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dayExerciseId" | "seriesNumber" | "minReps" | "maxReps" | "minRir" | "maxRir" | "effectiveReps" | "effectiveWeight" | "effectiveRir" | "trainingWeekId" | "isDropset" | "athleteNotes" | "trainerNotes", ExtArgs["result"]["dayExerciseSeries"]>
   export type DayExerciseSeriesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     dayExercise?: boolean | DayExerciseDefaultArgs<ExtArgs>
     trainingWeek?: boolean | TrainingWeekDefaultArgs<ExtArgs>
@@ -10169,15 +10229,17 @@ export namespace Prisma {
       id: string
       dayExerciseId: string
       seriesNumber: number
-      minReps: number
-      maxReps: number
-      minRir: number
-      maxRir: number
+      minReps: number | null
+      maxReps: number | null
+      minRir: number | null
+      maxRir: number | null
       effectiveReps: number | null
       effectiveWeight: number | null
       effectiveRir: number | null
       trainingWeekId: string
       isDropset: boolean
+      athleteNotes: string | null
+      trainerNotes: string | null
     }, ExtArgs["result"]["dayExerciseSeries"]>
     composites: {}
   }
@@ -10615,6 +10677,8 @@ export namespace Prisma {
     readonly effectiveRir: FieldRef<"DayExerciseSeries", 'Int'>
     readonly trainingWeekId: FieldRef<"DayExerciseSeries", 'String'>
     readonly isDropset: FieldRef<"DayExerciseSeries", 'Boolean'>
+    readonly athleteNotes: FieldRef<"DayExerciseSeries", 'String'>
+    readonly trainerNotes: FieldRef<"DayExerciseSeries", 'String'>
   }
     
 
@@ -12140,7 +12204,8 @@ export namespace Prisma {
     id: 'id',
     blockNumber: 'blockNumber',
     description: 'description',
-    userId: 'userId'
+    userId: 'userId',
+    createdAt: 'createdAt'
   };
 
   export type TrainingBlockScalarFieldEnum = (typeof TrainingBlockScalarFieldEnum)[keyof typeof TrainingBlockScalarFieldEnum]
@@ -12181,7 +12246,8 @@ export namespace Prisma {
     name: 'name',
     exerciseGroupId: 'exerciseGroupId',
     recommendedMinReps: 'recommendedMinReps',
-    recommendedMaxReps: 'recommendedMaxReps'
+    recommendedMaxReps: 'recommendedMaxReps',
+    measurementType: 'measurementType'
   };
 
   export type ExerciseScalarFieldEnum = (typeof ExerciseScalarFieldEnum)[keyof typeof ExerciseScalarFieldEnum]
@@ -12233,7 +12299,9 @@ export namespace Prisma {
     effectiveWeight: 'effectiveWeight',
     effectiveRir: 'effectiveRir',
     trainingWeekId: 'trainingWeekId',
-    isDropset: 'isDropset'
+    isDropset: 'isDropset',
+    athleteNotes: 'athleteNotes',
+    trainerNotes: 'trainerNotes'
   };
 
   export type DayExerciseSeriesScalarFieldEnum = (typeof DayExerciseSeriesScalarFieldEnum)[keyof typeof DayExerciseSeriesScalarFieldEnum]
@@ -12329,6 +12397,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'MeasurementType'
+   */
+  export type EnumMeasurementTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MeasurementType'>
+    
+
+
+  /**
+   * Reference to a field of type 'MeasurementType[]'
+   */
+  export type ListEnumMeasurementTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MeasurementType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -12368,6 +12450,7 @@ export namespace Prisma {
     blockNumber?: IntFilter<"TrainingBlock"> | number
     description?: StringFilter<"TrainingBlock"> | string
     userId?: StringFilter<"TrainingBlock"> | string
+    createdAt?: DateTimeFilter<"TrainingBlock"> | Date | string
     weeks?: TrainingWeekListRelationFilter
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -12378,6 +12461,7 @@ export namespace Prisma {
     blockNumber?: SortOrder
     description?: SortOrder
     userId?: SortOrder
+    createdAt?: SortOrder
     weeks?: TrainingWeekOrderByRelationAggregateInput
     user?: UserOrderByWithRelationInput
   }
@@ -12391,6 +12475,7 @@ export namespace Prisma {
     blockNumber?: IntFilter<"TrainingBlock"> | number
     description?: StringFilter<"TrainingBlock"> | string
     userId?: StringFilter<"TrainingBlock"> | string
+    createdAt?: DateTimeFilter<"TrainingBlock"> | Date | string
     weeks?: TrainingWeekListRelationFilter
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
@@ -12401,6 +12486,7 @@ export namespace Prisma {
     blockNumber?: SortOrder
     description?: SortOrder
     userId?: SortOrder
+    createdAt?: SortOrder
     _count?: TrainingBlockCountOrderByAggregateInput
     _avg?: TrainingBlockAvgOrderByAggregateInput
     _max?: TrainingBlockMaxOrderByAggregateInput
@@ -12417,6 +12503,7 @@ export namespace Prisma {
     blockNumber?: IntWithAggregatesFilter<"TrainingBlock"> | number
     description?: StringWithAggregatesFilter<"TrainingBlock"> | string
     userId?: StringWithAggregatesFilter<"TrainingBlock"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"TrainingBlock"> | Date | string
   }
 
   export type TrainingWeekWhereInput = {
@@ -12591,6 +12678,7 @@ export namespace Prisma {
     exerciseGroupId?: StringFilter<"Exercise"> | string
     recommendedMinReps?: IntNullableFilter<"Exercise"> | number | null
     recommendedMaxReps?: IntNullableFilter<"Exercise"> | number | null
+    measurementType?: EnumMeasurementTypeFilter<"Exercise"> | $Enums.MeasurementType
     exerciseGroup?: XOR<ExerciseGroupScalarRelationFilter, ExerciseGroupWhereInput>
     dayExercises?: DayExerciseListRelationFilter
   }
@@ -12601,6 +12689,7 @@ export namespace Prisma {
     exerciseGroupId?: SortOrder
     recommendedMinReps?: SortOrderInput | SortOrder
     recommendedMaxReps?: SortOrderInput | SortOrder
+    measurementType?: SortOrder
     exerciseGroup?: ExerciseGroupOrderByWithRelationInput
     dayExercises?: DayExerciseOrderByRelationAggregateInput
   }
@@ -12614,6 +12703,7 @@ export namespace Prisma {
     exerciseGroupId?: StringFilter<"Exercise"> | string
     recommendedMinReps?: IntNullableFilter<"Exercise"> | number | null
     recommendedMaxReps?: IntNullableFilter<"Exercise"> | number | null
+    measurementType?: EnumMeasurementTypeFilter<"Exercise"> | $Enums.MeasurementType
     exerciseGroup?: XOR<ExerciseGroupScalarRelationFilter, ExerciseGroupWhereInput>
     dayExercises?: DayExerciseListRelationFilter
   }, "id" | "name">
@@ -12624,6 +12714,7 @@ export namespace Prisma {
     exerciseGroupId?: SortOrder
     recommendedMinReps?: SortOrderInput | SortOrder
     recommendedMaxReps?: SortOrderInput | SortOrder
+    measurementType?: SortOrder
     _count?: ExerciseCountOrderByAggregateInput
     _avg?: ExerciseAvgOrderByAggregateInput
     _max?: ExerciseMaxOrderByAggregateInput
@@ -12640,6 +12731,7 @@ export namespace Prisma {
     exerciseGroupId?: StringWithAggregatesFilter<"Exercise"> | string
     recommendedMinReps?: IntNullableWithAggregatesFilter<"Exercise"> | number | null
     recommendedMaxReps?: IntNullableWithAggregatesFilter<"Exercise"> | number | null
+    measurementType?: EnumMeasurementTypeWithAggregatesFilter<"Exercise"> | $Enums.MeasurementType
   }
 
   export type UserWhereInput = {
@@ -12832,15 +12924,17 @@ export namespace Prisma {
     id?: StringFilter<"DayExerciseSeries"> | string
     dayExerciseId?: StringFilter<"DayExerciseSeries"> | string
     seriesNumber?: IntFilter<"DayExerciseSeries"> | number
-    minReps?: IntFilter<"DayExerciseSeries"> | number
-    maxReps?: IntFilter<"DayExerciseSeries"> | number
-    minRir?: IntFilter<"DayExerciseSeries"> | number
-    maxRir?: IntFilter<"DayExerciseSeries"> | number
+    minReps?: IntNullableFilter<"DayExerciseSeries"> | number | null
+    maxReps?: IntNullableFilter<"DayExerciseSeries"> | number | null
+    minRir?: IntNullableFilter<"DayExerciseSeries"> | number | null
+    maxRir?: IntNullableFilter<"DayExerciseSeries"> | number | null
     effectiveReps?: IntNullableFilter<"DayExerciseSeries"> | number | null
     effectiveWeight?: FloatNullableFilter<"DayExerciseSeries"> | number | null
     effectiveRir?: IntNullableFilter<"DayExerciseSeries"> | number | null
     trainingWeekId?: StringFilter<"DayExerciseSeries"> | string
     isDropset?: BoolFilter<"DayExerciseSeries"> | boolean
+    athleteNotes?: StringNullableFilter<"DayExerciseSeries"> | string | null
+    trainerNotes?: StringNullableFilter<"DayExerciseSeries"> | string | null
     dayExercise?: XOR<DayExerciseScalarRelationFilter, DayExerciseWhereInput>
     trainingWeek?: XOR<TrainingWeekScalarRelationFilter, TrainingWeekWhereInput>
   }
@@ -12849,15 +12943,17 @@ export namespace Prisma {
     id?: SortOrder
     dayExerciseId?: SortOrder
     seriesNumber?: SortOrder
-    minReps?: SortOrder
-    maxReps?: SortOrder
-    minRir?: SortOrder
-    maxRir?: SortOrder
+    minReps?: SortOrderInput | SortOrder
+    maxReps?: SortOrderInput | SortOrder
+    minRir?: SortOrderInput | SortOrder
+    maxRir?: SortOrderInput | SortOrder
     effectiveReps?: SortOrderInput | SortOrder
     effectiveWeight?: SortOrderInput | SortOrder
     effectiveRir?: SortOrderInput | SortOrder
     trainingWeekId?: SortOrder
     isDropset?: SortOrder
+    athleteNotes?: SortOrderInput | SortOrder
+    trainerNotes?: SortOrderInput | SortOrder
     dayExercise?: DayExerciseOrderByWithRelationInput
     trainingWeek?: TrainingWeekOrderByWithRelationInput
   }
@@ -12869,15 +12965,17 @@ export namespace Prisma {
     NOT?: DayExerciseSeriesWhereInput | DayExerciseSeriesWhereInput[]
     dayExerciseId?: StringFilter<"DayExerciseSeries"> | string
     seriesNumber?: IntFilter<"DayExerciseSeries"> | number
-    minReps?: IntFilter<"DayExerciseSeries"> | number
-    maxReps?: IntFilter<"DayExerciseSeries"> | number
-    minRir?: IntFilter<"DayExerciseSeries"> | number
-    maxRir?: IntFilter<"DayExerciseSeries"> | number
+    minReps?: IntNullableFilter<"DayExerciseSeries"> | number | null
+    maxReps?: IntNullableFilter<"DayExerciseSeries"> | number | null
+    minRir?: IntNullableFilter<"DayExerciseSeries"> | number | null
+    maxRir?: IntNullableFilter<"DayExerciseSeries"> | number | null
     effectiveReps?: IntNullableFilter<"DayExerciseSeries"> | number | null
     effectiveWeight?: FloatNullableFilter<"DayExerciseSeries"> | number | null
     effectiveRir?: IntNullableFilter<"DayExerciseSeries"> | number | null
     trainingWeekId?: StringFilter<"DayExerciseSeries"> | string
     isDropset?: BoolFilter<"DayExerciseSeries"> | boolean
+    athleteNotes?: StringNullableFilter<"DayExerciseSeries"> | string | null
+    trainerNotes?: StringNullableFilter<"DayExerciseSeries"> | string | null
     dayExercise?: XOR<DayExerciseScalarRelationFilter, DayExerciseWhereInput>
     trainingWeek?: XOR<TrainingWeekScalarRelationFilter, TrainingWeekWhereInput>
   }, "id">
@@ -12886,15 +12984,17 @@ export namespace Prisma {
     id?: SortOrder
     dayExerciseId?: SortOrder
     seriesNumber?: SortOrder
-    minReps?: SortOrder
-    maxReps?: SortOrder
-    minRir?: SortOrder
-    maxRir?: SortOrder
+    minReps?: SortOrderInput | SortOrder
+    maxReps?: SortOrderInput | SortOrder
+    minRir?: SortOrderInput | SortOrder
+    maxRir?: SortOrderInput | SortOrder
     effectiveReps?: SortOrderInput | SortOrder
     effectiveWeight?: SortOrderInput | SortOrder
     effectiveRir?: SortOrderInput | SortOrder
     trainingWeekId?: SortOrder
     isDropset?: SortOrder
+    athleteNotes?: SortOrderInput | SortOrder
+    trainerNotes?: SortOrderInput | SortOrder
     _count?: DayExerciseSeriesCountOrderByAggregateInput
     _avg?: DayExerciseSeriesAvgOrderByAggregateInput
     _max?: DayExerciseSeriesMaxOrderByAggregateInput
@@ -12909,15 +13009,17 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"DayExerciseSeries"> | string
     dayExerciseId?: StringWithAggregatesFilter<"DayExerciseSeries"> | string
     seriesNumber?: IntWithAggregatesFilter<"DayExerciseSeries"> | number
-    minReps?: IntWithAggregatesFilter<"DayExerciseSeries"> | number
-    maxReps?: IntWithAggregatesFilter<"DayExerciseSeries"> | number
-    minRir?: IntWithAggregatesFilter<"DayExerciseSeries"> | number
-    maxRir?: IntWithAggregatesFilter<"DayExerciseSeries"> | number
+    minReps?: IntNullableWithAggregatesFilter<"DayExerciseSeries"> | number | null
+    maxReps?: IntNullableWithAggregatesFilter<"DayExerciseSeries"> | number | null
+    minRir?: IntNullableWithAggregatesFilter<"DayExerciseSeries"> | number | null
+    maxRir?: IntNullableWithAggregatesFilter<"DayExerciseSeries"> | number | null
     effectiveReps?: IntNullableWithAggregatesFilter<"DayExerciseSeries"> | number | null
     effectiveWeight?: FloatNullableWithAggregatesFilter<"DayExerciseSeries"> | number | null
     effectiveRir?: IntNullableWithAggregatesFilter<"DayExerciseSeries"> | number | null
     trainingWeekId?: StringWithAggregatesFilter<"DayExerciseSeries"> | string
     isDropset?: BoolWithAggregatesFilter<"DayExerciseSeries"> | boolean
+    athleteNotes?: StringNullableWithAggregatesFilter<"DayExerciseSeries"> | string | null
+    trainerNotes?: StringNullableWithAggregatesFilter<"DayExerciseSeries"> | string | null
   }
 
   export type PaymentWhereInput = {
@@ -12982,6 +13084,7 @@ export namespace Prisma {
     id?: string
     blockNumber: number
     description: string
+    createdAt?: Date | string
     weeks?: TrainingWeekCreateNestedManyWithoutBlockInput
     user: UserCreateNestedOneWithoutBlocksInput
   }
@@ -12992,6 +13095,7 @@ export namespace Prisma {
     blockNumber: number
     description: string
     userId: string
+    createdAt?: Date | string
     weeks?: TrainingWeekUncheckedCreateNestedManyWithoutBlockInput
   }
 
@@ -13000,6 +13104,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     blockNumber?: IntFieldUpdateOperationsInput | number
     description?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     weeks?: TrainingWeekUpdateManyWithoutBlockNestedInput
     user?: UserUpdateOneRequiredWithoutBlocksNestedInput
   }
@@ -13010,6 +13115,7 @@ export namespace Prisma {
     blockNumber?: IntFieldUpdateOperationsInput | number
     description?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     weeks?: TrainingWeekUncheckedUpdateManyWithoutBlockNestedInput
   }
 
@@ -13019,6 +13125,7 @@ export namespace Prisma {
     blockNumber: number
     description: string
     userId: string
+    createdAt?: Date | string
   }
 
   export type TrainingBlockUpdateManyMutationInput = {
@@ -13026,6 +13133,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     blockNumber?: IntFieldUpdateOperationsInput | number
     description?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TrainingBlockUncheckedUpdateManyInput = {
@@ -13034,6 +13142,7 @@ export namespace Prisma {
     blockNumber?: IntFieldUpdateOperationsInput | number
     description?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TrainingWeekCreateInput = {
@@ -13202,6 +13311,7 @@ export namespace Prisma {
     name: string
     recommendedMinReps?: number | null
     recommendedMaxReps?: number | null
+    measurementType?: $Enums.MeasurementType
     exerciseGroup: ExerciseGroupCreateNestedOneWithoutExercisesInput
     dayExercises?: DayExerciseCreateNestedManyWithoutExerciseInput
   }
@@ -13212,6 +13322,7 @@ export namespace Prisma {
     exerciseGroupId: string
     recommendedMinReps?: number | null
     recommendedMaxReps?: number | null
+    measurementType?: $Enums.MeasurementType
     dayExercises?: DayExerciseUncheckedCreateNestedManyWithoutExerciseInput
   }
 
@@ -13220,6 +13331,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     recommendedMinReps?: NullableIntFieldUpdateOperationsInput | number | null
     recommendedMaxReps?: NullableIntFieldUpdateOperationsInput | number | null
+    measurementType?: EnumMeasurementTypeFieldUpdateOperationsInput | $Enums.MeasurementType
     exerciseGroup?: ExerciseGroupUpdateOneRequiredWithoutExercisesNestedInput
     dayExercises?: DayExerciseUpdateManyWithoutExerciseNestedInput
   }
@@ -13230,6 +13342,7 @@ export namespace Prisma {
     exerciseGroupId?: StringFieldUpdateOperationsInput | string
     recommendedMinReps?: NullableIntFieldUpdateOperationsInput | number | null
     recommendedMaxReps?: NullableIntFieldUpdateOperationsInput | number | null
+    measurementType?: EnumMeasurementTypeFieldUpdateOperationsInput | $Enums.MeasurementType
     dayExercises?: DayExerciseUncheckedUpdateManyWithoutExerciseNestedInput
   }
 
@@ -13239,6 +13352,7 @@ export namespace Prisma {
     exerciseGroupId: string
     recommendedMinReps?: number | null
     recommendedMaxReps?: number | null
+    measurementType?: $Enums.MeasurementType
   }
 
   export type ExerciseUpdateManyMutationInput = {
@@ -13246,6 +13360,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     recommendedMinReps?: NullableIntFieldUpdateOperationsInput | number | null
     recommendedMaxReps?: NullableIntFieldUpdateOperationsInput | number | null
+    measurementType?: EnumMeasurementTypeFieldUpdateOperationsInput | $Enums.MeasurementType
   }
 
   export type ExerciseUncheckedUpdateManyInput = {
@@ -13254,6 +13369,7 @@ export namespace Prisma {
     exerciseGroupId?: StringFieldUpdateOperationsInput | string
     recommendedMinReps?: NullableIntFieldUpdateOperationsInput | number | null
     recommendedMaxReps?: NullableIntFieldUpdateOperationsInput | number | null
+    measurementType?: EnumMeasurementTypeFieldUpdateOperationsInput | $Enums.MeasurementType
   }
 
   export type UserCreateInput = {
@@ -13465,14 +13581,16 @@ export namespace Prisma {
   export type DayExerciseSeriesCreateInput = {
     id?: string
     seriesNumber: number
-    minReps: number
-    maxReps: number
-    minRir: number
-    maxRir: number
+    minReps?: number | null
+    maxReps?: number | null
+    minRir?: number | null
+    maxRir?: number | null
     effectiveReps?: number | null
     effectiveWeight?: number | null
     effectiveRir?: number | null
     isDropset?: boolean
+    athleteNotes?: string | null
+    trainerNotes?: string | null
     dayExercise: DayExerciseCreateNestedOneWithoutSeriesInput
     trainingWeek: TrainingWeekCreateNestedOneWithoutDayExerciseSeriesInput
   }
@@ -13481,28 +13599,32 @@ export namespace Prisma {
     id?: string
     dayExerciseId: string
     seriesNumber: number
-    minReps: number
-    maxReps: number
-    minRir: number
-    maxRir: number
+    minReps?: number | null
+    maxReps?: number | null
+    minRir?: number | null
+    maxRir?: number | null
     effectiveReps?: number | null
     effectiveWeight?: number | null
     effectiveRir?: number | null
     trainingWeekId: string
     isDropset?: boolean
+    athleteNotes?: string | null
+    trainerNotes?: string | null
   }
 
   export type DayExerciseSeriesUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     seriesNumber?: IntFieldUpdateOperationsInput | number
-    minReps?: IntFieldUpdateOperationsInput | number
-    maxReps?: IntFieldUpdateOperationsInput | number
-    minRir?: IntFieldUpdateOperationsInput | number
-    maxRir?: IntFieldUpdateOperationsInput | number
+    minReps?: NullableIntFieldUpdateOperationsInput | number | null
+    maxReps?: NullableIntFieldUpdateOperationsInput | number | null
+    minRir?: NullableIntFieldUpdateOperationsInput | number | null
+    maxRir?: NullableIntFieldUpdateOperationsInput | number | null
     effectiveReps?: NullableIntFieldUpdateOperationsInput | number | null
     effectiveWeight?: NullableFloatFieldUpdateOperationsInput | number | null
     effectiveRir?: NullableIntFieldUpdateOperationsInput | number | null
     isDropset?: BoolFieldUpdateOperationsInput | boolean
+    athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     dayExercise?: DayExerciseUpdateOneRequiredWithoutSeriesNestedInput
     trainingWeek?: TrainingWeekUpdateOneRequiredWithoutDayExerciseSeriesNestedInput
   }
@@ -13511,58 +13633,66 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     dayExerciseId?: StringFieldUpdateOperationsInput | string
     seriesNumber?: IntFieldUpdateOperationsInput | number
-    minReps?: IntFieldUpdateOperationsInput | number
-    maxReps?: IntFieldUpdateOperationsInput | number
-    minRir?: IntFieldUpdateOperationsInput | number
-    maxRir?: IntFieldUpdateOperationsInput | number
+    minReps?: NullableIntFieldUpdateOperationsInput | number | null
+    maxReps?: NullableIntFieldUpdateOperationsInput | number | null
+    minRir?: NullableIntFieldUpdateOperationsInput | number | null
+    maxRir?: NullableIntFieldUpdateOperationsInput | number | null
     effectiveReps?: NullableIntFieldUpdateOperationsInput | number | null
     effectiveWeight?: NullableFloatFieldUpdateOperationsInput | number | null
     effectiveRir?: NullableIntFieldUpdateOperationsInput | number | null
     trainingWeekId?: StringFieldUpdateOperationsInput | string
     isDropset?: BoolFieldUpdateOperationsInput | boolean
+    athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DayExerciseSeriesCreateManyInput = {
     id?: string
     dayExerciseId: string
     seriesNumber: number
-    minReps: number
-    maxReps: number
-    minRir: number
-    maxRir: number
+    minReps?: number | null
+    maxReps?: number | null
+    minRir?: number | null
+    maxRir?: number | null
     effectiveReps?: number | null
     effectiveWeight?: number | null
     effectiveRir?: number | null
     trainingWeekId: string
     isDropset?: boolean
+    athleteNotes?: string | null
+    trainerNotes?: string | null
   }
 
   export type DayExerciseSeriesUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     seriesNumber?: IntFieldUpdateOperationsInput | number
-    minReps?: IntFieldUpdateOperationsInput | number
-    maxReps?: IntFieldUpdateOperationsInput | number
-    minRir?: IntFieldUpdateOperationsInput | number
-    maxRir?: IntFieldUpdateOperationsInput | number
+    minReps?: NullableIntFieldUpdateOperationsInput | number | null
+    maxReps?: NullableIntFieldUpdateOperationsInput | number | null
+    minRir?: NullableIntFieldUpdateOperationsInput | number | null
+    maxRir?: NullableIntFieldUpdateOperationsInput | number | null
     effectiveReps?: NullableIntFieldUpdateOperationsInput | number | null
     effectiveWeight?: NullableFloatFieldUpdateOperationsInput | number | null
     effectiveRir?: NullableIntFieldUpdateOperationsInput | number | null
     isDropset?: BoolFieldUpdateOperationsInput | boolean
+    athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DayExerciseSeriesUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     dayExerciseId?: StringFieldUpdateOperationsInput | string
     seriesNumber?: IntFieldUpdateOperationsInput | number
-    minReps?: IntFieldUpdateOperationsInput | number
-    maxReps?: IntFieldUpdateOperationsInput | number
-    minRir?: IntFieldUpdateOperationsInput | number
-    maxRir?: IntFieldUpdateOperationsInput | number
+    minReps?: NullableIntFieldUpdateOperationsInput | number | null
+    maxReps?: NullableIntFieldUpdateOperationsInput | number | null
+    minRir?: NullableIntFieldUpdateOperationsInput | number | null
+    maxRir?: NullableIntFieldUpdateOperationsInput | number | null
     effectiveReps?: NullableIntFieldUpdateOperationsInput | number | null
     effectiveWeight?: NullableFloatFieldUpdateOperationsInput | number | null
     effectiveRir?: NullableIntFieldUpdateOperationsInput | number | null
     trainingWeekId?: StringFieldUpdateOperationsInput | string
     isDropset?: BoolFieldUpdateOperationsInput | boolean
+    athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PaymentCreateInput = {
@@ -13651,6 +13781,17 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
   export type TrainingWeekListRelationFilter = {
     every?: TrainingWeekWhereInput
     some?: TrainingWeekWhereInput
@@ -13672,6 +13813,7 @@ export namespace Prisma {
     blockNumber?: SortOrder
     description?: SortOrder
     userId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type TrainingBlockAvgOrderByAggregateInput = {
@@ -13684,6 +13826,7 @@ export namespace Prisma {
     blockNumber?: SortOrder
     description?: SortOrder
     userId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type TrainingBlockMinOrderByAggregateInput = {
@@ -13692,6 +13835,7 @@ export namespace Prisma {
     blockNumber?: SortOrder
     description?: SortOrder
     userId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type TrainingBlockSumOrderByAggregateInput = {
@@ -13740,7 +13884,7 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
-  export type DateTimeFilter<$PrismaModel = never> = {
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
     notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -13748,7 +13892,10 @@ export namespace Prisma {
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type TrainingBlockScalarRelationFilter = {
@@ -13806,20 +13953,6 @@ export namespace Prisma {
 
   export type TrainingWeekSumOrderByAggregateInput = {
     weekNumber?: SortOrder
-  }
-
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type TrainingWeekScalarRelationFilter = {
@@ -13905,6 +14038,13 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type EnumMeasurementTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.MeasurementType | EnumMeasurementTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MeasurementType[] | ListEnumMeasurementTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MeasurementType[] | ListEnumMeasurementTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMeasurementTypeFilter<$PrismaModel> | $Enums.MeasurementType
+  }
+
   export type ExerciseGroupScalarRelationFilter = {
     is?: ExerciseGroupWhereInput
     isNot?: ExerciseGroupWhereInput
@@ -13921,6 +14061,7 @@ export namespace Prisma {
     exerciseGroupId?: SortOrder
     recommendedMinReps?: SortOrder
     recommendedMaxReps?: SortOrder
+    measurementType?: SortOrder
   }
 
   export type ExerciseAvgOrderByAggregateInput = {
@@ -13934,6 +14075,7 @@ export namespace Prisma {
     exerciseGroupId?: SortOrder
     recommendedMinReps?: SortOrder
     recommendedMaxReps?: SortOrder
+    measurementType?: SortOrder
   }
 
   export type ExerciseMinOrderByAggregateInput = {
@@ -13942,6 +14084,7 @@ export namespace Prisma {
     exerciseGroupId?: SortOrder
     recommendedMinReps?: SortOrder
     recommendedMaxReps?: SortOrder
+    measurementType?: SortOrder
   }
 
   export type ExerciseSumOrderByAggregateInput = {
@@ -13963,6 +14106,16 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type EnumMeasurementTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MeasurementType | EnumMeasurementTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MeasurementType[] | ListEnumMeasurementTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MeasurementType[] | ListEnumMeasurementTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMeasurementTypeWithAggregatesFilter<$PrismaModel> | $Enums.MeasurementType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMeasurementTypeFilter<$PrismaModel>
+    _max?: NestedEnumMeasurementTypeFilter<$PrismaModel>
   }
 
   export type StringNullableFilter<$PrismaModel = never> = {
@@ -14215,6 +14368,8 @@ export namespace Prisma {
     effectiveRir?: SortOrder
     trainingWeekId?: SortOrder
     isDropset?: SortOrder
+    athleteNotes?: SortOrder
+    trainerNotes?: SortOrder
   }
 
   export type DayExerciseSeriesAvgOrderByAggregateInput = {
@@ -14241,6 +14396,8 @@ export namespace Prisma {
     effectiveRir?: SortOrder
     trainingWeekId?: SortOrder
     isDropset?: SortOrder
+    athleteNotes?: SortOrder
+    trainerNotes?: SortOrder
   }
 
   export type DayExerciseSeriesMinOrderByAggregateInput = {
@@ -14256,6 +14413,8 @@ export namespace Prisma {
     effectiveRir?: SortOrder
     trainingWeekId?: SortOrder
     isDropset?: SortOrder
+    athleteNotes?: SortOrder
+    trainerNotes?: SortOrder
   }
 
   export type DayExerciseSeriesSumOrderByAggregateInput = {
@@ -14364,6 +14523,10 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
+  }
+
   export type TrainingWeekUpdateManyWithoutBlockNestedInput = {
     create?: XOR<TrainingWeekCreateWithoutBlockInput, TrainingWeekUncheckedCreateWithoutBlockInput> | TrainingWeekCreateWithoutBlockInput[] | TrainingWeekUncheckedCreateWithoutBlockInput[]
     connectOrCreate?: TrainingWeekCreateOrConnectWithoutBlockInput | TrainingWeekCreateOrConnectWithoutBlockInput[]
@@ -14432,10 +14595,6 @@ export namespace Prisma {
     connectOrCreate?: DayExerciseSeriesCreateOrConnectWithoutTrainingWeekInput | DayExerciseSeriesCreateOrConnectWithoutTrainingWeekInput[]
     createMany?: DayExerciseSeriesCreateManyTrainingWeekInputEnvelope
     connect?: DayExerciseSeriesWhereUniqueInput | DayExerciseSeriesWhereUniqueInput[]
-  }
-
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
   }
 
   export type TrainingBlockUpdateOneRequiredWithoutWeeksNestedInput = {
@@ -14626,6 +14785,10 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type EnumMeasurementTypeFieldUpdateOperationsInput = {
+    set?: $Enums.MeasurementType
   }
 
   export type ExerciseGroupUpdateOneRequiredWithoutExercisesNestedInput = {
@@ -14918,6 +15081,17 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type NestedDateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
@@ -14970,17 +15144,6 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
-  export type NestedDateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -15004,6 +15167,13 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedEnumMeasurementTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.MeasurementType | EnumMeasurementTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MeasurementType[] | ListEnumMeasurementTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MeasurementType[] | ListEnumMeasurementTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMeasurementTypeFilter<$PrismaModel> | $Enums.MeasurementType
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -15031,6 +15201,16 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedEnumMeasurementTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MeasurementType | EnumMeasurementTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MeasurementType[] | ListEnumMeasurementTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MeasurementType[] | ListEnumMeasurementTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMeasurementTypeWithAggregatesFilter<$PrismaModel> | $Enums.MeasurementType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMeasurementTypeFilter<$PrismaModel>
+    _max?: NestedEnumMeasurementTypeFilter<$PrismaModel>
   }
 
   export type NestedStringNullableFilter<$PrismaModel = never> = {
@@ -15290,6 +15470,7 @@ export namespace Prisma {
     id?: string
     blockNumber: number
     description: string
+    createdAt?: Date | string
     user: UserCreateNestedOneWithoutBlocksInput
   }
 
@@ -15299,6 +15480,7 @@ export namespace Prisma {
     blockNumber: number
     description: string
     userId: string
+    createdAt?: Date | string
   }
 
   export type TrainingBlockCreateOrConnectWithoutWeeksInput = {
@@ -15335,14 +15517,16 @@ export namespace Prisma {
   export type DayExerciseSeriesCreateWithoutTrainingWeekInput = {
     id?: string
     seriesNumber: number
-    minReps: number
-    maxReps: number
-    minRir: number
-    maxRir: number
+    minReps?: number | null
+    maxReps?: number | null
+    minRir?: number | null
+    maxRir?: number | null
     effectiveReps?: number | null
     effectiveWeight?: number | null
     effectiveRir?: number | null
     isDropset?: boolean
+    athleteNotes?: string | null
+    trainerNotes?: string | null
     dayExercise: DayExerciseCreateNestedOneWithoutSeriesInput
   }
 
@@ -15350,14 +15534,16 @@ export namespace Prisma {
     id?: string
     dayExerciseId: string
     seriesNumber: number
-    minReps: number
-    maxReps: number
-    minRir: number
-    maxRir: number
+    minReps?: number | null
+    maxReps?: number | null
+    minRir?: number | null
+    maxRir?: number | null
     effectiveReps?: number | null
     effectiveWeight?: number | null
     effectiveRir?: number | null
     isDropset?: boolean
+    athleteNotes?: string | null
+    trainerNotes?: string | null
   }
 
   export type DayExerciseSeriesCreateOrConnectWithoutTrainingWeekInput = {
@@ -15386,6 +15572,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     blockNumber?: IntFieldUpdateOperationsInput | number
     description?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutBlocksNestedInput
   }
 
@@ -15395,6 +15582,7 @@ export namespace Prisma {
     blockNumber?: IntFieldUpdateOperationsInput | number
     description?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TrainingDayUpsertWithWhereUniqueWithoutWeekInput = {
@@ -15447,15 +15635,17 @@ export namespace Prisma {
     id?: StringFilter<"DayExerciseSeries"> | string
     dayExerciseId?: StringFilter<"DayExerciseSeries"> | string
     seriesNumber?: IntFilter<"DayExerciseSeries"> | number
-    minReps?: IntFilter<"DayExerciseSeries"> | number
-    maxReps?: IntFilter<"DayExerciseSeries"> | number
-    minRir?: IntFilter<"DayExerciseSeries"> | number
-    maxRir?: IntFilter<"DayExerciseSeries"> | number
+    minReps?: IntNullableFilter<"DayExerciseSeries"> | number | null
+    maxReps?: IntNullableFilter<"DayExerciseSeries"> | number | null
+    minRir?: IntNullableFilter<"DayExerciseSeries"> | number | null
+    maxRir?: IntNullableFilter<"DayExerciseSeries"> | number | null
     effectiveReps?: IntNullableFilter<"DayExerciseSeries"> | number | null
     effectiveWeight?: FloatNullableFilter<"DayExerciseSeries"> | number | null
     effectiveRir?: IntNullableFilter<"DayExerciseSeries"> | number | null
     trainingWeekId?: StringFilter<"DayExerciseSeries"> | string
     isDropset?: BoolFilter<"DayExerciseSeries"> | boolean
+    athleteNotes?: StringNullableFilter<"DayExerciseSeries"> | string | null
+    trainerNotes?: StringNullableFilter<"DayExerciseSeries"> | string | null
   }
 
   export type TrainingWeekCreateWithoutTrainingDaysInput = {
@@ -15574,6 +15764,7 @@ export namespace Prisma {
     name: string
     recommendedMinReps?: number | null
     recommendedMaxReps?: number | null
+    measurementType?: $Enums.MeasurementType
     dayExercises?: DayExerciseCreateNestedManyWithoutExerciseInput
   }
 
@@ -15582,6 +15773,7 @@ export namespace Prisma {
     name: string
     recommendedMinReps?: number | null
     recommendedMaxReps?: number | null
+    measurementType?: $Enums.MeasurementType
     dayExercises?: DayExerciseUncheckedCreateNestedManyWithoutExerciseInput
   }
 
@@ -15620,6 +15812,7 @@ export namespace Prisma {
     exerciseGroupId?: StringFilter<"Exercise"> | string
     recommendedMinReps?: IntNullableFilter<"Exercise"> | number | null
     recommendedMaxReps?: IntNullableFilter<"Exercise"> | number | null
+    measurementType?: EnumMeasurementTypeFilter<"Exercise"> | $Enums.MeasurementType
   }
 
   export type ExerciseGroupCreateWithoutExercisesInput = {
@@ -15709,6 +15902,7 @@ export namespace Prisma {
     id?: string
     blockNumber: number
     description: string
+    createdAt?: Date | string
     weeks?: TrainingWeekCreateNestedManyWithoutBlockInput
   }
 
@@ -15717,6 +15911,7 @@ export namespace Prisma {
     id?: string
     blockNumber: number
     description: string
+    createdAt?: Date | string
     weeks?: TrainingWeekUncheckedCreateNestedManyWithoutBlockInput
   }
 
@@ -15779,6 +15974,7 @@ export namespace Prisma {
     blockNumber?: IntFilter<"TrainingBlock"> | number
     description?: StringFilter<"TrainingBlock"> | string
     userId?: StringFilter<"TrainingBlock"> | string
+    createdAt?: DateTimeFilter<"TrainingBlock"> | Date | string
   }
 
   export type PaymentUpsertWithWhereUniqueWithoutUserInput = {
@@ -15834,6 +16030,7 @@ export namespace Prisma {
     name: string
     recommendedMinReps?: number | null
     recommendedMaxReps?: number | null
+    measurementType?: $Enums.MeasurementType
     exerciseGroup: ExerciseGroupCreateNestedOneWithoutExercisesInput
   }
 
@@ -15843,6 +16040,7 @@ export namespace Prisma {
     exerciseGroupId: string
     recommendedMinReps?: number | null
     recommendedMaxReps?: number | null
+    measurementType?: $Enums.MeasurementType
   }
 
   export type ExerciseCreateOrConnectWithoutDayExercisesInput = {
@@ -15853,29 +16051,33 @@ export namespace Prisma {
   export type DayExerciseSeriesCreateWithoutDayExerciseInput = {
     id?: string
     seriesNumber: number
-    minReps: number
-    maxReps: number
-    minRir: number
-    maxRir: number
+    minReps?: number | null
+    maxReps?: number | null
+    minRir?: number | null
+    maxRir?: number | null
     effectiveReps?: number | null
     effectiveWeight?: number | null
     effectiveRir?: number | null
     isDropset?: boolean
+    athleteNotes?: string | null
+    trainerNotes?: string | null
     trainingWeek: TrainingWeekCreateNestedOneWithoutDayExerciseSeriesInput
   }
 
   export type DayExerciseSeriesUncheckedCreateWithoutDayExerciseInput = {
     id?: string
     seriesNumber: number
-    minReps: number
-    maxReps: number
-    minRir: number
-    maxRir: number
+    minReps?: number | null
+    maxReps?: number | null
+    minRir?: number | null
+    maxRir?: number | null
     effectiveReps?: number | null
     effectiveWeight?: number | null
     effectiveRir?: number | null
     trainingWeekId: string
     isDropset?: boolean
+    athleteNotes?: string | null
+    trainerNotes?: string | null
   }
 
   export type DayExerciseSeriesCreateOrConnectWithoutDayExerciseInput = {
@@ -15931,6 +16133,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     recommendedMinReps?: NullableIntFieldUpdateOperationsInput | number | null
     recommendedMaxReps?: NullableIntFieldUpdateOperationsInput | number | null
+    measurementType?: EnumMeasurementTypeFieldUpdateOperationsInput | $Enums.MeasurementType
     exerciseGroup?: ExerciseGroupUpdateOneRequiredWithoutExercisesNestedInput
   }
 
@@ -15940,6 +16143,7 @@ export namespace Prisma {
     exerciseGroupId?: StringFieldUpdateOperationsInput | string
     recommendedMinReps?: NullableIntFieldUpdateOperationsInput | number | null
     recommendedMaxReps?: NullableIntFieldUpdateOperationsInput | number | null
+    measurementType?: EnumMeasurementTypeFieldUpdateOperationsInput | $Enums.MeasurementType
   }
 
   export type DayExerciseSeriesUpsertWithWhereUniqueWithoutDayExerciseInput = {
@@ -16201,14 +16405,16 @@ export namespace Prisma {
     id?: string
     dayExerciseId: string
     seriesNumber: number
-    minReps: number
-    maxReps: number
-    minRir: number
-    maxRir: number
+    minReps?: number | null
+    maxReps?: number | null
+    minRir?: number | null
+    maxRir?: number | null
     effectiveReps?: number | null
     effectiveWeight?: number | null
     effectiveRir?: number | null
     isDropset?: boolean
+    athleteNotes?: string | null
+    trainerNotes?: string | null
   }
 
   export type TrainingDayUpdateWithoutWeekInput = {
@@ -16237,14 +16443,16 @@ export namespace Prisma {
   export type DayExerciseSeriesUpdateWithoutTrainingWeekInput = {
     id?: StringFieldUpdateOperationsInput | string
     seriesNumber?: IntFieldUpdateOperationsInput | number
-    minReps?: IntFieldUpdateOperationsInput | number
-    maxReps?: IntFieldUpdateOperationsInput | number
-    minRir?: IntFieldUpdateOperationsInput | number
-    maxRir?: IntFieldUpdateOperationsInput | number
+    minReps?: NullableIntFieldUpdateOperationsInput | number | null
+    maxReps?: NullableIntFieldUpdateOperationsInput | number | null
+    minRir?: NullableIntFieldUpdateOperationsInput | number | null
+    maxRir?: NullableIntFieldUpdateOperationsInput | number | null
     effectiveReps?: NullableIntFieldUpdateOperationsInput | number | null
     effectiveWeight?: NullableFloatFieldUpdateOperationsInput | number | null
     effectiveRir?: NullableIntFieldUpdateOperationsInput | number | null
     isDropset?: BoolFieldUpdateOperationsInput | boolean
+    athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     dayExercise?: DayExerciseUpdateOneRequiredWithoutSeriesNestedInput
   }
 
@@ -16252,28 +16460,32 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     dayExerciseId?: StringFieldUpdateOperationsInput | string
     seriesNumber?: IntFieldUpdateOperationsInput | number
-    minReps?: IntFieldUpdateOperationsInput | number
-    maxReps?: IntFieldUpdateOperationsInput | number
-    minRir?: IntFieldUpdateOperationsInput | number
-    maxRir?: IntFieldUpdateOperationsInput | number
+    minReps?: NullableIntFieldUpdateOperationsInput | number | null
+    maxReps?: NullableIntFieldUpdateOperationsInput | number | null
+    minRir?: NullableIntFieldUpdateOperationsInput | number | null
+    maxRir?: NullableIntFieldUpdateOperationsInput | number | null
     effectiveReps?: NullableIntFieldUpdateOperationsInput | number | null
     effectiveWeight?: NullableFloatFieldUpdateOperationsInput | number | null
     effectiveRir?: NullableIntFieldUpdateOperationsInput | number | null
     isDropset?: BoolFieldUpdateOperationsInput | boolean
+    athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DayExerciseSeriesUncheckedUpdateManyWithoutTrainingWeekInput = {
     id?: StringFieldUpdateOperationsInput | string
     dayExerciseId?: StringFieldUpdateOperationsInput | string
     seriesNumber?: IntFieldUpdateOperationsInput | number
-    minReps?: IntFieldUpdateOperationsInput | number
-    maxReps?: IntFieldUpdateOperationsInput | number
-    minRir?: IntFieldUpdateOperationsInput | number
-    maxRir?: IntFieldUpdateOperationsInput | number
+    minReps?: NullableIntFieldUpdateOperationsInput | number | null
+    maxReps?: NullableIntFieldUpdateOperationsInput | number | null
+    minRir?: NullableIntFieldUpdateOperationsInput | number | null
+    maxRir?: NullableIntFieldUpdateOperationsInput | number | null
     effectiveReps?: NullableIntFieldUpdateOperationsInput | number | null
     effectiveWeight?: NullableFloatFieldUpdateOperationsInput | number | null
     effectiveRir?: NullableIntFieldUpdateOperationsInput | number | null
     isDropset?: BoolFieldUpdateOperationsInput | boolean
+    athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DayExerciseCreateManyTrainingDayInput = {
@@ -16319,6 +16531,7 @@ export namespace Prisma {
     name: string
     recommendedMinReps?: number | null
     recommendedMaxReps?: number | null
+    measurementType?: $Enums.MeasurementType
   }
 
   export type ExerciseUpdateWithoutExerciseGroupInput = {
@@ -16326,6 +16539,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     recommendedMinReps?: NullableIntFieldUpdateOperationsInput | number | null
     recommendedMaxReps?: NullableIntFieldUpdateOperationsInput | number | null
+    measurementType?: EnumMeasurementTypeFieldUpdateOperationsInput | $Enums.MeasurementType
     dayExercises?: DayExerciseUpdateManyWithoutExerciseNestedInput
   }
 
@@ -16334,6 +16548,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     recommendedMinReps?: NullableIntFieldUpdateOperationsInput | number | null
     recommendedMaxReps?: NullableIntFieldUpdateOperationsInput | number | null
+    measurementType?: EnumMeasurementTypeFieldUpdateOperationsInput | $Enums.MeasurementType
     dayExercises?: DayExerciseUncheckedUpdateManyWithoutExerciseNestedInput
   }
 
@@ -16342,6 +16557,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     recommendedMinReps?: NullableIntFieldUpdateOperationsInput | number | null
     recommendedMaxReps?: NullableIntFieldUpdateOperationsInput | number | null
+    measurementType?: EnumMeasurementTypeFieldUpdateOperationsInput | $Enums.MeasurementType
   }
 
   export type DayExerciseCreateManyExerciseInput = {
@@ -16387,6 +16603,7 @@ export namespace Prisma {
     id?: string
     blockNumber: number
     description: string
+    createdAt?: Date | string
   }
 
   export type PaymentCreateManyUserInput = {
@@ -16401,6 +16618,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     blockNumber?: IntFieldUpdateOperationsInput | number
     description?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     weeks?: TrainingWeekUpdateManyWithoutBlockNestedInput
   }
 
@@ -16409,6 +16627,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     blockNumber?: IntFieldUpdateOperationsInput | number
     description?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     weeks?: TrainingWeekUncheckedUpdateManyWithoutBlockNestedInput
   }
 
@@ -16417,6 +16636,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     blockNumber?: IntFieldUpdateOperationsInput | number
     description?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PaymentUpdateWithoutUserInput = {
@@ -16443,57 +16663,65 @@ export namespace Prisma {
   export type DayExerciseSeriesCreateManyDayExerciseInput = {
     id?: string
     seriesNumber: number
-    minReps: number
-    maxReps: number
-    minRir: number
-    maxRir: number
+    minReps?: number | null
+    maxReps?: number | null
+    minRir?: number | null
+    maxRir?: number | null
     effectiveReps?: number | null
     effectiveWeight?: number | null
     effectiveRir?: number | null
     trainingWeekId: string
     isDropset?: boolean
+    athleteNotes?: string | null
+    trainerNotes?: string | null
   }
 
   export type DayExerciseSeriesUpdateWithoutDayExerciseInput = {
     id?: StringFieldUpdateOperationsInput | string
     seriesNumber?: IntFieldUpdateOperationsInput | number
-    minReps?: IntFieldUpdateOperationsInput | number
-    maxReps?: IntFieldUpdateOperationsInput | number
-    minRir?: IntFieldUpdateOperationsInput | number
-    maxRir?: IntFieldUpdateOperationsInput | number
+    minReps?: NullableIntFieldUpdateOperationsInput | number | null
+    maxReps?: NullableIntFieldUpdateOperationsInput | number | null
+    minRir?: NullableIntFieldUpdateOperationsInput | number | null
+    maxRir?: NullableIntFieldUpdateOperationsInput | number | null
     effectiveReps?: NullableIntFieldUpdateOperationsInput | number | null
     effectiveWeight?: NullableFloatFieldUpdateOperationsInput | number | null
     effectiveRir?: NullableIntFieldUpdateOperationsInput | number | null
     isDropset?: BoolFieldUpdateOperationsInput | boolean
+    athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     trainingWeek?: TrainingWeekUpdateOneRequiredWithoutDayExerciseSeriesNestedInput
   }
 
   export type DayExerciseSeriesUncheckedUpdateWithoutDayExerciseInput = {
     id?: StringFieldUpdateOperationsInput | string
     seriesNumber?: IntFieldUpdateOperationsInput | number
-    minReps?: IntFieldUpdateOperationsInput | number
-    maxReps?: IntFieldUpdateOperationsInput | number
-    minRir?: IntFieldUpdateOperationsInput | number
-    maxRir?: IntFieldUpdateOperationsInput | number
+    minReps?: NullableIntFieldUpdateOperationsInput | number | null
+    maxReps?: NullableIntFieldUpdateOperationsInput | number | null
+    minRir?: NullableIntFieldUpdateOperationsInput | number | null
+    maxRir?: NullableIntFieldUpdateOperationsInput | number | null
     effectiveReps?: NullableIntFieldUpdateOperationsInput | number | null
     effectiveWeight?: NullableFloatFieldUpdateOperationsInput | number | null
     effectiveRir?: NullableIntFieldUpdateOperationsInput | number | null
     trainingWeekId?: StringFieldUpdateOperationsInput | string
     isDropset?: BoolFieldUpdateOperationsInput | boolean
+    athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DayExerciseSeriesUncheckedUpdateManyWithoutDayExerciseInput = {
     id?: StringFieldUpdateOperationsInput | string
     seriesNumber?: IntFieldUpdateOperationsInput | number
-    minReps?: IntFieldUpdateOperationsInput | number
-    maxReps?: IntFieldUpdateOperationsInput | number
-    minRir?: IntFieldUpdateOperationsInput | number
-    maxRir?: IntFieldUpdateOperationsInput | number
+    minReps?: NullableIntFieldUpdateOperationsInput | number | null
+    maxReps?: NullableIntFieldUpdateOperationsInput | number | null
+    minRir?: NullableIntFieldUpdateOperationsInput | number | null
+    maxRir?: NullableIntFieldUpdateOperationsInput | number | null
     effectiveReps?: NullableIntFieldUpdateOperationsInput | number | null
     effectiveWeight?: NullableFloatFieldUpdateOperationsInput | number | null
     effectiveRir?: NullableIntFieldUpdateOperationsInput | number | null
     trainingWeekId?: StringFieldUpdateOperationsInput | string
     isDropset?: BoolFieldUpdateOperationsInput | boolean
+    athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

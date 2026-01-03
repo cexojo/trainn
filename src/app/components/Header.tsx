@@ -5,7 +5,10 @@ import MenuButton from './MenuButton';
 
 import Search from './Search';
 
-export default function Header() {
+export default function Header({
+  showBreadcrumbs = true,
+  showSearchAndAlerts = true,
+}: { showBreadcrumbs?: boolean; showSearchAndAlerts?: boolean } = {}) {
   return (
     <Stack
       direction="row"
@@ -19,13 +22,15 @@ export default function Header() {
       }}
       spacing={2}
     >
-      <NavbarBreadcrumbs />
-      <Stack direction="row" sx={{ gap: 1 }}>
-        <Search />
-        <MenuButton showBadge aria-label="Open notifications">
-          <NotificationsRoundedIcon />
-        </MenuButton>
-      </Stack>
+      {showBreadcrumbs && <NavbarBreadcrumbs />}
+      {showSearchAndAlerts && (
+        <Stack direction="row" sx={{ gap: 1 }}>
+          <Search />
+          <MenuButton showBadge aria-label="Open notifications">
+            <NotificationsRoundedIcon />
+          </MenuButton>
+        </Stack>
+      )}
     </Stack>
   );
 }

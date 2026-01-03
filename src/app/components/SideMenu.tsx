@@ -5,9 +5,7 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import SelectContent from './SelectContent';
 import MenuContent from './MenuContent';
-import CardAlert from './CardAlert';
 import OptionsMenu from './OptionsMenu';
 
 const drawerWidth = 240;
@@ -26,10 +24,24 @@ const Drawer = styled(MuiDrawer)({
 import React, { useState } from 'react';
 // ...rest of imports
 
-export default function SideMenu({ setSection }: { setSection: (section: string) => void }) {
+export default function SideMenu({
+  setSection,
+  role
+}: {
+  setSection: (section: string | null) => void;
+  role: "admin" | "athlete";
+}) {
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
+  const [user, setUser] = useState<{ name?: string; email?: string } | null>(null);
 
-  const handleSectionSelect = (section: string) => {
+  React.useEffect(() => {
+    fetch("/api/get-user-id")
+      .then(res => res.json())
+      .then(data => setUser({ name: data.name, email: data.email }))
+      .catch(() => setUser(null));
+  }, []);
+
+  const handleSectionSelect = (section: string | null) => {
     setSelectedSection(section);
     setSection(section);
   };
@@ -47,11 +59,21 @@ export default function SideMenu({ setSection }: { setSection: (section: string)
       <Box
         sx={{
           display: 'flex',
+          alignItems: 'center',
+          gap: 1.5,
           mt: 'calc(var(--template-frame-height, 0px) + 4px)',
           p: 1.5,
         }}
       >
-        <SelectContent />
+        {/* Display logged-in user info */}
+        <Box>
+          <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: "16px" }}>
+            {user?.name || "Usuario"}
+          </Typography>
+          <Typography variant="caption" sx={{ color: "text.secondary" }}>
+            {user?.email || ""}
+          </Typography>
+        </Box>
       </Box>
       <Divider />
       <Box
@@ -62,8 +84,7 @@ export default function SideMenu({ setSection }: { setSection: (section: string)
           flexDirection: 'column',
         }}
       >
-        <MenuContent setSection={handleSectionSelect} selectedSection={selectedSection} />
-        <CardAlert />
+        <MenuContent role={role} setSection={handleSectionSelect} selectedSection={selectedSection} />
       </Box>
       <Stack
         direction="row"
@@ -75,12 +96,6 @@ export default function SideMenu({ setSection }: { setSection: (section: string)
           borderColor: 'divider',
         }}
       >
-        <Avatar
-          sizes="small"
-          alt="Riley Carter"
-          src="/static/images/avatar/7.jpg"
-          sx={{ width: 36, height: 36 }}
-        />
         <Box sx={{ mr: 'auto' }}>
           <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
             Riley Carter

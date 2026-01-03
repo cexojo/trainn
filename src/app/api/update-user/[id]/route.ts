@@ -3,12 +3,16 @@ import prisma from '@/prisma/client';
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const { hidden } = await req.json();
+  const { hidden, hidingDate } = await req.json();
 
   try {
     const updatedUser = await prisma.user.update({
       where: { id },
-      data: { hidden },
+      data: {
+        hidden,
+        // Accept hidingDate as explicit update, can be null or string
+        hidingDate: typeof hidingDate !== 'undefined' ? hidingDate : undefined,
+      },
     });
     return NextResponse.json(updatedUser);
   } catch (error) {

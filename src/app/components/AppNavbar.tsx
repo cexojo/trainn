@@ -10,6 +10,7 @@ import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import SideMenuMobile from './SideMenuMobile';
 import MenuButton from './MenuButton';
+import { translations, type Lang } from "@/app/i18n";
 
 const Toolbar = styled(MuiToolbar)({
   width: '100%',
@@ -27,7 +28,7 @@ const Toolbar = styled(MuiToolbar)({
   },
 });
 
-export default function AppNavbar({ setSection }: { setSection: (section: string) => void }) {
+export default function AppNavbar({ setSection }: { setSection: (section: string | null) => void }) {
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen: boolean) => () => {
@@ -64,7 +65,7 @@ export default function AppNavbar({ setSection }: { setSection: (section: string
           >
             <CustomIcon />
             <Typography variant="h4" component="h1" sx={{ color: 'text.primary' }}>
-              Dashboard
+              {translations["es"]?.dashboard ?? "Dashboard"}
             </Typography>
           </Stack>
           <MenuButton aria-label="menu" onClick={toggleDrawer(true)}>

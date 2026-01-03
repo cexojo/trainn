@@ -2,9 +2,39 @@ export type Lang = "en" | "es";
 
 export type Translations = {
   [K in Lang]: {
+    blockNoContent: string;
+    blockNoWeeks: string;
+    blockNoDaysInWeek: string;
+    blockNoExerciseForDay: string;
+    // ManageBlocks Page
+    copyWeekError: string;
+    deleteBlockTooltip: string;
+    hideBlock: string;
+    publishBlock: string;
+    weekLabel: string;
+    moveWeekBack: string;
+    moveWeekForward: string;
+    copyWeekTooltip: string;
+    deleteWeekTooltip: string;
+    series: string;
+    copyWeekTitle: string;
+    copyWeekConfirm: (from: string | number, to: string | number) => string;
+    cancel: string;
+    copy: string;
+    deleteWeekTitle: string;
+    deleteWeekConfirm: (week: string | number) => string;
+    delete: string;
+    hideBlockConfirm: string;
+    publishBlockConfirm: string;
+    deleteBlockTitle: string;
+    deleteBlockConfirm: (blockLabel: string) => string;
+    thisBlock: string;
+    seriesSingular: string;
+    seriesPlural: string;
     loginTitle: string;
     loginUsernameLabel: string;
     athletes: string;
+    dashboard: string;
 
     // Stat cards/dashboard
     activeAthletesTitle: string;
@@ -122,16 +152,57 @@ export type Translations = {
     manageUsersQuickFilterDue: string;
     manageUsersQuickFilterNoFuture: string;
     manageUsersQuickFilterAllActive: string;
+    manageUsersQuickFilterInactive: string;
     manageUsersTableEmpty: string;
     manageUsersTableShowing: string;
     hideUser: string;
     unhideUser: string;
+    hiddenUserStatus: string;
     adminMenuHome: string;
     adminMenuAthletes: string;
     adminMenuSettings: string;
     adminMenuAbout: string;
     adminMenuFeedback: string;
+    adminMenuExercises: string;
+    adminMenuTrainingBlocks: string;
+    adminMenuCreateBlock: string;
+    adminMenuManageBlocks: string;
     editFieldTooltip: string;
+    wizardAddExercise: string;
+    wizardNoExercises: string;
+    wizardRemoveExercise: string;
+    wizardAddDropsetCheckbox: string;
+    wizardSeriesLabel: string;
+    wizardSeriesCopy: string;
+    wizardSeriesAdd: string;
+    wizardSeriesRemove: string;
+    wizardMinReps: string;
+    wizardMaxReps: string;
+    wizardMinRIR: string;
+    wizardMaxRIR: string;
+    wizardSeriesNotes: string;
+    wizardDropsetNotes: string;
+    wizardDragSeries: string;
+
+        // Create Block Wizard translations
+    createBlockWizardStepConfig: string;
+    createBlockWizardStepDesign: string;
+    createBlockWizardStepSummary: string;
+    createBlockWizardAthleteLabel: string;
+    createBlockWizardAthletePlaceholder: string;
+    createBlockWizardWeeksLabel: string;
+    createBlockWizardDaysPerWeekLabel: string;
+    createBlockWizardDesignStepText: string;
+    createBlockWizardSummaryStepText: string;
+    createBlockWizardBackButton: string;
+    createBlockWizardFinishButton: string;
+    createBlockWizardNextButton: string;
+    createBlockWizardStep1Info: string;
+
+    // Block visibility (wizard)
+    blockVisibilityLabel: string;
+    blockVisibilityImmediately: string;
+    blockVisibilityNotYet: string;
 
     // Training tab and table headers
     trainingTab: string;
@@ -144,12 +215,60 @@ export type Translations = {
     trainingTableRIR: string;
     trainingTableMinMaxRIR: string;
     trainingTableProgress: string;
+    exercises: string;
+    createAthlete: string;
+
+    // Added for ManageBlocks.tsx
+    dropsetAbbr: string;
+    repsMin: string;
+    repsMax: string;
+    rirMin: string;
+    rirMax: string;
+    notes: string;
+    updateDsError: string;
+    setDsOffTitle: string;
+    setDsOnTitle: string;
+    trainerNoteLabel: string;
+    athleteNoteLabel: string;
+    athleteDataGroup: string;
+    min: string;
+    max: string;
   };
 };
 
 // Export translations used in front-end
 export const translations: Translations = {
   en: {
+    blockNoContent: "No block content available.",
+    blockNoWeeks: "No weeks in this block.",
+    blockNoDaysInWeek: "No days in this week.",
+    blockNoExerciseForDay: "No exercises for this day.",
+    // ManageBlocks Page
+    copyWeekError: "An error occurred copying the week.",
+    deleteBlockTooltip: "Delete block",
+    hideBlock: "Hide block",
+    publishBlock: "Publish block",
+    weekLabel: "Week",
+    moveWeekBack: "Move week back",
+    moveWeekForward: "Move week forward",
+    copyWeekTooltip: "Copy week",
+    deleteWeekTooltip: "Delete week",
+    series: "Series",
+    copyWeekTitle: "Copy week",
+    copyWeekConfirm: (from, to) =>
+      `Are you sure you want to copy week ${from}? This will move all subsequent weeks forward and create a new week ${to} with the same days, exercise, series and values.`,
+    cancel: "Cancel",
+    copy: "Copy",
+    deleteWeekTitle: "Delete week",
+    deleteWeekConfirm: (week) => `Are you sure you want to delete week ${week}?`,
+    delete: "Delete",
+    hideBlockConfirm: "The athlete will no longer be able to see this block. Are you sure?",
+    publishBlockConfirm: "The athlete will be able to see the block from now on.",
+    deleteBlockTitle: "Delete block",
+    deleteBlockConfirm: (blockLabel) => `Are you sure you want to delete ${blockLabel}? All weeks and associated data will be deleted.`,
+    thisBlock: "this block",
+    seriesSingular: "series",
+    seriesPlural: "series",
     // Training tab and table headers
     trainingTab: "Training",
     trainingTableExercise: "Exercise",
@@ -167,7 +286,28 @@ export const translations: Translations = {
     adminMenuSettings: "Settings",
     adminMenuAbout: "About",
     adminMenuFeedback: "Feedback",
+    adminMenuExercises: "Exercises",
+    adminMenuTrainingBlocks: "Training Blocks",
+    adminMenuCreateBlock: "Create Block",
+    adminMenuManageBlocks: "Manage Blocks",
+
+    // Create Block Wizard
+    createBlockWizardStepConfig: "Select athlete and configuration",
+    createBlockWizardStepDesign: "Program design",
+    createBlockWizardStepSummary: "Summary and confirmation",
+    createBlockWizardAthleteLabel: "Athlete",
+    createBlockWizardAthletePlaceholder: "Search athlete",
+    createBlockWizardWeeksLabel: "Number of weeks",
+    createBlockWizardDaysPerWeekLabel: "Days per week",
+    createBlockWizardDesignStepText: "Design: Drag and arrange exercises per day…",
+    createBlockWizardSummaryStepText: "Review your selections before creating block…",
+    createBlockWizardBackButton: "Back",
+    createBlockWizardFinishButton: "Finish",
+    createBlockWizardNextButton: "Next",
+    createBlockWizardStep1Info: "To start creating the block, select the athlete, the block duration in weeks, and how many days per week the athlete will train.",
+
     athletes: "Athletes",
+    dashboard: "Dashboard",
     loginTitle: "Login",
     loginUsernameLabel: "Username",
 
@@ -215,6 +355,7 @@ export const translations: Translations = {
     week: "Week",
     day: "Day",
     exercise: "Exercise",
+    exercises: "Exercises",
     muscleGroup: "Muscle Group",
     reps: "Reps",
     weight: "Weight (kg)",
@@ -287,13 +428,82 @@ export const translations: Translations = {
     manageUsersQuickFilterDue: "Payments due",
     manageUsersQuickFilterNoFuture: "No future payments",
     manageUsersQuickFilterAllActive: "All active users",
+    manageUsersQuickFilterInactive: "Inactive users",
     manageUsersTableEmpty: "No users.",
     manageUsersTableShowing: "Showing {from}–{to} of {total} users",
     hideUser: "Hide user",
     unhideUser: "Unhide user",
+    hiddenUserStatus: "User hidden",
     editFieldTooltip: "Click to edit",
+    createAthlete: "Create athlete",
+
+    // Block visibility (wizard)
+    blockVisibilityLabel: "Block visibility",
+    blockVisibilityImmediately: "Publish the block for the athlete immediately",
+    blockVisibilityNotYet: "Do not publish yet, I will do it later",
+    wizardAddExercise: "Add exercise",
+    wizardNoExercises: "No exercises assigned.",
+    wizardRemoveExercise: "Remove Exercise",
+    wizardAddDropsetCheckbox: "Add dropset series",
+    wizardSeriesLabel: "Series",
+    wizardSeriesCopy: "Duplicate series",
+    wizardSeriesAdd: "Insert blank series below",
+    wizardSeriesRemove: "Delete series",
+    wizardMinReps: "Min reps",
+    wizardMaxReps: "Max reps",
+    wizardMinRIR: "Min RIR",
+    wizardMaxRIR: "Max RIR",
+    wizardSeriesNotes: "Notes",
+    wizardDropsetNotes: "Notes (dropset)",
+    wizardDragSeries: "Drag to reorder",
+
+    // --- Added for ManageBlocks.tsx UI/column translation
+    dropsetAbbr: "DS",
+    repsMin: "Reps Min",
+    repsMax: "Reps Max",
+    rirMin: "RIR Min",
+    rirMax: "RIR Max",
+    notes: "Notes",
+    updateDsError: "Failed to update DS field",
+    setDsOffTitle: "Set Dropset OFF",
+    setDsOnTitle: "Set Dropset ON",
+    trainerNoteLabel: "Trainer Note",
+    athleteNoteLabel: "Athlete Note",
+    athleteDataGroup: "Athlete Data",
+    min: "Min",
+    max: "Max",
   },
   es: {
+    blockNoContent: "No hay contenido del bloque disponible.",
+    blockNoWeeks: "No hay semanas en el bloque.",
+    blockNoDaysInWeek: "No hay días en esta semana.",
+    blockNoExerciseForDay: "Ningún ejercicio para este día.",
+    // ManageBlocks Page
+    copyWeekError: "Ha ocurrido un error al copiar la semana",
+    deleteBlockTooltip: "Eliminar bloque",
+    hideBlock: "Ocultar bloque",
+    publishBlock: "Publicar bloque",
+    weekLabel: "Semana",
+    moveWeekBack: "Mover semana hacia atrás",
+    moveWeekForward: "Mover semana hacia adelante",
+    copyWeekTooltip: "Copiar semana",
+    deleteWeekTooltip: "Eliminar semana",
+    series: "Series",
+    copyWeekTitle: "Copiar semana",
+    copyWeekConfirm: (from, to) =>
+      `¿Seguro que quieres copiar la semana ${from}? Esta acción moverá hacia delante todas las semanas siguientes y creará una nueva semana ${to} con los mismos días, ejercicios, series y valores.`,
+    cancel: "Cancelar",
+    copy: "Copiar",
+    deleteWeekTitle: "Eliminar semana",
+    deleteWeekConfirm: (week) => `¿Seguro que quieres eliminar la semana ${week}?`,
+    delete: "Eliminar",
+    hideBlockConfirm: "El atleta dejará de ver este bloque. ¿Seguro?",
+    publishBlockConfirm: "El atleta podrá ver este bloque a partir de ahora.",
+    deleteBlockTitle: "Eliminar bloque",
+    deleteBlockConfirm: (blockLabel) => `¿Seguro que quieres eliminar ${blockLabel}? Se eliminarán todas las semanas y datos asociados.`,
+    thisBlock: "este bloque",
+    seriesSingular: "serie",
+    seriesPlural: "series",
     // Training tab and table headers
     trainingTab: "Entrenamiento",
     trainingTableExercise: "Ejercicio",
@@ -307,6 +517,7 @@ export const translations: Translations = {
     trainingTableProgress: "Progreso",
 
     athletes: "Atletas",
+    dashboard: "Panel de control",
     loginTitle: "Iniciar sesión",
     loginUsernameLabel: "Usuario",
 
@@ -354,6 +565,7 @@ export const translations: Translations = {
     week: "Semana",
     day: "Día",
     exercise: "Ejercicio",
+    exercises: "Ejercicios",
     muscleGroup: "Grupo muscular",
     reps: "Repeticiones",
     weight: "Peso (kg)",
@@ -426,15 +638,74 @@ export const translations: Translations = {
     manageUsersQuickFilterDue: "Pagos pendientes",
     manageUsersQuickFilterNoFuture: "Sin pagos futuros",
     manageUsersQuickFilterAllActive: "Usuarios activos",
+    manageUsersQuickFilterInactive: "Usuarios inactivos",
     manageUsersTableEmpty: "No hay usuarios.",
     manageUsersTableShowing: "Mostrando {from}–{to} de {total} usuarios",
     hideUser: "Ocultar usuario",
     unhideUser: "Mostrar usuario",
+    hiddenUserStatus: "Usuario oculto",
     adminMenuHome: "Inicio",
     adminMenuAthletes: "Atletas",
     adminMenuSettings: "Ajustes",
     adminMenuAbout: "Acerca de",
     adminMenuFeedback: "Comentarios",
+    adminMenuExercises: "Ejercicios",
+    adminMenuTrainingBlocks: "Bloques de entrenamiento",
+    adminMenuCreateBlock: "Crear bloque",
+    adminMenuManageBlocks: "Gestionar bloques",
+
+    // Create Block Wizard
+    createBlockWizardStepConfig: "Seleccionar atleta y configuración",
+    createBlockWizardStepDesign: "Diseño del programa",
+    createBlockWizardStepSummary: "Resumen y confirmación",
+    createBlockWizardAthleteLabel: "Atleta",
+    createBlockWizardAthletePlaceholder: "Buscar atleta",
+    createBlockWizardWeeksLabel: "Número de semanas",
+    createBlockWizardDaysPerWeekLabel: "Días por semana",
+    createBlockWizardDesignStepText: "Diseño: Arrastra y organiza ejercicios por día…",
+    createBlockWizardSummaryStepText: "Revisa tu selección antes de crear el bloque…",
+    createBlockWizardBackButton: "Atrás",
+    createBlockWizardFinishButton: "Finalizar",
+    createBlockWizardNextButton: "Siguiente",
+    createBlockWizardStep1Info: "Para empezar a crear el bloque, selecciona el atleta, la duración en semanas del bloque y cuántos días a la semana entrenará el atleta",
+
     editFieldTooltip: "Haz clic para editar",
+    createAthlete: "Crear atleta",
+
+    // Block visibility (wizard)
+    blockVisibilityLabel: "Visibilidad del bloque",
+    blockVisibilityImmediately: "Publicar el bloque para el atleta al crearlo",
+    blockVisibilityNotYet: "No publicarlo aún, lo haré yo en otro momento",
+    wizardAddExercise: "Añadir ejercicio",
+    wizardNoExercises: "No hay ejercicios asignados.",
+    wizardRemoveExercise: "Eliminar Ejercicio",
+    wizardAddDropsetCheckbox: "Añadir serie dropset",
+    wizardSeriesLabel: "Series",
+    wizardSeriesCopy: "Duplicar serie",
+    wizardSeriesAdd: "Insertar serie en blanco debajo",
+    wizardSeriesRemove: "Eliminar serie",
+    wizardMinReps: "Min repeticiones",
+    wizardMaxReps: "Max repeticiones",
+    wizardMinRIR: "Min RIR",
+    wizardMaxRIR: "Max RIR",
+    wizardSeriesNotes: "Notas",
+    wizardDropsetNotes: "Notas (dropset)",
+    wizardDragSeries: "Arrastrar para reordenar",
+
+    // --- Añadido para ManageBlocks.tsx
+    dropsetAbbr: "DS",
+    repsMin: "Mín. Reps",
+    repsMax: "Máx. Reps",
+    rirMin: "Mín. RIR",
+    rirMax: "Máx. RIR",
+    notes: "Notas",
+    updateDsError: "Error al actualizar el campo DS",
+    setDsOffTitle: "Marcar DS como NO",
+    setDsOnTitle: "Marcar DS como SÍ",
+    trainerNoteLabel: "Nota entrenador",
+    athleteNoteLabel: "Nota atleta",
+    athleteDataGroup: "Datos del atleta",
+    min: "Mín.",
+    max: "Máx.",
   }
 };

@@ -1,19 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma/client";
-import jwt from "jsonwebtoken";
-
-const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-for-local";
-
-function getTokenPayload(req: NextRequest) {
-  // Only use the "elena_auth_token" cookie for JWT authentication
-  const token = req.cookies.get("elena_auth_token")?.value;
-  if (!token) return null;
-  try {
-    return jwt.verify(token, JWT_SECRET) as any;
-  } catch {
-    return null;
-  }
-}
+import { getTokenPayload } from "@/app/api/utils/auth";
 
 export async function GET(req: NextRequest) {
   // Auth
@@ -43,7 +30,9 @@ export async function GET(req: NextRequest) {
           amount: true,
           isPayed: true,
         }
-      }
+      },
+      hidden: true,
+      hidingDate: true
     }
   });
 

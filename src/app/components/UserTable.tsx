@@ -1,19 +1,13 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
 import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import { Box, Typography, Button, IconButton, Tooltip, Dialog, DialogTitle, DialogContent, Tabs, Tab, CircularProgress, TextField, Select, MenuItem } from "@mui/material";
-import Grid from "@mui/material/Grid";
-import { translations, type Lang } from "../../i18n";
+import { Box, Typography, Button, IconButton, Tooltip, Dialog, DialogTitle, DialogContent, Tabs, Tab, CircularProgress, TextField, Select, MenuItem, Menu } from "@mui/material";
+import { translations, type Lang } from "@/app/i18n";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 
-import EditIcon from "@mui/icons-material/Edit";
-import SaveIcon from "@mui/icons-material/CheckCircle";
-import CloseIcon from "@mui/icons-material/Cancel";
 import { useRef } from "react";
 
 function EditableUserField({ label, value, field, userId, onUpdated, lang }: {
@@ -190,6 +184,12 @@ function TrainingTab({ userId, lang }: { userId: string, lang: Lang }) {
     exercisesByDay[ex.dayNumber].push(ex);
   });
 
+  // Debug rendering if no results
+  const debugInfo = (
+    <pre style={{ fontSize: "11px", background: "#eee", color: "#a33", padding: 8, margin: 4, maxHeight: 240, overflow: "auto" }}>
+      {JSON.stringify({ filteredExercises, exercisesByDay }, null, 2)}
+    </pre>
+  );
   return (
     <Box sx={{ mt: 2 }}>
       <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
@@ -235,73 +235,103 @@ function TrainingTab({ userId, lang }: { userId: string, lang: Lang }) {
               <Typography variant="caption" sx={{ mb: 0.5, mt: 2, pl: 1, fontWeight: 600, color: "#555", fontSize: 13 }}>
                 {`${translations[lang].day} ${dayExercises[0]?.dayNumber ?? dayNumber}`}
               </Typography>
-              <Box sx={{ width: "100%", overflowX: "auto" }}>
-                <table style={{ borderCollapse: "collapse", width: "100%" }}>
-                  <thead>
-                    <tr>
-                      <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].trainingTableExercise ?? "Exercise"}</th>
-                      <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].trainingTableSeries ?? "Series"}</th>
-                      <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].trainingTableDS ?? "DS"}</th>
-                      <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].trainingTableWeight ?? "Weight"}</th>
-                      <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].trainingTableReps ?? "Reps"}</th>
-                      <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].trainingTableRIR ?? "RIR"}</th>
-                      <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].trainingTableProgress ?? "Progress"}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(() => {
-                      // Merge cells for consecutive series with the same exercise id
-                      const mergedRows = [];
-                      let lastExerciseId = null;
-                      let groupStartIdx = 0;
-                      for (let idx = 0; idx < dayExercises.length; ++idx) {
-                        const ex = dayExercises[idx];
-                        const isFirst = idx === 0 || dayExercises[idx].exercise?.id !== dayExercises[idx - 1].exercise?.id;
-                        const isLast = idx === dayExercises.length - 1 || dayExercises[idx].exercise?.id !== dayExercises[idx + 1].exercise?.id;
-                        if (isFirst) groupStartIdx = idx;
-                        let rowspan = 1;
-                        if (isFirst) {
-                          // compute rowspan for this exercise group
-                          for (let j = idx + 1; j < dayExercises.length; ++j) {
-                            if (dayExercises[j].exercise?.id !== ex.exercise?.id) break;
-                            rowspan++;
+              {dayExercises.length === 0 ? (
+                <Box sx={{ color: "#a33" }}>Ningún ejercicio para este día. {debugInfo}</Box>
+              ) : (
+                <Box sx={{ width: "100%", overflowX: "auto" }}>
+                  <table style={{ borderCollapse: "collapse", width: "100%" }}>
+                    <thead>
+                      <tr>
+                        <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].trainingTableExercise}</th>
+                        <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].trainingTableSeries}</th>
+                        <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].trainingTableDS}</th>
+                        <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].trainingTableWeight}</th>
+                        <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].trainingTableReps}</th>
+                        <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].trainingTableRIR}</th>
+                        <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].trainingTableProgress}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(() => {
+                        // Merge cells for consecutive series with the same exercise id
+                        const mergedRows = [];
+                        let lastExerciseId = null;
+                        let groupStartIdx = 0;
+                        for (let idx = 0; idx < dayExercises.length; ++idx) {
+                          const ex = dayExercises[idx];
+                          const isFirst = idx === 0 || dayExercises[idx].exercise?.id !== dayExercises[idx - 1].exercise?.id;
+                          const isLast = idx === dayExercises.length - 1 || dayExercises[idx].exercise?.id !== dayExercises[idx + 1].exercise?.id;
+                          if (isFirst) groupStartIdx = idx;
+                          let rowspan = 1;
+                          if (isFirst) {
+                            // compute rowspan for this exercise group
+                            for (let j = idx + 1; j < dayExercises.length; ++j) {
+                              if (dayExercises[j].exercise?.id !== ex.exercise?.id) break;
+                              rowspan++;
+                            }
                           }
+                          mergedRows.push(
+                            <tr key={ex.id + "-" + idx} style={{ borderBottom: "1px solid #eee" }}>
+                              {isFirst ? (
+                                <td rowSpan={rowspan} style={{ padding: "4px 8px", verticalAlign: "middle", fontWeight: 500 }}>{ex.exercise?.name ?? ""}</td>
+                              ) : null}
+                              <td style={{ padding: "4px 8px" }}>{ex.seriesNumber ?? ""}</td>
+                              <td style={{ padding: "4px 8px", color: "#e67300", fontWeight: ex.isDropset ? 700 : 400 }}>
+                                {ex.isDropset ? "DS" : ""}
+                              </td>
+                              <td style={{ padding: "4px 8px" }}>{ex.effectiveWeight ?? "-"}</td>
+                              <td style={{ padding: "4px 8px" }}>
+                                {ex.effectiveReps ?? "-"}
+                                {(ex.minReps !== undefined || ex.maxReps !== undefined) && (() => {
+                                  function renderRange(
+                                    min: number | string | null | undefined,
+                                    max: number | string | null | undefined
+                                  ) {
+                                    const isEmpty = (v: number | string | null | undefined) =>
+                                      v === undefined || v === null || v === "";
+                                    if (isEmpty(min) && isEmpty(max)) return "";
+                                    if (!isEmpty(min) && isEmpty(max)) return `Min. ${min}`;
+                                    if (isEmpty(min) && !isEmpty(max)) return `Max. ${max}`;
+                                    if (!isEmpty(min) && !isEmpty(max) && min === max) return min;
+                                    return `${min}-${max}`;
+                                  }
+                                  const range = renderRange(ex.minReps, ex.maxReps);
+                                  return range
+                                    ? <span style={{ color: "#888", fontSize: 12, marginLeft: 4 }}>{range}</span>
+                                    : null;
+                                })()}
+                              </td>
+                              <td style={{ padding: "4px 8px" }}>
+                                {ex.effectiveRir ?? "-"}
+                                {(ex.minRir !== undefined || ex.maxRir !== undefined) && (() => {
+                                  function renderRange(
+                                    min: number | string | null | undefined,
+                                    max: number | string | null | undefined
+                                  ) {
+                                    const isEmpty = (v: number | string | null | undefined) =>
+                                      v === undefined || v === null || v === "";
+                                    if (isEmpty(min) && isEmpty(max)) return "";
+                                    if (!isEmpty(min) && isEmpty(max)) return `Min. ${min}`;
+                                    if (isEmpty(min) && !isEmpty(max)) return `Max ${max}`;
+                                    if (!isEmpty(min) && !isEmpty(max) && min === max) return min;
+                                    return `${min}-${max}`;
+                                  }
+                                  const range = renderRange(ex.minRir, ex.maxRir);
+                                  return range
+                                    ? <span style={{ color: "#888", fontSize: 12, marginLeft: 4 }}>{range}</span>
+                                    : null;
+                                })()}
+                              </td>
+                              <td style={{ padding: "4px 8px" }}>{ex.progress ?? ""}</td>
+                            </tr>
+                          );
                         }
-                        mergedRows.push(
-                          <tr key={ex.id + "-" + idx} style={{ borderBottom: "1px solid #eee" }}>
-                            {isFirst ? (
-                              <td rowSpan={rowspan} style={{ padding: "4px 8px", verticalAlign: "middle", fontWeight: 500 }}>{ex.exercise?.name ?? ""}</td>
-                            ) : null}
-                            <td style={{ padding: "4px 8px" }}>{ex.seriesNumber ?? ""}</td>
-                            <td style={{ padding: "4px 8px", color: "#e67300", fontWeight: ex.isDropset ? 700 : 400 }}>
-                              {ex.isDropset ? "DS" : ""}
-                            </td>
-                            <td style={{ padding: "4px 8px" }}>{ex.effectiveWeight ?? "-"}</td>
-                            <td style={{ padding: "4px 8px" }}>
-                              {ex.effectiveReps ?? "-"}
-                              {(ex.minReps !== undefined || ex.maxReps !== undefined) && (
-                                <span style={{ color: "#888", fontSize: 12, marginLeft: 4 }}>
-                                  {` (${ex.minReps ?? "-"}-${ex.maxReps ?? "-"})`}
-                                </span>
-                              )}
-                            </td>
-                            <td style={{ padding: "4px 8px" }}>
-                              {ex.effectiveRir ?? "-"}
-                              {(ex.minRir !== undefined || ex.maxRir !== undefined) && (
-                                <span style={{ color: "#888", fontSize: 12, marginLeft: 4 }}>
-                                  {` (${ex.minRir ?? "-"}-${ex.maxRir ?? "-"})`}
-                                </span>
-                              )}
-                            </td>
-                            <td style={{ padding: "4px 8px" }}>{ex.progress ?? ""}</td>
-                          </tr>
-                        );
-                      }
-                      return mergedRows;
-                    })()}
-                  </tbody>
-                </table>
-              </Box>
+                        return mergedRows;
+                      })()}
+                    </tbody>
+                  </table>
+                </Box>
+              )}
             </Box>
           ))
       )}
@@ -309,13 +339,26 @@ function TrainingTab({ userId, lang }: { userId: string, lang: Lang }) {
   );
 }
 
-export default function UserTable({ lang }: { lang: Lang }) {
+export default function UserTable({
+  lang,
+  crearAtletaButton,
+  refreshKey
+}: {
+  lang: Lang,
+  crearAtletaButton?: React.ReactNode,
+  refreshKey?: number
+}) {
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<any | null>(null);
   const [modalTab, setModalTab] = useState<"info" | "payments" | "training">("info");
   const [searchTerm, setSearchTerm] = useState("");
-  const [quickFilter, setQuickFilter] = useState<"active" | "all" | "due" | "nofuture" | "noplan">("active");
+  const [quickFilter, setQuickFilter] = useState<"active" | "all" | "inactive" | "due" | "nofuture" | "noplan">("active");
+
+  // Context menu state
+  const [contextMenuAnchor, setContextMenuAnchor] = useState<{mouseX: number, mouseY: number} | null>(null);
+  const [contextMenuRow, setContextMenuRow] = useState<any | null>(null);
+  const [actionLoading, setActionLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -326,18 +369,19 @@ export default function UserTable({ lang }: { lang: Lang }) {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [refreshKey]);
 
   // Column definitions
   const columns: GridColDef[] = [
-    { field: "name", headerName: translations[lang].manageUsersTableName, flex: 1, minWidth: 160 },
-    { field: "username", headerName: translations[lang].manageUsersModalUsername, flex: 1, minWidth: 130 },
-    { field: "email", headerName: translations[lang].manageUsersTableEmail, flex: 1.5, minWidth: 210 },
+    { field: "name", headerName: translations[lang].manageUsersTableName, flex: 1, minWidth: 160, sortable: false },
+    { field: "username", headerName: translations[lang].manageUsersModalUsername, flex: 1, minWidth: 130, sortable: false },
+    { field: "email", headerName: translations[lang].manageUsersTableEmail, flex: 1.5, minWidth: 210, sortable: false },
     {
       field: "status",
       headerName: translations[lang].manageUsersTableStatus,
       type: "string",
       minWidth: 150,
+      sortable: false,
       valueGetter: (params: any) => {
         const row = params?.row;
         if (!row) return "";
@@ -347,9 +391,9 @@ export default function UserTable({ lang }: { lang: Lang }) {
               (p: any) => !p.isPayed && new Date(p.dueDate) <= now
             )
           : false;
-        if (hasOverdueUnpaid) return translations[lang].paymentsTableUnpaid ?? "Payments overdue";
+        if (hasOverdueUnpaid) return translations[lang].paymentsTableUnpaid;
         if (row.hidden) return translations[lang].hideUser;
-        return translations[lang].paymentsTablePaid ?? "In good standing";
+        return translations[lang].paymentsTablePaid;
       },
       renderCell: (params: any) => {
         const row = params?.row;
@@ -362,43 +406,22 @@ export default function UserTable({ lang }: { lang: Lang }) {
           : false;
         if (hasOverdueUnpaid)
           return (
-            <Tooltip title={translations[lang].paymentsTableUnpaid ?? "Payments overdue"}>
+            <Tooltip title={translations[lang].paymentsTableUnpaid}>
               <CancelIcon color="error" />
             </Tooltip>
           );
         if (row.hidden)
           return (
-            <Tooltip title={translations[lang].hideUser}>
+            <Tooltip title={translations[lang].hiddenUserStatus}>
               <VisibilityOffIcon />
             </Tooltip>
           );
         return (
-          <Tooltip title={translations[lang].paymentsTablePaid ?? "In good standing"}>
+          <Tooltip title={translations[lang].paymentsTablePaid}>
             <CheckCircleIcon color="success" />
           </Tooltip>
         );
       }
-    },
-    {
-      field: "actions",
-      headerName: translations[lang].manageUsersTableActions,
-      sortable: false,
-      filterable: false,
-      minWidth: 150,
-      align: "center",
-      renderCell: ({ row }) => (
-        <Tooltip title={row.hidden ? translations[lang].unhideUser : translations[lang].hideUser}>
-          <IconButton
-            size="small"
-            onClick={e => {
-              e.stopPropagation();
-              handleHideUser(row);
-            }}
-          >
-            {row.hidden ? <VisibilityIcon /> : <VisibilityOffIcon />}
-          </IconButton>
-        </Tooltip>
-      )
     }
   ];
 
@@ -420,30 +443,59 @@ export default function UserTable({ lang }: { lang: Lang }) {
         (u.username ?? "").toLowerCase().includes(term) ||
         (u.email ?? "").toLowerCase().includes(term);
 
-      if (quickFilter === "noplan") {
-        return u.noPlan === true;
+      // Inactivo: show only hidden users
+      if (quickFilter === "inactive") {
+        return u.hidden === true && matchesSearch;
       }
 
-      // Apply filters
-      if (quickFilter === "due" && !hasOverdueUnpaid) return false;
-      if (quickFilter === "nofuture" && hasFuturePayment) return false;
-      if (quickFilter === "active" && u.hidden) return false;
+      // Noplan: SIN planificación, only active users
+      if (quickFilter === "noplan") {
+        return u.noPlan === true && u.hidden !== true && matchesSearch;
+      }
+
+      // Due: Pagos pendientes, only active users
+      if (quickFilter === "due") {
+        return hasOverdueUnpaid && u.hidden !== true && matchesSearch;
+      }
+
+      // Nofuture: Sin pagos futuros, only active users
+      if (quickFilter === "nofuture") {
+        return !hasFuturePayment && u.hidden !== true && matchesSearch;
+      }
+
+      // Active: show only not hidden
+      if (quickFilter === "active") {
+        return u.hidden !== true && matchesSearch;
+      }
+
+      // All
       return matchesSearch;
     });
   }, [athletes, searchTerm, quickFilter]);
 
   const handleHideUser = async (user: any) => {
+    setActionLoading(true);
     const updatedUser = { ...user, hidden: !user.hidden };
+    const nowISO = new Date().toISOString();
+    const isHiding = updatedUser.hidden;
     const res = await fetch(`/api/update-user/${user.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ hidden: updatedUser.hidden }),
+      body: JSON.stringify({
+        hidden: updatedUser.hidden,
+        hidingDate: isHiding ? nowISO : null
+      }),
     });
     if (res.ok) {
       setUsers((prevUsers: any[]) =>
-        prevUsers.map((u: any) => (u.id === user.id ? updatedUser : u))
+        prevUsers.map((u: any) =>
+          u.id === user.id
+            ? { ...updatedUser, hidingDate: isHiding ? nowISO : null }
+            : u
+        )
       );
     }
+    setActionLoading(false);
   };
 
   // Payment/user info modal dialog
@@ -457,42 +509,86 @@ export default function UserTable({ lang }: { lang: Lang }) {
 
   return (
     <Box sx={{ width: "100%", background: "background.paper" }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2, gap: 2 }}>
-        <TextField
-          value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
-          placeholder={placeholder}
-          variant="outlined"
-          size="small"
-          sx={{ width: 300 }}
-          inputProps={{
-            'aria-label': placeholder
+      <Box sx={{ mb: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: 2,
+            alignItems: { sm: "center" }
           }}
-        />
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Typography variant="body1" sx={{ fontWeight: 500 }}>
-            {translations[lang].manageUsersQuickFilters}
-          </Typography>
-          <Select
-            value={quickFilter}
-            onChange={e => setQuickFilter(e.target.value as any)}
+        >
+          <TextField
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            placeholder={placeholder}
+            variant="outlined"
             size="small"
-            sx={{ minWidth: 160 }}
+            sx={{
+              width: { xs: "100%", sm: 300 }
+            }}
+            inputProps={{
+              'aria-label': placeholder
+            }}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              width: { xs: "100%", sm: "auto" },
+              gap: 2,
+              alignItems: { sm: "center" },
+              mt: { xs: 2, sm: 0 }
+            }}
           >
-            <MenuItem value="active">{translations[lang].manageUsersQuickFilterAllActive}</MenuItem>
-            <MenuItem value="all">{translations[lang].manageUsersQuickFilterAll}</MenuItem>
-            <MenuItem value="due">{translations[lang].manageUsersQuickFilterDue}</MenuItem>
-            <MenuItem value="nofuture">{translations[lang].manageUsersQuickFilterNoFuture}</MenuItem>
-            <MenuItem value="noplan">Sin planificación</MenuItem>
-          </Select>
+            <Box sx={{ width: { xs: "100%", sm: "auto" } }}>
+              <Select
+                value={quickFilter}
+                onChange={e => setQuickFilter(e.target.value as any)}
+                size="small"
+                sx={{
+                  minWidth: { xs: "100%", sm: 160 }
+                }}
+                fullWidth={true}
+              >
+                <MenuItem value="active">{translations[lang].manageUsersQuickFilterAllActive}</MenuItem>
+                <MenuItem value="all">{translations[lang].manageUsersQuickFilterAll}</MenuItem>
+                <MenuItem value="inactive">{translations[lang].manageUsersQuickFilterInactive}</MenuItem>
+                <MenuItem value="due">{translations[lang].manageUsersQuickFilterDue}</MenuItem>
+                <MenuItem value="nofuture">{translations[lang].manageUsersQuickFilterNoFuture}</MenuItem>
+                <MenuItem value="noplan">Sin planificación</MenuItem>
+              </Select>
+            </Box>
+            <Box sx={{
+              width: { xs: "100%", sm: "auto" },
+              mt: { xs: 2, sm: 0 }
+            }}>
+              {crearAtletaButton}
+            </Box>
+          </Box>
         </Box>
       </Box>
-      <Box sx={{ height: 600, width: "100%" }}>
+      <Box
+        sx={{ height: 600, width: "100%" }}
+        onContextMenu={e => {
+          // Only trigger for rows, not headers etc.
+          const target = e.target as HTMLElement;
+          const rowNode = target.closest('[data-id]');
+          if (rowNode) {
+            e.preventDefault();
+            const rowId = rowNode.getAttribute('data-id');
+            const rowData = filteredUsers.find(u => u.id === rowId);
+            setContextMenuAnchor({ mouseX: e.clientX + 2, mouseY: e.clientY - 6 });
+            setContextMenuRow(rowData || null);
+          }
+        }}
+      >
         <DataGrid
           rows={filteredUsers}
           columns={columns}
           getRowId={row => row.id}
           loading={loading}
+          disableColumnMenu={true}
           pageSizeOptions={[10, 25, 50]}
           initialState={{
             pagination: { paginationModel: { pageSize: 10, page: 0 } },
@@ -503,6 +599,33 @@ export default function UserTable({ lang }: { lang: Lang }) {
             cursor: "pointer",
           }}
         />
+        {/* Context Menu for right-clicking a row */}
+        <Menu
+          open={!!contextMenuAnchor}
+          onClose={() => setContextMenuAnchor(null)}
+          anchorReference="anchorPosition"
+          anchorPosition={
+            contextMenuAnchor
+              ? { top: contextMenuAnchor.mouseY, left: contextMenuAnchor.mouseX }
+              : undefined
+          }
+          onClick={() => setContextMenuAnchor(null)}
+        >
+          <MenuItem
+            onClick={async (e) => {
+              e.stopPropagation();
+              setContextMenuAnchor(null);
+              // Defer API call to next microtask so menu closes before heavy work.
+              if (contextMenuRow) {
+                await handleHideUser(contextMenuRow);
+              }
+            }}
+          >
+            {contextMenuRow?.hidden
+              ? translations[lang].unhideUser
+              : translations[lang].hideUser}
+          </MenuItem>
+        </Menu>
         <Dialog
           open={!!selected}
           maxWidth={false}
@@ -524,7 +647,7 @@ export default function UserTable({ lang }: { lang: Lang }) {
             <Tabs value={modalTab} onChange={(_, v) => setModalTab(v)}>
               <Tab value="info" label={translations[lang].infoTab} />
               <Tab value="payments" label={translations[lang].paymentsTab} />
-              <Tab value="training" label={translations[lang].trainingTab ?? "Training"} />
+              <Tab value="training" label={translations[lang].trainingTab} />
             </Tabs>
             {modalTab === "info" && selected && (
               <Box sx={{ mt: 2 }}>
@@ -579,7 +702,7 @@ export default function UserTable({ lang }: { lang: Lang }) {
                 </Typography>
                 {!selected.payments || selected.payments.length === 0 ? (
                   <Typography variant="body2" color="text.secondary">
-                    {translations[lang].manageUsersAddPaymentNone ?? "No payments found."}
+                    {translations[lang].manageUsersAddPaymentNone}
                   </Typography>
                 ) : (
                   <Box component="ul" sx={{ listStyle: "none", p: 0 }}>
@@ -615,8 +738,8 @@ export default function UserTable({ lang }: { lang: Lang }) {
             )}
           </DialogContent>
         </Dialog>
-        {loading && (
-          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", position: "absolute", width: "100%", height: "100%", top: 0, left: 0, background: "rgba(255,255,255,0.5)" }}>
+        {(loading || actionLoading) && (
+          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", position: "absolute", width: "100%", height: "100%", top: 0, left: 0, background: "rgba(255,255,255,0.5)", zIndex: 1999 }}>
             <CircularProgress />
           </Box>
         )}
