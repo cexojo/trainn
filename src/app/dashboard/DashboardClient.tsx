@@ -19,6 +19,10 @@ import {
   datePickersCustomizations,
   treeViewCustomizations,
 } from '../theme/customizations';
+import { FrontendError } from '@/utils/errors';
+import { translations, Lang } from '../i18n';
+
+const lang: Lang = "es";
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -29,7 +33,18 @@ const xThemeComponents = {
 
 export default function DashboardClient(props: { disableCustomTheme?: boolean }) {
   const [currentSection, setCurrentSection] = React.useState<string | null>(null);
+  // Hoisted training selection state for navbar
+  const [selectedBlock, setSelectedBlock] = React.useState<any | null>(null);
+  const [selectedWeek, setSelectedWeek] = React.useState<any | null>(null);
+  const [selectedDay, setSelectedDay] = React.useState<number | null>(null);
+
+  // Default section logic: for athlete show "training", admin stays as null (Inicio)
   const [userRole, setUserRole] = React.useState<"admin" | "athlete" | null>(null);
+  React.useEffect(() => {
+    if (userRole === "athlete" && !currentSection) {
+      setCurrentSection("training");
+    }
+  }, [userRole, currentSection]);
 
   React.useEffect(() => {
     fetch("/api/get-user-id")
@@ -38,7 +53,7 @@ export default function DashboardClient(props: { disableCustomTheme?: boolean })
         if (data.role === "admin") setUserRole("admin");
         else setUserRole("athlete");
       })
-      .catch(() => setUserRole("athlete"));
+      .catch(() => { throw new FrontendError("Unknown role."); });
   }, []);
 
   if (!userRole) {
@@ -51,7 +66,18 @@ export default function DashboardClient(props: { disableCustomTheme?: boolean })
       <CssBaseline enableColorScheme />
       <Box sx={{ display: 'flex' }}>
         <SideMenu setSection={section => setCurrentSection(section)} role={userRole} />
-        <AppNavbar setSection={section => setCurrentSection(section)} />
+        <AppNavbar
+          setSection={section => setCurrentSection(section)}
+          userRole={userRole}
+          currentSection={currentSection}
+          blockWeekLabel={
+            userRole === "athlete" && currentSection === "training" && selectedBlock && selectedWeek && selectedDay !== null
+              ? translations[lang].blockWeekDayLabel(selectedBlock.blockNumber ?? "", selectedWeek.weekNumber ?? "", (selectedDay as number) + 1)
+              : userRole === "athlete" && currentSection === "training" && selectedBlock && selectedWeek
+              ? translations[lang].blockWeekLabel(selectedBlock.blockNumber ?? "", selectedWeek.weekNumber ?? "")
+              : undefined
+          }
+        />
         {/* Main content */}
         <Box
           component="main"
@@ -72,8 +98,18 @@ export default function DashboardClient(props: { disableCustomTheme?: boolean })
               mt: { xs: 8, md: 0 },
             }}
           >
-            <Header />
-            <MainGrid section={currentSection} />
+            <Header showBreadcrumbs={false} showSearchAndAlerts={false} />
+            {/* Pass selection state to training panel for lifting */}
+            <MainGrid
+              section={currentSection}
+              userRole={userRole}
+              selectedBlock={selectedBlock}
+              setSelectedBlock={setSelectedBlock}
+              selectedWeek={selectedWeek}
+              setSelectedWeek={setSelectedWeek}
+              selectedDay={selectedDay}
+              setSelectedDay={setSelectedDay}
+            />
           </Stack>
         </Box>
       </Box>

@@ -74,12 +74,21 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: "Notes editing not supported." }, { status: 400 });
   }
 
-  // Only allow series fields to update on series
+  // Allow updating athleteNotes string (including empty), or handle effective fields as before
   if (
     !id ||
-    !["effectiveReps", "effectiveWeight", "effectiveRir"].includes(field)
+    !["effectiveReps", "effectiveWeight", "effectiveRir", "athleteNotes"].includes(field)
   ) {
     return NextResponse.json({ error: "Bad request" }, { status: 400 });
+  }
+
+  if (field === "athleteNotes") {
+    // Accept empty string -- clear note if sent as ""
+    const update = await prisma.dayExerciseSeries.update({
+      where: { id },
+      data: { athleteNotes: value ?? "" },
+    });
+    return NextResponse.json(update);
   }
 
   // Convert value to number (if possible) or null

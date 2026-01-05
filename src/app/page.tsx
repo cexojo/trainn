@@ -3,28 +3,22 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Divider from '@mui/material/Divider';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
-import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import AppTheme from './theme/AppTheme';
-import ColorModeSelect from './theme/ColorModeSelect';
-import { GoogleIcon, FacebookIcon } from './components/CustomIcons';
-import Image from 'next/image';
 import { translations, Lang } from './i18n';
 import { useRouter } from 'next/navigation';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useColorScheme } from '@mui/material/styles';
+import { FrontendError } from '@/utils/errors';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -102,13 +96,13 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     // front end validate again for safety
     if (!username || username.trim().length === 0) {
       setUsernameError(true);
-      setUsernameErrorMessage('Por favor introduce un usuario.');
+      setUsernameErrorMessage(translations[lang].loginUsernameRequired);
       setLoading(false);
       return;
     }
     if (!password || password.length < 6) {
       setPasswordError(true);
-      setPasswordErrorMessage('La contraseña debe tener al menos 6 caracteres.');
+      setPasswordErrorMessage(translations[lang].signinPasswordTooShort);
       setLoading(false);
       return;
     }
@@ -120,9 +114,9 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       });
       const data = await response.json();
       if (!response.ok) {
-        setLoginError(data.error || 'Error de autenticación');
-        setSnackbarSeverity('error');
-        setSnackbarMsg(data.error || 'Error de autenticación');
+      setLoginError(data.error || translations[lang].signinLoginFailed);
+      setSnackbarSeverity('error');
+      setSnackbarMsg(data.error || translations[lang].signinLoginFailed);
         setSnackbarOpen(true);
         setLoading(false);
         return;
@@ -137,32 +131,23 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           document.cookie = `elena_auth_token=${data.token}; path=/; secure; samesite=lax`;
         }
         setSnackbarSeverity('success');
-        setSnackbarMsg('Inicio de sesión exitoso. Redirigiendo...');
+        setSnackbarMsg(translations[lang].signinLoginSuccess);
         setSnackbarOpen(true);
         setTimeout(() => {
-          if (data.role === 'admin') {
-            router.push('/admin_dashboard');
-          } else if (data.role === 'athlete') {
-            router.push('/training_schedule');
-          } else {
-            setLoginError('Rol desconocido');
-            setSnackbarSeverity('error');
-            setSnackbarMsg('Rol desconocido');
-            setSnackbarOpen(true);
-          }
+          router.push('/dashboard');
           setLoading(false);
         }, 1200);
       } else {
-        setLoginError('Respuesta inesperada.');
+        setLoginError(translations[lang].unexpectedResponse);
         setSnackbarSeverity('error');
-        setSnackbarMsg('Respuesta inesperada.');
+        setSnackbarMsg(translations[lang].unexpectedResponse);
         setSnackbarOpen(true);
         setLoading(false);
       }
     } catch (err) {
-      setLoginError('No se pudo conectar al servidor.');
+      setLoginError(translations[lang].couldNotConnect);
       setSnackbarSeverity('error');
-      setSnackbarMsg('No se pudo conectar al servidor.');
+      setSnackbarMsg(translations[lang].couldNotConnect);
       setSnackbarOpen(true);
       setLoading(false);
     }
@@ -176,7 +161,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
     if (!username.value || username.value.trim().length === 0) {
       setUsernameError(true);
-      setUsernameErrorMessage('Por favor introduce un usuario.');
+      setUsernameErrorMessage(translations[lang].loginUsernameRequired);
       isValid = false;
     } else {
       setUsernameError(false);
@@ -185,7 +170,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
     if (!password.value || password.value.length < 6) {
       setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
+      setPasswordErrorMessage(translations[lang].signinPasswordTooShort);
       isValid = false;
     } else {
       setPasswordError(false);
@@ -228,11 +213,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               gap: 2,
             }}
           >
-            {loginError && (
-              <Typography color="error" sx={{ mb: 1, fontWeight: 500, textAlign: 'center' }}>
-                {loginError}
-              </Typography>
-            )}
             <FormControl>
               <FormLabel htmlFor="username">{translations[lang].loginUsernameLabel}</FormLabel>
               <TextField

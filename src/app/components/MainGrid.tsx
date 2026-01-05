@@ -3,22 +3,48 @@ import Typography from '@mui/material/Typography';
 import { translations } from '@/app/i18n';
 
 import Button from "@mui/material/Button";
-import DashboardStatsPanel from './DashboardStatsPanel';
+import DashboardStatsPanelAdmin from './DashboardStatsPanelAdmin';
 import TrainingBlocksWizard from './TrainingBlocksWizard';
 import UserTable from "@/app/components/UserTable";
-import ExerciseTable from "@/app/admin_dashboard/ExerciseTable";
+import ExerciseTable from "@/app/dashboard/ExerciseTable";
 import ManageBlocks from "@/app/components/ManageBlocks";
+import TrainingPanel from "./TrainingPanel";
 
 import React, { useState } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, CircularProgress } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, CircularProgress, Snackbar, Alert } from "@mui/material";
 
-export default function MainGrid({ section }: { section?: string | null }) {
+import { FrontendError } from "@/utils/errors";
+
+export default function MainGrid({
+  section,
+  userRole,
+  selectedBlock,
+  setSelectedBlock,
+  selectedWeek,
+  setSelectedWeek,
+  selectedDay,
+  setSelectedDay
+}: {
+  section?: string | null,
+  userRole?: "admin" | "athlete" | null,
+  selectedBlock?: any,
+  setSelectedBlock: (block: any) => void,
+  selectedWeek?: any,
+  setSelectedWeek: (week: any) => void,
+  selectedDay?: number | null,
+  setSelectedDay?: (dayIdx: number | null) => void
+}) {
   const lang = "es"; // Replace with current language context if available
 
   // Modal state for creating athlete
   const [openCreate, setOpenCreate] = useState(false);
   const [createLoading, setCreateLoading] = useState(false);
-  const [createError, setCreateError] = useState<string | null>(null);
+  // Error notification state (snackbar)
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<string | null>(null);
+
+  // Remove obsolete dialog-local error state
+  // const [createError, setCreateError] = useState<string | null>(null);
   const [fields, setFields] = useState({
     name: "",
     username: "",
@@ -52,37 +78,49 @@ export default function MainGrid({ section }: { section?: string | null }) {
   // Handler to create athlete
   const handleCreate = async () => {
     setCreateLoading(true);
-    setCreateError(null);
+    setSnackbarMessage(null);
+    setSnackbarOpen(false);
     const payload = {
       ...fields,
       role: "athlete"
     };
-    const res = await fetch("/api/create_user", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-    setCreateLoading(false);
-    if (res.ok) {
-      setOpenCreate(false);
-      resetFields();
-      setAthletesRefreshKey((k) => k + 1);
-      // Focus the "Crear atleta" button after closing the dialog
-      setTimeout(() => createButtonRef.current?.focus(), 0);
-    } else {
-      setCreateError((await res.json()).error || "Failed to create athlete.");
+    try {
+      const res = await fetch("/api/create_user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      setCreateLoading(false);
+      if (res.ok) {
+        setOpenCreate(false);
+        resetFields();
+        setAthletesRefreshKey((k) => k + 1);
+        // Focus the "Crear atleta" button after closing the dialog
+        setTimeout(() => createButtonRef.current?.focus(), 0);
+      } else {
+        const errorMsg = (await res.json()).error;
+        new FrontendError(errorMsg);
+        setSnackbarMessage(errorMsg);
+        setSnackbarOpen(true);
+        throw new FrontendError(errorMsg);
+      }
+    } catch (err: any) {
+      setCreateLoading(false);
+      new FrontendError(translations[lang].networkOrClientError, err);
+      setSnackbarMessage(translations[lang].networkOrClientError);
+      setSnackbarOpen(true);
     }
   };
 
   return (
     <Box sx={{ width: '100%', maxWidth: '100%' }}>
-      {!section && <DashboardStatsPanel />}
+      {!section && userRole === 'admin' && <DashboardStatsPanelAdmin />}
       {section === "training-blocks" && (
         <Box sx={{ mt: 3, mb: 3 }}>
           <TrainingBlocksWizard />
         </Box>
       )}
-      {section === "create-block" && (
+      {section === "create-block" && userRole === 'admin' && (
         <Box sx={{ mt: 3, mb: 3 }}>
           <Typography variant="h5" sx={{ mb: 2 }}>
             {translations[lang].adminMenuCreateBlock}
@@ -90,7 +128,7 @@ export default function MainGrid({ section }: { section?: string | null }) {
           <TrainingBlocksWizard />
         </Box>
       )}
-      {section === "manage-blocks" && (
+      {section === "manage-blocks" && userRole === 'admin' && (
         <Box sx={{ mt: 3, mb: 3 }}>
           <Typography variant="h5" sx={{ mb: 2 }}>
             {translations[lang].adminMenuManageBlocks}
@@ -98,7 +136,7 @@ export default function MainGrid({ section }: { section?: string | null }) {
           <ManageBlocks />
         </Box>
       )}
-      {section === "athletes" && (
+      {section === "athletes" && userRole === 'admin' && (
         <Box sx={{ mt: 3, mb: 3 }}>
           <Typography variant="h5" sx={{ mb: 2 }}>
             {translations[lang].athletes}
@@ -114,15 +152,15 @@ export default function MainGrid({ section }: { section?: string | null }) {
                   color="primary"
                   onClick={() => setOpenCreate(true)}
                 >
-                  {translations[lang]?.createAthlete ?? "Crear atleta"}
+                  {translations[lang]?.createAthlete}
                 </Button>
                 <Dialog open={openCreate} onClose={() => setOpenCreate(false)}>
-                  <DialogTitle>{translations[lang]?.createAthlete ?? "Crear atleta"}</DialogTitle>
+                  <DialogTitle>{translations[lang]?.createAthlete}</DialogTitle>
                   <DialogContent sx={{ minWidth: 340 }}>
                     <TextField
                       autoFocus
                       margin="dense"
-                      label={translations[lang]?.manageUsersModalName ?? "Name"}
+                      label={translations[lang]?.manageUsersModalName}
                       type="text"
                       fullWidth
                       value={fields.name}
@@ -131,12 +169,12 @@ export default function MainGrid({ section }: { section?: string | null }) {
                     />
                     <TextField
                       margin="dense"
-                      label={translations[lang]?.manageUsersModalUsername ?? "Username"}
+                      label={translations[lang]?.manageUsersModalUsername}
                       type="text"
                       fullWidth
                       value={fields.username}
                       error={touched.username && !valid.username}
-                      helperText={touched.username && !valid.username ? "El usuario ya existe" : ""}
+                      helperText={touched.username && !valid.username ? translations[lang]?.usernameTakenError : ""}
                       onBlur={async () => {
                         setTouched(t => ({ ...t, username: true }));
                         if (fields.username) {
@@ -165,12 +203,12 @@ export default function MainGrid({ section }: { section?: string | null }) {
                     />
                     <TextField
                       margin="dense"
-                      label={translations[lang]?.manageUsersModalEmail ?? "Email"}
+                      label={translations[lang]?.manageUsersModalEmail}
                       type="email"
                       fullWidth
                       value={fields.email}
                       error={touched.email && !valid.email}
-                      helperText={touched.email && !valid.email ? "Introduce un email válido" : ""}
+                      helperText={touched.email && !valid.email ? translations[lang]?.invalidEmailError : ""}
                       onBlur={() => setTouched(t => ({ ...t, email: true }))}
                       onChange={e => {
                         const value = e.target.value;
@@ -185,7 +223,7 @@ export default function MainGrid({ section }: { section?: string | null }) {
                     />
                     <TextField
                       margin="dense"
-                      label="Frecuencia de pago"
+                      label={translations[lang]?.createUserFrequencyLabel}
                       select
                       fullWidth
                       value={fields.paymentFrequency}
@@ -194,13 +232,13 @@ export default function MainGrid({ section }: { section?: string | null }) {
                       sx={{ mt: 1 }}
                       required
                     >
-                      <option value="monthly">Mensual</option>
-                      <option value="quarterly">Trimestral</option>
-                      <option value="yearly">Anual</option>
+                      <option value="monthly">{translations[lang]?.createUserFrequencyMonthly}</option>
+                      <option value="quarterly">{translations[lang]?.createUserFrequencyQuarterly}</option>
+                      <option value="yearly">{translations[lang]?.createUserFrequencyYearly}</option>
                     </TextField>
                     <TextField
                       margin="dense"
-                      label="Importe de pago (€)"
+                      label={translations[lang]?.createUserPaymentAmountLabel}
                       type="number"
                       inputProps={{ min: 0, step: 0.01 }}
                       fullWidth
@@ -208,15 +246,10 @@ export default function MainGrid({ section }: { section?: string | null }) {
                       onChange={e => setFields({ ...fields, paymentAmount: e.target.value })}
                       required
                     />
-                    {createError && (
-                      <Typography color="error" variant="body2" sx={{ mt: 1 }}>
-                        {createError}
-                      </Typography>
-                    )}
                   </DialogContent>
                   <DialogActions>
                     <Button onClick={() => setOpenCreate(false)} disabled={createLoading}>
-                      {translations[lang]?.manageUsersAddPaymentCancel ?? "Cancel"}
+                      {translations[lang]?.manageUsersAddPaymentCancel}
                     </Button>
                     {fields.name &&
                       fields.username &&
@@ -233,7 +266,7 @@ export default function MainGrid({ section }: { section?: string | null }) {
                           color="primary"
                           startIcon={createLoading ? <CircularProgress size={18} color="inherit" /> : undefined}
                         >
-                          {translations[lang]?.createAthlete ?? "Crear atleta"}
+                          {translations[lang]?.createAthlete}
                         </Button>
                     )}
                   </DialogActions>
@@ -243,7 +276,19 @@ export default function MainGrid({ section }: { section?: string | null }) {
           />
         </Box>
       )}
-      {section === "exercises" && (
+      {section === "training" && userRole === 'athlete' && (
+        <Box sx={{ mt: 3, mb: 3 }}>
+          <TrainingPanel
+            selectedBlock={selectedBlock}
+            setSelectedBlock={setSelectedBlock}
+            selectedWeek={selectedWeek}
+            setSelectedWeek={setSelectedWeek}
+            selectedDay={selectedDay}
+            setSelectedDay={setSelectedDay}
+          />
+        </Box>
+      )}
+      {section === "exercises" && userRole === 'admin' && (
         <Box sx={{ mt: 3, mb: 3 }}>
           <Typography variant="h5" sx={{ mb: 2 }}>
             {translations[lang].exercises}
@@ -251,6 +296,17 @@ export default function MainGrid({ section }: { section?: string | null }) {
           <ExerciseTable lang={lang} />
         </Box>
       )}
+    {/* Snackbar for error notifications */}
+    <Snackbar
+      open={snackbarOpen}
+      autoHideDuration={6000}
+      onClose={() => setSnackbarOpen(false)}
+      anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+    >
+      <Alert severity="error" variant="filled" onClose={() => setSnackbarOpen(false)}>
+        {snackbarMessage}
+      </Alert>
+    </Snackbar>
     </Box>
   );
 }

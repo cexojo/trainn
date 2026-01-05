@@ -40,54 +40,98 @@ export function Progress({
   }
   let arrow = "";
   let arrowColor = "";
+  let miniLegend = "";
   if (dReps !== undefined && dWeight !== undefined) {
     if (dReps > 0 && dWeight > 0) {
       arrow = "▲";
       arrowColor = "text-green-800 dark:text-green-400";
+      miniLegend = translations[lang].progressLegendMoreWeightMoreReps || "";
     } else if (
-      (dReps > 0 && dWeight === 0) ||
+      (dReps > 0 && dWeight === 0)
+    ) {
+      arrow = "▲";
+      arrowColor = "text-green-400 dark:text-green-300";
+      miniLegend = translations[lang].progressLegendSameWeightMoreReps || "";
+    } else if (
       (dReps === 0 && dWeight > 0)
     ) {
       arrow = "▲";
       arrowColor = "text-green-400 dark:text-green-300";
+      miniLegend = translations[lang].progressLegendMoreWeightSameReps || "";
     } else if (
-      (dReps > 0 && dWeight < 0) ||
+      (dReps > 0 && dWeight < 0)
+    ) {
+      arrow = "↔";
+      arrowColor = "text-orange-500 dark:text-orange-400";
+      miniLegend = translations[lang].progressLegendLessWeightMoreReps || "";
+    } else if (
       (dReps < 0 && dWeight > 0)
     ) {
       arrow = "↔";
       arrowColor = "text-orange-500 dark:text-orange-400";
+      miniLegend = translations[lang].progressLegendMoreWeightLessReps || "";
     } else if (dReps < 0 && dWeight === 0) {
       arrow = "▼";
       arrowColor = "text-red-400 dark:text-red-400";
+      miniLegend = translations[lang].progressLegendSameWeightLessReps || "";
     } else if (dReps < 0 && dWeight < 0) {
       arrow = "▼";
       arrowColor = "text-red-700 dark:text-red-500";
+      miniLegend = translations[lang].progressLegendLessWeightLessReps || "";
     } else {
       arrow = "→";
       arrowColor = "text-zinc-400";
+      miniLegend = translations[lang].progressLegendNoProgress || "";
     }
   } else if (dReps !== undefined) {
-    if (dReps > 0) { arrow = "▲"; arrowColor = "text-green-400 dark:text-green-300"; }
-    else if (dReps < 0) { arrow = "▼"; arrowColor = "text-red-700 dark:text-red-500"; }
-    else { arrow = "→"; arrowColor = "text-zinc-400"; }
+    if (dReps > 0) {
+      arrow = "▲";
+      arrowColor = "text-green-400 dark:text-green-300";
+      miniLegend = translations[lang].progressLegendMoreRepsOnly || "";
+    }
+    else if (dReps < 0) {
+      arrow = "▼";
+      arrowColor = "text-red-700 dark:text-red-500";
+      miniLegend = translations[lang].progressLegendLessRepsOnly || "";
+    }
+    else {
+      arrow = "→";
+      arrowColor = "text-zinc-400";
+      miniLegend = translations[lang].progressLegendNoProgress || "";
+    }
   } else if (dWeight !== undefined) {
-    if (dWeight > 0) { arrow = "▲"; arrowColor = "text-green-400 dark:text-green-300"; }
-    else if (dWeight < 0) { arrow = "▼"; arrowColor = "text-red-700 dark:text-red-500"; }
-    else { arrow = "→"; arrowColor = "text-zinc-400"; }
+    if (dWeight > 0) {
+      arrow = "▲";
+      arrowColor = "text-green-400 dark:text-green-300";
+      miniLegend = translations[lang].progressLegendMoreWeightOnly || "";
+    }
+    else if (dWeight < 0) {
+      arrow = "▼";
+      arrowColor = "text-red-700 dark:text-red-500";
+      miniLegend = translations[lang].progressLegendLessWeightOnly || "";
+    }
+    else {
+      arrow = "→";
+      arrowColor = "text-zinc-400";
+      miniLegend = translations[lang].progressLegendNoProgress || "";
+    }
   } else {
     return <div />;
   }
   return (
     <div className="flex flex-row items-center justify-center gap-1 h-full text-xs md:text-sm">
-      <span className={arrowColor}>{arrow}</span>
-      {dReps !== undefined && dReps !== 0 && (
-        <span className={colorR}>{translations[lang].progressRLabel}</span>
-      )}
-      {dWeight !== undefined && dWeight !== 0 && dReps !== 0 && dReps !== undefined && dWeight !== undefined ? (
-        <span className="mx-0.5"></span>
-      ) : null}
-      {dWeight !== undefined && dWeight !== 0 && (
-        <span className={colorW}>{translations[lang].progressWLabel}</span>
+      <span style={{ display: "flex", flexDirection: "column", alignItems: "center", lineHeight: 1.15 }}>
+        {dWeight !== undefined && dWeight !== 0 && (
+          <span className={colorW}>{translations[lang].progressWLabel}</span>
+        )}
+        {dReps !== undefined && dReps !== 0 && (
+          <span className={colorR}>{translations[lang].progressRLabel}</span>
+        )}        
+      </span>
+      {miniLegend && (
+        <span style={{ fontSize: "0.68em", color: "#888", marginTop: 1, display: "block", textAlign: "center" }}>
+          {miniLegend}
+        </span>
       )}
     </div>
   );

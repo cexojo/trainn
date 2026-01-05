@@ -35,8 +35,6 @@ export type Translations = {
     loginUsernameLabel: string;
     athletes: string;
     dashboard: string;
-
-    // Stat cards/dashboard
     activeAthletesTitle: string;
     activeAthletesInterval: string;
     actualRevenueTitle: string;
@@ -52,8 +50,12 @@ export type Translations = {
     loginPasswordPlaceholder: string;
     loginLoading: string;
     loginFailed: string;
-
-    // Sign in page
+    loginUsernameRequired: string;
+    signinPasswordTooShort: string;
+    signinLoginFailed: string;
+    signinLoginSuccess: string;
+    unexpectedResponse: string;
+    couldNotConnect: string;
     signinTitle: string;
     signinEmailLabel: string;
     signinEmailPlaceholder: string;
@@ -67,7 +69,6 @@ export type Translations = {
     signinWithFacebook: string;
     signinNoAccount: string;
     signinSignup: string;
-
     dashboardTitle: string;
     adminMenu: string;
     manageUsers: string;
@@ -79,7 +80,13 @@ export type Translations = {
     block: string;
     week: string;
     day: string;
+    blockWeekDayLabel: (block: string | number, week: string | number, day: string | number) => string;
+    blockWeekLabel: (block: string | number, week: string | number) => string;
     exercise: string;
+    createUserPaymentAmountLabel: string;
+    createUserFrequencyMonthly: string;
+    createUserFrequencyQuarterly: string;
+    createUserFrequencyYearly: string;
     muscleGroup: string;
     reps: string;
     weight: string;
@@ -87,6 +94,18 @@ export type Translations = {
     progress: string;
     showLegend: string;
     progressLegend: string;
+    progressLegendMoreWeightMoreReps: string;
+    progressLegendSameWeightMoreReps: string;
+    progressLegendMoreWeightSameReps: string;
+    progressLegendLessWeightMoreReps: string;
+    progressLegendMoreWeightLessReps: string;
+    progressLegendSameWeightLessReps: string;
+    progressLegendLessWeightLessReps: string;
+    progressLegendNoProgress: string;
+    progressLegendMoreRepsOnly: string;
+    progressLegendLessRepsOnly: string;
+    progressLegendMoreWeightOnly: string;
+    progressLegendLessWeightOnly: string;
     legend1: string;
     legend2: string;
     legend3: string;
@@ -153,6 +172,10 @@ export type Translations = {
     manageUsersQuickFilterNoFuture: string;
     manageUsersQuickFilterAllActive: string;
     manageUsersQuickFilterInactive: string;
+    sendWelcomeEmail: string;
+    sendWelcomeEmailSuccess: string;
+    sendWelcomeEmailError: string;
+    sendWelcomeEmailConfirm: (name: string, email: string) => string;
     manageUsersTableEmpty: string;
     manageUsersTableShowing: string;
     hideUser: string;
@@ -183,8 +206,6 @@ export type Translations = {
     wizardSeriesNotes: string;
     wizardDropsetNotes: string;
     wizardDragSeries: string;
-
-        // Create Block Wizard translations
     createBlockWizardStepConfig: string;
     createBlockWizardStepDesign: string;
     createBlockWizardStepSummary: string;
@@ -198,13 +219,9 @@ export type Translations = {
     createBlockWizardFinishButton: string;
     createBlockWizardNextButton: string;
     createBlockWizardStep1Info: string;
-
-    // Block visibility (wizard)
     blockVisibilityLabel: string;
     blockVisibilityImmediately: string;
     blockVisibilityNotYet: string;
-
-    // Training tab and table headers
     trainingTab: string;
     trainingTableExercise: string;
     trainingTableSeries: string;
@@ -217,8 +234,6 @@ export type Translations = {
     trainingTableProgress: string;
     exercises: string;
     createAthlete: string;
-
-    // Added for ManageBlocks.tsx
     dropsetAbbr: string;
     repsMin: string;
     repsMax: string;
@@ -233,17 +248,20 @@ export type Translations = {
     athleteDataGroup: string;
     min: string;
     max: string;
+    networkOrClientError: string;
+    networkOrClientErrorCreateAthlete: string;
+    usernameTakenError: string;
+    invalidEmailError: string;
+    createUserFrequencyLabel: string;
   };
 };
 
-// Export translations used in front-end
 export const translations: Translations = {
   en: {
     blockNoContent: "No block content available.",
     blockNoWeeks: "No weeks in this block.",
     blockNoDaysInWeek: "No days in this week.",
     blockNoExerciseForDay: "No exercises for this day.",
-    // ManageBlocks Page
     copyWeekError: "An error occurred copying the week.",
     deleteBlockTooltip: "Delete block",
     hideBlock: "Hide block",
@@ -256,7 +274,7 @@ export const translations: Translations = {
     series: "Series",
     copyWeekTitle: "Copy week",
     copyWeekConfirm: (from, to) =>
-      `Are you sure you want to copy week ${from}? This will move all subsequent weeks forward and create a new week ${to} with the same days, exercise, series and values.`,
+      `Are you sure you want to copy week ${from}? This will move all subsequent weeks forward and create a new week ${to} with the same days, exercises, series and values.`,
     cancel: "Cancel",
     copy: "Copy",
     deleteWeekTitle: "Delete week",
@@ -269,49 +287,10 @@ export const translations: Translations = {
     thisBlock: "this block",
     seriesSingular: "series",
     seriesPlural: "series",
-    // Training tab and table headers
-    trainingTab: "Training",
-    trainingTableExercise: "Exercise",
-    trainingTableSeries: "Series",
-    trainingTableDS: "DS",
-    trainingTableWeight: "Weight",
-    trainingTableReps: "Reps",
-    trainingTableMinMaxReps: "Min-Max Reps",
-    trainingTableRIR: "RIR",
-    trainingTableMinMaxRIR: "Min-Max RIR",
-    trainingTableProgress: "Progress",
-
-    adminMenuHome: "Home",
-    adminMenuAthletes: "Athletes",
-    adminMenuSettings: "Settings",
-    adminMenuAbout: "About",
-    adminMenuFeedback: "Feedback",
-    adminMenuExercises: "Exercises",
-    adminMenuTrainingBlocks: "Training Blocks",
-    adminMenuCreateBlock: "Create Block",
-    adminMenuManageBlocks: "Manage Blocks",
-
-    // Create Block Wizard
-    createBlockWizardStepConfig: "Select athlete and configuration",
-    createBlockWizardStepDesign: "Program design",
-    createBlockWizardStepSummary: "Summary and confirmation",
-    createBlockWizardAthleteLabel: "Athlete",
-    createBlockWizardAthletePlaceholder: "Search athlete",
-    createBlockWizardWeeksLabel: "Number of weeks",
-    createBlockWizardDaysPerWeekLabel: "Days per week",
-    createBlockWizardDesignStepText: "Design: Drag and arrange exercises per day…",
-    createBlockWizardSummaryStepText: "Review your selections before creating block…",
-    createBlockWizardBackButton: "Back",
-    createBlockWizardFinishButton: "Finish",
-    createBlockWizardNextButton: "Next",
-    createBlockWizardStep1Info: "To start creating the block, select the athlete, the block duration in weeks, and how many days per week the athlete will train.",
-
+    loginTitle: "Sign in",
+    loginUsernameLabel: "Username",
     athletes: "Athletes",
     dashboard: "Dashboard",
-    loginTitle: "Login",
-    loginUsernameLabel: "Username",
-
-    // Stat cards/dashboard
     activeAthletesTitle: "Active athletes",
     activeAthletesInterval: "Active athletes per month",
     actualRevenueTitle: "Actual revenue",
@@ -327,8 +306,12 @@ export const translations: Translations = {
     loginPasswordPlaceholder: "Enter your password",
     loginLoading: "Logging in...",
     loginFailed: "Login failed",
-
-    // Sign in page translations
+    loginUsernameRequired: "Please enter your username.",
+    signinPasswordTooShort: "Password must be at least 6 characters long.",
+    signinLoginFailed: "Authentication failed",
+    signinLoginSuccess: "Successfully signed in. Redirecting...",
+    unexpectedResponse: "Unexpected response.",
+    couldNotConnect: "Could not connect to server.",
     signinTitle: "Sign in",
     signinEmailLabel: "Email",
     signinEmailPlaceholder: "your@email.com",
@@ -342,7 +325,6 @@ export const translations: Translations = {
     signinWithFacebook: "Sign in with Facebook",
     signinNoAccount: "Don't have an account?",
     signinSignup: "Sign up",
-
     dashboardTitle: "Athlete Dashboard",
     adminMenu: "Admin Menu",
     manageUsers: "Manage Users",
@@ -352,10 +334,16 @@ export const translations: Translations = {
     ds: "DS",
     nextWeek: "Next week",
     block: "Block",
+    blockWeekDayLabel: (block, week, day) => `Block ${block} / Week ${week} / Day ${day}`,
+    blockWeekLabel: (block, week) => `Block ${block} / Week ${week}`,
     week: "Week",
     day: "Day",
     exercise: "Exercise",
     exercises: "Exercises",
+    createUserPaymentAmountLabel: "Payment amount",
+    createUserFrequencyMonthly: "Monthly",
+    createUserFrequencyQuarterly: "Quarterly",
+    createUserFrequencyYearly: "Yearly",
     muscleGroup: "Muscle Group",
     reps: "Reps",
     weight: "Weight (kg)",
@@ -363,6 +351,18 @@ export const translations: Translations = {
     progress: "Progress",
     showLegend: "Show progress legend",
     progressLegend: "Progress Legend",
+    progressLegendMoreWeightMoreReps: "More weight and more reps",
+    progressLegendSameWeightMoreReps: "Same weight, more reps",
+    progressLegendMoreWeightSameReps: "More weight, same reps",
+    progressLegendLessWeightMoreReps: "Less weight, more reps",
+    progressLegendMoreWeightLessReps: "More weight, less reps",
+    progressLegendSameWeightLessReps: "Same weight, less reps",
+    progressLegendLessWeightLessReps: "Less weight and less reps",
+    progressLegendNoProgress: "No progress",
+    progressLegendMoreRepsOnly: "More reps",
+    progressLegendLessRepsOnly: "Less reps",
+    progressLegendMoreWeightOnly: "More weight",
+    progressLegendLessWeightOnly: "Less weight",
     legend1: "Both reps and weight positive",
     legend2: "One positive, other neutral",
     legend3: "One positive, other negative",
@@ -379,7 +379,7 @@ export const translations: Translations = {
     nameDefault: "John Doe",
     progressRLabel: "R",
     progressWLabel: "W",
-    lastWeekShort: "Last wk: ",
+    lastWeekShort: "→ ",
     loadingAthletes: "Loading athletes...",
     creatingBlock: "Creating block...",
     blockCreated: "Block created!",
@@ -398,7 +398,7 @@ export const translations: Translations = {
     manageUsersStatusEmpty: "",
     manageUsersActionsEmpty: "",
     accessDenied: "Access Denied",
-    accessDeniedDesc: "This page is only visible to admin users.",
+    accessDeniedDesc: "Only admins can manage users.",
     manageUsersFilterOnlyUnpaid: "Only unpaid",
     paymentsTableDate: "Date",
     paymentsTableAmount: "Amount",
@@ -409,10 +409,10 @@ export const translations: Translations = {
     infoTab: "Info",
     paymentsTab: "Payments",
     actionsMarkPayed: "Mark this payment as payed?",
-    actionsMarkUnpayed: "Mark this payment as unpayed?",
+    actionsMarkUnpayed: "Mark this payment as unpaid?",
     actionsRemovePayment: "Remove this payment?",
     actionsMarkPayedTooltip: "Mark as payed",
-    actionsMarkUnpayedTooltip: "Mark as unpayed",
+    actionsMarkUnpayedTooltip: "Mark as unpaid",
     actionsRemovePaymentTooltip: "Remove payment",
     actionsConfirmYes: "Yes",
     actionsConfirmNo: "No",
@@ -429,18 +429,26 @@ export const translations: Translations = {
     manageUsersQuickFilterNoFuture: "No future payments",
     manageUsersQuickFilterAllActive: "All active users",
     manageUsersQuickFilterInactive: "Inactive users",
+    sendWelcomeEmail: "Send welcome email",
+    sendWelcomeEmailSuccess: "Welcome email sent!",
+    sendWelcomeEmailError: "Could not send the welcome email.",
+    sendWelcomeEmailConfirm: (name, email) =>
+      `A welcome email will be sent to ${name} (${email}) so they can generate a new password. Do you want to continue?`,
     manageUsersTableEmpty: "No users.",
     manageUsersTableShowing: "Showing {from}–{to} of {total} users",
     hideUser: "Hide user",
     unhideUser: "Unhide user",
     hiddenUserStatus: "User hidden",
+    adminMenuHome: "Home",
+    adminMenuAthletes: "Athletes",
+    adminMenuSettings: "Settings",
+    adminMenuAbout: "About",
+    adminMenuFeedback: "Feedback",
+    adminMenuExercises: "Exercises",
+    adminMenuTrainingBlocks: "Training Blocks",
+    adminMenuCreateBlock: "Create Block",
+    adminMenuManageBlocks: "Manage Blocks",
     editFieldTooltip: "Click to edit",
-    createAthlete: "Create athlete",
-
-    // Block visibility (wizard)
-    blockVisibilityLabel: "Block visibility",
-    blockVisibilityImmediately: "Publish the block for the athlete immediately",
-    blockVisibilityNotYet: "Do not publish yet, I will do it later",
     wizardAddExercise: "Add exercise",
     wizardNoExercises: "No exercises assigned.",
     wizardRemoveExercise: "Remove Exercise",
@@ -456,8 +464,33 @@ export const translations: Translations = {
     wizardSeriesNotes: "Notes",
     wizardDropsetNotes: "Notes (dropset)",
     wizardDragSeries: "Drag to reorder",
-
-    // --- Added for ManageBlocks.tsx UI/column translation
+    createBlockWizardStepConfig: "Select athlete and configuration",
+    createBlockWizardStepDesign: "Program design",
+    createBlockWizardStepSummary: "Summary and confirmation",
+    createBlockWizardAthleteLabel: "Athlete",
+    createBlockWizardAthletePlaceholder: "Search athlete",
+    createBlockWizardWeeksLabel: "Number of weeks",
+    createBlockWizardDaysPerWeekLabel: "Days per week",
+    createBlockWizardDesignStepText: "Design: Drag and arrange exercises per day…",
+    createBlockWizardSummaryStepText: "Review your selections before creating block…",
+    createBlockWizardBackButton: "Back",
+    createBlockWizardFinishButton: "Finish",
+    createBlockWizardNextButton: "Next",
+    createBlockWizardStep1Info: "To start creating the block, select the athlete, the block duration in weeks, and how many days per week the athlete will train.",
+    blockVisibilityLabel: "Block visibility",
+    blockVisibilityImmediately: "Publish the block for the athlete immediately",
+    blockVisibilityNotYet: "Do not publish yet, I will do it later",
+    trainingTab: "Training",
+    trainingTableExercise: "Exercise",
+    trainingTableSeries: "Series",
+    trainingTableDS: "DS",
+    trainingTableWeight: "Weight",
+    trainingTableReps: "Reps",
+    trainingTableMinMaxReps: "Min-Max Reps",
+    trainingTableRIR: "RIR",
+    trainingTableMinMaxRIR: "Min-Max RIR",
+    trainingTableProgress: "Progress",
+    createAthlete: "Create athlete",
     dropsetAbbr: "DS",
     repsMin: "Reps Min",
     repsMax: "Reps Max",
@@ -472,13 +505,17 @@ export const translations: Translations = {
     athleteDataGroup: "Athlete Data",
     min: "Min",
     max: "Max",
+    networkOrClientError: "A network or client error occurred",
+    networkOrClientErrorCreateAthlete: "Network or client error while creating athlete",
+    usernameTakenError: "That username is already taken",
+    invalidEmailError: "Invalid email address",
+    createUserFrequencyLabel: "Create user frequency"
   },
   es: {
     blockNoContent: "No hay contenido del bloque disponible.",
     blockNoWeeks: "No hay semanas en el bloque.",
     blockNoDaysInWeek: "No hay días en esta semana.",
     blockNoExerciseForDay: "Ningún ejercicio para este día.",
-    // ManageBlocks Page
     copyWeekError: "Ha ocurrido un error al copiar la semana",
     deleteBlockTooltip: "Eliminar bloque",
     hideBlock: "Ocultar bloque",
@@ -504,7 +541,6 @@ export const translations: Translations = {
     thisBlock: "este bloque",
     seriesSingular: "serie",
     seriesPlural: "series",
-    // Training tab and table headers
     trainingTab: "Entrenamiento",
     trainingTableExercise: "Ejercicio",
     trainingTableSeries: "Serie",
@@ -514,14 +550,11 @@ export const translations: Translations = {
     trainingTableMinMaxReps: "Rango Reps",
     trainingTableRIR: "RIR",
     trainingTableMinMaxRIR: "Rango RIR",
-    trainingTableProgress: "Progreso",
-
+    trainingTableProgress: "Prog.",
     athletes: "Atletas",
     dashboard: "Panel de control",
     loginTitle: "Iniciar sesión",
     loginUsernameLabel: "Usuario",
-
-    // Stat cards/dashboard
     activeAthletesTitle: "Atletas activos",
     activeAthletesInterval: "Atletas activos por mes",
     actualRevenueTitle: "Ingresos reales",
@@ -537,8 +570,12 @@ export const translations: Translations = {
     loginPasswordPlaceholder: "Introduce tu contraseña",
     loginLoading: "Iniciando sesión...",
     loginFailed: "Error al iniciar sesión",
-
-    // Sign in page translations
+    loginUsernameRequired: "Por favor introduce un usuario.",
+    signinPasswordTooShort: "La contraseña debe tener al menos 6 caracteres.",
+    signinLoginFailed: "Error de autenticación",
+    signinLoginSuccess: "Inicio de sesión exitoso. Redirigiendo...",
+    unexpectedResponse: "Respuesta inesperada.",
+    couldNotConnect: "No se pudo conectar al servidor.",
     signinTitle: "Iniciar sesión",
     signinEmailLabel: "Correo electrónico",
     signinEmailPlaceholder: "tucorreo@correo.com",
@@ -552,7 +589,6 @@ export const translations: Translations = {
     signinWithFacebook: "Iniciar sesión con Facebook",
     signinNoAccount: "¿No tienes una cuenta?",
     signinSignup: "Regístrate",
-
     dashboardTitle: "Panel del atleta",
     adminMenu: "Menú de administrador",
     manageUsers: "Gestionar usuarios",
@@ -562,17 +598,35 @@ export const translations: Translations = {
     ds: "DS",
     nextWeek: "Semana siguiente",
     block: "Bloque",
+    blockWeekDayLabel: (block, week, day) => `Bloque ${block} / Semana ${week} / Día ${day}`,
+    blockWeekLabel: (block, week) => `Bloque ${block} / Semana ${week}`,
     week: "Semana",
     day: "Día",
     exercise: "Ejercicio",
     exercises: "Ejercicios",
+    createUserPaymentAmountLabel: "Importe del pago",
+    createUserFrequencyMonthly: "Mensual",
+    createUserFrequencyQuarterly: "Trimestral",
+    createUserFrequencyYearly: "Anual",
     muscleGroup: "Grupo muscular",
-    reps: "Repeticiones",
-    weight: "Peso (kg)",
+    reps: "Reps",
+    weight: "Peso",
     rir: "RIR",
-    progress: "Progreso",
+    progress: "Prog.",
     showLegend: "Ver leyenda de progreso",
     progressLegend: "Leyenda de Progreso",
+    progressLegendMoreWeightMoreReps: "Más peso y más repes",
+    progressLegendSameWeightMoreReps: "Mismo peso, más repes",
+    progressLegendMoreWeightSameReps: "Más peso, mismas repes",
+    progressLegendLessWeightMoreReps: "Menos peso, más repes",
+    progressLegendMoreWeightLessReps: "Más peso, menos repes",
+    progressLegendSameWeightLessReps: "Mismo peso, menos repes",
+    progressLegendLessWeightLessReps: "Menos peso y menos repes",
+    progressLegendNoProgress: "Sin progreso",
+    progressLegendMoreRepsOnly: "Más repes",
+    progressLegendLessRepsOnly: "Menos repes",
+    progressLegendMoreWeightOnly: "Más peso",
+    progressLegendLessWeightOnly: "Menos peso",
     legend1: "Repeticiones y peso suben",
     legend2: "Uno sube, otro neutro",
     legend3: "Uno sube, otro baja",
@@ -589,7 +643,7 @@ export const translations: Translations = {
     nameDefault: "John Doe",
     progressRLabel: "R",
     progressWLabel: "P",
-    lastWeekShort: "Sem. ant.: ",
+    lastWeekShort: "→ ",
     loadingAthletes: "Cargando atletas...",
     creatingBlock: "Creando bloque...",
     blockCreated: "¡Bloque creado!",
@@ -639,6 +693,11 @@ export const translations: Translations = {
     manageUsersQuickFilterNoFuture: "Sin pagos futuros",
     manageUsersQuickFilterAllActive: "Usuarios activos",
     manageUsersQuickFilterInactive: "Usuarios inactivos",
+    sendWelcomeEmail: "Enviar correo de bienvenida",
+    sendWelcomeEmailSuccess: "¡Correo de bienvenida enviado!",
+    sendWelcomeEmailError: "No se pudo enviar el correo de bienvenida.",
+    sendWelcomeEmailConfirm: (name, email) =>
+      `Se enviará a ${name} (${email}) un correo de bienvenida para que genere una nueva contraseña, ¿desea continuar?`,
     manageUsersTableEmpty: "No hay usuarios.",
     manageUsersTableShowing: "Mostrando {from}–{to} de {total} usuarios",
     hideUser: "Ocultar usuario",
@@ -653,26 +712,8 @@ export const translations: Translations = {
     adminMenuTrainingBlocks: "Bloques de entrenamiento",
     adminMenuCreateBlock: "Crear bloque",
     adminMenuManageBlocks: "Gestionar bloques",
-
-    // Create Block Wizard
-    createBlockWizardStepConfig: "Seleccionar atleta y configuración",
-    createBlockWizardStepDesign: "Diseño del programa",
-    createBlockWizardStepSummary: "Resumen y confirmación",
-    createBlockWizardAthleteLabel: "Atleta",
-    createBlockWizardAthletePlaceholder: "Buscar atleta",
-    createBlockWizardWeeksLabel: "Número de semanas",
-    createBlockWizardDaysPerWeekLabel: "Días por semana",
-    createBlockWizardDesignStepText: "Diseño: Arrastra y organiza ejercicios por día…",
-    createBlockWizardSummaryStepText: "Revisa tu selección antes de crear el bloque…",
-    createBlockWizardBackButton: "Atrás",
-    createBlockWizardFinishButton: "Finalizar",
-    createBlockWizardNextButton: "Siguiente",
-    createBlockWizardStep1Info: "Para empezar a crear el bloque, selecciona el atleta, la duración en semanas del bloque y cuántos días a la semana entrenará el atleta",
-
     editFieldTooltip: "Haz clic para editar",
     createAthlete: "Crear atleta",
-
-    // Block visibility (wizard)
     blockVisibilityLabel: "Visibilidad del bloque",
     blockVisibilityImmediately: "Publicar el bloque para el atleta al crearlo",
     blockVisibilityNotYet: "No publicarlo aún, lo haré yo en otro momento",
@@ -691,8 +732,19 @@ export const translations: Translations = {
     wizardSeriesNotes: "Notas",
     wizardDropsetNotes: "Notas (dropset)",
     wizardDragSeries: "Arrastrar para reordenar",
-
-    // --- Añadido para ManageBlocks.tsx
+    createBlockWizardStepConfig: "Seleccionar atleta y configuración",
+    createBlockWizardStepDesign: "Diseño del programa",
+    createBlockWizardStepSummary: "Resumen y confirmación",
+    createBlockWizardAthleteLabel: "Atleta",
+    createBlockWizardAthletePlaceholder: "Buscar atleta",
+    createBlockWizardWeeksLabel: "Número de semanas",
+    createBlockWizardDaysPerWeekLabel: "Días por semana",
+    createBlockWizardDesignStepText: "Diseño: Arrastra y organiza ejercicios por día…",
+    createBlockWizardSummaryStepText: "Revisa tu selección antes de crear el bloque…",
+    createBlockWizardBackButton: "Atrás",
+    createBlockWizardFinishButton: "Finalizar",
+    createBlockWizardNextButton: "Siguiente",
+    createBlockWizardStep1Info: "Para empezar a crear el bloque, selecciona el atleta, la duración en semanas del bloque y cuántos días a la semana entrenará el atleta",
     dropsetAbbr: "DS",
     repsMin: "Mín. Reps",
     repsMax: "Máx. Reps",
@@ -707,5 +759,10 @@ export const translations: Translations = {
     athleteDataGroup: "Datos del atleta",
     min: "Mín.",
     max: "Máx.",
+    networkOrClientError: "Se produjo un error de red o cliente",
+    networkOrClientErrorCreateAthlete: "Error de red o cliente al crear atleta",
+    usernameTakenError: "Ese nombre de usuario ya está en uso",
+    invalidEmailError: "Correo electrónico inválido",
+    createUserFrequencyLabel: "Frecuencia para crear usuario"
   }
 };

@@ -359,6 +359,11 @@ export default function UserTable({
   const [contextMenuAnchor, setContextMenuAnchor] = useState<{mouseX: number, mouseY: number} | null>(null);
   const [contextMenuRow, setContextMenuRow] = useState<any | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
+  const [pendingWelcomeUser, setPendingWelcomeUser] = useState<any | null>(null);
+  const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  // Import logAdminError
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const logAdminError = require("@/app/utils/logAdminError").logAdminError;
 
   useEffect(() => {
     setLoading(true);
@@ -625,6 +630,15 @@ export default function UserTable({
               ? translations[lang].unhideUser
               : translations[lang].hideUser}
           </MenuItem>
+          <MenuItem
+            onClick={e => {
+              e.stopPropagation();
+              setContextMenuAnchor(null);
+              if (contextMenuRow) setPendingWelcomeUser(contextMenuRow);
+            }}
+          >
+            {translations[lang].sendWelcomeEmail}
+          </MenuItem>
         </Menu>
         <Dialog
           open={!!selected}
@@ -741,6 +755,91 @@ export default function UserTable({
         {(loading || actionLoading) && (
           <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", position: "absolute", width: "100%", height: "100%", top: 0, left: 0, background: "rgba(255,255,255,0.5)", zIndex: 1999 }}>
             <CircularProgress />
+          </Box>
+        )}
+        <Dialog
+          open={!!pendingWelcomeUser}
+          onClose={() => setPendingWelcomeUser(null)}
+        >
+          <DialogTitle>{translations[lang].sendWelcomeEmail}</DialogTitle>
+          <DialogContent>
+            <Typography>
+              {pendingWelcomeUser &&
+                translations[lang].sendWelcomeEmailConfirm(
+                  pendingWelcomeUser.name || pendingWelcomeUser.username || "",
+                  pendingWelcomeUser.email || ""
+                )}
+            </Typography>
+          </DialogContent>
+          <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, m: 2 }}>
+            <Button onClick={() => setPendingWelcomeUser(null)} color="inherit">
+              {translations[lang].actionsConfirmNo}
+            </Button>
+            <Button
+              color="primary"
+              variant="contained"
+              disabled={actionLoading}
+              onClick={async () => {
+                if (!pendingWelcomeUser) return;
+                setActionLoading(true);
+                try {
+                  const res = await fetch("/api/send-welcome-email", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId: pendingWelcomeUser.id })
+                  });
+                  if (res.ok) {
+                    setNotification({ type: "success", message: translations[lang].sendWelcomeEmailSuccess });
+                  } else {
+                    logAdminError(res, "Send welcome email API error");
+                    setNotification({ type: "error", message: translations[lang].sendWelcomeEmailError });
+                  }
+                } catch (err) {
+                  logAdminError(err, "Send welcome email exception");
+                  setNotification({ type: "error", message: translations[lang].sendWelcomeEmailError });
+                }
+                setActionLoading(false);
+                setPendingWelcomeUser(null);
+              }}
+              autoFocus
+            >
+              {translations[lang].actionsConfirmYes}
+            </Button>
+          </Box>
+        </Dialog>
+        {/* Notification Snackbar */}
+        {notification && (
+          <Box sx={{
+            position: "fixed",
+            bottom: 32,
+            left: 0,
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            zIndex: 16000,
+          }}>
+            <Box sx={{
+              bgcolor: notification.type === "success" ? "#1AAF4B" : "#E53935",
+              color: "#fff",
+              px: 3,
+              py: 1.2,
+              borderRadius: 2,
+              boxShadow: 3,
+              fontWeight: 500,
+              fontSize: 16,
+              textAlign: "center",
+              mx: "auto",
+              minWidth: 240,
+            }}>
+              {notification.message}
+              <IconButton
+                size="small"
+                sx={{ color: "#fff", ml: 2 }}
+                onClick={() => setNotification(null)}
+              >
+                <CancelIcon fontSize="small" />
+              </IconButton>
+            </Box>
           </Box>
         )}
       </Box>

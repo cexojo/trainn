@@ -75,6 +75,7 @@ model User {
   username              String          @unique
   email                 String          @unique
   password              String?
+  passwordRefreshToken  String?         @unique
   isocode               String?
   lastVisitedWeek       String? // weekId of last visited week
   registrationDate      DateTime        @default(now())

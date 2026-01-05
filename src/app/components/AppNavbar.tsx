@@ -28,7 +28,17 @@ const Toolbar = styled(MuiToolbar)({
   },
 });
 
-export default function AppNavbar({ setSection }: { setSection: (section: string | null) => void }) {
+export default function AppNavbar({
+  setSection,
+  userRole,
+  currentSection,
+  blockWeekLabel,
+}: {
+  setSection: (section: string | null) => void;
+  userRole?: string | null;
+  currentSection?: string | null;
+  blockWeekLabel?: string;
+}) {
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen: boolean) => () => {
@@ -64,9 +74,16 @@ export default function AppNavbar({ setSection }: { setSection: (section: string
             sx={{ justifyContent: 'center', mr: 'auto' }}
           >
             <CustomIcon />
-            <Typography variant="h4" component="h1" sx={{ color: 'text.primary' }}>
-              {translations["es"]?.dashboard ?? "Dashboard"}
-            </Typography>
+            <Box>
+              <Typography variant="h4" component="h1" sx={{ color: 'text.primary' }}>
+                {translations["es"].dashboard}
+              </Typography>
+              {blockWeekLabel && (
+                <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.25 }}>
+                  {blockWeekLabel}
+                </Typography>
+              )}
+            </Box>
           </Stack>
           <MenuButton aria-label="menu" onClick={toggleDrawer(true)}>
             <MenuRoundedIcon />

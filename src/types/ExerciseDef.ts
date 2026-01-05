@@ -1,4 +1,5 @@
 export type ExerciseDef = {
+  athleteUserRead?: boolean;
   id: string;
   day: string;
   exerciseNumber?: number;

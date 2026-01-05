@@ -7456,6 +7456,7 @@ export namespace Prisma {
     username: string | null
     email: string | null
     password: string | null
+    passwordRefreshToken: string | null
     isocode: string | null
     lastVisitedWeek: string | null
     registrationDate: Date | null
@@ -7474,6 +7475,7 @@ export namespace Prisma {
     username: string | null
     email: string | null
     password: string | null
+    passwordRefreshToken: string | null
     isocode: string | null
     lastVisitedWeek: string | null
     registrationDate: Date | null
@@ -7492,6 +7494,7 @@ export namespace Prisma {
     username: number
     email: number
     password: number
+    passwordRefreshToken: number
     isocode: number
     lastVisitedWeek: number
     registrationDate: number
@@ -7520,6 +7523,7 @@ export namespace Prisma {
     username?: true
     email?: true
     password?: true
+    passwordRefreshToken?: true
     isocode?: true
     lastVisitedWeek?: true
     registrationDate?: true
@@ -7538,6 +7542,7 @@ export namespace Prisma {
     username?: true
     email?: true
     password?: true
+    passwordRefreshToken?: true
     isocode?: true
     lastVisitedWeek?: true
     registrationDate?: true
@@ -7556,6 +7561,7 @@ export namespace Prisma {
     username?: true
     email?: true
     password?: true
+    passwordRefreshToken?: true
     isocode?: true
     lastVisitedWeek?: true
     registrationDate?: true
@@ -7661,6 +7667,7 @@ export namespace Prisma {
     username: string
     email: string
     password: string | null
+    passwordRefreshToken: string | null
     isocode: string | null
     lastVisitedWeek: string | null
     registrationDate: Date
@@ -7698,6 +7705,7 @@ export namespace Prisma {
     username?: boolean
     email?: boolean
     password?: boolean
+    passwordRefreshToken?: boolean
     isocode?: boolean
     lastVisitedWeek?: boolean
     registrationDate?: boolean
@@ -7719,6 +7727,7 @@ export namespace Prisma {
     username?: boolean
     email?: boolean
     password?: boolean
+    passwordRefreshToken?: boolean
     isocode?: boolean
     lastVisitedWeek?: boolean
     registrationDate?: boolean
@@ -7737,6 +7746,7 @@ export namespace Prisma {
     username?: boolean
     email?: boolean
     password?: boolean
+    passwordRefreshToken?: boolean
     isocode?: boolean
     lastVisitedWeek?: boolean
     registrationDate?: boolean
@@ -7755,6 +7765,7 @@ export namespace Prisma {
     username?: boolean
     email?: boolean
     password?: boolean
+    passwordRefreshToken?: boolean
     isocode?: boolean
     lastVisitedWeek?: boolean
     registrationDate?: boolean
@@ -7767,7 +7778,7 @@ export namespace Prisma {
     lastKOLogin?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "username" | "email" | "password" | "isocode" | "lastVisitedWeek" | "registrationDate" | "hidingDate" | "subscriptionAmount" | "subscriptionFrequency" | "role" | "hidden" | "lastOKLogin" | "lastKOLogin", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "username" | "email" | "password" | "passwordRefreshToken" | "isocode" | "lastVisitedWeek" | "registrationDate" | "hidingDate" | "subscriptionAmount" | "subscriptionFrequency" | "role" | "hidden" | "lastOKLogin" | "lastKOLogin", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     blocks?: boolean | User$blocksArgs<ExtArgs>
     payments?: boolean | User$paymentsArgs<ExtArgs>
@@ -7788,6 +7799,7 @@ export namespace Prisma {
       username: string
       email: string
       password: string | null
+      passwordRefreshToken: string | null
       isocode: string | null
       lastVisitedWeek: string | null
       registrationDate: Date
@@ -8228,6 +8240,7 @@ export namespace Prisma {
     readonly username: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
+    readonly passwordRefreshToken: FieldRef<"User", 'String'>
     readonly isocode: FieldRef<"User", 'String'>
     readonly lastVisitedWeek: FieldRef<"User", 'String'>
     readonly registrationDate: FieldRef<"User", 'DateTime'>
@@ -12259,6 +12272,7 @@ export namespace Prisma {
     username: 'username',
     email: 'email',
     password: 'password',
+    passwordRefreshToken: 'passwordRefreshToken',
     isocode: 'isocode',
     lastVisitedWeek: 'lastVisitedWeek',
     registrationDate: 'registrationDate',
@@ -12743,6 +12757,7 @@ export namespace Prisma {
     username?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
     password?: StringNullableFilter<"User"> | string | null
+    passwordRefreshToken?: StringNullableFilter<"User"> | string | null
     isocode?: StringNullableFilter<"User"> | string | null
     lastVisitedWeek?: StringNullableFilter<"User"> | string | null
     registrationDate?: DateTimeFilter<"User"> | Date | string
@@ -12763,6 +12778,7 @@ export namespace Prisma {
     username?: SortOrder
     email?: SortOrder
     password?: SortOrderInput | SortOrder
+    passwordRefreshToken?: SortOrderInput | SortOrder
     isocode?: SortOrderInput | SortOrder
     lastVisitedWeek?: SortOrderInput | SortOrder
     registrationDate?: SortOrder
@@ -12781,6 +12797,7 @@ export namespace Prisma {
     id?: string
     username?: string
     email?: string
+    passwordRefreshToken?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
@@ -12798,7 +12815,7 @@ export namespace Prisma {
     lastKOLogin?: DateTimeNullableFilter<"User"> | Date | string | null
     blocks?: TrainingBlockListRelationFilter
     payments?: PaymentListRelationFilter
-  }, "id" | "username" | "email">
+  }, "id" | "username" | "email" | "passwordRefreshToken">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
@@ -12806,6 +12823,7 @@ export namespace Prisma {
     username?: SortOrder
     email?: SortOrder
     password?: SortOrderInput | SortOrder
+    passwordRefreshToken?: SortOrderInput | SortOrder
     isocode?: SortOrderInput | SortOrder
     lastVisitedWeek?: SortOrderInput | SortOrder
     registrationDate?: SortOrder
@@ -12832,6 +12850,7 @@ export namespace Prisma {
     username?: StringWithAggregatesFilter<"User"> | string
     email?: StringWithAggregatesFilter<"User"> | string
     password?: StringNullableWithAggregatesFilter<"User"> | string | null
+    passwordRefreshToken?: StringNullableWithAggregatesFilter<"User"> | string | null
     isocode?: StringNullableWithAggregatesFilter<"User"> | string | null
     lastVisitedWeek?: StringNullableWithAggregatesFilter<"User"> | string | null
     registrationDate?: DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -13378,6 +13397,7 @@ export namespace Prisma {
     username: string
     email: string
     password?: string | null
+    passwordRefreshToken?: string | null
     isocode?: string | null
     lastVisitedWeek?: string | null
     registrationDate?: Date | string
@@ -13398,6 +13418,7 @@ export namespace Prisma {
     username: string
     email: string
     password?: string | null
+    passwordRefreshToken?: string | null
     isocode?: string | null
     lastVisitedWeek?: string | null
     registrationDate?: Date | string
@@ -13418,6 +13439,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     isocode?: NullableStringFieldUpdateOperationsInput | string | null
     lastVisitedWeek?: NullableStringFieldUpdateOperationsInput | string | null
     registrationDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13438,6 +13460,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     isocode?: NullableStringFieldUpdateOperationsInput | string | null
     lastVisitedWeek?: NullableStringFieldUpdateOperationsInput | string | null
     registrationDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13458,6 +13481,7 @@ export namespace Prisma {
     username: string
     email: string
     password?: string | null
+    passwordRefreshToken?: string | null
     isocode?: string | null
     lastVisitedWeek?: string | null
     registrationDate?: Date | string
@@ -13476,6 +13500,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     isocode?: NullableStringFieldUpdateOperationsInput | string | null
     lastVisitedWeek?: NullableStringFieldUpdateOperationsInput | string | null
     registrationDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13494,6 +13519,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     isocode?: NullableStringFieldUpdateOperationsInput | string | null
     lastVisitedWeek?: NullableStringFieldUpdateOperationsInput | string | null
     registrationDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14188,6 +14214,7 @@ export namespace Prisma {
     username?: SortOrder
     email?: SortOrder
     password?: SortOrder
+    passwordRefreshToken?: SortOrder
     isocode?: SortOrder
     lastVisitedWeek?: SortOrder
     registrationDate?: SortOrder
@@ -14210,6 +14237,7 @@ export namespace Prisma {
     username?: SortOrder
     email?: SortOrder
     password?: SortOrder
+    passwordRefreshToken?: SortOrder
     isocode?: SortOrder
     lastVisitedWeek?: SortOrder
     registrationDate?: SortOrder
@@ -14228,6 +14256,7 @@ export namespace Prisma {
     username?: SortOrder
     email?: SortOrder
     password?: SortOrder
+    passwordRefreshToken?: SortOrder
     isocode?: SortOrder
     lastVisitedWeek?: SortOrder
     registrationDate?: SortOrder
@@ -15352,6 +15381,7 @@ export namespace Prisma {
     username: string
     email: string
     password?: string | null
+    passwordRefreshToken?: string | null
     isocode?: string | null
     lastVisitedWeek?: string | null
     registrationDate?: Date | string
@@ -15371,6 +15401,7 @@ export namespace Prisma {
     username: string
     email: string
     password?: string | null
+    passwordRefreshToken?: string | null
     isocode?: string | null
     lastVisitedWeek?: string | null
     registrationDate?: Date | string
@@ -15433,6 +15464,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     isocode?: NullableStringFieldUpdateOperationsInput | string | null
     lastVisitedWeek?: NullableStringFieldUpdateOperationsInput | string | null
     registrationDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15452,6 +15484,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     isocode?: NullableStringFieldUpdateOperationsInput | string | null
     lastVisitedWeek?: NullableStringFieldUpdateOperationsInput | string | null
     registrationDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16276,6 +16309,7 @@ export namespace Prisma {
     username: string
     email: string
     password?: string | null
+    passwordRefreshToken?: string | null
     isocode?: string | null
     lastVisitedWeek?: string | null
     registrationDate?: Date | string
@@ -16295,6 +16329,7 @@ export namespace Prisma {
     username: string
     email: string
     password?: string | null
+    passwordRefreshToken?: string | null
     isocode?: string | null
     lastVisitedWeek?: string | null
     registrationDate?: Date | string
@@ -16330,6 +16365,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     isocode?: NullableStringFieldUpdateOperationsInput | string | null
     lastVisitedWeek?: NullableStringFieldUpdateOperationsInput | string | null
     registrationDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16349,6 +16385,7 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     isocode?: NullableStringFieldUpdateOperationsInput | string | null
     lastVisitedWeek?: NullableStringFieldUpdateOperationsInput | string | null
     registrationDate?: DateTimeFieldUpdateOperationsInput | Date | string
