@@ -7452,7 +7452,8 @@ export namespace Prisma {
 
   export type UserMinAggregateOutputType = {
     id: string | null
-    name: string | null
+    firstName: string | null
+    lastName: string | null
     username: string | null
     email: string | null
     password: string | null
@@ -7471,7 +7472,8 @@ export namespace Prisma {
 
   export type UserMaxAggregateOutputType = {
     id: string | null
-    name: string | null
+    firstName: string | null
+    lastName: string | null
     username: string | null
     email: string | null
     password: string | null
@@ -7490,7 +7492,8 @@ export namespace Prisma {
 
   export type UserCountAggregateOutputType = {
     id: number
-    name: number
+    firstName: number
+    lastName: number
     username: number
     email: number
     password: number
@@ -7519,7 +7522,8 @@ export namespace Prisma {
 
   export type UserMinAggregateInputType = {
     id?: true
-    name?: true
+    firstName?: true
+    lastName?: true
     username?: true
     email?: true
     password?: true
@@ -7538,7 +7542,8 @@ export namespace Prisma {
 
   export type UserMaxAggregateInputType = {
     id?: true
-    name?: true
+    firstName?: true
+    lastName?: true
     username?: true
     email?: true
     password?: true
@@ -7557,7 +7562,8 @@ export namespace Prisma {
 
   export type UserCountAggregateInputType = {
     id?: true
-    name?: true
+    firstName?: true
+    lastName?: true
     username?: true
     email?: true
     password?: true
@@ -7663,7 +7669,8 @@ export namespace Prisma {
 
   export type UserGroupByOutputType = {
     id: string
-    name: string
+    firstName: string
+    lastName: string
     username: string
     email: string
     password: string | null
@@ -7701,7 +7708,8 @@ export namespace Prisma {
 
   export type UserSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
+    firstName?: boolean
+    lastName?: boolean
     username?: boolean
     email?: boolean
     password?: boolean
@@ -7723,7 +7731,8 @@ export namespace Prisma {
 
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
+    firstName?: boolean
+    lastName?: boolean
     username?: boolean
     email?: boolean
     password?: boolean
@@ -7742,7 +7751,8 @@ export namespace Prisma {
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
+    firstName?: boolean
+    lastName?: boolean
     username?: boolean
     email?: boolean
     password?: boolean
@@ -7761,7 +7771,8 @@ export namespace Prisma {
 
   export type UserSelectScalar = {
     id?: boolean
-    name?: boolean
+    firstName?: boolean
+    lastName?: boolean
     username?: boolean
     email?: boolean
     password?: boolean
@@ -7778,7 +7789,7 @@ export namespace Prisma {
     lastKOLogin?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "username" | "email" | "password" | "passwordRefreshToken" | "isocode" | "lastVisitedWeek" | "registrationDate" | "hidingDate" | "subscriptionAmount" | "subscriptionFrequency" | "role" | "hidden" | "lastOKLogin" | "lastKOLogin", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "firstName" | "lastName" | "username" | "email" | "password" | "passwordRefreshToken" | "isocode" | "lastVisitedWeek" | "registrationDate" | "hidingDate" | "subscriptionAmount" | "subscriptionFrequency" | "role" | "hidden" | "lastOKLogin" | "lastKOLogin", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     blocks?: boolean | User$blocksArgs<ExtArgs>
     payments?: boolean | User$paymentsArgs<ExtArgs>
@@ -7795,7 +7806,8 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      name: string
+      firstName: string
+      lastName: string
       username: string
       email: string
       password: string | null
@@ -8236,7 +8248,8 @@ export namespace Prisma {
    */
   interface UserFieldRefs {
     readonly id: FieldRef<"User", 'String'>
-    readonly name: FieldRef<"User", 'String'>
+    readonly firstName: FieldRef<"User", 'String'>
+    readonly lastName: FieldRef<"User", 'String'>
     readonly username: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
@@ -9910,6 +9923,7 @@ export namespace Prisma {
     isDropset: boolean | null
     athleteNotes: string | null
     trainerNotes: string | null
+    athleteUserRead: boolean | null
   }
 
   export type DayExerciseSeriesMaxAggregateOutputType = {
@@ -9927,6 +9941,7 @@ export namespace Prisma {
     isDropset: boolean | null
     athleteNotes: string | null
     trainerNotes: string | null
+    athleteUserRead: boolean | null
   }
 
   export type DayExerciseSeriesCountAggregateOutputType = {
@@ -9944,6 +9959,7 @@ export namespace Prisma {
     isDropset: number
     athleteNotes: number
     trainerNotes: number
+    athleteUserRead: number
     _all: number
   }
 
@@ -9985,6 +10001,7 @@ export namespace Prisma {
     isDropset?: true
     athleteNotes?: true
     trainerNotes?: true
+    athleteUserRead?: true
   }
 
   export type DayExerciseSeriesMaxAggregateInputType = {
@@ -10002,6 +10019,7 @@ export namespace Prisma {
     isDropset?: true
     athleteNotes?: true
     trainerNotes?: true
+    athleteUserRead?: true
   }
 
   export type DayExerciseSeriesCountAggregateInputType = {
@@ -10019,6 +10037,7 @@ export namespace Prisma {
     isDropset?: true
     athleteNotes?: true
     trainerNotes?: true
+    athleteUserRead?: true
     _all?: true
   }
 
@@ -10123,6 +10142,7 @@ export namespace Prisma {
     isDropset: boolean
     athleteNotes: string | null
     trainerNotes: string | null
+    athleteUserRead: boolean
     _count: DayExerciseSeriesCountAggregateOutputType | null
     _avg: DayExerciseSeriesAvgAggregateOutputType | null
     _sum: DayExerciseSeriesSumAggregateOutputType | null
@@ -10159,6 +10179,7 @@ export namespace Prisma {
     isDropset?: boolean
     athleteNotes?: boolean
     trainerNotes?: boolean
+    athleteUserRead?: boolean
     dayExercise?: boolean | DayExerciseDefaultArgs<ExtArgs>
     trainingWeek?: boolean | TrainingWeekDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dayExerciseSeries"]>
@@ -10178,6 +10199,7 @@ export namespace Prisma {
     isDropset?: boolean
     athleteNotes?: boolean
     trainerNotes?: boolean
+    athleteUserRead?: boolean
     dayExercise?: boolean | DayExerciseDefaultArgs<ExtArgs>
     trainingWeek?: boolean | TrainingWeekDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dayExerciseSeries"]>
@@ -10197,6 +10219,7 @@ export namespace Prisma {
     isDropset?: boolean
     athleteNotes?: boolean
     trainerNotes?: boolean
+    athleteUserRead?: boolean
     dayExercise?: boolean | DayExerciseDefaultArgs<ExtArgs>
     trainingWeek?: boolean | TrainingWeekDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dayExerciseSeries"]>
@@ -10216,9 +10239,10 @@ export namespace Prisma {
     isDropset?: boolean
     athleteNotes?: boolean
     trainerNotes?: boolean
+    athleteUserRead?: boolean
   }
 
-  export type DayExerciseSeriesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dayExerciseId" | "seriesNumber" | "minReps" | "maxReps" | "minRir" | "maxRir" | "effectiveReps" | "effectiveWeight" | "effectiveRir" | "trainingWeekId" | "isDropset" | "athleteNotes" | "trainerNotes", ExtArgs["result"]["dayExerciseSeries"]>
+  export type DayExerciseSeriesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dayExerciseId" | "seriesNumber" | "minReps" | "maxReps" | "minRir" | "maxRir" | "effectiveReps" | "effectiveWeight" | "effectiveRir" | "trainingWeekId" | "isDropset" | "athleteNotes" | "trainerNotes" | "athleteUserRead", ExtArgs["result"]["dayExerciseSeries"]>
   export type DayExerciseSeriesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     dayExercise?: boolean | DayExerciseDefaultArgs<ExtArgs>
     trainingWeek?: boolean | TrainingWeekDefaultArgs<ExtArgs>
@@ -10253,6 +10277,7 @@ export namespace Prisma {
       isDropset: boolean
       athleteNotes: string | null
       trainerNotes: string | null
+      athleteUserRead: boolean
     }, ExtArgs["result"]["dayExerciseSeries"]>
     composites: {}
   }
@@ -10692,6 +10717,7 @@ export namespace Prisma {
     readonly isDropset: FieldRef<"DayExerciseSeries", 'Boolean'>
     readonly athleteNotes: FieldRef<"DayExerciseSeries", 'String'>
     readonly trainerNotes: FieldRef<"DayExerciseSeries", 'String'>
+    readonly athleteUserRead: FieldRef<"DayExerciseSeries", 'Boolean'>
   }
     
 
@@ -12268,7 +12294,8 @@ export namespace Prisma {
 
   export const UserScalarFieldEnum: {
     id: 'id',
-    name: 'name',
+    firstName: 'firstName',
+    lastName: 'lastName',
     username: 'username',
     email: 'email',
     password: 'password',
@@ -12315,7 +12342,8 @@ export namespace Prisma {
     trainingWeekId: 'trainingWeekId',
     isDropset: 'isDropset',
     athleteNotes: 'athleteNotes',
-    trainerNotes: 'trainerNotes'
+    trainerNotes: 'trainerNotes',
+    athleteUserRead: 'athleteUserRead'
   };
 
   export type DayExerciseSeriesScalarFieldEnum = (typeof DayExerciseSeriesScalarFieldEnum)[keyof typeof DayExerciseSeriesScalarFieldEnum]
@@ -12753,7 +12781,8 @@ export namespace Prisma {
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     id?: StringFilter<"User"> | string
-    name?: StringFilter<"User"> | string
+    firstName?: StringFilter<"User"> | string
+    lastName?: StringFilter<"User"> | string
     username?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
     password?: StringNullableFilter<"User"> | string | null
@@ -12774,7 +12803,8 @@ export namespace Prisma {
 
   export type UserOrderByWithRelationInput = {
     id?: SortOrder
-    name?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
     username?: SortOrder
     email?: SortOrder
     password?: SortOrderInput | SortOrder
@@ -12801,7 +12831,8 @@ export namespace Prisma {
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
-    name?: StringFilter<"User"> | string
+    firstName?: StringFilter<"User"> | string
+    lastName?: StringFilter<"User"> | string
     password?: StringNullableFilter<"User"> | string | null
     isocode?: StringNullableFilter<"User"> | string | null
     lastVisitedWeek?: StringNullableFilter<"User"> | string | null
@@ -12819,7 +12850,8 @@ export namespace Prisma {
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
-    name?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
     username?: SortOrder
     email?: SortOrder
     password?: SortOrderInput | SortOrder
@@ -12846,7 +12878,8 @@ export namespace Prisma {
     OR?: UserScalarWhereWithAggregatesInput[]
     NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"User"> | string
-    name?: StringWithAggregatesFilter<"User"> | string
+    firstName?: StringWithAggregatesFilter<"User"> | string
+    lastName?: StringWithAggregatesFilter<"User"> | string
     username?: StringWithAggregatesFilter<"User"> | string
     email?: StringWithAggregatesFilter<"User"> | string
     password?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -12954,6 +12987,7 @@ export namespace Prisma {
     isDropset?: BoolFilter<"DayExerciseSeries"> | boolean
     athleteNotes?: StringNullableFilter<"DayExerciseSeries"> | string | null
     trainerNotes?: StringNullableFilter<"DayExerciseSeries"> | string | null
+    athleteUserRead?: BoolFilter<"DayExerciseSeries"> | boolean
     dayExercise?: XOR<DayExerciseScalarRelationFilter, DayExerciseWhereInput>
     trainingWeek?: XOR<TrainingWeekScalarRelationFilter, TrainingWeekWhereInput>
   }
@@ -12973,6 +13007,7 @@ export namespace Prisma {
     isDropset?: SortOrder
     athleteNotes?: SortOrderInput | SortOrder
     trainerNotes?: SortOrderInput | SortOrder
+    athleteUserRead?: SortOrder
     dayExercise?: DayExerciseOrderByWithRelationInput
     trainingWeek?: TrainingWeekOrderByWithRelationInput
   }
@@ -12995,6 +13030,7 @@ export namespace Prisma {
     isDropset?: BoolFilter<"DayExerciseSeries"> | boolean
     athleteNotes?: StringNullableFilter<"DayExerciseSeries"> | string | null
     trainerNotes?: StringNullableFilter<"DayExerciseSeries"> | string | null
+    athleteUserRead?: BoolFilter<"DayExerciseSeries"> | boolean
     dayExercise?: XOR<DayExerciseScalarRelationFilter, DayExerciseWhereInput>
     trainingWeek?: XOR<TrainingWeekScalarRelationFilter, TrainingWeekWhereInput>
   }, "id">
@@ -13014,6 +13050,7 @@ export namespace Prisma {
     isDropset?: SortOrder
     athleteNotes?: SortOrderInput | SortOrder
     trainerNotes?: SortOrderInput | SortOrder
+    athleteUserRead?: SortOrder
     _count?: DayExerciseSeriesCountOrderByAggregateInput
     _avg?: DayExerciseSeriesAvgOrderByAggregateInput
     _max?: DayExerciseSeriesMaxOrderByAggregateInput
@@ -13039,6 +13076,7 @@ export namespace Prisma {
     isDropset?: BoolWithAggregatesFilter<"DayExerciseSeries"> | boolean
     athleteNotes?: StringNullableWithAggregatesFilter<"DayExerciseSeries"> | string | null
     trainerNotes?: StringNullableWithAggregatesFilter<"DayExerciseSeries"> | string | null
+    athleteUserRead?: BoolWithAggregatesFilter<"DayExerciseSeries"> | boolean
   }
 
   export type PaymentWhereInput = {
@@ -13393,7 +13431,8 @@ export namespace Prisma {
 
   export type UserCreateInput = {
     id?: string
-    name: string
+    firstName: string
+    lastName: string
     username: string
     email: string
     password?: string | null
@@ -13414,7 +13453,8 @@ export namespace Prisma {
 
   export type UserUncheckedCreateInput = {
     id?: string
-    name: string
+    firstName: string
+    lastName: string
     username: string
     email: string
     password?: string | null
@@ -13435,7 +13475,8 @@ export namespace Prisma {
 
   export type UserUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13456,7 +13497,8 @@ export namespace Prisma {
 
   export type UserUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13477,7 +13519,8 @@ export namespace Prisma {
 
   export type UserCreateManyInput = {
     id?: string
-    name: string
+    firstName: string
+    lastName: string
     username: string
     email: string
     password?: string | null
@@ -13496,7 +13539,8 @@ export namespace Prisma {
 
   export type UserUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13515,7 +13559,8 @@ export namespace Prisma {
 
   export type UserUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13617,6 +13662,7 @@ export namespace Prisma {
     isDropset?: boolean
     athleteNotes?: string | null
     trainerNotes?: string | null
+    athleteUserRead?: boolean
     dayExercise: DayExerciseCreateNestedOneWithoutSeriesInput
     trainingWeek: TrainingWeekCreateNestedOneWithoutDayExerciseSeriesInput
   }
@@ -13636,6 +13682,7 @@ export namespace Prisma {
     isDropset?: boolean
     athleteNotes?: string | null
     trainerNotes?: string | null
+    athleteUserRead?: boolean
   }
 
   export type DayExerciseSeriesUpdateInput = {
@@ -13651,6 +13698,7 @@ export namespace Prisma {
     isDropset?: BoolFieldUpdateOperationsInput | boolean
     athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
     trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    athleteUserRead?: BoolFieldUpdateOperationsInput | boolean
     dayExercise?: DayExerciseUpdateOneRequiredWithoutSeriesNestedInput
     trainingWeek?: TrainingWeekUpdateOneRequiredWithoutDayExerciseSeriesNestedInput
   }
@@ -13670,6 +13718,7 @@ export namespace Prisma {
     isDropset?: BoolFieldUpdateOperationsInput | boolean
     athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
     trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    athleteUserRead?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type DayExerciseSeriesCreateManyInput = {
@@ -13687,6 +13736,7 @@ export namespace Prisma {
     isDropset?: boolean
     athleteNotes?: string | null
     trainerNotes?: string | null
+    athleteUserRead?: boolean
   }
 
   export type DayExerciseSeriesUpdateManyMutationInput = {
@@ -13702,6 +13752,7 @@ export namespace Prisma {
     isDropset?: BoolFieldUpdateOperationsInput | boolean
     athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
     trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    athleteUserRead?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type DayExerciseSeriesUncheckedUpdateManyInput = {
@@ -13719,6 +13770,7 @@ export namespace Prisma {
     isDropset?: BoolFieldUpdateOperationsInput | boolean
     athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
     trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    athleteUserRead?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type PaymentCreateInput = {
@@ -14210,7 +14262,8 @@ export namespace Prisma {
 
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
-    name?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
     username?: SortOrder
     email?: SortOrder
     password?: SortOrder
@@ -14233,7 +14286,8 @@ export namespace Prisma {
 
   export type UserMaxOrderByAggregateInput = {
     id?: SortOrder
-    name?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
     username?: SortOrder
     email?: SortOrder
     password?: SortOrder
@@ -14252,7 +14306,8 @@ export namespace Prisma {
 
   export type UserMinOrderByAggregateInput = {
     id?: SortOrder
-    name?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
     username?: SortOrder
     email?: SortOrder
     password?: SortOrder
@@ -14399,6 +14454,7 @@ export namespace Prisma {
     isDropset?: SortOrder
     athleteNotes?: SortOrder
     trainerNotes?: SortOrder
+    athleteUserRead?: SortOrder
   }
 
   export type DayExerciseSeriesAvgOrderByAggregateInput = {
@@ -14427,6 +14483,7 @@ export namespace Prisma {
     isDropset?: SortOrder
     athleteNotes?: SortOrder
     trainerNotes?: SortOrder
+    athleteUserRead?: SortOrder
   }
 
   export type DayExerciseSeriesMinOrderByAggregateInput = {
@@ -14444,6 +14501,7 @@ export namespace Prisma {
     isDropset?: SortOrder
     athleteNotes?: SortOrder
     trainerNotes?: SortOrder
+    athleteUserRead?: SortOrder
   }
 
   export type DayExerciseSeriesSumOrderByAggregateInput = {
@@ -15377,7 +15435,8 @@ export namespace Prisma {
 
   export type UserCreateWithoutBlocksInput = {
     id?: string
-    name: string
+    firstName: string
+    lastName: string
     username: string
     email: string
     password?: string | null
@@ -15397,7 +15456,8 @@ export namespace Prisma {
 
   export type UserUncheckedCreateWithoutBlocksInput = {
     id?: string
-    name: string
+    firstName: string
+    lastName: string
     username: string
     email: string
     password?: string | null
@@ -15460,7 +15520,8 @@ export namespace Prisma {
 
   export type UserUpdateWithoutBlocksInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15480,7 +15541,8 @@ export namespace Prisma {
 
   export type UserUncheckedUpdateWithoutBlocksInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15560,6 +15622,7 @@ export namespace Prisma {
     isDropset?: boolean
     athleteNotes?: string | null
     trainerNotes?: string | null
+    athleteUserRead?: boolean
     dayExercise: DayExerciseCreateNestedOneWithoutSeriesInput
   }
 
@@ -15577,6 +15640,7 @@ export namespace Prisma {
     isDropset?: boolean
     athleteNotes?: string | null
     trainerNotes?: string | null
+    athleteUserRead?: boolean
   }
 
   export type DayExerciseSeriesCreateOrConnectWithoutTrainingWeekInput = {
@@ -15679,6 +15743,7 @@ export namespace Prisma {
     isDropset?: BoolFilter<"DayExerciseSeries"> | boolean
     athleteNotes?: StringNullableFilter<"DayExerciseSeries"> | string | null
     trainerNotes?: StringNullableFilter<"DayExerciseSeries"> | string | null
+    athleteUserRead?: BoolFilter<"DayExerciseSeries"> | boolean
   }
 
   export type TrainingWeekCreateWithoutTrainingDaysInput = {
@@ -16094,6 +16159,7 @@ export namespace Prisma {
     isDropset?: boolean
     athleteNotes?: string | null
     trainerNotes?: string | null
+    athleteUserRead?: boolean
     trainingWeek: TrainingWeekCreateNestedOneWithoutDayExerciseSeriesInput
   }
 
@@ -16111,6 +16177,7 @@ export namespace Prisma {
     isDropset?: boolean
     athleteNotes?: string | null
     trainerNotes?: string | null
+    athleteUserRead?: boolean
   }
 
   export type DayExerciseSeriesCreateOrConnectWithoutDayExerciseInput = {
@@ -16305,7 +16372,8 @@ export namespace Prisma {
 
   export type UserCreateWithoutPaymentsInput = {
     id?: string
-    name: string
+    firstName: string
+    lastName: string
     username: string
     email: string
     password?: string | null
@@ -16325,7 +16393,8 @@ export namespace Prisma {
 
   export type UserUncheckedCreateWithoutPaymentsInput = {
     id?: string
-    name: string
+    firstName: string
+    lastName: string
     username: string
     email: string
     password?: string | null
@@ -16361,7 +16430,8 @@ export namespace Prisma {
 
   export type UserUpdateWithoutPaymentsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16381,7 +16451,8 @@ export namespace Prisma {
 
   export type UserUncheckedUpdateWithoutPaymentsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16452,6 +16523,7 @@ export namespace Prisma {
     isDropset?: boolean
     athleteNotes?: string | null
     trainerNotes?: string | null
+    athleteUserRead?: boolean
   }
 
   export type TrainingDayUpdateWithoutWeekInput = {
@@ -16490,6 +16562,7 @@ export namespace Prisma {
     isDropset?: BoolFieldUpdateOperationsInput | boolean
     athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
     trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    athleteUserRead?: BoolFieldUpdateOperationsInput | boolean
     dayExercise?: DayExerciseUpdateOneRequiredWithoutSeriesNestedInput
   }
 
@@ -16507,6 +16580,7 @@ export namespace Prisma {
     isDropset?: BoolFieldUpdateOperationsInput | boolean
     athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
     trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    athleteUserRead?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type DayExerciseSeriesUncheckedUpdateManyWithoutTrainingWeekInput = {
@@ -16523,6 +16597,7 @@ export namespace Prisma {
     isDropset?: BoolFieldUpdateOperationsInput | boolean
     athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
     trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    athleteUserRead?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type DayExerciseCreateManyTrainingDayInput = {
@@ -16711,6 +16786,7 @@ export namespace Prisma {
     isDropset?: boolean
     athleteNotes?: string | null
     trainerNotes?: string | null
+    athleteUserRead?: boolean
   }
 
   export type DayExerciseSeriesUpdateWithoutDayExerciseInput = {
@@ -16726,6 +16802,7 @@ export namespace Prisma {
     isDropset?: BoolFieldUpdateOperationsInput | boolean
     athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
     trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    athleteUserRead?: BoolFieldUpdateOperationsInput | boolean
     trainingWeek?: TrainingWeekUpdateOneRequiredWithoutDayExerciseSeriesNestedInput
   }
 
@@ -16743,6 +16820,7 @@ export namespace Prisma {
     isDropset?: BoolFieldUpdateOperationsInput | boolean
     athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
     trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    athleteUserRead?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type DayExerciseSeriesUncheckedUpdateManyWithoutDayExerciseInput = {
@@ -16759,6 +16837,7 @@ export namespace Prisma {
     isDropset?: BoolFieldUpdateOperationsInput | boolean
     athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
     trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    athleteUserRead?: BoolFieldUpdateOperationsInput | boolean
   }
 
 

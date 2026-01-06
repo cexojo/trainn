@@ -161,7 +161,8 @@ exports.Prisma.ExerciseScalarFieldEnum = {
 
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
-  name: 'name',
+  firstName: 'firstName',
+  lastName: 'lastName',
   username: 'username',
   email: 'email',
   password: 'password',
@@ -202,7 +203,8 @@ exports.Prisma.DayExerciseSeriesScalarFieldEnum = {
   trainingWeekId: 'trainingWeekId',
   isDropset: 'isDropset',
   athleteNotes: 'athleteNotes',
-  trainerNotes: 'trainerNotes'
+  trainerNotes: 'trainerNotes',
+  athleteUserRead: 'athleteUserRead'
 };
 
 exports.Prisma.PaymentScalarFieldEnum = {

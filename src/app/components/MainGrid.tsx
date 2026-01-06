@@ -46,7 +46,8 @@ export default function MainGrid({
   // Remove obsolete dialog-local error state
   // const [createError, setCreateError] = useState<string | null>(null);
   const [fields, setFields] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     username: "",
     email: "",
     paymentFrequency: "quarterly",
@@ -65,7 +66,8 @@ export default function MainGrid({
   // Helper to clear form
   const resetFields = () =>
     setFields({
-      name: "",
+      firstName: "",
+      lastName: "",
       username: "",
       email: "",
       paymentFrequency: "quarterly",
@@ -160,11 +162,20 @@ export default function MainGrid({
                     <TextField
                       autoFocus
                       margin="dense"
-                      label={translations[lang]?.manageUsersModalName}
+                      label={translations[lang]?.manageUsersModalFirstName}
                       type="text"
                       fullWidth
-                      value={fields.name}
-                      onChange={e => setFields({ ...fields, name: e.target.value })}
+                      value={fields.firstName}
+                      onChange={e => setFields({ ...fields, firstName: e.target.value })}
+                      required
+                    />
+                    <TextField
+                      margin="dense"
+                      label={translations[lang]?.manageUsersModalLastName}
+                      type="text"
+                      fullWidth
+                      value={fields.lastName}
+                      onChange={e => setFields({ ...fields, lastName: e.target.value })}
                       required
                     />
                     <TextField
@@ -251,7 +262,8 @@ export default function MainGrid({
                     <Button onClick={() => setOpenCreate(false)} disabled={createLoading}>
                       {translations[lang]?.manageUsersAddPaymentCancel}
                     </Button>
-                    {fields.name &&
+                    {fields.firstName &&
+                      fields.lastName &&
                       fields.username &&
                       valid.username &&
                       fields.email &&

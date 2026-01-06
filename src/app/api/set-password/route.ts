@@ -1,6 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma/client";
 import bcrypt from "bcryptjs";
+import { translations } from "@/app/i18n";
+
+/**
+ * Gets user info by passwordRefreshToken (for password reset page).
+ * Query param: ?passwordRefreshToken=...
+ * Returns: { firstName, email }
+ */
+export async function GET(req: NextRequest) {
+  try {
+    const passwordRefreshToken = req.nextUrl.searchParams.get("passwordRefreshToken");
+    if (!passwordRefreshToken) {
+      return NextResponse.json({ error: translations["es"].passwordInvalidOrExpired }, { status: 400 });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { passwordRefreshToken },
+      select: { firstName: true, email: true }
+    });
+    if (!user) {
+      return NextResponse.json({ error: translations["es"].passwordInvalidOrExpired }, { status: 404 });
+    }
+
+    return NextResponse.json(user);
+  } catch (err) {
+    return NextResponse.json(
+      { error: translations["es"].passwordSnackbarError, detail: String(err) },
+      { status: 500 }
+    );
+  }
+}
 
 /**
  * Sets or updates the user's password using a passwordRefreshToken.
@@ -11,7 +41,7 @@ export async function POST(req: NextRequest) {
     const { passwordRefreshToken, password } = await req.json();
 
     if (!passwordRefreshToken || !password) {
-      return NextResponse.json({ error: "Missing passwordRefreshToken or password" }, { status: 400 });
+      return NextResponse.json({ error: translations["es"].passwordSnackbarError }, { status: 400 });
     }
 
     // Find the user with this token
@@ -19,7 +49,7 @@ export async function POST(req: NextRequest) {
       where: { passwordRefreshToken },
     });
     if (!user) {
-      return NextResponse.json({ error: "Invalid or expired password reset link" }, { status: 404 });
+      return NextResponse.json({ error: translations["es"].passwordInvalidOrExpired }, { status: 404 });
     }
 
     // Hash the new password
@@ -45,7 +75,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error("Failed to set password:", err);
     return NextResponse.json(
-      { error: "Failed to set password" },
+      { error: translations["es"].passwordSnackbarError },
       { status: 500 }
     );
   }

@@ -13,10 +13,14 @@ export async function GET(req: NextRequest) {
   // Get all athletes with their payments
   const users = await prisma.user.findMany({
     where: { role: "athlete" },
-    orderBy: { name: "asc" },
+    orderBy: [
+      { firstName: "asc" },
+      { lastName: "asc" }
+    ],
     select: {
       id: true,
-      name: true,
+      firstName: true,
+      lastName: true,
       username: true,
       email: true,
       lastVisitedWeek: true,
@@ -32,7 +36,10 @@ export async function GET(req: NextRequest) {
         }
       },
       hidden: true,
-      hidingDate: true
+      hidingDate: true,
+      password: true,
+      subscriptionFrequency: true,
+      subscriptionAmount: true
     }
   });
 
@@ -89,7 +96,10 @@ export async function GET(req: NextRequest) {
         noPlan = false;
       }
     }
-    return { ...u, noPlan };
+    // Determine if user has a password without returning the hash
+    const { password, ...userNoPassword } = u;
+    const hasPassword = Boolean(password && password.length > 0);
+    return { ...userNoPassword, noPlan, hasPassword };
   }));
 
   return NextResponse.json(usersWithNoPlan);

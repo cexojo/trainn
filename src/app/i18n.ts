@@ -2,6 +2,23 @@ export type Lang = "en" | "es";
 
 export type Translations = {
   [K in Lang]: {
+    // Password page translations (new):
+    manageUsersQuickFilterNoPlan: string;
+    manageUsersQuickFilterNoPassword: string;
+    noExercisesForDay: string;
+    passwordTitle: string;
+    passwordSnackbarInvalidOrExpired: string;
+    passwordSnackbarRequirements: string;
+    passwordSnackbarMismatch: string;
+    passwordSnackbarError: string;
+    passwordInvalidOrExpired: string;
+    passwordLoadingUser: string;
+    passwordLabel: string;
+    passwordRepeatLabel: string;
+    passwordHelperText: string;
+    passwordHelperTextMismatch: string;
+    passwordButton: string;
+
     blockNoContent: string;
     blockNoWeeks: string;
     blockNoDaysInWeek: string;
@@ -132,6 +149,8 @@ export type Translations = {
     manageUsersTableStatus: string;
     manageUsersTableActions: string;
     manageUsersModalHeader: string;
+    manageUsersModalFirstName: string;
+    manageUsersModalLastName: string;
     manageUsersModalName: string;
     manageUsersModalUsername: string;
     manageUsersModalEmail: string;
@@ -171,7 +190,7 @@ export type Translations = {
     manageUsersQuickFilterDue: string;
     manageUsersQuickFilterNoFuture: string;
     manageUsersQuickFilterAllActive: string;
-    manageUsersQuickFilterInactive: string;
+    manageUsersQuickFilterHidden: string;
     sendWelcomeEmail: string;
     sendWelcomeEmailSuccess: string;
     sendWelcomeEmailError: string;
@@ -251,13 +270,32 @@ export type Translations = {
     networkOrClientError: string;
     networkOrClientErrorCreateAthlete: string;
     usernameTakenError: string;
+    emailTakenError: string;
     invalidEmailError: string;
     createUserFrequencyLabel: string;
+    searchUserTablePlaceholder: string;
   };
 };
 
 export const translations: Translations = {
   en: {
+    manageUsersQuickFilterNoPlan: "No plan",
+    manageUsersQuickFilterNoPassword: "Users without password",
+    noExercisesForDay: "No exercises for this day.",
+    // Password page translations (new)
+    passwordTitle: "Create password",
+    passwordSnackbarInvalidOrExpired: "Invalid or expired password reset link.",
+    passwordSnackbarRequirements: "Password does not meet requirements.",
+    passwordSnackbarMismatch: "Passwords do not match.",
+    passwordSnackbarError: "An error occurred. Please try again or contact support.",
+    passwordInvalidOrExpired: "Invalid or expired password reset link.",
+    passwordLoadingUser: "Loading user...",
+    passwordLabel: "Password",
+    passwordRepeatLabel: "Repeat password",
+    passwordHelperText: "At least 6 characters, uppercase, lowercase, and a number",
+    passwordHelperTextMismatch: "Passwords do not match",
+    passwordButton: "Save password",
+
     blockNoContent: "No block content available.",
     blockNoWeeks: "No weeks in this block.",
     blockNoDaysInWeek: "No days in this week.",
@@ -389,6 +427,8 @@ export const translations: Translations = {
     manageUsersTableStatus: "Status",
     manageUsersTableActions: "Actions",
     manageUsersModalHeader: "Athlete Details",
+    manageUsersModalFirstName: "First name",
+    manageUsersModalLastName: "Last name",
     manageUsersModalName: "Name",
     manageUsersModalUsername: "Username",
     manageUsersModalEmail: "Email",
@@ -428,7 +468,7 @@ export const translations: Translations = {
     manageUsersQuickFilterDue: "Payments due",
     manageUsersQuickFilterNoFuture: "No future payments",
     manageUsersQuickFilterAllActive: "All active users",
-    manageUsersQuickFilterInactive: "Inactive users",
+    manageUsersQuickFilterHidden: "Hidden users",
     sendWelcomeEmail: "Send welcome email",
     sendWelcomeEmailSuccess: "Welcome email sent!",
     sendWelcomeEmailError: "Could not send the welcome email.",
@@ -508,10 +548,29 @@ export const translations: Translations = {
     networkOrClientError: "A network or client error occurred",
     networkOrClientErrorCreateAthlete: "Network or client error while creating athlete",
     usernameTakenError: "That username is already taken",
+    emailTakenError: "That email is already taken",
     invalidEmailError: "Invalid email address",
-    createUserFrequencyLabel: "Create user frequency"
+    createUserFrequencyLabel: "Create user frequency",
+    searchUserTablePlaceholder: "Search by name, username, or email"
   },
   es: {
+    manageUsersQuickFilterNoPlan: "Sin planificación",
+    manageUsersQuickFilterNoPassword: "Usuarios sin contraseña",
+    noExercisesForDay: "Ningún ejercicio para este día.",
+    // Password page translations (new)
+    passwordTitle: "Crear contraseña",
+    passwordSnackbarInvalidOrExpired: "Enlace inválido o expirado.",
+    passwordSnackbarRequirements: "La contraseña no cumple los requisitos.",
+    passwordSnackbarMismatch: "Las contraseñas no coinciden.",
+    passwordSnackbarError: "Ha ocurrido un error. Inténtalo de nuevo o contacta soporte.",
+    passwordInvalidOrExpired: "Enlace inválido o expirado.",
+    passwordLoadingUser: "Cargando usuario...",
+    passwordLabel: "Contraseña",
+    passwordRepeatLabel: "Repite la contraseña",
+    passwordHelperText: "Mínimo 6 caracteres, mayúsculas, minúsculas y números",
+    passwordHelperTextMismatch: "Las contraseñas no coinciden",
+    passwordButton: "Guardar contraseña",
+
     blockNoContent: "No hay contenido del bloque disponible.",
     blockNoWeeks: "No hay semanas en el bloque.",
     blockNoDaysInWeek: "No hay días en esta semana.",
@@ -653,6 +712,8 @@ export const translations: Translations = {
     manageUsersTableStatus: "Estado",
     manageUsersTableActions: "Acciones",
     manageUsersModalHeader: "Detalles del atleta",
+    manageUsersModalFirstName: "Nombre",
+    manageUsersModalLastName: "Apellido",
     manageUsersModalName: "Nombre",
     manageUsersModalUsername: "Usuario",
     manageUsersModalEmail: "Correo",
@@ -692,7 +753,7 @@ export const translations: Translations = {
     manageUsersQuickFilterDue: "Pagos pendientes",
     manageUsersQuickFilterNoFuture: "Sin pagos futuros",
     manageUsersQuickFilterAllActive: "Usuarios activos",
-    manageUsersQuickFilterInactive: "Usuarios inactivos",
+    manageUsersQuickFilterHidden: "Usuarios ocultos",
     sendWelcomeEmail: "Enviar correo de bienvenida",
     sendWelcomeEmailSuccess: "¡Correo de bienvenida enviado!",
     sendWelcomeEmailError: "No se pudo enviar el correo de bienvenida.",
@@ -762,7 +823,9 @@ export const translations: Translations = {
     networkOrClientError: "Se produjo un error de red o cliente",
     networkOrClientErrorCreateAthlete: "Error de red o cliente al crear atleta",
     usernameTakenError: "Ese nombre de usuario ya está en uso",
+    emailTakenError: "Ese correo electrónico ya está en uso",
     invalidEmailError: "Correo electrónico inválido",
-    createUserFrequencyLabel: "Frecuencia para crear usuario"
+    createUserFrequencyLabel: "Frecuencia para crear usuario",
+    searchUserTablePlaceholder: "Buscar por nombre, usuario o email"
   }
 };

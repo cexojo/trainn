@@ -7,16 +7,198 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import EuroIcon from "@mui/icons-material/Euro";
 
 import { useRef } from "react";
 
-function EditableUserField({ label, value, field, userId, onUpdated, lang }: {
+function EditableDropdownField({
+  label, value, options, userId, onUpdated, forceRefresh, lang, setNotification, field
+}: {
   label: string,
   value: string,
-  field: "name" | "username" | "email",
+  options: Array<{ value: string, label: string }>,
   userId: string,
   onUpdated: (val: string) => void,
+  forceRefresh: () => void,
   lang: Lang,
+  setNotification: (obj: { type: "success" | "error"; message: string }) => void,
+  field: string
+}) {
+  const [editing, setEditing] = useState(false);
+  const [temp, setTemp] = useState(value || "");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setTemp(value || "");
+  }, [value]);
+
+  const doPatch = async (incoming: string) => {
+    if (incoming === value) {
+      setEditing(false);
+      return;
+    }
+    setLoading(true);
+    const res = await fetch(`/api/update-user/${userId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ [field]: incoming }),
+    });
+    setLoading(false);
+    if (res.ok) {
+      onUpdated(incoming);
+      setEditing(false);
+      forceRefresh();
+      setNotification({ type: "success", message: lang === "es" ? "Frecuencia actualizada" : "Frequency updated" });
+    } else {
+      setNotification({ type: "error", message: lang === "es" ? "Error al actualizar la frecuencia" : "Failed to update frequency" });
+    }
+  };
+
+  return (
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+      <strong>{label}:</strong>
+      {editing ? (
+        <Select
+          size="small"
+          value={temp}
+          onChange={e => {
+            setTemp(e.target.value);
+            doPatch(e.target.value);
+          }}
+          onBlur={() => setEditing(false)}
+          sx={{ ml: 1, minWidth: 120 }}
+          autoFocus
+        >
+          {options.map(opt => (
+            <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
+          ))}
+        </Select>
+      ) : (
+        <Typography
+          sx={{
+            ml: 1,
+            minWidth: 120,
+            display: "inline-block",
+            textDecoration: "underline dotted",
+            cursor: "pointer",
+            color: "#1976d2"
+          }}
+          onClick={() => setEditing(true)}
+          tabIndex={0}
+          role="button"
+          title={lang === "es" ? "Editar frecuencia" : "Edit frequency"}
+        >
+          {options.find(o => o.value === value)?.label || <span style={{color:"#888"}}>---</span>}
+        </Typography>
+      )}
+      {loading && <CircularProgress size={18} />}
+    </Box>
+  );
+}
+
+function EditableNumberField({
+  label, value, userId, onUpdated, forceRefresh, lang, setNotification, field
+}: {
+  label: string,
+  value: number,
+  userId: string,
+  onUpdated: (val: number) => void,
+  forceRefresh: () => void,
+  lang: Lang,
+  setNotification: (obj: { type: "success" | "error"; message: string }) => void,
+  field: string
+}) {
+  const [editing, setEditing] = useState(false);
+  const [temp, setTemp] = useState(value === null || value === undefined ? "" : value.toString());
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setTemp(value === null || value === undefined ? "" : value.toString());
+  }, [value]);
+
+  const doPatch = async () => {
+    const parsed = parseFloat(temp);
+    if (!isFinite(parsed)) {
+      setEditing(false);
+      return;
+    }
+    if (parsed === value) {
+      setEditing(false);
+      return;
+    }
+    setLoading(true);
+    const res = await fetch(`/api/update-user/${userId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ [field]: parsed }),
+    });
+    setLoading(false);
+    if (res.ok) {
+      onUpdated(parsed);
+      setEditing(false);
+      forceRefresh();
+      setNotification({ type: "success", message: lang === "es" ? "Cuota actualizada" : "Amount updated" });
+    } else {
+      setNotification({ type: "error", message: lang === "es" ? "Error al actualizar la cuota" : "Failed to update amount" });
+    }
+  };
+
+  return (
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+      <strong>{label}:</strong>
+      {editing ? (
+        <TextField
+          type="number"
+          size="small"
+          value={temp}
+          onChange={e => setTemp(e.target.value)}
+          onBlur={doPatch}
+          onKeyDown={e => {
+            if (e.key === "Enter") {
+              doPatch();
+            } else if (e.key === "Escape") {
+              setEditing(false);
+              setTemp(value?.toString() ?? "");
+            }
+          }}
+          autoFocus
+          sx={{ width: 90 }}
+          inputProps={{ min: 0, step: "0.01" }}
+        />
+      ) : (
+        <Typography
+          sx={{
+            ml: 1,
+            minWidth: 90,
+            display: "inline-block",
+            textDecoration: "underline dotted",
+            cursor: "pointer",
+            color: "#1976d2"
+          }}
+          onClick={() => setEditing(true)}
+          tabIndex={0}
+          role="button"
+          title={lang === "es" ? "Editar cuota" : "Edit amount"}
+        >
+          {value !== null && value !== undefined
+            ? Number(value).toFixed(2)
+            : <span style={{color:"#888"}}>---</span>}
+        </Typography>
+      )}
+      {loading && <CircularProgress size={18} />}
+    </Box>
+  );
+}
+
+function EditableUserField({ label, value, field, userId, onUpdated, forceRefresh, lang, setNotification }: {
+  label: string,
+  value: string,
+  field: "username" | "email" | "firstName" | "lastName",
+  userId: string,
+  onUpdated: (val: string) => void,
+  forceRefresh: () => void,
+  lang: Lang,
+  setNotification: (val: { type: "success" | "error"; message: string }) => void
 }) {
   const [editing, setEditing] = useState(false);
   const [temp, setTemp] = useState(value || "");
@@ -49,8 +231,21 @@ function EditableUserField({ label, value, field, userId, onUpdated, lang }: {
     if (res.ok) {
       onUpdated(temp);
       setEditing(false);
+      forceRefresh();
     } else {
-      // optionally show error
+      let msg = "";
+      try {
+        const out = await res.json();
+        if (out && out.error === "email_taken") {
+          msg = translations[lang].emailTakenError;
+        } else if (out && out.error === "username_taken") {
+          msg = translations[lang].usernameTakenError;
+        }
+      } catch {}
+      if (!msg) {
+        msg = lang === "es" ? "Error al actualizar el usuario. Inténtalo de nuevo o recarga la página." : "Error updating user. Please try again or reload the page.";
+      }
+      setNotification({ type: "error", message: msg });
     }
   };
 
@@ -236,7 +431,7 @@ function TrainingTab({ userId, lang }: { userId: string, lang: Lang }) {
                 {`${translations[lang].day} ${dayExercises[0]?.dayNumber ?? dayNumber}`}
               </Typography>
               {dayExercises.length === 0 ? (
-                <Box sx={{ color: "#a33" }}>Ningún ejercicio para este día. {debugInfo}</Box>
+                <Box sx={{ color: "#a33" }}>{translations[lang].noExercisesForDay} {debugInfo}</Box>
               ) : (
                 <Box sx={{ width: "100%", overflowX: "auto" }}>
                   <table style={{ borderCollapse: "collapse", width: "100%" }}>
@@ -353,7 +548,8 @@ export default function UserTable({
   const [selected, setSelected] = useState<any | null>(null);
   const [modalTab, setModalTab] = useState<"info" | "payments" | "training">("info");
   const [searchTerm, setSearchTerm] = useState("");
-  const [quickFilter, setQuickFilter] = useState<"active" | "all" | "inactive" | "due" | "nofuture" | "noplan">("active");
+  const [quickFilter, setQuickFilter] = useState<"active" | "all" | "hidden" | "due" | "nofuture" | "noplan" | "nopassword">("active");
+  const [internalRefreshKey, setInternalRefreshKey] = useState(0);
 
   // Context menu state
   const [contextMenuAnchor, setContextMenuAnchor] = useState<{mouseX: number, mouseY: number} | null>(null);
@@ -374,11 +570,27 @@ export default function UserTable({
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [refreshKey]);
+  }, [refreshKey, internalRefreshKey]);
 
   // Column definitions
   const columns: GridColDef[] = [
-    { field: "name", headerName: translations[lang].manageUsersTableName, flex: 1, minWidth: 160, sortable: false },
+    {
+      field: "name",
+      headerName: translations[lang].manageUsersTableName,
+      flex: 1,
+      minWidth: 160,
+      sortable: false,
+      valueGetter: (params: any) => {
+        const row = params?.row;
+        if (!row) return "";
+        return (row.firstName || "") + " " + (row.lastName || "");
+      },
+      renderCell: (params: any) => {
+        const row = params?.row;
+        if (!row) return "";
+        return (row.firstName || "") + " " + (row.lastName || "");
+      },
+    },
     { field: "username", headerName: translations[lang].manageUsersModalUsername, flex: 1, minWidth: 130, sortable: false },
     { field: "email", headerName: translations[lang].manageUsersTableEmail, flex: 1.5, minWidth: 210, sortable: false },
     {
@@ -412,7 +624,7 @@ export default function UserTable({
         if (hasOverdueUnpaid)
           return (
             <Tooltip title={translations[lang].paymentsTableUnpaid}>
-              <CancelIcon color="error" />
+              <EuroIcon sx={{ color: "#E53935" }} />
             </Tooltip>
           );
         if (row.hidden)
@@ -423,7 +635,7 @@ export default function UserTable({
           );
         return (
           <Tooltip title={translations[lang].paymentsTablePaid}>
-            <CheckCircleIcon color="success" />
+            <EuroIcon sx={{ color: "#23b802" }} />
           </Tooltip>
         );
       }
@@ -448,8 +660,8 @@ export default function UserTable({
         (u.username ?? "").toLowerCase().includes(term) ||
         (u.email ?? "").toLowerCase().includes(term);
 
-      // Inactivo: show only hidden users
-      if (quickFilter === "inactive") {
+      // Hidden: show only hidden users
+      if (quickFilter === "hidden") {
         return u.hidden === true && matchesSearch;
       }
 
@@ -466,6 +678,11 @@ export default function UserTable({
       // Nofuture: Sin pagos futuros, only active users
       if (quickFilter === "nofuture") {
         return !hasFuturePayment && u.hidden !== true && matchesSearch;
+      }
+
+      // Usuarios sin contraseña: users who have not set a password (hasPassword === false)
+      if (quickFilter === "nopassword") {
+        return (u.hasPassword === false) && matchesSearch;
       }
 
       // Active: show only not hidden
@@ -506,11 +723,7 @@ export default function UserTable({
   // Payment/user info modal dialog
   const handleRowClick = (params: GridRowParams) => setSelected(params.row);
 
-  const searchPlaceholders: Record<string, string> = {
-    en: "Search by name, username, or email",
-    es: "Buscar por nombre, usuario o email",
-  };
-  const placeholder = searchPlaceholders[lang] ?? "Search...";
+  const placeholder = translations[lang].searchUserTablePlaceholder;
 
   return (
     <Box sx={{ width: "100%", background: "background.paper" }}>
@@ -558,10 +771,11 @@ export default function UserTable({
               >
                 <MenuItem value="active">{translations[lang].manageUsersQuickFilterAllActive}</MenuItem>
                 <MenuItem value="all">{translations[lang].manageUsersQuickFilterAll}</MenuItem>
-                <MenuItem value="inactive">{translations[lang].manageUsersQuickFilterInactive}</MenuItem>
+                <MenuItem value="hidden">{translations[lang].manageUsersQuickFilterHidden}</MenuItem>
                 <MenuItem value="due">{translations[lang].manageUsersQuickFilterDue}</MenuItem>
                 <MenuItem value="nofuture">{translations[lang].manageUsersQuickFilterNoFuture}</MenuItem>
-                <MenuItem value="noplan">Sin planificación</MenuItem>
+                <MenuItem value="noplan">{translations[lang].manageUsersQuickFilterNoPlan}</MenuItem>
+                <MenuItem value="nopassword">{translations[lang].manageUsersQuickFilterNoPassword}</MenuItem>
               </Select>
             </Box>
             <Box sx={{
@@ -655,13 +869,12 @@ export default function UserTable({
           }}
         >
           <DialogTitle>
-            👤 {selected?.name ?? ""}
+            👤 {(selected?.firstName || "") + " " + (selected?.lastName || "")}
           </DialogTitle>
           <DialogContent sx={{ height: 'calc(50vh - 64px)', overflowY: 'auto' }}>
             <Tabs value={modalTab} onChange={(_, v) => setModalTab(v)}>
               <Tab value="info" label={translations[lang].infoTab} />
               <Tab value="payments" label={translations[lang].paymentsTab} />
-              <Tab value="training" label={translations[lang].trainingTab} />
             </Tabs>
             {modalTab === "info" && selected && (
               <Box sx={{ mt: 2 }}>
@@ -671,10 +884,10 @@ export default function UserTable({
                   value={selected.username}
                   field="username"
                   userId={selected.id}
-                  onUpdated={(newVal) =>
-                    setSelected({ ...selected, username: newVal })
-                  }
+                  onUpdated={(newVal) => setSelected({ ...selected, username: newVal })}
+                  forceRefresh={() => setInternalRefreshKey(k => k + 1)}
                   lang={lang}
+                  setNotification={setNotification}
                 />
                 {/* Editable Email */}
                 <EditableUserField
@@ -682,21 +895,57 @@ export default function UserTable({
                   value={selected.email}
                   field="email"
                   userId={selected.id}
-                  onUpdated={(newVal) =>
-                    setSelected({ ...selected, email: newVal })
-                  }
+                  onUpdated={(newVal) => setSelected({ ...selected, email: newVal })}
+                  forceRefresh={() => setInternalRefreshKey(k => k + 1)}
                   lang={lang}
+                  setNotification={setNotification}
                 />
-                {/* Editable Name */}
+                {/* Editable First Name */}
                 <EditableUserField
-                  label={translations[lang].manageUsersModalName}
-                  value={selected.name}
-                  field="name"
+                  label={translations[lang].manageUsersModalFirstName}
+                  value={selected.firstName}
+                  field="firstName"
                   userId={selected.id}
-                  onUpdated={(newVal) =>
-                    setSelected({ ...selected, name: newVal })
-                  }
+                  onUpdated={(newVal) => setSelected({ ...selected, firstName: newVal })}
+                  forceRefresh={() => setInternalRefreshKey(k => k + 1)}
                   lang={lang}
+                  setNotification={setNotification}
+                />
+                {/* Editable Last Name */}
+                <EditableUserField
+                  label={translations[lang].manageUsersModalLastName}
+                  value={selected.lastName}
+                  field="lastName"
+                  userId={selected.id}
+                  onUpdated={(newVal) => setSelected({ ...selected, lastName: newVal })}
+                  forceRefresh={() => setInternalRefreshKey(k => k + 1)}
+                  lang={lang}
+                  setNotification={setNotification}
+                />
+                <EditableDropdownField
+                  label={lang === "es" ? "Frecuencia" : "Frequency"}
+                  value={selected.subscriptionFrequency || ""}
+                  options={[
+                    { value: "monthly", label: lang === "es" ? "Mensual" : "Monthly" },
+                    { value: "quarterly", label: lang === "es" ? "Trimestral" : "Quarterly" },
+                    { value: "yearly", label: lang === "es" ? "Anual" : "Yearly" }
+                  ]}
+                  userId={selected.id}
+                  onUpdated={val => setSelected({ ...selected, subscriptionFrequency: val })}
+                  forceRefresh={() => setInternalRefreshKey(k => k + 1)}
+                  lang={lang}
+                  setNotification={setNotification}
+                  field="subscriptionFrequency"
+                />
+                <EditableNumberField
+                  label={lang === "es" ? "Cuota (€)" : "Amount (€)"}
+                  value={selected.subscriptionAmount}
+                  userId={selected.id}
+                  onUpdated={val => setSelected({ ...selected, subscriptionAmount: val })}
+                  forceRefresh={() => setInternalRefreshKey(k => k + 1)}
+                  lang={lang}
+                  setNotification={setNotification}
+                  field="subscriptionAmount"
                 />
                 <Typography>
                   <strong>{translations[lang].manageUsersModalLastLogin}:</strong>{" "}
@@ -719,36 +968,57 @@ export default function UserTable({
                     {translations[lang].manageUsersAddPaymentNone}
                   </Typography>
                 ) : (
-                  <Box component="ul" sx={{ listStyle: "none", p: 0 }}>
-                    {selected.payments.map((p: any) => (
-                      <Box key={p.id} component="li" sx={{ display: "flex", alignItems: "center", gap: 2, mb: 1 }}>
-                        <Typography sx={{ minWidth: 100 }}>
-                          {new Date(p.dueDate).toLocaleDateString(lang === "es" ? "es-ES" : "en-GB")}
-                        </Typography>
-                        <Typography sx={{ minWidth: 80 }}>
-                          {typeof p.amount === "number" ? p.amount.toFixed(2) : p.amount}
-                        </Typography>
-                        <Box>
-                          {p.isPayed ? (
-                            <Tooltip title={translations[lang].paymentsTablePaid}>
-                              <CheckCircleIcon color="success" />
-                            </Tooltip>
-                          ) : (
-                            <Tooltip title={translations[lang].paymentsTableUnpaid}>
-                              <CancelIcon color="error" />
-                            </Tooltip>
-                          )}
-                        </Box>
-                      </Box>
-                    ))}
+                  <Box sx={{ width: '100%', minWidth: 360 }}>
+                    <DataGrid
+                      rows={selected.payments}
+                      columns={[
+                        {
+                          field: 'dueDate',
+                          headerName: translations[lang].paymentsTableDate,
+                          minWidth: 120,
+                          renderCell: (params: any) =>
+                            params.row && params.row.dueDate
+                              ? new Date(params.row.dueDate).toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-GB')
+                              : '—'
+                        },
+                        {
+                          field: 'amount',
+                          headerName: translations[lang].paymentsTableAmount,
+                          minWidth: 100,
+                          valueFormatter: (params: any) =>
+                            typeof params.value === 'number'
+                              ? params.value.toFixed(2)
+                              : params.value
+                        },
+                        {
+                          field: 'isPayed',
+                          headerName: translations[lang].paymentsTablePaid,
+                          minWidth: 80,
+                          sortable: false,
+                          renderCell: (params: any) =>
+                            params.value ? (
+                              <Tooltip title={translations[lang].paymentsTablePaid}>
+                                <EuroIcon sx={{ color: "#23b802" }} />
+                              </Tooltip>
+                            ) : (
+                              <Tooltip title={translations[lang].paymentsTableUnpaid}>
+                                <EuroIcon sx={{ color: "#E53935" }} />
+                              </Tooltip>
+                            ),
+                        },
+                      ]}
+                      pageSizeOptions={[5]}
+                      initialState={{
+                        pagination: { paginationModel: { pageSize: 6, page: 0 } }
+                      }}
+                      getRowId={row => row.id}
+                      hideFooterSelectedRowCount
+                      autoHeight
+                      disableColumnMenu
+                    />
                   </Box>
                 )}
               </Box>
-            )}
-
-            {/* Training Tab */}
-            {modalTab === "training" && selected && (
-              <TrainingTab userId={selected.id} lang={lang} />
             )}
           </DialogContent>
         </Dialog>

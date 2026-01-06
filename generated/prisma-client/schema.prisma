@@ -71,7 +71,8 @@ enum Role {
 
 model User {
   id                    String          @id @default(uuid())
-  name                  String
+  firstName             String
+  lastName              String
   username              String          @unique
   email                 String          @unique
   password              String?
@@ -122,6 +123,7 @@ model DayExerciseSeries {
   isDropset       Boolean      @default(false)
   athleteNotes    String?
   trainerNotes    String?
+  athleteUserRead Boolean      @default(false)
 }
 
 model Payment {
