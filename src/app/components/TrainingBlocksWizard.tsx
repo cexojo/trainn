@@ -182,7 +182,13 @@ export default function TrainingBlocksWizard() {
                 disabled={athleteLoading}
                 options={athleteOptions}
                 getOptionLabel={option =>
-                  (option && (option.name || option.email || option.username)) || ""
+                  option
+                    ? (
+                        option.firstName && option.lastName
+                          ? `${option.firstName} ${option.lastName}`
+                          : (option.firstName || option.lastName || option.username || "")
+                      )
+                    : ""
                 }
                 isOptionEqualToValue={(option, value) => option && value && option.id === value.id}
                 value={selectedAthlete}
@@ -541,7 +547,19 @@ export default function TrainingBlocksWizard() {
               Atleta:&nbsp;
               <span style={{ fontWeight: 400 }}>
                 {selectedAthlete
-                  ? (selectedAthlete.name || selectedAthlete.username || selectedAthlete.email)
+                  ? (
+                      selectedAthlete.firstName && selectedAthlete.lastName
+                        ? `${selectedAthlete.firstName} ${selectedAthlete.lastName}`
+                        : (
+                            selectedAthlete.firstName
+                              ? selectedAthlete.firstName
+                              : (
+                                  selectedAthlete.lastName
+                                    ? selectedAthlete.lastName
+                                    : selectedAthlete.username
+                                )
+                          )
+                    )
                   : ""}
               </span>
             </Typography>

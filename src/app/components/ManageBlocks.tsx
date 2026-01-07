@@ -18,7 +18,8 @@ type Block = {
 
 type Athlete = {
   id: string;
-  name?: string;
+  firstName?: string;
+  lastName?: string;
   username?: string;
   email?: string;
   hidden?: boolean;
@@ -956,7 +957,13 @@ export default function ManageBlocks() {
         <Autocomplete
           disabled={athleteLoading}
           options={athletes}
-          getOptionLabel={opt => opt?.name || opt?.username || opt?.email || ""}
+          getOptionLabel={opt =>
+            opt
+              ? (opt.firstName && opt.lastName
+                  ? `${opt.firstName} ${opt.lastName}`
+                  : (opt.firstName || opt.lastName || opt.username || opt.email || ""))
+              : ""
+          }
           isOptionEqualToValue={(opt, val) => opt && val && opt.id === val.id}
           value={selectedAthlete}
           onChange={(_, val) => setSelectedAthlete(val)}
