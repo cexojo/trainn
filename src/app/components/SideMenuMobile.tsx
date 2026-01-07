@@ -53,20 +53,7 @@ export default function SideMenuMobile({ open, toggleDrawer, setSection }: SideM
           height: '100%',
         }}
       >
-        <Stack direction="row" sx={{ p: 2, pb: 0, gap: 1 }}>
-          <Stack
-            direction="row"
-            sx={{ gap: 1, alignItems: 'center', flexGrow: 1, p: 1 }}
-          >
-            <Typography component="p" variant="h6">
-              Riley Carter
-            </Typography>
-          </Stack>
-          <MenuButton showBadge>
-            <NotificationsRoundedIcon />
-          </MenuButton>
-        </Stack>
-        <Divider />
+        
         <Stack sx={{ flexGrow: 1 }}>
           <MenuContent setSection={setSection} role={userRole} onMenuItemClick={() => toggleDrawer(false)()} />
           <Divider />

@@ -7,32 +7,63 @@ import * as Sentry from "@sentry/nextjs";
 
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-for-local";
 
+function expiredAuthCookie(resp: NextResponse) {
+  resp.cookies.set({
+    name: "elena_auth_token",
+    value: "",
+    maxAge: 0,
+    path: "/",
+    httpOnly: true,
+    sameSite: "lax"
+  });
+  return resp;
+}
+
 export async function POST(req: NextRequest) {
   const { username, password } = await req.json();
 
   const lang = "es";
   const t = translations[lang];
 
+  // Always expire existing auth token as first step
+
   if (!username) {
     Sentry.logger.error("Login failed", { cause: "Username not provided", username: username });
-    return NextResponse.json({ error: t.loginFailed }, { status: 401 });
+    return expiredAuthCookie(
+      NextResponse.json({ error: t.loginFailed }, { status: 401 })
+    );
   }
   if (!password) {
     Sentry.logger.error("Login failed", { cause: "Password not provided", username: username });
-    return NextResponse.json({ error: t.loginFailed }, { status: 401 });
+    return expiredAuthCookie(
+      NextResponse.json({ error: t.loginFailed }, { status: 401 })
+    );
   }
 
   const user = await prisma.user.findFirst({
-    where: { username }
+    where: { username },
+    select: {
+      id: true, username: true, password: true, role: true, hidden: true
+    }
   });
 
   if (!user) {
     Sentry.logger.error("Login failed", { cause: "Username does not exist", username: username });
-    return NextResponse.json({ error: t.loginFailed }, { status: 401 });
+    return expiredAuthCookie(
+      NextResponse.json({ error: t.loginFailed }, { status: 401 })
+    );
+  }
+  if (user.hidden) {
+    Sentry.logger.error("Login failed", { cause: "User is hidden", username: username });
+    return expiredAuthCookie(
+      NextResponse.json({ error: t.loginFailed }, { status: 401 })
+    );
   }
   if (!user.password) {
     Sentry.logger.error("Login failed", { cause: "Username has empty password", username: username });
-    return NextResponse.json({ error: t.loginFailed }, { status: 401 });
+    return expiredAuthCookie(
+      NextResponse.json({ error: t.loginFailed }, { status: 401 })
+    );
   }
 
   const valid = await bcrypt.compare(password, user.password);
@@ -43,7 +74,9 @@ export async function POST(req: NextRequest) {
       where: { id: user.id },
       data: { lastKOLogin: new Date() },
     });
-    return NextResponse.json({ error: t.loginFailed }, { status: 401 });
+    return expiredAuthCookie(
+      NextResponse.json({ error: t.loginFailed }, { status: 401 })
+    );
   }
 
   // Mark success login
@@ -59,8 +92,8 @@ export async function POST(req: NextRequest) {
     { expiresIn: "7d" }
   );
   
-  const response = NextResponse.json({ ok: true, userId: user.id, role: user.role }, { status: 200 });
-  response.cookies.set({
+  const successResponse = NextResponse.json({ ok: true, userId: user.id, role: user.role }, { status: 200 });
+  successResponse.cookies.set({
     name: "elena_auth_token",
     value: token,
     httpOnly: true,
@@ -69,5 +102,5 @@ export async function POST(req: NextRequest) {
     path: "/"
   });
 
-  return response;
+  return successResponse;
 }

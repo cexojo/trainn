@@ -32,12 +32,12 @@ export default function SideMenu({
   role: "admin" | "athlete";
 }) {
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
-  const [user, setUser] = useState<{ name?: string; email?: string } | null>(null);
+  const [user, setUser] = useState<{ firstName?: string; lastName?: string; email?: string } | null>(null);
 
   React.useEffect(() => {
     fetch("/api/get-user-id")
       .then(res => res.json())
-      .then(data => setUser({ name: data.name, email: data.email }))
+      .then(data => setUser({ firstName: data.firstName, lastName: data.lastName, email: data.email }))
       .catch(() => setUser(null));
   }, []);
 
@@ -68,7 +68,7 @@ export default function SideMenu({
         {/* Display logged-in user info */}
         <Box>
           <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: "16px" }}>
-            {user?.name || "Usuario"}
+            {[user?.firstName, user?.lastName].filter(Boolean).join(" ") || "Usuariorr"}
           </Typography>
           <Typography variant="caption" sx={{ color: "text.secondary" }}>
             {user?.email || ""}
@@ -96,14 +96,6 @@ export default function SideMenu({
           borderColor: 'divider',
         }}
       >
-        <Box sx={{ mr: 'auto' }}>
-          <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
-            Riley Carter
-          </Typography>
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            riley@email.com
-          </Typography>
-        </Box>
         <OptionsMenu />
       </Stack>
     </Drawer>

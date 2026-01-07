@@ -6,6 +6,7 @@ import { translations, type Lang } from "@/app/i18n";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import NotificationSnackbar from "./NotificationSnackbar";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import EuroIcon from "@mui/icons-material/Euro";
 
@@ -557,6 +558,12 @@ export default function UserTable({
   const [actionLoading, setActionLoading] = useState(false);
   const [pendingWelcomeUser, setPendingWelcomeUser] = useState<any | null>(null);
   const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  // Confirmation dialog state for hiding/unhiding users
+  const [confirmationDialog, setConfirmationDialog] = useState<{ open: boolean; message: string; user: any | null }>({
+    open: false,
+    message: "",
+    user: null,
+  });
   // Import logAdminError
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const logAdminError = require("@/app/utils/logAdminError").logAdminError;
@@ -831,12 +838,18 @@ export default function UserTable({
           onClick={() => setContextMenuAnchor(null)}
         >
           <MenuItem
-            onClick={async (e) => {
+            onClick={e => {
               e.stopPropagation();
               setContextMenuAnchor(null);
-              // Defer API call to next microtask so menu closes before heavy work.
+              // Show confirmation dialog instead of immediate action
               if (contextMenuRow) {
-                await handleHideUser(contextMenuRow);
+                setConfirmationDialog({
+                  open: true,
+                  user: contextMenuRow,
+                  message: contextMenuRow.hidden
+                    ? "Si habilitas de nuevo a este usuario podrá volver a acceder a la plataforma con su nombre de usuario y contraseña, ¿deseas continuar?"
+                    : "Si ocultas el usuario no aparecerá como activo hasta que lo vuelvas a habilitar y no podrá acceder a la aplicación con su nombre de usuario y contraseña, ¿deseas continuar?"
+                });
               }
             }}
           >
@@ -1077,41 +1090,40 @@ export default function UserTable({
             </Button>
           </Box>
         </Dialog>
-        {/* Notification Snackbar */}
-        {notification && (
-          <Box sx={{
-            position: "fixed",
-            bottom: 32,
-            left: 0,
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            zIndex: 16000,
-          }}>
-            <Box sx={{
-              bgcolor: notification.type === "success" ? "#1AAF4B" : "#E53935",
-              color: "#fff",
-              px: 3,
-              py: 1.2,
-              borderRadius: 2,
-              boxShadow: 3,
-              fontWeight: 500,
-              fontSize: 16,
-              textAlign: "center",
-              mx: "auto",
-              minWidth: 240,
-            }}>
-              {notification.message}
-              <IconButton
-                size="small"
-                sx={{ color: "#fff", ml: 2 }}
-                onClick={() => setNotification(null)}
+        {/* Confirmation Dialog for Hide/Unhide */}
+        <Dialog
+          open={confirmationDialog.open}
+          onClose={() => setConfirmationDialog({ ...confirmationDialog, open: false })}
+        >
+          <DialogTitle>Confirmación</DialogTitle>
+          <DialogContent>
+            <Typography>{confirmationDialog.message}</Typography>
+            <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end", gap: 2 }}>
+              <Button
+                onClick={() => setConfirmationDialog({ ...confirmationDialog, open: false })}
+                color="inherit"
               >
-                <CancelIcon fontSize="small" />
-              </IconButton>
+                Cancelar
+              </Button>
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={async () => {
+                  setConfirmationDialog({ ...confirmationDialog, open: false });
+                  if (confirmationDialog.user) await handleHideUser(confirmationDialog.user);
+                }}
+              >
+                Confirmar
+              </Button>
             </Box>
-          </Box>
-        )}
+          </DialogContent>
+        </Dialog>
+
+        {/* Notification Snackbar */}
+        <NotificationSnackbar
+          notification={notification}
+          onClose={() => setNotification(null)}
+        />
       </Box>
     </Box>
   );

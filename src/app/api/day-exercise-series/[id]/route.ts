@@ -5,9 +5,9 @@ import { getTokenPayload } from "@/app/api/utils/auth";
 // PATCH /api/day-exercise-series/[id]
 // Body: any subset of DayExerciseSeries fields
 export async function PATCH(req: NextRequest, ctx: any) {
-  // ADMIN AUTH CHECK
+  // AUTH CHECK (admin or athlete allowed)
   const payload = getTokenPayload(req);
-  if (!payload || payload.role !== "admin") {
+  if (!payload || (payload.role !== "admin" && payload.role !== "athlete")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const params = await ctx.params;
@@ -23,20 +23,31 @@ export async function PATCH(req: NextRequest, ctx: any) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  // Only allow patching fields defined in the model
-  const allowedFields = [
-    "seriesNumber",
-    "minReps",
-    "maxReps",
-    "minRir",
-    "maxRir",
-    "effectiveReps",
-    "effectiveWeight",
-    "effectiveRir",
-    "isDropset",
-    "athleteNotes",
-    "trainerNotes",
-  ];
+  // Role-based allowed fields
+  let allowedFields: string[] = [];
+  if (payload.role === "admin") {
+    allowedFields = [
+      "seriesNumber",
+      "minReps",
+      "maxReps",
+      "minRir",
+      "maxRir",
+      "effectiveReps",
+      "effectiveWeight",
+      "effectiveRir",
+      "isDropset",
+      "athleteNotes",
+      "trainerNotes",
+    ];
+  } else {
+    // athlete: can only update results and athlete notes
+    allowedFields = [
+      "effectiveReps",
+      "effectiveWeight",
+      "effectiveRir",
+      "athleteNotes",
+    ];
+  }
 
   // Keys in the model that should be coerced to number
   const numberFields = [
@@ -53,10 +64,39 @@ export async function PATCH(req: NextRequest, ctx: any) {
   const updateData: any = {};
   for (const key of allowedFields) {
     if (data[key] !== undefined) {
-      if (numberFields.includes(key) && data[key] !== null && data[key] !== "") {
-        // Convert to number if not already
-        const num = Number(data[key]);
-        updateData[key] = isNaN(num) ? null : num;
+      if (numberFields.includes(key)) {
+        // Validation for effective fields: must be ""/null, or 0 to 999
+        const isEffectiveField = (
+          key === "effectiveReps" ||
+          key === "effectiveWeight" ||
+          key === "effectiveRir"
+        );
+        if (data[key] === "" || data[key] === null) {
+          updateData[key] = null;
+        } else {
+          const num = Number(data[key]);
+          if (isEffectiveField) {
+            if (
+              typeof data[key] === "string" && data[key].trim() === ""
+            ) {
+              updateData[key] = null;
+            } else if (
+              !isFinite(num) ||
+              num < 0 ||
+              num > 999 ||
+              isNaN(num)
+            ) {
+              return NextResponse.json(
+                { error: "out_of_range_value" },
+                { status: 400 }
+              );
+            } else {
+              updateData[key] = num;
+            }
+          } else {
+            updateData[key] = isNaN(num) ? null : num;
+          }
+        }
       } else {
         updateData[key] = data[key];
       }
@@ -72,7 +112,7 @@ export async function PATCH(req: NextRequest, ctx: any) {
       where: { id },
       data: updateData,
     });
-    return NextResponse.json({ success: true, data: updated });
+    return new Response(null, { status: 200 });
   } catch (err: any) {
     return NextResponse.json({ error: "Failed to update series", detail: String(err), id, requestBody: data, updateData }, { status: 500 });
   }

@@ -1,5 +1,6 @@
 import prisma from '@/prisma/client';
 import { NextRequest, NextResponse } from "next/server";
+import { getTokenPayload } from "@/app/api/utils/auth";
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
@@ -13,9 +14,26 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Missing userId" }, { status: 400 });
     }
 
-    // Fetch all training blocks for the user, include their weeks (no isVisible filter: admin can see all)
+    // Fetch user role to check if is athlete and filter visible blocks
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true }
+    });
+
+    // If user is athlete, only allow token user to access their own data
+    if (user?.role === "athlete") {
+      const tokenPayload = getTokenPayload(req);
+      if (!tokenPayload || !tokenPayload.id || tokenPayload.id !== userId) {
+        return NextResponse.json({ error: "Unauthorized." }, { status: 403 });
+      }
+    }
+
+    // Fetch all training blocks for the user, include their weeks (athlete can only see isVisible: true)
     const blocks = await prisma.trainingBlock.findMany({
-      where: { userId },
+      where: {
+        userId,
+        ...(user?.role === "athlete" ? { isVisible: true } : {})
+      },
       orderBy: { blockNumber: "asc" },
       include: {
         weeks: {
@@ -93,6 +111,40 @@ export async function GET(req: NextRequest) {
             }
           }
         });
+
+        // DUPLICATE CHECK: group by (trainingDayId, exerciseNumber, exerciseId, seriesNumber)
+        const rawDuplicates: Record<string, number[]> = {};
+        exerciseDefs.forEach((def: any, idx: number) => {
+          const dId = def.dayExercise?.trainingDay?.id ?? "NA";
+          const n = def.dayExercise?.exerciseNumber ?? "NA";
+          const eId = def.dayExercise?.exercise?.id ?? def.dayExerciseId ?? "NA";
+          const sN = def.seriesNumber ?? "NA";
+          const key = `${dId}|${n}|${eId}|${sN}`;
+          if (!rawDuplicates[key]) rawDuplicates[key] = [];
+          rawDuplicates[key].push(idx);
+        });
+        const duplicateKeys = Object.entries(rawDuplicates).filter(([_, idxs]) => idxs.length > 1);
+        debugObj.rawDuplicateSeries = duplicateKeys.map(([k, idxs]) => ({
+          key: k,
+          count: idxs.length,
+          recordIds: idxs.map(i => exerciseDefs[i].id),
+        }));
+
+        // NEW: Check (trainingDayId, exerciseNumber) uniqueness among dayExercise (ignoring exerciseId)
+        const dayExerciseSeen: Record<string, string[]> = {};
+        exerciseDefs.forEach((def: any) => {
+          const dId = def.dayExercise?.trainingDay?.id ?? "NA";
+          const n = def.dayExercise?.exerciseNumber ?? "NA";
+          const key = `${dId}|${n}`;
+          const dayExerciseId = def.dayExercise?.id ?? "?";
+          if (!dayExerciseSeen[key]) dayExerciseSeen[key] = [];
+          if (!dayExerciseSeen[key].includes(dayExerciseId)) {
+            dayExerciseSeen[key].push(dayExerciseId);
+          }
+        });
+        debugObj.nonUniqueDayExerciseNumber = Object.entries(dayExerciseSeen)
+          .filter(([_, array]) => array.length > 1)
+          .map(([key, ids]) => ({ key, dayExerciseIds: ids }));
       } catch (err) {
         throw err;
       }
@@ -240,13 +292,18 @@ export async function GET(req: NextRequest) {
           isDropset: def.isDropset
         };
       });
-      // ---- Ensure deterministic order by day, exerciseNumber, and seriesNumber ----
+      // ---- Ensure order: by dayNumber, exerciseNumber, seriesNumber ----
       exerciseDefs = exerciseDefs.sort((a, b) => {
-        if (a.day > b.day) return 1;
-        if (a.day < b.day) return -1;
-        if ((a.exerciseNumber ?? 0) > (b.exerciseNumber ?? 0)) return 1;
-        if ((a.exerciseNumber ?? 0) < (b.exerciseNumber ?? 0)) return -1;
-        return (a.seriesNumber ?? 0) - (b.seriesNumber ?? 0);
+        // Use dayNumber from trainingDay
+        const dayA = Number(a.trainingDay?.dayNumber ?? 0);
+        const dayB = Number(b.trainingDay?.dayNumber ?? 0);
+        if (dayA !== dayB) return dayA - dayB;
+        const exA = Number(a.exerciseNumber ?? 0);
+        const exB = Number(b.exerciseNumber ?? 0);
+        if (exA !== exB) return exA - exB;
+        const serA = Number(a.seriesNumber ?? 0);
+        const serB = Number(b.seriesNumber ?? 0);
+        return serA - serB;
       });
     }
 

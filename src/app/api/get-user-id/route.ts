@@ -37,16 +37,34 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const user = await prisma.user.findFirst({
-    where: { id: qUserId }
+    where: { id: qUserId },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      username: true,
+      email: true,
+      lastVisitedWeek: true,
+      isocode: true,
+      role: true,
+      hidden: true,
+    }
   });
 
   if (!user)
     return NextResponse.json({ error: "Not found" }, { status: 404 });
 
+  // Reject hidden athletes
+  if (user.role === "athlete" && user.hidden) {
+    return NextResponse.json({ error: "Access denied" }, { status: 403 });
+  }
+
   return NextResponse.json({
     id: user.id,
-    name: user.name,
+    firstName: user.firstName,
+    lastName: user.lastName,
     username: user.username,
+    email: user.email,
     lastVisitedWeek: user.lastVisitedWeek ?? null,
     isocode: (user as any).isocode ?? null,
     role: user.role

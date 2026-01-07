@@ -48,12 +48,19 @@ export default function DashboardClient(props: { disableCustomTheme?: boolean })
 
   React.useEffect(() => {
     fetch("/api/get-user-id")
-      .then(res => res.json())
+      .then(res => {
+        if (res.status === 401 || res.status === 403) {
+          // Not logged in or unauthorized: redirect to root
+          window.location.replace("/");
+          return Promise.reject(new Error("Unauthorized"));
+        }
+        return res.json();
+      })
       .then(data => {
         if (data.role === "admin") setUserRole("admin");
         else setUserRole("athlete");
       })
-      .catch(() => { throw new FrontendError("Unknown role."); });
+      .catch(() => { /* Swallow error - redirect already triggered if unauthorized */ });
   }, []);
 
   if (!userRole) {

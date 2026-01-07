@@ -37,6 +37,9 @@ function EditableDayDate({ dayIdx, dayDate, setDayDate, lang }: { dayIdx: number
 }
 
 
+import CancelIcon from "@mui/icons-material/Cancel";
+import NotificationSnackbar from "./NotificationSnackbar";
+
 export default function TrainingPanel({
   selectedBlock,
   setSelectedBlock,
@@ -53,6 +56,7 @@ export default function TrainingPanel({
   setSelectedDay?: (dayIdx: number | null) => void,
 }) {
   // Modal state/hooks, must be inside the function!
+  const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [openNotesModal, setOpenNotesModal] = useState(false);
   const [editingSeries, setEditingSeries] = useState<string | null>(null);
   const [modalNotes, setModalNotes] = useState<string>("");
@@ -62,10 +66,10 @@ export default function TrainingPanel({
   const handleCloseNotesModal = async () => {
     setOpenNotesModal(false);
     if (editingSeries !== null) {
-      await fetch("/api/exercise-definitions", {
+      await fetch(`/api/day-exercise-series/${editingSeries}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: editingSeries, field: "athleteNotes", value: modalNotes }),
+        body: JSON.stringify({ athleteNotes: modalNotes }),
       });
       // Update athleteNotes in exerciseDefs in state for immediate UI refresh
       setExerciseDefs(prevDefs =>
@@ -190,12 +194,33 @@ export default function TrainingPanel({
 
   const handleBlur = async (defId: string, field: "effectiveReps" | "effectiveWeight" | "effectiveRir", value: string | number) => {
     setChanged(c => ({ ...c, [defId + field]: true }));
-    await fetch("/api/exercise-definitions", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: defId, field, value }),
-    });
-    setChanged(c => ({ ...c, [defId + field]: false }));
+    try {
+      const res = await fetch(`/api/day-exercise-series/${defId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ [field]: value }),
+      });
+      if (!res.ok) {
+        let showRangeError = false;
+        try {
+          const result = await res.json();
+          showRangeError = res.status === 400 && result && result.error === "out_of_range_value";
+        } catch {}
+        if (showRangeError) {
+          const msg = lang === "es"
+            ? "El valor debe estar entre 0 y 999"
+            : "Value must be between 0 and 999";
+          setNotification({ type: "error", message: msg });
+        } else {
+          // fallback generic
+          setNotification({ type: "error", message: lang === "es" ? "Error al guardar resultado" : "Error saving result" });
+        }
+      }
+    } catch {
+      setNotification({ type: "error", message: lang === "es" ? "Error de red" : "Network error" });
+    } finally {
+      setChanged(c => ({ ...c, [defId + field]: false }));
+    }
   };
 
   const handleLocalChange = (
@@ -254,7 +279,8 @@ export default function TrainingPanel({
   };
 
   return (
-    <Box>
+    <>
+      <Box>
       {(statusModalOpen) && (
         <Box
           sx={{
@@ -715,5 +741,10 @@ export default function TrainingPanel({
         </Box>
       </Box>
     </Box>
+      <NotificationSnackbar
+        notification={notification}
+        onClose={() => setNotification(null)}
+      />
+    </>
   );
 }
