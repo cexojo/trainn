@@ -45,7 +45,14 @@ export async function GET(req: NextRequest) {
           }
         }
       }
-      if (!selectedWeek) selectedWeek = (selectedBlock as any).weeks[(selectedBlock as any).weeks.length - 1];
+      if (!selectedWeek && selectedBlock && selectedBlock.weeks && selectedBlock.weeks.length > 0) {
+        selectedWeek = (selectedBlock as any).weeks[(selectedBlock as any).weeks.length - 1];
+      }
+    }
+
+    // Abort if no selectedBlock or selectedWeek (invalid IDs)
+    if (!selectedBlock || !selectedWeek) {
+      return NextResponse.json({ error: "Block or week not found" }, { status: 404 });
     }
 
     // Load exercise definitions for selectedWeek, and for previous week if exists
@@ -74,17 +81,21 @@ export async function GET(req: NextRequest) {
         }
       });
 
-      exerciseDefs = await prisma.dayExerciseSeries.findMany({
-        where: { trainingWeekId: { in: weekIds } },
-        include: {
-          dayExercise: {
-            include: {
-              exercise: { include: { exerciseGroup: true } },
-              trainingDay: { select: { id: true, dayNumber: true, dayLabel: true, date: true } }
+      try {
+        exerciseDefs = await prisma.dayExerciseSeries.findMany({
+          where: { trainingWeekId: { in: weekIds } },
+          include: {
+            dayExercise: {
+              include: {
+                exercise: { include: { exerciseGroup: true } },
+                trainingDay: { select: { id: true, dayNumber: true, dayLabel: true, date: true } }
+              }
             }
           }
-        }
-      });
+        });
+      } catch (err) {
+        throw err;
+      }
 
       // --- Find placeholders from previous week (same day number in block) ---
       // Find previous week in block (by weekNumber)
@@ -97,9 +108,12 @@ export async function GET(req: NextRequest) {
         ? { id: selectedWeek.id, weekNumber: selectedWeek.weekNumber }
         : null;
 
-      const prevWeek = (selectedBlock as any)!.weeks
-        .filter((w: { id: any; weekNumber: number; weekStart: Date; weekEnd: Date }) => w.weekNumber < selectedWeek!.weekNumber)
-        .sort((a: { weekNumber: number }, b: { weekNumber: number }): number => b.weekNumber - a.weekNumber)[0];
+      let prevWeek = null;
+      if (selectedBlock && selectedBlock.weeks && selectedWeek) {
+        prevWeek = (selectedBlock as any).weeks
+          .filter((w: { id: any; weekNumber: number; weekStart: Date; weekEnd: Date }) => w.weekNumber < selectedWeek.weekNumber)
+          .sort((a: { weekNumber: number }, b: { weekNumber: number }): number => b.weekNumber - a.weekNumber)[0];
+      }
 
       debugObj.prevWeek = prevWeek
         ? { id: prevWeek.id, weekNumber: prevWeek.weekNumber }
