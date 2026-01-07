@@ -2,6 +2,10 @@ export type Lang = "en" | "es";
 
 export type Translations = {
   [K in Lang]: {
+    sexLabel: string;
+    sexMale: string;
+    sexFemale: string;
+    sexOther: string;
     // Password page translations (new):
     manageUsersQuickFilterNoPlan: string;
     manageUsersQuickFilterNoPassword: string;
@@ -279,6 +283,10 @@ export type Translations = {
 
 export const translations: Translations = {
   en: {
+    sexLabel: "Sex",
+    sexMale: "Male",
+    sexFemale: "Female",
+    sexOther: "Other",
     manageUsersQuickFilterNoPlan: "No plan",
     manageUsersQuickFilterNoPassword: "Users without password",
     noExercisesForDay: "No exercises for this day.",
@@ -553,7 +561,11 @@ export const translations: Translations = {
     createUserFrequencyLabel: "Create user frequency",
     searchUserTablePlaceholder: "Search by name, username, or email"
   },
-  es: {
+  es: {    
+    sexLabel: "Sexo",
+    sexMale: "Hombre",
+    sexFemale: "Mujer",
+    sexOther: "Otro",
     manageUsersQuickFilterNoPlan: "Sin planificación",
     manageUsersQuickFilterNoPassword: "Usuarios sin contraseña",
     noExercisesForDay: "Ningún ejercicio para este día.",

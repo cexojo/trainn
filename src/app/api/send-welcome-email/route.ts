@@ -44,6 +44,7 @@ export async function POST(req: NextRequest) {
         lastName: true,
         username: true,
         passwordRefreshToken: true,
+        sex: true,
       }
     });
     Sentry.logger.debug("[send-welcome-email] User info after update", { user });
@@ -59,7 +60,7 @@ export async function POST(req: NextRequest) {
 
     // Build link and email parameters
     const baseUrl = process.env.BASE_URL || "http://localhost:3000";
-    const generatePasswordLink = `${baseUrl}/create_password?token=${user.passwordRefreshToken}`;
+    const generatePasswordLink = `${baseUrl}/create-password/${user.passwordRefreshToken}`;
 
     // Gmail credentials via env, using Google's recommended App Password flow.
     const gmailUser = process.env.GMAIL_USER;
@@ -80,14 +81,18 @@ export async function POST(req: NextRequest) {
       }
     });
 
+    // Pick the correct Spanish greeting
+    const bienvenida =
+      user.sex === "FEMALE" ? "Bienvenida" : "Bienvenido";
+
     // Email contents
     const mailOptions = {
-      from: `"Elena Trainer" <${gmailUser}>`,
+      from: `"Elena Benet" <${gmailUser}>`,
       to: user.email,
-      subject: "Bienvenido/a a Elena Trainer – genera tu contraseña",
+      subject: `${bienvenida} a Elena Benet – genera tu contraseña`,
       text: `Hola ${user.firstName || user.username || ""},
 
-Bienvenido/a a Elena Trainer.
+${bienvenida} a la plataforma de entrenamiento de Elena Benet.
 
 Haz clic en el siguiente enlace para generar tu contraseña y acceder a la plataforma:
 ${generatePasswordLink}
@@ -95,7 +100,7 @@ ${generatePasswordLink}
 Si tienes dudas, responde a este email.
 
 Un saludo,
-El equipo de Elena Trainer
+El equipo de Elena Benet
 `,
       html: `
 <style>
@@ -117,13 +122,13 @@ El equipo de Elena Trainer
       <a style="text-decoration: none; outline: none" href="https://trainn-hazel.vercel.app" target="_blank">
         <img
           style="height: 125px; vertical-align: middle"
-          src="https://trainn-hazel.vercel.app/elena_logo.png"
+          src="https://app.elenabenet.com/elena_logo.png"
           alt="logo"
         />
       </a>
     </div>
     <div style="padding: 14px">
-      <h1 style="font-size: 22px; margin-bottom: 26px">¡Te doy la bienvenida, ${user.firstName || user.username || ""}!</h1>
+      <h1 style="font-size: 22px; margin-bottom: 26px">¡${bienvenida}, ${user.firstName || user.username || ""}!</h1>
       <p>
         Te he creado un usuario para mi plataforma. Desde ella podrás registrar tu entrenamiento, ver tus bloques de ejercicios, seguir tu progreso y mucho más.
       </p>
@@ -134,13 +139,13 @@ El equipo de Elena Trainer
         Puedes crear tu contraseña <a href="${generatePasswordLink}">aquí</a>.
       </p>
       <p>
-        <a href="https://trainn-hazel.vercel.app">Accede a la plataforma aquí</a>.
+        <a href="https://app.elenabenet.com">Accede a la plataforma aquí</a>.
       </p>
     </div>
   </div>
   <div style="max-width: 600px; margin: auto">
     <p style="color: #999">
-      Has recibido este email porque te has registrado como atleta en la plataforma de Elena. Puedes ejercer tus derechos reconocidos en la LODP mandándome <a style="color: #999" href="mailto:elena.benet.notifications@gmail.com">un correo</a> y te atenderé lo antes posible. 
+      Has recibido este email porque te has registrado como atleta en la plataforma de Elena Benet. Puedes ejercer tus derechos reconocidos en la LODP mandándome <a style="color: #999" href="mailto:elenaalonsobeneyto8@gmail.com">un correo</a> y te atenderé lo antes posible. 
     </p>
   </div>
 </div>

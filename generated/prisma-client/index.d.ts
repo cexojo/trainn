@@ -78,6 +78,14 @@ export const Role: {
 
 export type Role = (typeof Role)[keyof typeof Role]
 
+
+export const Sex: {
+  MALE: 'MALE',
+  FEMALE: 'FEMALE'
+};
+
+export type Sex = (typeof Sex)[keyof typeof Sex]
+
 }
 
 export type MeasurementType = $Enums.MeasurementType
@@ -87,6 +95,10 @@ export const MeasurementType: typeof $Enums.MeasurementType
 export type Role = $Enums.Role
 
 export const Role: typeof $Enums.Role
+
+export type Sex = $Enums.Sex
+
+export const Sex: typeof $Enums.Sex
 
 /**
  * ##  Prisma Client ʲˢ
@@ -7468,6 +7480,7 @@ export namespace Prisma {
     hidden: boolean | null
     lastOKLogin: Date | null
     lastKOLogin: Date | null
+    sex: $Enums.Sex | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -7488,6 +7501,7 @@ export namespace Prisma {
     hidden: boolean | null
     lastOKLogin: Date | null
     lastKOLogin: Date | null
+    sex: $Enums.Sex | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -7508,6 +7522,7 @@ export namespace Prisma {
     hidden: number
     lastOKLogin: number
     lastKOLogin: number
+    sex: number
     _all: number
   }
 
@@ -7538,6 +7553,7 @@ export namespace Prisma {
     hidden?: true
     lastOKLogin?: true
     lastKOLogin?: true
+    sex?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -7558,6 +7574,7 @@ export namespace Prisma {
     hidden?: true
     lastOKLogin?: true
     lastKOLogin?: true
+    sex?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -7578,6 +7595,7 @@ export namespace Prisma {
     hidden?: true
     lastOKLogin?: true
     lastKOLogin?: true
+    sex?: true
     _all?: true
   }
 
@@ -7685,6 +7703,7 @@ export namespace Prisma {
     hidden: boolean
     lastOKLogin: Date | null
     lastKOLogin: Date | null
+    sex: $Enums.Sex | null
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -7724,6 +7743,7 @@ export namespace Prisma {
     hidden?: boolean
     lastOKLogin?: boolean
     lastKOLogin?: boolean
+    sex?: boolean
     blocks?: boolean | User$blocksArgs<ExtArgs>
     payments?: boolean | User$paymentsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -7747,6 +7767,7 @@ export namespace Prisma {
     hidden?: boolean
     lastOKLogin?: boolean
     lastKOLogin?: boolean
+    sex?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -7767,6 +7788,7 @@ export namespace Prisma {
     hidden?: boolean
     lastOKLogin?: boolean
     lastKOLogin?: boolean
+    sex?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -7787,9 +7809,10 @@ export namespace Prisma {
     hidden?: boolean
     lastOKLogin?: boolean
     lastKOLogin?: boolean
+    sex?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "firstName" | "lastName" | "username" | "email" | "password" | "passwordRefreshToken" | "isocode" | "lastVisitedWeek" | "registrationDate" | "hidingDate" | "subscriptionAmount" | "subscriptionFrequency" | "role" | "hidden" | "lastOKLogin" | "lastKOLogin", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "firstName" | "lastName" | "username" | "email" | "password" | "passwordRefreshToken" | "isocode" | "lastVisitedWeek" | "registrationDate" | "hidingDate" | "subscriptionAmount" | "subscriptionFrequency" | "role" | "hidden" | "lastOKLogin" | "lastKOLogin" | "sex", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     blocks?: boolean | User$blocksArgs<ExtArgs>
     payments?: boolean | User$paymentsArgs<ExtArgs>
@@ -7822,6 +7845,7 @@ export namespace Prisma {
       hidden: boolean
       lastOKLogin: Date | null
       lastKOLogin: Date | null
+      sex: $Enums.Sex | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -8264,6 +8288,7 @@ export namespace Prisma {
     readonly hidden: FieldRef<"User", 'Boolean'>
     readonly lastOKLogin: FieldRef<"User", 'DateTime'>
     readonly lastKOLogin: FieldRef<"User", 'DateTime'>
+    readonly sex: FieldRef<"User", 'Sex'>
   }
     
 
@@ -12309,7 +12334,8 @@ export namespace Prisma {
     role: 'role',
     hidden: 'hidden',
     lastOKLogin: 'lastOKLogin',
-    lastKOLogin: 'lastKOLogin'
+    lastKOLogin: 'lastKOLogin',
+    sex: 'sex'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -12477,6 +12503,20 @@ export namespace Prisma {
    * Reference to a field of type 'Role[]'
    */
   export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Sex'
+   */
+  export type EnumSexFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Sex'>
+    
+
+
+  /**
+   * Reference to a field of type 'Sex[]'
+   */
+  export type ListEnumSexFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Sex[]'>
     
   /**
    * Deep Input Types
@@ -12797,6 +12837,7 @@ export namespace Prisma {
     hidden?: BoolFilter<"User"> | boolean
     lastOKLogin?: DateTimeNullableFilter<"User"> | Date | string | null
     lastKOLogin?: DateTimeNullableFilter<"User"> | Date | string | null
+    sex?: EnumSexNullableFilter<"User"> | $Enums.Sex | null
     blocks?: TrainingBlockListRelationFilter
     payments?: PaymentListRelationFilter
   }
@@ -12819,6 +12860,7 @@ export namespace Prisma {
     hidden?: SortOrder
     lastOKLogin?: SortOrderInput | SortOrder
     lastKOLogin?: SortOrderInput | SortOrder
+    sex?: SortOrderInput | SortOrder
     blocks?: TrainingBlockOrderByRelationAggregateInput
     payments?: PaymentOrderByRelationAggregateInput
   }
@@ -12844,6 +12886,7 @@ export namespace Prisma {
     hidden?: BoolFilter<"User"> | boolean
     lastOKLogin?: DateTimeNullableFilter<"User"> | Date | string | null
     lastKOLogin?: DateTimeNullableFilter<"User"> | Date | string | null
+    sex?: EnumSexNullableFilter<"User"> | $Enums.Sex | null
     blocks?: TrainingBlockListRelationFilter
     payments?: PaymentListRelationFilter
   }, "id" | "username" | "email" | "passwordRefreshToken">
@@ -12866,6 +12909,7 @@ export namespace Prisma {
     hidden?: SortOrder
     lastOKLogin?: SortOrderInput | SortOrder
     lastKOLogin?: SortOrderInput | SortOrder
+    sex?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -12894,6 +12938,7 @@ export namespace Prisma {
     hidden?: BoolWithAggregatesFilter<"User"> | boolean
     lastOKLogin?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     lastKOLogin?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    sex?: EnumSexNullableWithAggregatesFilter<"User"> | $Enums.Sex | null
   }
 
   export type DayExerciseWhereInput = {
@@ -13447,6 +13492,7 @@ export namespace Prisma {
     hidden?: boolean
     lastOKLogin?: Date | string | null
     lastKOLogin?: Date | string | null
+    sex?: $Enums.Sex | null
     blocks?: TrainingBlockCreateNestedManyWithoutUserInput
     payments?: PaymentCreateNestedManyWithoutUserInput
   }
@@ -13469,6 +13515,7 @@ export namespace Prisma {
     hidden?: boolean
     lastOKLogin?: Date | string | null
     lastKOLogin?: Date | string | null
+    sex?: $Enums.Sex | null
     blocks?: TrainingBlockUncheckedCreateNestedManyWithoutUserInput
     payments?: PaymentUncheckedCreateNestedManyWithoutUserInput
   }
@@ -13491,6 +13538,7 @@ export namespace Prisma {
     hidden?: BoolFieldUpdateOperationsInput | boolean
     lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     blocks?: TrainingBlockUpdateManyWithoutUserNestedInput
     payments?: PaymentUpdateManyWithoutUserNestedInput
   }
@@ -13513,6 +13561,7 @@ export namespace Prisma {
     hidden?: BoolFieldUpdateOperationsInput | boolean
     lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     blocks?: TrainingBlockUncheckedUpdateManyWithoutUserNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -13535,6 +13584,7 @@ export namespace Prisma {
     hidden?: boolean
     lastOKLogin?: Date | string | null
     lastKOLogin?: Date | string | null
+    sex?: $Enums.Sex | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -13555,6 +13605,7 @@ export namespace Prisma {
     hidden?: BoolFieldUpdateOperationsInput | boolean
     lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -13575,6 +13626,7 @@ export namespace Prisma {
     hidden?: BoolFieldUpdateOperationsInput | boolean
     lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
   }
 
   export type DayExerciseCreateInput = {
@@ -14240,6 +14292,13 @@ export namespace Prisma {
     not?: NestedEnumRoleFilter<$PrismaModel> | $Enums.Role
   }
 
+  export type EnumSexNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.Sex | EnumSexFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Sex[] | ListEnumSexFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Sex[] | ListEnumSexFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSexNullableFilter<$PrismaModel> | $Enums.Sex | null
+  }
+
   export type TrainingBlockListRelationFilter = {
     every?: TrainingBlockWhereInput
     some?: TrainingBlockWhereInput
@@ -14278,6 +14337,7 @@ export namespace Prisma {
     hidden?: SortOrder
     lastOKLogin?: SortOrder
     lastKOLogin?: SortOrder
+    sex?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
@@ -14302,6 +14362,7 @@ export namespace Prisma {
     hidden?: SortOrder
     lastOKLogin?: SortOrder
     lastKOLogin?: SortOrder
+    sex?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -14322,6 +14383,7 @@ export namespace Prisma {
     hidden?: SortOrder
     lastOKLogin?: SortOrder
     lastKOLogin?: SortOrder
+    sex?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
@@ -14384,6 +14446,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumRoleFilter<$PrismaModel>
     _max?: NestedEnumRoleFilter<$PrismaModel>
+  }
+
+  export type EnumSexNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Sex | EnumSexFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Sex[] | ListEnumSexFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Sex[] | ListEnumSexFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSexNullableWithAggregatesFilter<$PrismaModel> | $Enums.Sex | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumSexNullableFilter<$PrismaModel>
+    _max?: NestedEnumSexNullableFilter<$PrismaModel>
   }
 
   export type TrainingDayScalarRelationFilter = {
@@ -14962,6 +15034,10 @@ export namespace Prisma {
     set?: $Enums.Role
   }
 
+  export type NullableEnumSexFieldUpdateOperationsInput = {
+    set?: $Enums.Sex | null
+  }
+
   export type TrainingBlockUpdateManyWithoutUserNestedInput = {
     create?: XOR<TrainingBlockCreateWithoutUserInput, TrainingBlockUncheckedCreateWithoutUserInput> | TrainingBlockCreateWithoutUserInput[] | TrainingBlockUncheckedCreateWithoutUserInput[]
     connectOrCreate?: TrainingBlockCreateOrConnectWithoutUserInput | TrainingBlockCreateOrConnectWithoutUserInput[]
@@ -15332,6 +15408,13 @@ export namespace Prisma {
     not?: NestedEnumRoleFilter<$PrismaModel> | $Enums.Role
   }
 
+  export type NestedEnumSexNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.Sex | EnumSexFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Sex[] | ListEnumSexFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Sex[] | ListEnumSexFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSexNullableFilter<$PrismaModel> | $Enums.Sex | null
+  }
+
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -15387,6 +15470,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumRoleFilter<$PrismaModel>
     _max?: NestedEnumRoleFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSexNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Sex | EnumSexFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Sex[] | ListEnumSexFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Sex[] | ListEnumSexFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSexNullableWithAggregatesFilter<$PrismaModel> | $Enums.Sex | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumSexNullableFilter<$PrismaModel>
+    _max?: NestedEnumSexNullableFilter<$PrismaModel>
   }
 
   export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -15451,6 +15544,7 @@ export namespace Prisma {
     hidden?: boolean
     lastOKLogin?: Date | string | null
     lastKOLogin?: Date | string | null
+    sex?: $Enums.Sex | null
     payments?: PaymentCreateNestedManyWithoutUserInput
   }
 
@@ -15472,6 +15566,7 @@ export namespace Prisma {
     hidden?: boolean
     lastOKLogin?: Date | string | null
     lastKOLogin?: Date | string | null
+    sex?: $Enums.Sex | null
     payments?: PaymentUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -15536,6 +15631,7 @@ export namespace Prisma {
     hidden?: BoolFieldUpdateOperationsInput | boolean
     lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     payments?: PaymentUpdateManyWithoutUserNestedInput
   }
 
@@ -15557,6 +15653,7 @@ export namespace Prisma {
     hidden?: BoolFieldUpdateOperationsInput | boolean
     lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     payments?: PaymentUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -16388,6 +16485,7 @@ export namespace Prisma {
     hidden?: boolean
     lastOKLogin?: Date | string | null
     lastKOLogin?: Date | string | null
+    sex?: $Enums.Sex | null
     blocks?: TrainingBlockCreateNestedManyWithoutUserInput
   }
 
@@ -16409,6 +16507,7 @@ export namespace Prisma {
     hidden?: boolean
     lastOKLogin?: Date | string | null
     lastKOLogin?: Date | string | null
+    sex?: $Enums.Sex | null
     blocks?: TrainingBlockUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -16446,6 +16545,7 @@ export namespace Prisma {
     hidden?: BoolFieldUpdateOperationsInput | boolean
     lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     blocks?: TrainingBlockUpdateManyWithoutUserNestedInput
   }
 
@@ -16467,6 +16567,7 @@ export namespace Prisma {
     hidden?: BoolFieldUpdateOperationsInput | boolean
     lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     blocks?: TrainingBlockUncheckedUpdateManyWithoutUserNestedInput
   }
 

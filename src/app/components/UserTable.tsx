@@ -44,15 +44,15 @@ function EditableDropdownField({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ [field]: incoming }),
     });
-    setLoading(false);
-    if (res.ok) {
-      onUpdated(incoming);
-      setEditing(false);
-      forceRefresh();
-      setNotification({ type: "success", message: lang === "es" ? "Frecuencia actualizada" : "Frequency updated" });
-    } else {
-      setNotification({ type: "error", message: lang === "es" ? "Error al actualizar la frecuencia" : "Failed to update frequency" });
-    }
+      setLoading(false);
+      if (res.ok) {
+        onUpdated(incoming);
+        setEditing(false);
+        forceRefresh();
+        setNotification({ type: "success", message: lang === "es" ? "Campo actualizado correctamente" : "Field updated successfully" });
+      } else {
+        setNotification({ type: "error", message: lang === "es" ? "Error al actualizar el campo" : "Failed to update field" });
+      }
   };
 
   return (
@@ -138,9 +138,9 @@ function EditableNumberField({
       onUpdated(parsed);
       setEditing(false);
       forceRefresh();
-      setNotification({ type: "success", message: lang === "es" ? "Cuota actualizada" : "Amount updated" });
+      setNotification({ type: "success", message: lang === "es" ? "Campo actualizado correctamente" : "Field updated successfully" });
     } else {
-      setNotification({ type: "error", message: lang === "es" ? "Error al actualizar la cuota" : "Failed to update amount" });
+      setNotification({ type: "error", message: lang === "es" ? "Error al actualizar el campo" : "Failed to update field" });
     }
   };
 
@@ -934,6 +934,20 @@ export default function UserTable({
                   forceRefresh={() => setInternalRefreshKey(k => k + 1)}
                   lang={lang}
                   setNotification={setNotification}
+                />
+                <EditableDropdownField
+                  label={translations[lang].sexLabel}
+                  value={selected.sex || ""}
+                  options={[
+                    { value: "MALE", label: translations[lang].sexMale },
+                    { value: "FEMALE", label: translations[lang].sexFemale }
+                  ]}
+                  userId={selected.id}
+                  onUpdated={val => setSelected({ ...selected, sex: val })}
+                  forceRefresh={() => setInternalRefreshKey(k => k + 1)}
+                  lang={lang}
+                  setNotification={setNotification}
+                  field="sex"
                 />
                 <EditableDropdownField
                   label={lang === "es" ? "Frecuencia" : "Frequency"}

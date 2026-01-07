@@ -69,6 +69,11 @@ enum Role {
   athlete
 }
 
+enum Sex {
+  MALE
+  FEMALE
+}
+
 model User {
   id                String   @id @default(uuid())
   firstName         String
@@ -89,6 +94,7 @@ model User {
   hidden            Boolean  @default(false)
   lastOKLogin       DateTime?
   lastKOLogin       DateTime?
+  sex               Sex?
 }
 
 // New middle entity between TrainingDay and Exercise

@@ -176,7 +176,8 @@ exports.Prisma.UserScalarFieldEnum = {
   role: 'role',
   hidden: 'hidden',
   lastOKLogin: 'lastOKLogin',
-  lastKOLogin: 'lastKOLogin'
+  lastKOLogin: 'lastKOLogin',
+  sex: 'sex'
 };
 
 exports.Prisma.DayExerciseScalarFieldEnum = {
@@ -237,6 +238,11 @@ exports.MeasurementType = exports.$Enums.MeasurementType = {
 exports.Role = exports.$Enums.Role = {
   admin: 'admin',
   athlete: 'athlete'
+};
+
+exports.Sex = exports.$Enums.Sex = {
+  MALE: 'MALE',
+  FEMALE: 'FEMALE'
 };
 
 exports.Prisma.ModelName = {

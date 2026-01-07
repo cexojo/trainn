@@ -50,6 +50,7 @@ export default function MainGrid({
     lastName: "",
     username: "",
     email: "",
+    sex: "",
     paymentFrequency: "quarterly",
     paymentAmount: ""
   });
@@ -70,6 +71,7 @@ export default function MainGrid({
       lastName: "",
       username: "",
       email: "",
+      sex: "",
       paymentFrequency: "quarterly",
       paymentAmount: ""
     });
@@ -214,12 +216,12 @@ export default function MainGrid({
                     />
                     <TextField
                       margin="dense"
-                      label={translations[lang]?.manageUsersModalEmail}
+                      label={translations[lang].manageUsersModalEmail}
                       type="email"
                       fullWidth
                       value={fields.email}
                       error={touched.email && !valid.email}
-                      helperText={touched.email && !valid.email ? translations[lang]?.invalidEmailError : ""}
+                      helperText={touched.email && !valid.email ? translations[lang].invalidEmailError : ""}
                       onBlur={() => setTouched(t => ({ ...t, email: true }))}
                       onChange={e => {
                         const value = e.target.value;
@@ -232,6 +234,20 @@ export default function MainGrid({
                       }}
                       required
                     />
+                    <TextField
+                      margin="dense"
+                      label={translations[lang].sexLabel}
+                      select
+                      fullWidth
+                      value={fields.sex}
+                      onChange={e => setFields({ ...fields, sex: e.target.value })}
+                      SelectProps={{ native: true }}
+                      sx={{ mt: 1 }}
+                    >
+                      <option value=""></option>
+                      <option value="MALE">{translations[lang].sexMale}</option>
+                      <option value="FEMALE">{translations[lang].sexFemale}</option>
+                    </TextField>
                     <TextField
                       margin="dense"
                       label={translations[lang]?.createUserFrequencyLabel}
