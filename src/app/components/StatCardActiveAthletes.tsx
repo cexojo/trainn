@@ -36,19 +36,18 @@ export default function StatCardActiveAthletes() {
   const value = data.length ? data[data.length - 1].toLocaleString() : "-";
   // Calculate trend direction and percent change
   let trend: "up" | "down" | "neutral" = "neutral";
-  let trendValue: string | undefined = undefined;
+  let trendValue = "-";
   if (data.length >= 2) {
     const prev = data[data.length - 2];
     const curr = data[data.length - 1];
-    if (curr > prev) trend = "up";
-    else if (curr < prev) trend = "down";
-
+    const percent = prev === 0 ? (curr === 0 ? 0 : 100) : ((curr - prev) / prev) * 100;
     if (prev === 0) {
       trendValue = curr === 0 ? "+0%" : "+100%";
+      trend = curr > 0 ? "up" : "neutral";
     } else {
-      const percent = ((curr - prev) / Math.abs(prev)) * 100;
       const sign = percent > 0 ? "+" : percent < 0 ? "" : "+";
       trendValue = `${sign}${Math.round(percent)}%`;
+      trend = percent > 0 ? "up" : percent < 0 ? "down" : "neutral";
     }
   }
 

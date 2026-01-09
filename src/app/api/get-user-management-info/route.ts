@@ -39,7 +39,8 @@ export async function GET(req: NextRequest) {
       hidingDate: true,
       password: true,
       subscriptionFrequency: true,
-      subscriptionAmount: true
+      subscriptionAmount: true,
+      sex: true
     }
   });
 
