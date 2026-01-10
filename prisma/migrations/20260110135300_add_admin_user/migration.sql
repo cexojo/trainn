@@ -11,7 +11,7 @@ VALUES (
   '',
   '',
   '',
-  '',
-  '',
+  'es',
+  'admin',
   CURRENT_TIMESTAMP
 );

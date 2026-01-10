@@ -6,11 +6,17 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const reqBody = await req.json();
 
   // Prepare data object for update, only set non-undefined values
-  const allowedFields = ["firstName", "lastName", "username", "email", "hidden", "hidingDate", "subscriptionAmount", "subscriptionFrequency"];
+  const allowedFields = ["firstName", "lastName", "username", "email", "hidden", "hidingDate", "subscriptionAmount", "subscriptionFrequency", "sex", "isocode"];
   const data: Record<string, any> = {};
   for (const field of allowedFields) {
     if (typeof reqBody[field] !== "undefined") {
-      data[field] = reqBody[field];
+      if (field === "sex") {
+        if (reqBody[field] === "MALE" || reqBody[field] === "FEMALE") {
+          data[field] = reqBody[field];
+        }
+      } else {
+        data[field] = reqBody[field];
+      }
     }
   }
 

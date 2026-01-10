@@ -1,3 +1,27 @@
+-- turso db shell trainn-db-dev < prisma/migrations/20260109151355_init/migration.sql
+
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "firstName" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
+    "username" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT,
+    "passwordRefreshToken" TEXT,
+    "isocode" TEXT,
+    "lastVisitedWeek" TEXT,
+    "registrationDate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "hidingDate" DATETIME,
+    "subscriptionAmount" REAL,
+    "subscriptionFrequency" TEXT,
+    "role" TEXT NOT NULL DEFAULT 'athlete',
+    "hidden" BOOLEAN NOT NULL DEFAULT false,
+    "lastOKLogin" DATETIME,
+    "lastKOLogin" DATETIME,
+    "sex" TEXT
+);
+
 -- CreateTable
 CREATE TABLE "TrainingBlock" (
     "isVisible" BOOLEAN NOT NULL DEFAULT true,
@@ -44,28 +68,6 @@ CREATE TABLE "Exercise" (
     "recommendedMaxReps" INTEGER,
     "measurementType" TEXT NOT NULL DEFAULT 'REPS',
     CONSTRAINT "Exercise_exerciseGroupId_fkey" FOREIGN KEY ("exerciseGroupId") REFERENCES "ExerciseGroup" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
-);
-
--- CreateTable
-CREATE TABLE "User" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "firstName" TEXT NOT NULL,
-    "lastName" TEXT NOT NULL,
-    "username" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "password" TEXT,
-    "passwordRefreshToken" TEXT,
-    "isocode" TEXT,
-    "lastVisitedWeek" TEXT,
-    "registrationDate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "hidingDate" DATETIME,
-    "subscriptionAmount" REAL,
-    "subscriptionFrequency" TEXT,
-    "role" TEXT NOT NULL DEFAULT 'athlete',
-    "hidden" BOOLEAN NOT NULL DEFAULT false,
-    "lastOKLogin" DATETIME,
-    "lastKOLogin" DATETIME,
-    "sex" TEXT
 );
 
 -- CreateTable

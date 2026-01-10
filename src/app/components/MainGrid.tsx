@@ -89,7 +89,7 @@ export default function MainGrid({
       role: "athlete"
     };
     try {
-      const res = await fetch("/api/create_user", {
+      const res = await fetch("/api/create-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from '@/prisma/client';
-import { Role } from "generated-prisma-client";
 import { getTokenPayload } from "@/app/api/utils/auth";
 import { generateToken } from "@/app/utils/generateToken";
 import { APIError } from "@/utils/errors";
@@ -14,7 +13,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const { firstName, lastName, username, email, paymentFrequency, paymentAmount, role } = body;
+    const { firstName, lastName, username, email, paymentFrequency, paymentAmount, role, sex, isocode } = body;
 
     // Basic validation
     if (
@@ -47,6 +46,8 @@ export async function POST(req: NextRequest) {
         subscriptionAmount: parseFloat(paymentAmount),
         role,
         passwordRefreshToken,
+        sex: sex === "MALE" || sex === "FEMALE" ? sex : undefined,
+        isocode: typeof isocode === "string" ? isocode : "es",
         // Optionally: add password after hashing
       }
     });
