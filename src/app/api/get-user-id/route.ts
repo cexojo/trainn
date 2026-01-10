@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
   if (list && tokenPayload.role === "admin") {
     // Return all users as array of { id, name, username, lastVisitedWeek, role }
     const users = await prisma.user.findMany({
-      select: { id: true, name: true, username: true, email: true, lastVisitedWeek: true, role: true }
+      select: { id: true, firstName: true, lastName: true, username: true, email: true, lastVisitedWeek: true, role: true }
     });
     return NextResponse.json(users);
   }
@@ -101,7 +101,7 @@ export async function PATCH(req: NextRequest) {
     }
     return NextResponse.json({
       id: updated.id,
-      name: updated.name,
+      name: updated.firstName + " " + updated.lastName,
       lastVisitedWeek: updated.lastVisitedWeek ?? null,
       isocode: (updated as any).isocode ?? null,
     });

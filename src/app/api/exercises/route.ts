@@ -2,26 +2,56 @@ import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/prisma/client";
 import { getTokenPayload } from "@/app/api/utils/auth";
 import { APIError } from "@/utils/errors";
+import { Redis } from "@upstash/redis";
+import { getEnvName } from "@/utils/getEnvName";
+
+const redis = Redis.fromEnv();
+const ENV_NAME = getEnvName();
+const EXERCISES_CACHE_KEY = `${ENV_NAME}:exercises_list_cache_v1`;
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24h
 
 export async function GET(req: NextRequest) {
   const tokenPayload = getTokenPayload(req);
   if (!tokenPayload || tokenPayload.role !== "admin") {
-    // Unauthorized
     new APIError("Unauthorized GET /api/exercises", { reason: "Missing or non-admin tokenPayload" });
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const payload = getTokenPayload(req);
+  const payload = tokenPayload;
   if (!payload || payload.role !== "admin") {
-    // Forbidden
     new APIError("Forbidden GET /api/exercises", { reason: "Missing or non-admin payload" });
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
+
+  // Try Redis cache first
+  try {
+    const cache = await redis.get(EXERCISES_CACHE_KEY);
+    if (cache && typeof cache === "object" && "timestamp" in cache && "exercises" in cache) {
+      const ts = Number(cache.timestamp);
+      if (!Number.isNaN(ts) && Date.now() - ts < CACHE_TTL_MS && Array.isArray(cache.exercises)) {
+        // Fresh cache (<24h)
+        return NextResponse.json({ exercises: cache.exercises, cached: true });
+      }
+    }
+  } catch (redisErr) {
+    // If redis fails, fall back to DB (but log)
+    new APIError("Redis error on GET /api/exercises", { original: redisErr });
+  }
+
+  // Cache miss/expired/error: fetch from DB & refresh cache
   try {
     const exercises = await prisma.exercise.findMany({
       include: { exerciseGroup: true },
       orderBy: { name: "asc" },
     });
-    return NextResponse.json({ exercises });
+    try {
+      await redis.set(EXERCISES_CACHE_KEY, {
+        exercises,
+        timestamp: Date.now(),
+      });
+    } catch (redisSetErr) {
+      new APIError("Redis set error on GET /api/exercises", { original: redisSetErr });
+    }
+    return NextResponse.json({ exercises, cached: false });
   } catch (e: any) {
     new APIError("Failed to fetch exercises", { original: e });
     return NextResponse.json({ error: "Failed to fetch exercises." }, { status: 500 });
@@ -50,6 +80,19 @@ export async function POST(req: NextRequest) {
       },
       include: { exerciseGroup: true }
     });
+    // After adding, refresh cache
+    try {
+      const refreshed = await prisma.exercise.findMany({
+        include: { exerciseGroup: true },
+        orderBy: { name: "asc" },
+      });
+      await redis.set(EXERCISES_CACHE_KEY, {
+        exercises: refreshed,
+        timestamp: Date.now(),
+      });
+    } catch (cacheErr) {
+      new APIError("Redis refresh set error after POST /api/exercises", { original: cacheErr });
+    }
     return NextResponse.json(created);
   } catch (e: any) {
     if (e.code === "P2002") { // Unique constraint failed

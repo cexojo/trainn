@@ -1,8 +1,6 @@
-// This script seeds exercises and groups from a provided list.
-// Usage: npx ts-node prisma/seedExercisesAndGroups.ts
-
 import "dotenv/config";
-import prisma from "@/prisma/client";
+import { randomUUID } from "crypto";
+
 
 const dataRaw = `
 Crunch abdominal	Abs
@@ -219,7 +217,7 @@ Vertical Leg Press	Prensa
 Press muy inclinado con mancuernas	Press inclinado
 Press muy inclinado en multipower	Press inclinado
 Press inclinado con mancuernas	Press inclinado
-Press press inclinado en multipower	Press inclinado
+Press inclinado en multipower	Press inclinado
 Press inclinado con barra	Press inclinado
 Press inclinado en máquina sentado	Press inclinado
 Press en máquina neutro convergente	Press inclinado
@@ -300,8 +298,15 @@ Zancadas con mancuerna	Unilaterales
 Press muy inclinado con barra	Press muy inclinado
 Sentadilla búlgara con mancuernas	Unilaterales
 Sóleo sentado en máquina	Gemelo
-curl de muñeca prono	Aislamiento Antebrazo
+Curl de muñeca prono	Aislamiento Antebrazo
 `;
+
+function extractId(val: unknown): string {
+  if (val == null) throw new Error("Received null or undefined for id.");
+  if (typeof val === "string") return val;
+  if (typeof val === "number" || typeof val === "bigint") return val.toString();
+  throw new Error("Received unsupported id type: " + typeof val);
+}
 
 async function main() {
   const lines = dataRaw.trim().split('\n');
@@ -315,40 +320,15 @@ async function main() {
     // Handle/extract group
     let groupId = groupIds.get(group);
     if (!groupId) {
-      // Find or create group by name (unique)
-      let dbGroup = await prisma.exerciseGroup.findUnique({ where: { name: group } });
-      if (!dbGroup) {
-        dbGroup = await prisma.exerciseGroup.create({ data: { name: group } });
-        console.log(`Created group: ${group}`);
-      } else {
-        console.log(`Group exists: ${group}`);
-      }
-      groupId = dbGroup.id;
-      if (!groupId) throw new Error("Missing groupId for group " + group);
+      groupId = randomUUID();
+      const groupSql = `INSERT INTO exerciseGroup (id, name) VALUES ('${groupId}', '${group.replace("'", "''")}');`;
+      console.log(groupSql);
       groupIds.set(group, groupId);
     }
 
-    // Handle/extract exercise
-    let dbExercise = await prisma.exercise.findUnique({ where: { name: exercise } });
-    if (!dbExercise) {
-      await prisma.exercise.create({
-        data: {
-          name: exercise,
-          exerciseGroupId: groupId!,
-        },
-      });
-      console.log(`Created exercise: ${exercise} (group: ${group})`);
-    } else {
-      console.log(`Exercise exists: ${exercise}`);
-      // Optionally, update the group if needed
-      if (dbExercise.exerciseGroupId !== groupId) {
-        await prisma.exercise.update({
-          where: { id: dbExercise.id },
-          data: { exerciseGroupId: groupId! },
-        });
-        console.log(`Linked existing exercise "${exercise}" to group "${group}"`);
-      }
-    }
+    const exerciseId = randomUUID();
+    const exSql = `INSERT INTO exercise (id, name, exerciseGroupId) VALUES ('${exerciseId}', '${exercise.replace("'", "''")}', '${groupId}');`;
+    console.log(exSql);
   }
 }
 
@@ -356,7 +336,4 @@ main()
   .catch((e) => {
     console.error(e);
     process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
   });

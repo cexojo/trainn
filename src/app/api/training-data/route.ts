@@ -14,18 +14,24 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Missing userId" }, { status: 400 });
     }
 
-    // Fetch user role to check if is athlete and filter visible blocks
+    // Fetch user role to check authorization
+    const tokenPayload = getTokenPayload(req);
+
+    // Defensive: fetch user on the requested userId
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: { role: true }
     });
 
-    // If user is athlete, only allow token user to access their own data
-    if (user?.role === "athlete") {
-      const tokenPayload = getTokenPayload(req);
-      if (!tokenPayload || !tokenPayload.id || tokenPayload.id !== userId) {
-        return NextResponse.json({ error: "Unauthorized." }, { status: 403 });
-      }
+    // Authorization logic for both admin and athlete 
+    if (!tokenPayload || !tokenPayload.id || !tokenPayload.role) {
+      return NextResponse.json({ error: "Unauthorized." }, { status: 403 });
+    }
+    if (
+      tokenPayload.role === "athlete" &&
+      tokenPayload.id !== userId
+    ) {
+      return NextResponse.json({ error: "Unauthorized." }, { status: 403 });
     }
 
     // Fetch all training blocks for the user, include their weeks (athlete can only see isVisible: true)

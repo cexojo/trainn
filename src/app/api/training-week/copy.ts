@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       include: {
         trainingDays: {
           include: {
-            exerciseDefs: {
+            dayExercises: {
               include: {
                 exercise: true,
               },
@@ -57,13 +57,17 @@ export async function POST(req: NextRequest) {
       data: {
         weekNumber: newWeekNumber,
         blockId,
+        weekStart: sourceWeek.weekStart,
+        weekEnd: sourceWeek.weekEnd,
         trainingDays: {
           create: (sourceWeek.trainingDays as any[]).map((day: any) => ({
             dayNumber: day.dayNumber,
             dayLabel: day.dayLabel,
-            exerciseDefs: {
-              create: (day.exerciseDefs as any[]).map((ex: any) => ({
+            date: day.date,
+            dayExercises: {
+              create: (day.dayExercises as any[]).map((ex: any) => ({
                 exerciseId: ex.exerciseId,
+                day: day.dayLabel,
                 exerciseNumber: ex.exerciseNumber,
                 seriesNumber: ex.seriesNumber,
                 isDropset: ex.isDropset,
@@ -84,7 +88,7 @@ export async function POST(req: NextRequest) {
       include: {
         trainingDays: {
           include: {
-            exerciseDefs: true,
+            dayExercises: true,
           },
         },
       },

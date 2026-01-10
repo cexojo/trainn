@@ -19,10 +19,7 @@ const {
   skip,
   Decimal,
   Debug,
-  DbNull,
-  JsonNull,
-  AnyNull,
-  NullTypes,
+  objectEnumValues,
   makeStrictEnum,
   Extensions,
   warnOnce,
@@ -30,7 +27,7 @@ const {
   Public,
   getRuntime,
   createParam,
-} = require('./runtime/client.js')
+} = require('./runtime/wasm-compiler-edge.js')
 
 
 const Prisma = {}
@@ -39,12 +36,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 7.2.0
- * Query Engine version: 0c8ef2ce45c83248ab3df073180d5eda9e8be7a3
+ * Prisma Client JS version: 6.19.1
+ * Query Engine version: c2990dca591cba766e3b7ef5d9e8a84796e47ab7
  */
 Prisma.prismaVersion = {
-  client: "7.2.0",
-  engine: "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3"
+  client: "6.19.1",
+  engine: "c2990dca591cba766e3b7ef5d9e8a84796e47ab7"
 }
 
 Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
@@ -72,16 +69,19 @@ Prisma.defineExtension = Extensions.defineExtension
 /**
  * Shorthand utilities for JSON filtering
  */
-Prisma.DbNull = DbNull
-Prisma.JsonNull = JsonNull
-Prisma.AnyNull = AnyNull
+Prisma.DbNull = objectEnumValues.instances.DbNull
+Prisma.JsonNull = objectEnumValues.instances.JsonNull
+Prisma.AnyNull = objectEnumValues.instances.AnyNull
 
-Prisma.NullTypes = NullTypes
+Prisma.NullTypes = {
+  DbNull: objectEnumValues.classes.DbNull,
+  JsonNull: objectEnumValues.classes.JsonNull,
+  AnyNull: objectEnumValues.classes.AnyNull
+}
 
 
 
 
-  const path = require('path')
 
 /**
  * Enums
@@ -225,26 +225,77 @@ exports.Prisma.ModelName = {
  * Create the Client
  */
 const config = {
-  "previewFeatures": [],
-  "clientVersion": "7.2.0",
-  "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
+  "generator": {
+    "name": "client",
+    "provider": {
+      "fromEnvVar": null,
+      "value": "prisma-client-js"
+    },
+    "output": {
+      "value": "/Users/carlosexojomiguel/Documents/trainn/trainer-dashboard/trainn/generated/prisma-client",
+      "fromEnvVar": null
+    },
+    "config": {
+      "engineType": "client"
+    },
+    "binaryTargets": [
+      {
+        "fromEnvVar": null,
+        "value": "darwin-arm64",
+        "native": true
+      }
+    ],
+    "previewFeatures": [],
+    "sourceFilePath": "/Users/carlosexojomiguel/Documents/trainn/trainer-dashboard/trainn/prisma/schema.prisma",
+    "isCustomOutput": true
+  },
+  "relativeEnvPaths": {
+    "rootEnvPath": null,
+    "schemaEnvPath": "../../.env"
+  },
+  "relativePath": "../../prisma",
+  "clientVersion": "6.19.1",
+  "engineVersion": "c2990dca591cba766e3b7ef5d9e8a84796e47ab7",
+  "datasourceNames": [
+    "db"
+  ],
   "activeProvider": "sqlite",
-  "inlineSchema": "datasource db {\n  provider = \"sqlite\"\n}\n\n// Define custom output path for generated Prisma Client\ngenerator client {\n  provider   = \"prisma-client-js\"\n  output     = \"../generated/prisma-client\"\n  engineType = \"client\"\n}\n\nmodel TrainingBlock {\n  isVisible   Boolean        @default(true)\n  id          String         @id @default(uuid())\n  blockNumber Int\n  description String\n  weeks       TrainingWeek[]\n  user        User           @relation(fields: [userId], references: [id])\n  userId      String\n  createdAt   DateTime       @default(now())\n}\n\nmodel TrainingWeek {\n  id                String              @id @default(uuid())\n  block             TrainingBlock       @relation(fields: [blockId], references: [id])\n  blockId           String\n  weekNumber        Int\n  weekStart         DateTime\n  weekEnd           DateTime\n  trainingDays      TrainingDay[]\n  dayExerciseSeries DayExerciseSeries[]\n}\n\nmodel TrainingDay {\n  id           String        @id @default(uuid())\n  date         DateTime\n  dayLabel     String\n  dayNumber    Int\n  week         TrainingWeek  @relation(fields: [weekId], references: [id])\n  weekId       String\n  dayExercises DayExercise[]\n}\n\nmodel ExerciseGroup {\n  id        String     @id @default(uuid())\n  name      String     @unique\n  exercises Exercise[]\n}\n\nenum MeasurementType {\n  REPS\n  TIME\n}\n\nmodel Exercise {\n  id                 String          @id @default(uuid())\n  name               String          @unique\n  exerciseGroup      ExerciseGroup   @relation(fields: [exerciseGroupId], references: [id])\n  exerciseGroupId    String\n  recommendedMinReps Int?\n  recommendedMaxReps Int?\n  measurementType    MeasurementType @default(REPS)\n  dayExercises       DayExercise[]\n}\n\nenum Role {\n  admin\n  athlete\n}\n\nenum Sex {\n  MALE\n  FEMALE\n}\n\nmodel User {\n  id                    String          @id @default(uuid())\n  firstName             String\n  lastName              String\n  username              String          @unique\n  email                 String          @unique\n  password              String?\n  passwordRefreshToken  String?         @unique\n  isocode               String?\n  lastVisitedWeek       String? // weekId of last visited week\n  registrationDate      DateTime        @default(now())\n  hidingDate            DateTime?\n  subscriptionAmount    Float?\n  subscriptionFrequency String?\n  blocks                TrainingBlock[]\n  role                  Role            @default(athlete)\n  payments              Payment[]\n  hidden                Boolean         @default(false)\n  lastOKLogin           DateTime?\n  lastKOLogin           DateTime?\n  sex                   Sex?\n}\n\n// New middle entity between TrainingDay and Exercise\nmodel DayExercise {\n  id             String              @id @default(uuid())\n  trainingDay    TrainingDay         @relation(fields: [trainingDayId], references: [id])\n  trainingDayId  String\n  exercise       Exercise            @relation(fields: [exerciseId], references: [id])\n  exerciseId     String\n  athleteNotes   String?\n  trainerNotes   String?\n  day            String\n  exerciseNumber Int?\n  series         DayExerciseSeries[]\n}\n\n// Renamed, now links to DayExercise\nmodel DayExerciseSeries {\n  id              String       @id @default(uuid())\n  dayExercise     DayExercise  @relation(fields: [dayExerciseId], references: [id])\n  dayExerciseId   String\n  seriesNumber    Int\n  minReps         Int?\n  maxReps         Int?\n  minRir          Int?\n  maxRir          Int?\n  effectiveReps   Int?\n  effectiveWeight Float?\n  effectiveRir    Int?\n  trainingWeek    TrainingWeek @relation(fields: [trainingWeekId], references: [id])\n  trainingWeekId  String\n  isDropset       Boolean      @default(false)\n  athleteNotes    String?\n  trainerNotes    String?\n  athleteUserRead Boolean      @default(false)\n}\n\nmodel Payment {\n  id      String   @id @default(uuid())\n  user    User     @relation(fields: [userId], references: [id])\n  userId  String\n  dueDate DateTime\n  amount  Float\n  isPayed Boolean  @default(false)\n}\n"
+  "postinstall": false,
+  "inlineDatasources": {
+    "db": {
+      "url": {
+        "fromEnvVar": null,
+        "value": "file:./dev.db"
+      }
+    }
+  },
+  "inlineSchema": "datasource db {\n  provider = \"sqlite\"\n  url      = \"file:./dev.db\"\n}\n\n// Define custom output path for generated Prisma Client\ngenerator client {\n  provider   = \"prisma-client-js\"\n  output     = \"../generated/prisma-client\"\n  engineType = \"client\"\n}\n\nmodel TrainingBlock {\n  isVisible   Boolean        @default(true)\n  id          String         @id @default(uuid())\n  blockNumber Int\n  description String\n  weeks       TrainingWeek[]\n  user        User           @relation(fields: [userId], references: [id])\n  userId      String\n  createdAt   DateTime       @default(now())\n}\n\nmodel TrainingWeek {\n  id                String              @id @default(uuid())\n  block             TrainingBlock       @relation(fields: [blockId], references: [id])\n  blockId           String\n  weekNumber        Int\n  weekStart         DateTime\n  weekEnd           DateTime\n  trainingDays      TrainingDay[]\n  dayExerciseSeries DayExerciseSeries[]\n}\n\nmodel TrainingDay {\n  id           String        @id @default(uuid())\n  date         DateTime\n  dayLabel     String\n  dayNumber    Int\n  week         TrainingWeek  @relation(fields: [weekId], references: [id])\n  weekId       String\n  dayExercises DayExercise[]\n}\n\nmodel ExerciseGroup {\n  id        String     @id @default(uuid())\n  name      String     @unique\n  exercises Exercise[]\n}\n\nenum MeasurementType {\n  REPS\n  TIME\n}\n\nmodel Exercise {\n  id                 String          @id @default(uuid())\n  name               String          @unique\n  exerciseGroup      ExerciseGroup   @relation(fields: [exerciseGroupId], references: [id])\n  exerciseGroupId    String\n  recommendedMinReps Int?\n  recommendedMaxReps Int?\n  measurementType    MeasurementType @default(REPS)\n  dayExercises       DayExercise[]\n}\n\nenum Role {\n  admin\n  athlete\n}\n\nenum Sex {\n  MALE\n  FEMALE\n}\n\nmodel User {\n  id                    String          @id @default(uuid())\n  firstName             String\n  lastName              String\n  username              String          @unique\n  email                 String          @unique\n  password              String?\n  passwordRefreshToken  String?         @unique\n  isocode               String?\n  lastVisitedWeek       String? // weekId of last visited week\n  registrationDate      DateTime        @default(now())\n  hidingDate            DateTime?\n  subscriptionAmount    Float?\n  subscriptionFrequency String?\n  blocks                TrainingBlock[]\n  role                  Role            @default(athlete)\n  payments              Payment[]\n  hidden                Boolean         @default(false)\n  lastOKLogin           DateTime?\n  lastKOLogin           DateTime?\n  sex                   Sex?\n}\n\n// New middle entity between TrainingDay and Exercise\nmodel DayExercise {\n  id             String              @id @default(uuid())\n  trainingDay    TrainingDay         @relation(fields: [trainingDayId], references: [id])\n  trainingDayId  String\n  exercise       Exercise            @relation(fields: [exerciseId], references: [id])\n  exerciseId     String\n  athleteNotes   String?\n  trainerNotes   String?\n  day            String\n  exerciseNumber Int?\n  series         DayExerciseSeries[]\n}\n\n// Renamed, now links to DayExercise\nmodel DayExerciseSeries {\n  id              String       @id @default(uuid())\n  dayExercise     DayExercise  @relation(fields: [dayExerciseId], references: [id])\n  dayExerciseId   String\n  seriesNumber    Int\n  minReps         Int?\n  maxReps         Int?\n  minRir          Int?\n  maxRir          Int?\n  effectiveReps   Int?\n  effectiveWeight Float?\n  effectiveRir    Int?\n  trainingWeek    TrainingWeek @relation(fields: [trainingWeekId], references: [id])\n  trainingWeekId  String\n  isDropset       Boolean      @default(false)\n  athleteNotes    String?\n  trainerNotes    String?\n  athleteUserRead Boolean      @default(false)\n}\n\nmodel Payment {\n  id      String   @id @default(uuid())\n  user    User     @relation(fields: [userId], references: [id])\n  userId  String\n  dueDate DateTime\n  amount  Float\n  isPayed Boolean  @default(false)\n}\n",
+  "inlineSchemaHash": "82374a15663f3ba479092a5fae86b6f026ca93e74118344172e6742de3657865",
+  "copyEngine": true
 }
+config.dirname = '/'
 
 config.runtimeDataModel = JSON.parse("{\"models\":{\"TrainingBlock\":{\"fields\":[{\"name\":\"isVisible\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"blockNumber\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"weeks\",\"kind\":\"object\",\"type\":\"TrainingWeek\",\"relationName\":\"TrainingBlockToTrainingWeek\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"TrainingBlockToUser\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"TrainingWeek\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"block\",\"kind\":\"object\",\"type\":\"TrainingBlock\",\"relationName\":\"TrainingBlockToTrainingWeek\"},{\"name\":\"blockId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"weekNumber\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"weekStart\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"weekEnd\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"trainingDays\",\"kind\":\"object\",\"type\":\"TrainingDay\",\"relationName\":\"TrainingDayToTrainingWeek\"},{\"name\":\"dayExerciseSeries\",\"kind\":\"object\",\"type\":\"DayExerciseSeries\",\"relationName\":\"DayExerciseSeriesToTrainingWeek\"}],\"dbName\":null},\"TrainingDay\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"dayLabel\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"dayNumber\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"week\",\"kind\":\"object\",\"type\":\"TrainingWeek\",\"relationName\":\"TrainingDayToTrainingWeek\"},{\"name\":\"weekId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"dayExercises\",\"kind\":\"object\",\"type\":\"DayExercise\",\"relationName\":\"DayExerciseToTrainingDay\"}],\"dbName\":null},\"ExerciseGroup\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"exercises\",\"kind\":\"object\",\"type\":\"Exercise\",\"relationName\":\"ExerciseToExerciseGroup\"}],\"dbName\":null},\"Exercise\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"exerciseGroup\",\"kind\":\"object\",\"type\":\"ExerciseGroup\",\"relationName\":\"ExerciseToExerciseGroup\"},{\"name\":\"exerciseGroupId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"recommendedMinReps\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"recommendedMaxReps\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"measurementType\",\"kind\":\"enum\",\"type\":\"MeasurementType\"},{\"name\":\"dayExercises\",\"kind\":\"object\",\"type\":\"DayExercise\",\"relationName\":\"DayExerciseToExercise\"}],\"dbName\":null},\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"firstName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"passwordRefreshToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isocode\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastVisitedWeek\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"registrationDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"hidingDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"subscriptionAmount\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"subscriptionFrequency\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"blocks\",\"kind\":\"object\",\"type\":\"TrainingBlock\",\"relationName\":\"TrainingBlockToUser\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"Role\"},{\"name\":\"payments\",\"kind\":\"object\",\"type\":\"Payment\",\"relationName\":\"PaymentToUser\"},{\"name\":\"hidden\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"lastOKLogin\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"lastKOLogin\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"sex\",\"kind\":\"enum\",\"type\":\"Sex\"}],\"dbName\":null},\"DayExercise\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"trainingDay\",\"kind\":\"object\",\"type\":\"TrainingDay\",\"relationName\":\"DayExerciseToTrainingDay\"},{\"name\":\"trainingDayId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"exercise\",\"kind\":\"object\",\"type\":\"Exercise\",\"relationName\":\"DayExerciseToExercise\"},{\"name\":\"exerciseId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"athleteNotes\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"trainerNotes\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"day\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"exerciseNumber\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"series\",\"kind\":\"object\",\"type\":\"DayExerciseSeries\",\"relationName\":\"DayExerciseToDayExerciseSeries\"}],\"dbName\":null},\"DayExerciseSeries\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"dayExercise\",\"kind\":\"object\",\"type\":\"DayExercise\",\"relationName\":\"DayExerciseToDayExerciseSeries\"},{\"name\":\"dayExerciseId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"seriesNumber\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"minReps\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"maxReps\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"minRir\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"maxRir\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"effectiveReps\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"effectiveWeight\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"effectiveRir\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"trainingWeek\",\"kind\":\"object\",\"type\":\"TrainingWeek\",\"relationName\":\"DayExerciseSeriesToTrainingWeek\"},{\"name\":\"trainingWeekId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isDropset\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"athleteNotes\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"trainerNotes\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"athleteUserRead\",\"kind\":\"scalar\",\"type\":\"Boolean\"}],\"dbName\":null},\"Payment\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"PaymentToUser\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"dueDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"isPayed\",\"kind\":\"scalar\",\"type\":\"Boolean\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
+config.engineWasm = undefined
 config.compilerWasm = {
-      getRuntime: async () => require('./query_compiler_bg.js'),
-      getQueryCompilerWasmModule: async () => {
-        const { Buffer } = require('node:buffer')
-        const { wasm } = require('./query_compiler_bg.wasm-base64.js')
-        const queryCompilerWasmFileBytes = Buffer.from(wasm, 'base64')
+  getRuntime: async () => require('./query_compiler_bg.js'),
+  getQueryCompilerWasmModule: async () => {
+    const loader = (await import('#wasm-compiler-loader')).default
+    const compiler = (await loader).default
+    return compiler
+  }
+}
 
-        return new WebAssembly.Module(queryCompilerWasmFileBytes)
-      }
-    }
+config.injectableEdgeEnv = () => ({
+  parsed: {}
+})
+
+if (typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined) {
+  Debug.enable(typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined)
+}
 
 const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
+

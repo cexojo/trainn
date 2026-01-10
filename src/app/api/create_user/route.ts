@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from '@/prisma/client';
+import { Role } from "generated-prisma-client";
 import { getTokenPayload } from "@/app/api/utils/auth";
 import { generateToken } from "@/app/utils/generateToken";
 import { APIError } from "@/utils/errors";
@@ -13,11 +14,12 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const { name, username, email, paymentFrequency, paymentAmount, role } = body;
+    const { firstName, lastName, username, email, paymentFrequency, paymentAmount, role } = body;
 
     // Basic validation
     if (
-      !name ||
+      !firstName ||
+      !lastName ||
       !username ||
       !email ||
       !paymentFrequency ||
@@ -37,7 +39,8 @@ export async function POST(req: NextRequest) {
     // Insert new user in the database with Prisma
     const user = await prisma.user.create({
       data: {
-        name,
+        firstName,
+        lastName,
         username,
         email,
         subscriptionFrequency: paymentFrequency,
@@ -47,9 +50,6 @@ export async function POST(req: NextRequest) {
         // Optionally: add password after hashing
       }
     });
-
-    // Strip sensitive fields if present (e.g., password)
-    if ("password" in user) delete user.password;
 
     return NextResponse.json(user, { status: 201 });
   } catch (err) {

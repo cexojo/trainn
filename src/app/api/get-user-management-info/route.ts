@@ -44,56 +44,67 @@ export async function GET(req: NextRequest) {
     }
   });
 
-  // Compute noPlan flag for each athlete: minimal block/week/exercise fetch (hybrid approach)
-  const usersWithNoPlan = await Promise.all(users.map(async (u: typeof users[number]) => {
-    // 1. Find the last block (highest blockNumber)
-    const lastBlock = await prisma.trainingBlock.findFirst({
-      where: { userId: u.id },
-      orderBy: { blockNumber: "desc" },
-      select: {
-        id: true,
-        blockNumber: true,
-        weeks: {
-          orderBy: { weekNumber: "desc" },
-          take: 1,
-          select: {
-            id: true,
-            weekNumber: true,
-            dayExerciseSeries: {
-              where: {
-                OR: [
-                  { effectiveRir: { not: null } },
-                  { effectiveWeight: { not: null } },
-                  { effectiveReps: { not: null } }
-                ]
-              },
-              select: {
-                id: true,
-                effectiveRir: true,
-                effectiveWeight: true,
-                effectiveReps: true,
-              }
-            }
-          }
-        }
-      }
-    });
+  // Optimize: Fetch all latest blocks with weeks/dayExerciseSeries in one go
+  const userIds = users.map(u => u.id);
 
+  const blocks = await prisma.trainingBlock.findMany({
+    where: { userId: { in: userIds } },
+    select: {
+      id: true,
+      userId: true,
+      blockNumber: true,
+      weeks: {
+        orderBy: { weekNumber: 'desc' },
+        take: 1,
+        select: {
+          id: true,
+          weekNumber: true,
+          dayExerciseSeries: {
+            where: {
+              OR: [
+                { effectiveRir: { not: null } },
+                { effectiveWeight: { not: null } },
+                { effectiveReps: { not: null } },
+              ],
+            },
+            select: {
+              id: true,
+              effectiveRir: true,
+              effectiveWeight: true,
+              effectiveReps: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: [{ userId: "asc" }, { blockNumber: "desc" }],
+  });
+
+  // Group blocks by userId and pick highest blockNumber per user
+  const latestBlockByUser: Record<string, any> = {};
+  for (const b of blocks) {
+    // Only keep the block with highest blockNumber for each user
+    if (
+      !latestBlockByUser[b.userId] ||
+      b.blockNumber > latestBlockByUser[b.userId].blockNumber
+    ) {
+      latestBlockByUser[b.userId] = b;
+    }
+  }
+
+  // Compute noPlan per user from the block data; avoid extra queries
+  const usersWithNoPlan = users.map(u => {
+    const lastBlock = latestBlockByUser[u.id];
     let noPlan = false;
     if (!lastBlock) {
-      // No block at all
       noPlan = true;
     } else if (!lastBlock.weeks || lastBlock.weeks.length === 0) {
-      // Last block has no weeks
       noPlan = true;
     } else {
-      // Get last week (highest weekNumber)
       const lastWeek = lastBlock.weeks[0];
       if (!lastWeek || !lastWeek.dayExerciseSeries || lastWeek.dayExerciseSeries.length === 0) {
-        // No series (inputs) in last week
         noPlan = true;
       } else {
-        // There is at least one relevant input in dayExerciseSeries (filtered in query)
         noPlan = false;
       }
     }
@@ -101,7 +112,7 @@ export async function GET(req: NextRequest) {
     const { password, ...userNoPassword } = u;
     const hasPassword = Boolean(password && password.length > 0);
     return { ...userNoPassword, noPlan, hasPassword };
-  }));
+  });
 
   return NextResponse.json(usersWithNoPlan);
 }

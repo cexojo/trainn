@@ -24,29 +24,44 @@ export async function GET(req: NextRequest) {
   const lang = urlLang || "es";
 
   const now = new Date();
-  const results = [];
-
+  const months: { iso: string; label: string; start: Date; end: Date }[] = [];
   for (let i = 0; i < 12; i++) {
     const firstOfMonth = new Date(now.getFullYear(), now.getMonth() + i, 1);
     const lastOfMonth = new Date(now.getFullYear(), now.getMonth() + i + 1, 0, 23, 59, 59, 999);
-
-    const agg = await prisma.payment.aggregate({
-      _sum: { amount: true },
-      where: {
-        isPayed: false,
-        dueDate: {
-          gte: firstOfMonth,
-          lte: lastOfMonth
-        }
-      }
-    });
-
-    results.push({
-      month: formatYearMonth(firstOfMonth),
-      monthLabel: getMonthYearLabel(firstOfMonth, lang),
-      futureRevenue: agg._sum.amount || 0
+    months.push({
+      iso: formatYearMonth(firstOfMonth),
+      label: getMonthYearLabel(firstOfMonth, lang),
+      start: firstOfMonth,
+      end: lastOfMonth
     });
   }
+
+  const startOfFirstMonth = months[0].start;
+  const endOfLastMonth = months[months.length - 1].end;
+
+  const payments = await prisma.payment.findMany({
+    where: {
+      isPayed: false,
+      dueDate: {
+        gte: startOfFirstMonth,
+        lte: endOfLastMonth
+      }
+    },
+    select: { amount: true, dueDate: true }
+  });
+
+  // Aggregate by month (iso YYYY-MM)
+  const monthRevenue: Record<string, number> = {};
+  for (const payment of payments) {
+    const iso = formatYearMonth(new Date(payment.dueDate));
+    monthRevenue[iso] = (monthRevenue[iso] || 0) + (payment.amount || 0);
+  }
+
+  const results = months.map(month => ({
+    month: month.iso,
+    monthLabel: month.label,
+    futureRevenue: monthRevenue[month.iso] || 0
+  }));
 
   return NextResponse.json(results);
 }

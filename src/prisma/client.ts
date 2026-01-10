@@ -1,22 +1,47 @@
 import { PrismaClient } from 'generated-prisma-client';
-import { withAccelerate } from '@prisma/extension-accelerate';
-import { env } from 'prisma/config';
+import { PrismaLibSql } from "@prisma/adapter-libsql";
 
-// Singleton Prisma client with Accelerate and custom env config.
-// Note: In Next.js *API* environments, the globalThis trick avoids re-creating client during hot reloads.
-// In scripts, you'll just import directly.
-const globalForPrisma = globalThis as unknown as { prisma?: any };
+const prismaClientSingleton = () => {
+  const adapter = new PrismaLibSql({
+    url: `${process.env.TURSO_DATABASE_URL}`,
+    authToken: `${process.env.TURSO_AUTH_TOKEN}`,
+  });
+  const prisma = new PrismaClient({
+    adapter/*,
+    log: [
+      { emit: 'event', level: 'query' },
+      { emit: 'event', level: 'info' },
+      { emit: 'event', level: 'warn' },
+      { emit: 'event', level: 'error' },
+    ],*/
+  });
+/*
+  prisma.$on('query', (e) => {
+    console.log('PRISMA QUERY:', e.query);
+    console.log('PARAMS:', e.params);
+    console.log('DURATION (ms):', e.duration);
+  });
+  prisma.$on('info', (e) => {
+    console.log('PRISMA INFO:', e.message);
+  });
+  prisma.$on('warn', (e) => {
+    console.warn('PRISMA WARN:', e.message);
+  });
+  prisma.$on('error', (e) => {
+    console.error('PRISMA ERROR:', e);
+  });*/
 
-// The extended Prisma client with Accelerate extension has extra properties.
-// Assign to global using `any` type, but preserve type of exported variable.
-const _prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    accelerateUrl: env('PRISMA_DATABASE_URL'),
-  }).$extends(withAccelerate());
+  return prisma;
+};
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = _prisma;
+declare const globalThis: {
+  prismaGlobal: ReturnType<typeof prismaClientSingleton>;
+} & typeof global;
 
-const prisma: ReturnType<typeof _prisma> = _prisma;
+const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
 
 export default prisma;
+
+if (process.env.NODE_ENV !== "production") {
+  globalThis.prismaGlobal = prisma;
+}

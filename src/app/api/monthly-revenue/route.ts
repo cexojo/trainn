@@ -48,25 +48,35 @@ export async function GET(req: NextRequest) {
     });
   }
 
-  // For each month, sum the payments (isPayed) with dueDate inside this month
-  const data = [];
-  for (const month of months) {
-    const revenue = await prisma.payment.aggregate({
-      _sum: { amount: true },
-      where: {
-        isPayed: true,
-        dueDate: {
-          gte: month.start,
-          lte: month.end
-        }
+  // Get range for all 12 months
+  const startOfFirstMonth = months[0].start;
+  const endOfLastMonth = months[months.length - 1].end;
+
+  // Single query for all payments in the year
+  const payments = await prisma.payment.findMany({
+    where: {
+      isPayed: true,
+      dueDate: {
+        gte: startOfFirstMonth,
+        lte: endOfLastMonth
       }
-    });
-    data.push({
-      month: month.iso,
-      monthLabel: month.label,
-      revenue: revenue._sum.amount || 0
-    });
+    },
+    select: { amount: true, dueDate: true }
+  });
+
+  // Aggregate payments per ISO month (YYYY-MM)
+  const monthRevenue: Record<string, number> = {};
+  for (const payment of payments) {
+    const iso = formatYearMonth(new Date(payment.dueDate));
+    monthRevenue[iso] = (monthRevenue[iso] || 0) + (payment.amount || 0);
   }
+
+  // Format response data using months template (guarantees all months present, even with 0 revenue)
+  const data = months.map(month => ({
+    month: month.iso,
+    monthLabel: month.label,
+    revenue: monthRevenue[month.iso] || 0
+  }));
 
   return NextResponse.json(data);
 }

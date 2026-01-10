@@ -25,7 +25,9 @@
       "@/*": [
         "./src/*"
       ],
-      "generated-prisma-client": ["./generated/prisma-client"]
+      "generated-prisma-client": [
+        "./generated/prisma-client"
+      ]
     },
     "noEmit": true
   },
@@ -35,7 +37,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    ".next/dev/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

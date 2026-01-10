@@ -35,52 +35,48 @@ export async function POST(req: NextRequest) {
       `[ADMIN] ${payload?.email || payload?.id || 'unknown-admin'} is deleting training week id=${weekId}, blockId=${oldWeek.blockId}, weekNumber=${oldWeek.weekNumber}`
     );
 
-    await prisma.$transaction(async (tx: typeof prisma) => {
-      // Step 1: Get all TrainingDays for the week
-      const trainingDays = await tx.trainingDay.findMany({
-        where: { weekId },
-        select: { id: true },
-      });
-      const trainingDayIds = trainingDays.map((d: { id: string }) => d.id);
+    // Pre-fetch IDs required for deletes
+    const trainingDays = await prisma.trainingDay.findMany({
+      where: { weekId },
+      select: { id: true },
+    });
+    const trainingDayIds = trainingDays.map((d: { id: string }) => d.id);
 
-      // Step 2: Get all DayExercises for those days
-      const dayExercises = await tx.dayExercise.findMany({
-        where: { trainingDayId: { in: trainingDayIds } },
-        select: { id: true },
-      });
-      const dayExerciseIds = dayExercises.map((e: { id: string }) => e.id);
+    const dayExercises = await prisma.dayExercise.findMany({
+      where: { trainingDayId: { in: trainingDayIds } },
+      select: { id: true },
+    });
+    const dayExerciseIds = dayExercises.map((e: { id: string }) => e.id);
 
-      // Step 3: Delete all DayExerciseSeries for those DayExercises
-      if (dayExerciseIds.length > 0) {
-        await tx.dayExerciseSeries.deleteMany({
-          where: { dayExerciseId: { in: dayExerciseIds } },
-        });
-      }
-
-      // Step 4: Delete all DayExercises for those days
-      if (trainingDayIds.length > 0) {
-        await tx.dayExercise.deleteMany({
-          where: { trainingDayId: { in: trainingDayIds } },
-        });
-      }
-
-      // Step 5: Delete all TrainingDays for the week
-      await tx.trainingDay.deleteMany({
-        where: { weekId },
-      });
-
-      // Step 6: Delete the training week
-      await tx.trainingWeek.delete({ where: { id: weekId } });
-
-      // Step 7: Shift weekNumbers down by 1 for all later weeks in the same block
-      await tx.trainingWeek.updateMany({
+    // Prepare queries:
+    const queries = [];
+    if (dayExerciseIds.length > 0) {
+      queries.push(
+        prisma.dayExerciseSeries.deleteMany({
+          where: { dayExerciseId: { in: dayExerciseIds } }
+        })
+      );
+    }
+    if (trainingDayIds.length > 0) {
+      queries.push(
+        prisma.dayExercise.deleteMany({
+          where: { trainingDayId: { in: trainingDayIds }}
+        })
+      );
+    }
+    queries.push(
+      prisma.trainingDay.deleteMany({ where: { weekId } }),
+      prisma.trainingWeek.delete({ where: { id: weekId } }),
+      prisma.trainingWeek.updateMany({
         where: {
           blockId: oldWeek!.blockId,
-          weekNumber: { gt: oldWeek!.weekNumber },
+          weekNumber: { gt: oldWeek!.weekNumber }
         },
-        data: { weekNumber: { decrement: 1 } },
-      });
-    });
+        data: { weekNumber: { decrement: 1 } }
+      })
+    );
+    // Execute all deletions in a single transaction
+    await prisma.$transaction(queries);
 
     return NextResponse.json({ success: true });
   } catch (err: any) {

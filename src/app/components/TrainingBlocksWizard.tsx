@@ -193,6 +193,25 @@ export default function TrainingBlocksWizard() {
                 isOptionEqualToValue={(option, value) => option && value && option.id === value.id}
                 value={selectedAthlete}
                 onChange={(_, value) => setSelectedAthlete(value)}
+                renderOption={(props, option) => (
+                  <li {...props} key={option.id}>
+                    <span>
+                      {option.firstName && option.lastName
+                        ? `${option.firstName} ${option.lastName}`
+                        : (option.firstName || option.lastName || option.username || "")}
+                    </span>
+                    {option.email && (
+                      <span style={{
+                        color: "#999",
+                        fontSize: "0.77em",
+                        marginLeft: 6,
+                        verticalAlign: "middle"
+                      }}>
+                        ({option.email})
+                      </span>
+                    )}
+                  </li>
+                )}
                 renderInput={params => (
                   <TextField
                     {...params}

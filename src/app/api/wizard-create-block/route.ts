@@ -1,121 +1,162 @@
 import { NextRequest, NextResponse } from "next/server";
-
+import { v4 as uuidv4 } from "uuid";
 import prisma from '@/prisma/client';
 
+// Helper to add days to a date
+function addDays(date: Date, days: number) {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+}
+
 export async function POST(req: NextRequest) {
-  // Expects: { userId, name, numWeeks, exercises }
-  const data = await req.json();
-  const { userId, name, numWeeks, daysPerWeek, exercisesByDay, visible } = data;
+    // Expects: { userId, name, numWeeks, daysPerWeek, exercisesByDay, visible }
+    const data = await req.json();
+    const { userId, name, numWeeks, daysPerWeek, exercisesByDay, visible } = data;
 
-  if (!userId || !name || !numWeeks || !daysPerWeek || !Array.isArray(exercisesByDay) || exercisesByDay.length !== daysPerWeek) {
-    return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
-  }
-
-  try {
-    // Determine next blockNumber for user
-    const lastBlock = await prisma.trainingBlock.findFirst({
-      where: { userId },
-      orderBy: { blockNumber: "desc" }
-    });
-    const nextBlockNumber = lastBlock ? lastBlock.blockNumber + 1 : 1;
-
-    // Create the training block
-    const block = await prisma.trainingBlock.create({
-      data: {
-        userId,
-        isVisible: typeof visible === "boolean" ? visible : true,
-        blockNumber: nextBlockNumber,
-        description: name
-      }
-    });
-
-    // Create weeks for the block
-    const weeks: any[] = [];
-    for (let i = 1; i <= Number(numWeeks); ++i) {
-      // Set weekStart and weekEnd to today + (i-1) weeks, as example placeholders
-      const weekStart = new Date();
-      weekStart.setDate(weekStart.getDate() + (i - 1) * 7);
-      const weekEnd = new Date(weekStart);
-      weekEnd.setDate(weekStart.getDate() + 6);
-      const week = await prisma.trainingWeek.create({
-        data: {
-          blockId: block.id,
-          weekNumber: i,
-          weekStart,
-          weekEnd
-        }
-      });
-      weeks.push(week);
+    // Input validation
+    if (!userId || !name || !numWeeks || !daysPerWeek || !Array.isArray(exercisesByDay) || exercisesByDay.length !== daysPerWeek) {
+        return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    // For each week, create each day, then each exercise for that day
-    const creationLogs = [];
-    for (const week of weeks) {
-      for (let dayIdx = 0; dayIdx < daysPerWeek; ++dayIdx) {
-        const trainingDayLabel = `Day ${dayIdx + 1}`;
-        let day = await prisma.trainingDay.create({
-          data: {
-            weekId: week.id,
-            dayLabel: trainingDayLabel,
-            dayNumber: dayIdx + 1,
-            date: new Date(week.weekStart.getTime() + dayIdx * 24 * 60 * 60 * 1000)
-          }
+    try {
+        const result = await prisma.$transaction(async (tx) => {
+            // Get next block number for user
+            const lastBlock = await tx.trainingBlock.findFirst({
+                where: { userId },
+                orderBy: { blockNumber: "desc" },
+            });
+            const nextBlockNumber = lastBlock ? lastBlock.blockNumber + 1 : 1;
+            const blockId = uuidv4();
+
+            // 1. Create block
+            await tx.trainingBlock.create({
+                data: {
+                    id: blockId,
+                    userId,
+                    isVisible: typeof visible === "boolean" ? visible : true,
+                    blockNumber: nextBlockNumber,
+                    description: name,
+                },
+            });
+
+            // Precompute IDs for all weeks/days/exercises/series
+            const weeksArr = [];
+            const weekIdMap = [];
+            const today = new Date();
+
+            // 2. Weeks
+            for (let i = 1; i <= Number(numWeeks); ++i) {
+                const weekId = uuidv4();
+                weekIdMap.push(weekId);
+
+                const weekStart = addDays(today, (i - 1) * 7);
+                const weekEnd = addDays(weekStart, 6);
+
+                weeksArr.push({
+                    id: weekId,
+                    blockId: blockId,
+                    weekNumber: i,
+                    weekStart,
+                    weekEnd,
+                });
+            }
+            await tx.trainingWeek.createMany({ data: weeksArr });
+
+            // 3. Days
+            const daysArr = [];
+            // Map: weekNumber -> dayNumber -> dayId
+            const dayIdMatrix = Array(numWeeks)
+                .fill(null)
+                .map(() => Array(daysPerWeek).fill(null));
+            for (let w = 0; w < numWeeks; ++w) {
+                const weekId = weekIdMap[w];
+                const weekStart = weeksArr[w].weekStart;
+                for (let d = 0; d < daysPerWeek; ++d) {
+                    const dayId = uuidv4();
+                    dayIdMatrix[w][d] = dayId;
+                    daysArr.push({
+                        id: dayId,
+                        weekId,
+                        dayLabel: `Day ${d + 1}`,
+                        dayNumber: d + 1,
+                        date: addDays(weekStart, d),
+                    });
+                }
+            }
+            await tx.trainingDay.createMany({ data: daysArr });
+
+            // 4. DayExercises
+            // Map: weekIdx -> dayIdx -> exIdx -> dayExerciseId
+            const exercisesArr = [];
+            // Matrix: [week][day][exerciseIndex] = string
+            const dayExerciseIdMatrix: string[][][] = Array(numWeeks)
+                .fill(null)
+                .map(() =>
+                    Array(daysPerWeek)
+                        .fill(null)
+                        .map(() => [])
+                );
+            // Since exercisesByDay is daysPerWeek long (applies to each week)
+            for (let w = 0; w < numWeeks; ++w) {
+                for (let d = 0; d < daysPerWeek; ++d) {
+                    const exercisesForDay = exercisesByDay[d];
+                    for (let exIdx = 0; exIdx < exercisesForDay.length; ++exIdx) {
+                        const ex = exercisesForDay[exIdx];
+                        const dayExerciseId = uuidv4();
+                        dayExerciseIdMatrix[w][d].push(dayExerciseId);
+                        exercisesArr.push({
+                            id: dayExerciseId,
+                            trainingDayId: dayIdMatrix[w][d],
+                            exerciseId: ex.exerciseId,
+                            trainerNotes: ex.trainerNotes ?? "",
+                            day: `Day ${d + 1}`,
+                            exerciseNumber: ex.exerciseNumber ?? exIdx + 1,
+                        });
+                    }
+                }
+            }
+            await tx.dayExercise.createMany({ data: exercisesArr });
+
+            // 5. DayExerciseSeries
+            const seriesArr = [];
+            for (let w = 0; w < numWeeks; ++w) {
+                const weekId = weekIdMap[w];
+                for (let d = 0; d < daysPerWeek; ++d) {
+                    const exercisesForDay = exercisesByDay[d];
+                    for (let exIdx = 0; exIdx < exercisesForDay.length; ++exIdx) {
+                        const ex = exercisesForDay[exIdx];
+                        const dayExerciseId = dayExerciseIdMatrix[w][d][exIdx];
+                        if (Array.isArray(ex.series)) {
+                            for (let sIdx = 0; sIdx < ex.series.length; ++sIdx) {
+                                const ser = ex.series[sIdx] || {};
+                                seriesArr.push({
+                                    id: uuidv4(),
+                                    dayExerciseId,
+                                    seriesNumber: sIdx + 1,
+                                    minReps: ser.minReps !== undefined && ser.minReps !== "" ? ser.minReps : null,
+                                    maxReps: ser.maxReps !== undefined && ser.maxReps !== "" ? ser.maxReps : null,
+                                    minRir: ser.minRIR !== undefined && ser.minRIR !== "" ? ser.minRIR : null,
+                                    maxRir: ser.maxRIR !== undefined && ser.maxRIR !== "" ? ser.maxRIR : null,
+                                    trainingWeekId: weekId,
+                                    isDropset: !!ser.isDropset,
+                                    trainerNotes: ser.trainerNotes || "",
+                                    athleteUserRead: false,
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            if (seriesArr.length > 0) {
+                await tx.dayExerciseSeries.createMany({ data: seriesArr });
+            }
+
+            return { success: true, blockId: blockId };
         });
 
-        const exercises = exercisesByDay[dayIdx];
-        for (const [exIdx, ex] of exercises.entries()) {
-          const dayExercise = await prisma.dayExercise.create({
-            data: {
-              trainingDayId: day.id,
-              exerciseId: ex.exerciseId,
-              trainerNotes: ex.trainerNotes ?? "",
-              day: trainingDayLabel,
-              exerciseNumber: ex.exerciseNumber ?? exIdx + 1
-            }
-          });
-
-          for (let sIdx = 0; sIdx < (ex.series?.length || 0); ++sIdx) {
-            const ser = ex.series[sIdx] || {};
-            const series = await prisma.dayExerciseSeries.create({
-              data: {
-                dayExercise: { connect: { id: dayExercise.id } },
-                trainingWeek: { connect: { id: week.id } },
-                seriesNumber: sIdx + 1,
-                minReps: ser.minReps !== undefined && ser.minReps !== "" ? ser.minReps : null,
-                maxReps: ser.maxReps !== undefined && ser.maxReps !== "" ? ser.maxReps : null,
-                minRir: ser.minRIR !== undefined && ser.minRIR !== "" ? ser.minRIR : null,
-                maxRir: ser.maxRIR !== undefined && ser.maxRIR !== "" ? ser.maxRIR : null,
-                isDropset: !!ser.isDropset,
-              }
-            });
-            let exerciseName = '';
-            if (ex.exerciseName) {
-              exerciseName = ex.exerciseName;
-            } else {
-              try {
-                const exerciseObj = await prisma.exercise.findUnique({
-                  where: { id: ex.exerciseId },
-                  select: { name: true }
-                });
-                exerciseName = exerciseObj?.name || '';
-              } catch { exerciseName = ''; }
-            }
-            creationLogs.push({
-              dayNumber: day.dayNumber,
-              dayId: day.id,
-              exerciseNumber: dayExercise.exerciseNumber,
-              exerciseId: ex.exerciseId,
-              exerciseName,
-              seriesNumber: series.seriesNumber,
-              seriesId: series.id
-            });
-          }
-        }
-      }
+        return NextResponse.json(result);
+    } catch (err) {
+        return NextResponse.json({ error: "Failed to create block", detail: "" + err }, { status: 500 });
     }
-
-    return NextResponse.json({ success: true, blockId: block.id, logs: creationLogs });
-  } catch (err) {
-    return NextResponse.json({ error: "Failed to create block", detail: "" + err }, { status: 500 });
-  }
 }

@@ -867,7 +867,7 @@ export default function ManageBlocks() {
 
   useEffect(() => {
     setAthleteLoading(true);
-    fetch("/api/get-user-management-info")
+    fetch("/api/get-active-athletes-list")
       .then(r => r.json())
       .then(arr => {
         if (Array.isArray(arr)) {
@@ -967,6 +967,20 @@ export default function ManageBlocks() {
           isOptionEqualToValue={(opt, val) => opt && val && opt.id === val.id}
           value={selectedAthlete}
           onChange={(_, val) => setSelectedAthlete(val)}
+          renderOption={(props, option) => {
+            const label =
+              option.firstName && option.lastName
+                ? `${option.firstName} ${option.lastName}`
+                : (option.firstName || option.lastName || option.username || option.email || "");
+            return (
+              <li {...props} key={option.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                <span>{label}</span>
+                {option.email && (
+                  <span style={{ fontSize: 12, color: "#888" }}>{option.email}</span>
+                )}
+              </li>
+            );
+          }}
           renderInput={params => (
             <TextField
               {...params}

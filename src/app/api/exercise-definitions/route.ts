@@ -1,14 +1,12 @@
 import prisma from '@/prisma/client';
 import { NextRequest, NextResponse } from "next/server";
 
-
-
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   if (searchParams.get("distinct")) {
     // Return all unique exercises for selection
     const exercises = await prisma.exercise.findMany({
-      select: { id: true, name: true, group: true },
+      select: { id: true, name: true, exerciseGroup: { select: { name: true } } },
       orderBy: { name: "asc" },
     });
     return NextResponse.json(exercises);
@@ -18,7 +16,7 @@ export async function GET(req: NextRequest) {
 
   if (!userId) {
     // fallback to demo user "John Doe"
-    const demo = await prisma.user.findFirst({ where: { name: "John Doe" } });
+    const demo = await prisma.user.findFirst({ where: { firstName: "John", lastName: "Doe" } });
     if (!demo) return NextResponse.json({}, { status: 404 });
     userId = demo.id;
   }
