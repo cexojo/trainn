@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma/client";
 import { getTokenPayload } from "@/app/api/utils/auth";
 import { generateToken } from "@/app/utils/generateToken";
+import { getBaseUrl } from "@/app/utils/getBaseUrl";
 import * as Sentry from "@sentry/nextjs";
 import nodemailer from "nodemailer";
 
@@ -59,7 +60,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Build link and email parameters
-    const baseUrl = process.env.BASE_URL || "http://localhost:3000";
+    const baseUrl = getBaseUrl();
     const generatePasswordLink = `${baseUrl}/create-password/${user.passwordRefreshToken}`;
 
     // Gmail credentials via env, using Google's recommended App Password flow.
