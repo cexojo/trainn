@@ -175,7 +175,7 @@ INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('9c9beb95-3e1
 INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('1560dd63-3fde-45d9-aed5-4a43b694b5b0', 'Hip thrust', '066452b3-3663-4801-b3ce-1f40c3a06ad3');
 INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('436b8fc9-e119-4244-a4a2-90f08edad2d9', 'Hip thrust Unilateral con barra', '066452b3-3663-4801-b3ce-1f40c3a06ad3');
 INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('ffa406af-dd1d-4bf4-b838-7f1663b6a56b', 'Hip thrust Unilateral con mancuerna', '066452b3-3663-4801-b3ce-1f40c3a06ad3');
-INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('b44daa92-29f8-4f43-bc1d-6f187390ccaf', 'Hip trhust en máquina', '066452b3-3663-4801-b3ce-1f40c3a06ad3');
+INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('b44daa92-29f8-4f43-bc1d-6f187390ccaf', 'Hip thrust en máquina', '066452b3-3663-4801-b3ce-1f40c3a06ad3');
 INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('36b78fb0-0bd1-4bb9-a426-be6472a16bed', 'Hiperextensiones 45º foco glúteo', '066452b3-3663-4801-b3ce-1f40c3a06ad3');
 INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('143aabd3-c39d-4d3e-9ef6-387a54ce8c6b', 'Hiptrhust en multipower', '066452b3-3663-4801-b3ce-1f40c3a06ad3');
 INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('d4de56d4-3047-4707-871f-0c4b42b6d31a', 'Leg Swing en máquina', '066452b3-3663-4801-b3ce-1f40c3a06ad3');
