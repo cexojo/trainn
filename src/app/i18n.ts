@@ -2,6 +2,8 @@ export type Lang = "en" | "es";
 
 export type Translations = {
   [K in Lang]: {
+    athleteNotesModalTitle: (firstName: string, lastName?: string) => string;
+    noteButtonTitle: (firstName: string, lastName?: string) => string;
     measurementsMenu: string;
     sexLabel: string;
     sexMale: string;
@@ -306,6 +308,11 @@ export type Translations = {
 
 export const translations: Translations = {
   en: {
+    athleteNotesModalTitle: (firstName: string, lastName?: string) =>
+      `Notes for ${(firstName ?? "") + (lastName ? " " + lastName : "")}`,
+
+    noteButtonTitle: (firstName: string, lastName?: string) =>
+      `${(firstName ?? "") + (lastName ? " " + lastName : "") || "Athlete"}'s notes`,
     measurementsMenu: "Measurements",
     sexLabel: "Sex",
     sexMale: "Male",
@@ -608,6 +615,11 @@ export const translations: Translations = {
     measurementsSaveError: "Error al guardar la medida",
   },
   es: {
+    athleteNotesModalTitle: (firstName: string, lastName?: string) =>
+      `Notas de ${(firstName ?? "") + (lastName ? " " + lastName : "")}`,
+
+    noteButtonTitle: (firstName: string, lastName?: string) =>
+      `Notas de ${(firstName ?? "") + (lastName ? " " + lastName : "") || "Atleta"}`,
     measurementsMenu: "Medidas",
     sexLabel: "Sexo",
     sexMale: "Hombre",

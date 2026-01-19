@@ -85,7 +85,7 @@ export default function TrainingPanel({
 
   const [dayDates, setDayDates] = useState<string[]>([]);
   const [trainingDayIds, setTrainingDayIds] = useState<string[]>([]);
-  const [userInfo, setUserInfo] = useState<{ id: string, name: string, isocode: string, lastVisitedWeek?: string | null } | null>(null);
+  const [userInfo, setUserInfo] = useState<{ id: string, firstName: string, lastName?: string, isocode: string, lastVisitedWeek?: string | null } | null>(null);
   const [blockOpts, setBlockOpts] = useState<any[]>([]);
   // REMOVE local selectedBlock/selectedWeek state
   // const [selectedBlock, setSelectedBlock] = useState<any | null>(null);
@@ -130,7 +130,8 @@ export default function TrainingPanel({
       .then((d) => {
         setUserInfo({
           id: d.id,
-          name: translations[d.isocode as Lang]?.nameDefault || d.name,
+          firstName: d.firstName || "",
+          lastName: d.lastName || "",
           isocode: d.isocode || "en",
           lastVisitedWeek: d.lastVisitedWeek || null,
         });
@@ -381,9 +382,9 @@ export default function TrainingPanel({
             }}
           >
             <Typography variant="subtitle1" id="athlete-notes-modal-title" fontWeight={600} sx={{ mb: 1 }}>
-              {lang === "es"
-                ? `Notas de ${userInfo?.name || ""}`
-                : `${userInfo?.name || "Athlete"}'s notes`}
+              {translations[lang].athleteNotesModalTitle(
+                userInfo?.firstName ?? "", userInfo?.lastName ?? ""
+              )}
             </Typography>
             {/* Subtitle: Day / Exercise / Series */}
             {(() => {
@@ -589,7 +590,12 @@ export default function TrainingPanel({
                                               setSelectedDay?.(dayIdx);
                                               setFocusedExerciseKey(exKey);
                                             }}
-                                            title={userInfo?.name ? `${userInfo.name}'s notes` : 'Notes'}
+                                            title={
+                                              translations[lang].noteButtonTitle(
+                                                userInfo?.firstName ?? "",
+                                                userInfo?.lastName ?? ""
+                                              )
+                                            }
                                             sx={{
                                               p: 0,
                                               m: 0,
@@ -625,7 +631,7 @@ export default function TrainingPanel({
                                               setSelectedDay?.(dayIdx);
                                               setFocusedExerciseKey(exKey);
                                             }}
-                                            title={userInfo?.name ? `${userInfo.name}'s notes` : 'Notes'}
+                                            title={userInfo?.firstName ? `${userInfo.firstName}'s notes` : 'Notes'}
                                             sx={{
                                               p: 0,
                                               m: 0,
