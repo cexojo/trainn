@@ -90,6 +90,7 @@ model User {
   blocks            TrainingBlock[]
   role              Role     @default(athlete)
   payments          Payment[]
+  measurements      Measurement[]
   hidden            Boolean  @default(false)
   lastOKLogin       DateTime?
   lastKOLogin       DateTime?
@@ -138,4 +139,19 @@ model Payment {
   dueDate   DateTime
   amount    Float
   isPayed   Boolean  @default(false)
+}
+
+model Measurement {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  date       DateTime
+  weight     Float
+  neck       Float
+  arm        Float
+  waist      Float
+  abdomen    Float
+  hip        Float
+  thigh      Float
+  calfMuscle Float
 }

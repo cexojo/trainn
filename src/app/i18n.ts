@@ -2,6 +2,7 @@ export type Lang = "en" | "es";
 
 export type Translations = {
   [K in Lang]: {
+    measurementsMenu: string;
     sexLabel: string;
     sexMale: string;
     sexFemale: string;
@@ -278,11 +279,34 @@ export type Translations = {
     invalidEmailError: string;
     createUserFrequencyLabel: string;
     searchUserTablePlaceholder: string;
+
+    // Measurements
+    measurementsTitle: string;
+    measurementsAdd: string;
+    measurementsColumnDate: string;
+    measurementsColumnWeight: string;
+    measurementsColumnNeck: string;
+    measurementsColumnArm: string;
+    measurementsColumnWaist: string;
+    measurementsColumnAbdomen: string;
+    measurementsColumnHip: string;
+    measurementsColumnThigh: string;
+    measurementsColumnCalfMuscle: string;
+    measurementsLoading: string;
+    measurementsEmpty: string;
+    measurementsModalTitle: string;
+    measurementsModalCancel: string;
+    measurementsDeleteConfirm: string;
+    measurementsDeleted: string;
+    measurementsDeleteError: string;
+    measurementsDelete: string;
+    measurementsSaveError: string;
   };
 };
 
 export const translations: Translations = {
   en: {
+    measurementsMenu: "Measurements",
     sexLabel: "Sex",
     sexMale: "Male",
     sexFemale: "Female",
@@ -559,9 +583,32 @@ export const translations: Translations = {
     emailTakenError: "That email is already taken",
     invalidEmailError: "Invalid email address",
     createUserFrequencyLabel: "Create user frequency",
-    searchUserTablePlaceholder: "Search by name, username, or email"
+    searchUserTablePlaceholder: "Search by name, username, or email",
+
+    // Measurements
+    measurementsTitle: "Measurements",
+    measurementsAdd: "Add measurement",
+    measurementsColumnDate: "Date",
+    measurementsColumnWeight: "Weight",
+    measurementsColumnNeck: "Neck",
+    measurementsColumnArm: "Arm",
+    measurementsColumnWaist: "Waist",
+    measurementsColumnAbdomen: "Abdomen",
+    measurementsColumnHip: "Hip",
+    measurementsColumnThigh: "Thigh",
+    measurementsColumnCalfMuscle: "Calf",
+    measurementsLoading: "Loading…",
+    measurementsEmpty: "No measurements.",
+    measurementsModalTitle: "Add measurement",
+    measurementsModalCancel: "Cancel",
+    measurementsDeleteConfirm: "¿Eliminar esta medición?",
+    measurementsDeleted: "Medición borrada",
+    measurementsDeleteError: "Error al borrar la medición",
+    measurementsDelete: "Borrar",
+    measurementsSaveError: "Error al guardar la medida",
   },
-  es: {    
+  es: {
+    measurementsMenu: "Medidas",
     sexLabel: "Sexo",
     sexMale: "Hombre",
     sexFemale: "Mujer",
@@ -838,6 +885,28 @@ export const translations: Translations = {
     emailTakenError: "Ese correo electrónico ya está en uso",
     invalidEmailError: "Correo electrónico inválido",
     createUserFrequencyLabel: "Frecuencia para crear usuario",
-    searchUserTablePlaceholder: "Buscar por nombre, usuario o email"
+    searchUserTablePlaceholder: "Buscar por nombre, usuario o email",
+
+    // Measurements
+    measurementsTitle: "Medidas",
+    measurementsAdd: "Añadir medida",
+    measurementsColumnDate: "Fecha",
+    measurementsColumnWeight: "Peso (kg)",
+    measurementsColumnNeck: "Cuello",
+    measurementsColumnArm: "Brazo",
+    measurementsColumnWaist: "Cintura",
+    measurementsColumnAbdomen: "Abdomen",
+    measurementsColumnHip: "Cadera",
+    measurementsColumnThigh: "Muslo",
+    measurementsColumnCalfMuscle: "Genelo",
+    measurementsLoading: "Cargando…",
+    measurementsEmpty: "No hay medidas.",
+    measurementsModalTitle: "Añadir medida",
+    measurementsModalCancel: "Cancel",
+    measurementsDeleteConfirm: "Delete this measurement?",
+    measurementsDeleted: "Measurement deleted",
+    measurementsDeleteError: "Error deleting measurement",
+    measurementsDelete: "Delete",
+    measurementsSaveError: "Error saving measurement",
   }
 };

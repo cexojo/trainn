@@ -44,6 +44,7 @@ export default function MenuContent({
   const athleteListItems = [
     ...mainHome,
     { text: translations[lang].trainingTab, icon: <FitnessCenterRoundedIcon />, section: "training" },
+    { text: translations[lang].measurementsMenu, icon: <AnalyticsRoundedIcon />, section: "measurements" },
   ];
 
   const adminListItems = [

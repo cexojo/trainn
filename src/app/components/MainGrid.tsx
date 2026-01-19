@@ -9,6 +9,7 @@ import UserTable from "@/app/components/UserTable";
 import ExerciseTable from "@/app/dashboard/ExerciseTable";
 import ManageBlocks from "@/app/components/ManageBlocks";
 import TrainingPanel from "./TrainingPanel";
+import MeasurementsPanel from "@/app/components/MeasurementsPanel";
 
 import React, { useState } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, CircularProgress, Snackbar, Alert } from "@mui/material";
@@ -314,6 +315,11 @@ export default function MainGrid({
             selectedDay={selectedDay}
             setSelectedDay={setSelectedDay}
           />
+        </Box>
+      )}
+      {section === "measurements" && userRole === 'athlete' && (
+        <Box sx={{ mt: 3, mb: 3 }}>
+          <MeasurementsPanel />
         </Box>
       )}
       {section === "exercises" && userRole === 'admin' && (

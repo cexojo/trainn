@@ -213,6 +213,20 @@ exports.Prisma.PaymentScalarFieldEnum = {
   isPayed: 'isPayed'
 };
 
+exports.Prisma.MeasurementScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  date: 'date',
+  weight: 'weight',
+  neck: 'neck',
+  arm: 'arm',
+  waist: 'waist',
+  abdomen: 'abdomen',
+  hip: 'hip',
+  thigh: 'thigh',
+  calfMuscle: 'calfMuscle'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -246,7 +260,8 @@ exports.Prisma.ModelName = {
   User: 'User',
   DayExercise: 'DayExercise',
   DayExerciseSeries: 'DayExerciseSeries',
-  Payment: 'Payment'
+  Payment: 'Payment',
+  Measurement: 'Measurement'
 };
 
 /**

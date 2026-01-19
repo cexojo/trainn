@@ -58,6 +58,11 @@ export type DayExerciseSeries = $Result.DefaultSelection<Prisma.$DayExerciseSeri
  * 
  */
 export type Payment = $Result.DefaultSelection<Prisma.$PaymentPayload>
+/**
+ * Model Measurement
+ * 
+ */
+export type Measurement = $Result.DefaultSelection<Prisma.$MeasurementPayload>
 
 /**
  * Enums
@@ -306,6 +311,16 @@ export class PrismaClient<
     * ```
     */
   get payment(): Prisma.PaymentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.measurement`: Exposes CRUD operations for the **Measurement** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Measurements
+    * const measurements = await prisma.measurement.findMany()
+    * ```
+    */
+  get measurement(): Prisma.MeasurementDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -748,7 +763,8 @@ export namespace Prisma {
     User: 'User',
     DayExercise: 'DayExercise',
     DayExerciseSeries: 'DayExerciseSeries',
-    Payment: 'Payment'
+    Payment: 'Payment',
+    Measurement: 'Measurement'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -764,7 +780,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "trainingBlock" | "trainingWeek" | "trainingDay" | "exerciseGroup" | "exercise" | "user" | "dayExercise" | "dayExerciseSeries" | "payment"
+      modelProps: "trainingBlock" | "trainingWeek" | "trainingDay" | "exerciseGroup" | "exercise" | "user" | "dayExercise" | "dayExerciseSeries" | "payment" | "measurement"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1434,6 +1450,80 @@ export namespace Prisma {
           }
         }
       }
+      Measurement: {
+        payload: Prisma.$MeasurementPayload<ExtArgs>
+        fields: Prisma.MeasurementFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MeasurementFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeasurementPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MeasurementFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeasurementPayload>
+          }
+          findFirst: {
+            args: Prisma.MeasurementFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeasurementPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MeasurementFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeasurementPayload>
+          }
+          findMany: {
+            args: Prisma.MeasurementFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeasurementPayload>[]
+          }
+          create: {
+            args: Prisma.MeasurementCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeasurementPayload>
+          }
+          createMany: {
+            args: Prisma.MeasurementCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MeasurementCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeasurementPayload>[]
+          }
+          delete: {
+            args: Prisma.MeasurementDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeasurementPayload>
+          }
+          update: {
+            args: Prisma.MeasurementUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeasurementPayload>
+          }
+          deleteMany: {
+            args: Prisma.MeasurementDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MeasurementUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MeasurementUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeasurementPayload>[]
+          }
+          upsert: {
+            args: Prisma.MeasurementUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MeasurementPayload>
+          }
+          aggregate: {
+            args: Prisma.MeasurementAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMeasurement>
+          }
+          groupBy: {
+            args: Prisma.MeasurementGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MeasurementGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MeasurementCountArgs<ExtArgs>
+            result: $Utils.Optional<MeasurementCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1551,6 +1641,7 @@ export namespace Prisma {
     dayExercise?: DayExerciseOmit
     dayExerciseSeries?: DayExerciseSeriesOmit
     payment?: PaymentOmit
+    measurement?: MeasurementOmit
   }
 
   /* Types for Logging */
@@ -1797,11 +1888,13 @@ export namespace Prisma {
   export type UserCountOutputType = {
     blocks: number
     payments: number
+    measurements: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     blocks?: boolean | UserCountOutputTypeCountBlocksArgs
     payments?: boolean | UserCountOutputTypeCountPaymentsArgs
+    measurements?: boolean | UserCountOutputTypeCountMeasurementsArgs
   }
 
   // Custom InputTypes
@@ -1827,6 +1920,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountPaymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PaymentWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountMeasurementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MeasurementWhereInput
   }
 
 
@@ -7736,6 +7836,7 @@ export namespace Prisma {
     sex?: boolean
     blocks?: boolean | User$blocksArgs<ExtArgs>
     payments?: boolean | User$paymentsArgs<ExtArgs>
+    measurements?: boolean | User$measurementsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -7806,6 +7907,7 @@ export namespace Prisma {
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     blocks?: boolean | User$blocksArgs<ExtArgs>
     payments?: boolean | User$paymentsArgs<ExtArgs>
+    measurements?: boolean | User$measurementsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -7816,6 +7918,7 @@ export namespace Prisma {
     objects: {
       blocks: Prisma.$TrainingBlockPayload<ExtArgs>[]
       payments: Prisma.$PaymentPayload<ExtArgs>[]
+      measurements: Prisma.$MeasurementPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8232,6 +8335,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     blocks<T extends User$blocksArgs<ExtArgs> = {}>(args?: Subset<T, User$blocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrainingBlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     payments<T extends User$paymentsArgs<ExtArgs> = {}>(args?: Subset<T, User$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    measurements<T extends User$measurementsArgs<ExtArgs> = {}>(args?: Subset<T, User$measurementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MeasurementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8710,6 +8814,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PaymentScalarFieldEnum | PaymentScalarFieldEnum[]
+  }
+
+  /**
+   * User.measurements
+   */
+  export type User$measurementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Measurement
+     */
+    select?: MeasurementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Measurement
+     */
+    omit?: MeasurementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeasurementInclude<ExtArgs> | null
+    where?: MeasurementWhereInput
+    orderBy?: MeasurementOrderByWithRelationInput | MeasurementOrderByWithRelationInput[]
+    cursor?: MeasurementWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MeasurementScalarFieldEnum | MeasurementScalarFieldEnum[]
   }
 
   /**
@@ -12232,6 +12360,1202 @@ export namespace Prisma {
 
 
   /**
+   * Model Measurement
+   */
+
+  export type AggregateMeasurement = {
+    _count: MeasurementCountAggregateOutputType | null
+    _avg: MeasurementAvgAggregateOutputType | null
+    _sum: MeasurementSumAggregateOutputType | null
+    _min: MeasurementMinAggregateOutputType | null
+    _max: MeasurementMaxAggregateOutputType | null
+  }
+
+  export type MeasurementAvgAggregateOutputType = {
+    weight: number | null
+    neck: number | null
+    arm: number | null
+    waist: number | null
+    abdomen: number | null
+    hip: number | null
+    thigh: number | null
+    calfMuscle: number | null
+  }
+
+  export type MeasurementSumAggregateOutputType = {
+    weight: number | null
+    neck: number | null
+    arm: number | null
+    waist: number | null
+    abdomen: number | null
+    hip: number | null
+    thigh: number | null
+    calfMuscle: number | null
+  }
+
+  export type MeasurementMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    date: Date | null
+    weight: number | null
+    neck: number | null
+    arm: number | null
+    waist: number | null
+    abdomen: number | null
+    hip: number | null
+    thigh: number | null
+    calfMuscle: number | null
+  }
+
+  export type MeasurementMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    date: Date | null
+    weight: number | null
+    neck: number | null
+    arm: number | null
+    waist: number | null
+    abdomen: number | null
+    hip: number | null
+    thigh: number | null
+    calfMuscle: number | null
+  }
+
+  export type MeasurementCountAggregateOutputType = {
+    id: number
+    userId: number
+    date: number
+    weight: number
+    neck: number
+    arm: number
+    waist: number
+    abdomen: number
+    hip: number
+    thigh: number
+    calfMuscle: number
+    _all: number
+  }
+
+
+  export type MeasurementAvgAggregateInputType = {
+    weight?: true
+    neck?: true
+    arm?: true
+    waist?: true
+    abdomen?: true
+    hip?: true
+    thigh?: true
+    calfMuscle?: true
+  }
+
+  export type MeasurementSumAggregateInputType = {
+    weight?: true
+    neck?: true
+    arm?: true
+    waist?: true
+    abdomen?: true
+    hip?: true
+    thigh?: true
+    calfMuscle?: true
+  }
+
+  export type MeasurementMinAggregateInputType = {
+    id?: true
+    userId?: true
+    date?: true
+    weight?: true
+    neck?: true
+    arm?: true
+    waist?: true
+    abdomen?: true
+    hip?: true
+    thigh?: true
+    calfMuscle?: true
+  }
+
+  export type MeasurementMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    date?: true
+    weight?: true
+    neck?: true
+    arm?: true
+    waist?: true
+    abdomen?: true
+    hip?: true
+    thigh?: true
+    calfMuscle?: true
+  }
+
+  export type MeasurementCountAggregateInputType = {
+    id?: true
+    userId?: true
+    date?: true
+    weight?: true
+    neck?: true
+    arm?: true
+    waist?: true
+    abdomen?: true
+    hip?: true
+    thigh?: true
+    calfMuscle?: true
+    _all?: true
+  }
+
+  export type MeasurementAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Measurement to aggregate.
+     */
+    where?: MeasurementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Measurements to fetch.
+     */
+    orderBy?: MeasurementOrderByWithRelationInput | MeasurementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MeasurementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Measurements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Measurements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Measurements
+    **/
+    _count?: true | MeasurementCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MeasurementAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MeasurementSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MeasurementMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MeasurementMaxAggregateInputType
+  }
+
+  export type GetMeasurementAggregateType<T extends MeasurementAggregateArgs> = {
+        [P in keyof T & keyof AggregateMeasurement]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMeasurement[P]>
+      : GetScalarType<T[P], AggregateMeasurement[P]>
+  }
+
+
+
+
+  export type MeasurementGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MeasurementWhereInput
+    orderBy?: MeasurementOrderByWithAggregationInput | MeasurementOrderByWithAggregationInput[]
+    by: MeasurementScalarFieldEnum[] | MeasurementScalarFieldEnum
+    having?: MeasurementScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MeasurementCountAggregateInputType | true
+    _avg?: MeasurementAvgAggregateInputType
+    _sum?: MeasurementSumAggregateInputType
+    _min?: MeasurementMinAggregateInputType
+    _max?: MeasurementMaxAggregateInputType
+  }
+
+  export type MeasurementGroupByOutputType = {
+    id: string
+    userId: string
+    date: Date
+    weight: number
+    neck: number
+    arm: number
+    waist: number
+    abdomen: number
+    hip: number
+    thigh: number
+    calfMuscle: number
+    _count: MeasurementCountAggregateOutputType | null
+    _avg: MeasurementAvgAggregateOutputType | null
+    _sum: MeasurementSumAggregateOutputType | null
+    _min: MeasurementMinAggregateOutputType | null
+    _max: MeasurementMaxAggregateOutputType | null
+  }
+
+  type GetMeasurementGroupByPayload<T extends MeasurementGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MeasurementGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MeasurementGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MeasurementGroupByOutputType[P]>
+            : GetScalarType<T[P], MeasurementGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MeasurementSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    date?: boolean
+    weight?: boolean
+    neck?: boolean
+    arm?: boolean
+    waist?: boolean
+    abdomen?: boolean
+    hip?: boolean
+    thigh?: boolean
+    calfMuscle?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["measurement"]>
+
+  export type MeasurementSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    date?: boolean
+    weight?: boolean
+    neck?: boolean
+    arm?: boolean
+    waist?: boolean
+    abdomen?: boolean
+    hip?: boolean
+    thigh?: boolean
+    calfMuscle?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["measurement"]>
+
+  export type MeasurementSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    date?: boolean
+    weight?: boolean
+    neck?: boolean
+    arm?: boolean
+    waist?: boolean
+    abdomen?: boolean
+    hip?: boolean
+    thigh?: boolean
+    calfMuscle?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["measurement"]>
+
+  export type MeasurementSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    date?: boolean
+    weight?: boolean
+    neck?: boolean
+    arm?: boolean
+    waist?: boolean
+    abdomen?: boolean
+    hip?: boolean
+    thigh?: boolean
+    calfMuscle?: boolean
+  }
+
+  export type MeasurementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "date" | "weight" | "neck" | "arm" | "waist" | "abdomen" | "hip" | "thigh" | "calfMuscle", ExtArgs["result"]["measurement"]>
+  export type MeasurementInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type MeasurementIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type MeasurementIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $MeasurementPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Measurement"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      date: Date
+      weight: number
+      neck: number
+      arm: number
+      waist: number
+      abdomen: number
+      hip: number
+      thigh: number
+      calfMuscle: number
+    }, ExtArgs["result"]["measurement"]>
+    composites: {}
+  }
+
+  type MeasurementGetPayload<S extends boolean | null | undefined | MeasurementDefaultArgs> = $Result.GetResult<Prisma.$MeasurementPayload, S>
+
+  type MeasurementCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MeasurementFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MeasurementCountAggregateInputType | true
+    }
+
+  export interface MeasurementDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Measurement'], meta: { name: 'Measurement' } }
+    /**
+     * Find zero or one Measurement that matches the filter.
+     * @param {MeasurementFindUniqueArgs} args - Arguments to find a Measurement
+     * @example
+     * // Get one Measurement
+     * const measurement = await prisma.measurement.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MeasurementFindUniqueArgs>(args: SelectSubset<T, MeasurementFindUniqueArgs<ExtArgs>>): Prisma__MeasurementClient<$Result.GetResult<Prisma.$MeasurementPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Measurement that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MeasurementFindUniqueOrThrowArgs} args - Arguments to find a Measurement
+     * @example
+     * // Get one Measurement
+     * const measurement = await prisma.measurement.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MeasurementFindUniqueOrThrowArgs>(args: SelectSubset<T, MeasurementFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MeasurementClient<$Result.GetResult<Prisma.$MeasurementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Measurement that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MeasurementFindFirstArgs} args - Arguments to find a Measurement
+     * @example
+     * // Get one Measurement
+     * const measurement = await prisma.measurement.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MeasurementFindFirstArgs>(args?: SelectSubset<T, MeasurementFindFirstArgs<ExtArgs>>): Prisma__MeasurementClient<$Result.GetResult<Prisma.$MeasurementPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Measurement that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MeasurementFindFirstOrThrowArgs} args - Arguments to find a Measurement
+     * @example
+     * // Get one Measurement
+     * const measurement = await prisma.measurement.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MeasurementFindFirstOrThrowArgs>(args?: SelectSubset<T, MeasurementFindFirstOrThrowArgs<ExtArgs>>): Prisma__MeasurementClient<$Result.GetResult<Prisma.$MeasurementPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Measurements that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MeasurementFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Measurements
+     * const measurements = await prisma.measurement.findMany()
+     * 
+     * // Get first 10 Measurements
+     * const measurements = await prisma.measurement.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const measurementWithIdOnly = await prisma.measurement.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MeasurementFindManyArgs>(args?: SelectSubset<T, MeasurementFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MeasurementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Measurement.
+     * @param {MeasurementCreateArgs} args - Arguments to create a Measurement.
+     * @example
+     * // Create one Measurement
+     * const Measurement = await prisma.measurement.create({
+     *   data: {
+     *     // ... data to create a Measurement
+     *   }
+     * })
+     * 
+     */
+    create<T extends MeasurementCreateArgs>(args: SelectSubset<T, MeasurementCreateArgs<ExtArgs>>): Prisma__MeasurementClient<$Result.GetResult<Prisma.$MeasurementPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Measurements.
+     * @param {MeasurementCreateManyArgs} args - Arguments to create many Measurements.
+     * @example
+     * // Create many Measurements
+     * const measurement = await prisma.measurement.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MeasurementCreateManyArgs>(args?: SelectSubset<T, MeasurementCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Measurements and returns the data saved in the database.
+     * @param {MeasurementCreateManyAndReturnArgs} args - Arguments to create many Measurements.
+     * @example
+     * // Create many Measurements
+     * const measurement = await prisma.measurement.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Measurements and only return the `id`
+     * const measurementWithIdOnly = await prisma.measurement.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MeasurementCreateManyAndReturnArgs>(args?: SelectSubset<T, MeasurementCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MeasurementPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Measurement.
+     * @param {MeasurementDeleteArgs} args - Arguments to delete one Measurement.
+     * @example
+     * // Delete one Measurement
+     * const Measurement = await prisma.measurement.delete({
+     *   where: {
+     *     // ... filter to delete one Measurement
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MeasurementDeleteArgs>(args: SelectSubset<T, MeasurementDeleteArgs<ExtArgs>>): Prisma__MeasurementClient<$Result.GetResult<Prisma.$MeasurementPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Measurement.
+     * @param {MeasurementUpdateArgs} args - Arguments to update one Measurement.
+     * @example
+     * // Update one Measurement
+     * const measurement = await prisma.measurement.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MeasurementUpdateArgs>(args: SelectSubset<T, MeasurementUpdateArgs<ExtArgs>>): Prisma__MeasurementClient<$Result.GetResult<Prisma.$MeasurementPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Measurements.
+     * @param {MeasurementDeleteManyArgs} args - Arguments to filter Measurements to delete.
+     * @example
+     * // Delete a few Measurements
+     * const { count } = await prisma.measurement.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MeasurementDeleteManyArgs>(args?: SelectSubset<T, MeasurementDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Measurements.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MeasurementUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Measurements
+     * const measurement = await prisma.measurement.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MeasurementUpdateManyArgs>(args: SelectSubset<T, MeasurementUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Measurements and returns the data updated in the database.
+     * @param {MeasurementUpdateManyAndReturnArgs} args - Arguments to update many Measurements.
+     * @example
+     * // Update many Measurements
+     * const measurement = await prisma.measurement.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Measurements and only return the `id`
+     * const measurementWithIdOnly = await prisma.measurement.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MeasurementUpdateManyAndReturnArgs>(args: SelectSubset<T, MeasurementUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MeasurementPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Measurement.
+     * @param {MeasurementUpsertArgs} args - Arguments to update or create a Measurement.
+     * @example
+     * // Update or create a Measurement
+     * const measurement = await prisma.measurement.upsert({
+     *   create: {
+     *     // ... data to create a Measurement
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Measurement we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MeasurementUpsertArgs>(args: SelectSubset<T, MeasurementUpsertArgs<ExtArgs>>): Prisma__MeasurementClient<$Result.GetResult<Prisma.$MeasurementPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Measurements.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MeasurementCountArgs} args - Arguments to filter Measurements to count.
+     * @example
+     * // Count the number of Measurements
+     * const count = await prisma.measurement.count({
+     *   where: {
+     *     // ... the filter for the Measurements we want to count
+     *   }
+     * })
+    **/
+    count<T extends MeasurementCountArgs>(
+      args?: Subset<T, MeasurementCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MeasurementCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Measurement.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MeasurementAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MeasurementAggregateArgs>(args: Subset<T, MeasurementAggregateArgs>): Prisma.PrismaPromise<GetMeasurementAggregateType<T>>
+
+    /**
+     * Group by Measurement.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MeasurementGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MeasurementGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MeasurementGroupByArgs['orderBy'] }
+        : { orderBy?: MeasurementGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MeasurementGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMeasurementGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Measurement model
+   */
+  readonly fields: MeasurementFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Measurement.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MeasurementClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Measurement model
+   */
+  interface MeasurementFieldRefs {
+    readonly id: FieldRef<"Measurement", 'String'>
+    readonly userId: FieldRef<"Measurement", 'String'>
+    readonly date: FieldRef<"Measurement", 'DateTime'>
+    readonly weight: FieldRef<"Measurement", 'Float'>
+    readonly neck: FieldRef<"Measurement", 'Float'>
+    readonly arm: FieldRef<"Measurement", 'Float'>
+    readonly waist: FieldRef<"Measurement", 'Float'>
+    readonly abdomen: FieldRef<"Measurement", 'Float'>
+    readonly hip: FieldRef<"Measurement", 'Float'>
+    readonly thigh: FieldRef<"Measurement", 'Float'>
+    readonly calfMuscle: FieldRef<"Measurement", 'Float'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Measurement findUnique
+   */
+  export type MeasurementFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Measurement
+     */
+    select?: MeasurementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Measurement
+     */
+    omit?: MeasurementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeasurementInclude<ExtArgs> | null
+    /**
+     * Filter, which Measurement to fetch.
+     */
+    where: MeasurementWhereUniqueInput
+  }
+
+  /**
+   * Measurement findUniqueOrThrow
+   */
+  export type MeasurementFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Measurement
+     */
+    select?: MeasurementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Measurement
+     */
+    omit?: MeasurementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeasurementInclude<ExtArgs> | null
+    /**
+     * Filter, which Measurement to fetch.
+     */
+    where: MeasurementWhereUniqueInput
+  }
+
+  /**
+   * Measurement findFirst
+   */
+  export type MeasurementFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Measurement
+     */
+    select?: MeasurementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Measurement
+     */
+    omit?: MeasurementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeasurementInclude<ExtArgs> | null
+    /**
+     * Filter, which Measurement to fetch.
+     */
+    where?: MeasurementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Measurements to fetch.
+     */
+    orderBy?: MeasurementOrderByWithRelationInput | MeasurementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Measurements.
+     */
+    cursor?: MeasurementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Measurements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Measurements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Measurements.
+     */
+    distinct?: MeasurementScalarFieldEnum | MeasurementScalarFieldEnum[]
+  }
+
+  /**
+   * Measurement findFirstOrThrow
+   */
+  export type MeasurementFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Measurement
+     */
+    select?: MeasurementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Measurement
+     */
+    omit?: MeasurementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeasurementInclude<ExtArgs> | null
+    /**
+     * Filter, which Measurement to fetch.
+     */
+    where?: MeasurementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Measurements to fetch.
+     */
+    orderBy?: MeasurementOrderByWithRelationInput | MeasurementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Measurements.
+     */
+    cursor?: MeasurementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Measurements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Measurements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Measurements.
+     */
+    distinct?: MeasurementScalarFieldEnum | MeasurementScalarFieldEnum[]
+  }
+
+  /**
+   * Measurement findMany
+   */
+  export type MeasurementFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Measurement
+     */
+    select?: MeasurementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Measurement
+     */
+    omit?: MeasurementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeasurementInclude<ExtArgs> | null
+    /**
+     * Filter, which Measurements to fetch.
+     */
+    where?: MeasurementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Measurements to fetch.
+     */
+    orderBy?: MeasurementOrderByWithRelationInput | MeasurementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Measurements.
+     */
+    cursor?: MeasurementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Measurements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Measurements.
+     */
+    skip?: number
+    distinct?: MeasurementScalarFieldEnum | MeasurementScalarFieldEnum[]
+  }
+
+  /**
+   * Measurement create
+   */
+  export type MeasurementCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Measurement
+     */
+    select?: MeasurementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Measurement
+     */
+    omit?: MeasurementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeasurementInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Measurement.
+     */
+    data: XOR<MeasurementCreateInput, MeasurementUncheckedCreateInput>
+  }
+
+  /**
+   * Measurement createMany
+   */
+  export type MeasurementCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Measurements.
+     */
+    data: MeasurementCreateManyInput | MeasurementCreateManyInput[]
+  }
+
+  /**
+   * Measurement createManyAndReturn
+   */
+  export type MeasurementCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Measurement
+     */
+    select?: MeasurementSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Measurement
+     */
+    omit?: MeasurementOmit<ExtArgs> | null
+    /**
+     * The data used to create many Measurements.
+     */
+    data: MeasurementCreateManyInput | MeasurementCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeasurementIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Measurement update
+   */
+  export type MeasurementUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Measurement
+     */
+    select?: MeasurementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Measurement
+     */
+    omit?: MeasurementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeasurementInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Measurement.
+     */
+    data: XOR<MeasurementUpdateInput, MeasurementUncheckedUpdateInput>
+    /**
+     * Choose, which Measurement to update.
+     */
+    where: MeasurementWhereUniqueInput
+  }
+
+  /**
+   * Measurement updateMany
+   */
+  export type MeasurementUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Measurements.
+     */
+    data: XOR<MeasurementUpdateManyMutationInput, MeasurementUncheckedUpdateManyInput>
+    /**
+     * Filter which Measurements to update
+     */
+    where?: MeasurementWhereInput
+    /**
+     * Limit how many Measurements to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Measurement updateManyAndReturn
+   */
+  export type MeasurementUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Measurement
+     */
+    select?: MeasurementSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Measurement
+     */
+    omit?: MeasurementOmit<ExtArgs> | null
+    /**
+     * The data used to update Measurements.
+     */
+    data: XOR<MeasurementUpdateManyMutationInput, MeasurementUncheckedUpdateManyInput>
+    /**
+     * Filter which Measurements to update
+     */
+    where?: MeasurementWhereInput
+    /**
+     * Limit how many Measurements to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeasurementIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Measurement upsert
+   */
+  export type MeasurementUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Measurement
+     */
+    select?: MeasurementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Measurement
+     */
+    omit?: MeasurementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeasurementInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Measurement to update in case it exists.
+     */
+    where: MeasurementWhereUniqueInput
+    /**
+     * In case the Measurement found by the `where` argument doesn't exist, create a new Measurement with this data.
+     */
+    create: XOR<MeasurementCreateInput, MeasurementUncheckedCreateInput>
+    /**
+     * In case the Measurement was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MeasurementUpdateInput, MeasurementUncheckedUpdateInput>
+  }
+
+  /**
+   * Measurement delete
+   */
+  export type MeasurementDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Measurement
+     */
+    select?: MeasurementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Measurement
+     */
+    omit?: MeasurementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeasurementInclude<ExtArgs> | null
+    /**
+     * Filter which Measurement to delete.
+     */
+    where: MeasurementWhereUniqueInput
+  }
+
+  /**
+   * Measurement deleteMany
+   */
+  export type MeasurementDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Measurements to delete
+     */
+    where?: MeasurementWhereInput
+    /**
+     * Limit how many Measurements to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Measurement without action
+   */
+  export type MeasurementDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Measurement
+     */
+    select?: MeasurementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Measurement
+     */
+    omit?: MeasurementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeasurementInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -12363,6 +13687,23 @@ export namespace Prisma {
   };
 
   export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+  export const MeasurementScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    date: 'date',
+    weight: 'weight',
+    neck: 'neck',
+    arm: 'arm',
+    waist: 'waist',
+    abdomen: 'abdomen',
+    hip: 'hip',
+    thigh: 'thigh',
+    calfMuscle: 'calfMuscle'
+  };
+
+  export type MeasurementScalarFieldEnum = (typeof MeasurementScalarFieldEnum)[keyof typeof MeasurementScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -12762,6 +14103,7 @@ export namespace Prisma {
     sex?: EnumSexNullableFilter<"User"> | $Enums.Sex | null
     blocks?: TrainingBlockListRelationFilter
     payments?: PaymentListRelationFilter
+    measurements?: MeasurementListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -12785,6 +14127,7 @@ export namespace Prisma {
     sex?: SortOrderInput | SortOrder
     blocks?: TrainingBlockOrderByRelationAggregateInput
     payments?: PaymentOrderByRelationAggregateInput
+    measurements?: MeasurementOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -12811,6 +14154,7 @@ export namespace Prisma {
     sex?: EnumSexNullableFilter<"User"> | $Enums.Sex | null
     blocks?: TrainingBlockListRelationFilter
     payments?: PaymentListRelationFilter
+    measurements?: MeasurementListRelationFilter
   }, "id" | "username" | "email" | "passwordRefreshToken">
 
   export type UserOrderByWithAggregationInput = {
@@ -13101,6 +14445,93 @@ export namespace Prisma {
     dueDate?: DateTimeWithAggregatesFilter<"Payment"> | Date | string
     amount?: FloatWithAggregatesFilter<"Payment"> | number
     isPayed?: BoolWithAggregatesFilter<"Payment"> | boolean
+  }
+
+  export type MeasurementWhereInput = {
+    AND?: MeasurementWhereInput | MeasurementWhereInput[]
+    OR?: MeasurementWhereInput[]
+    NOT?: MeasurementWhereInput | MeasurementWhereInput[]
+    id?: StringFilter<"Measurement"> | string
+    userId?: StringFilter<"Measurement"> | string
+    date?: DateTimeFilter<"Measurement"> | Date | string
+    weight?: FloatFilter<"Measurement"> | number
+    neck?: FloatFilter<"Measurement"> | number
+    arm?: FloatFilter<"Measurement"> | number
+    waist?: FloatFilter<"Measurement"> | number
+    abdomen?: FloatFilter<"Measurement"> | number
+    hip?: FloatFilter<"Measurement"> | number
+    thigh?: FloatFilter<"Measurement"> | number
+    calfMuscle?: FloatFilter<"Measurement"> | number
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type MeasurementOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    date?: SortOrder
+    weight?: SortOrder
+    neck?: SortOrder
+    arm?: SortOrder
+    waist?: SortOrder
+    abdomen?: SortOrder
+    hip?: SortOrder
+    thigh?: SortOrder
+    calfMuscle?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type MeasurementWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: MeasurementWhereInput | MeasurementWhereInput[]
+    OR?: MeasurementWhereInput[]
+    NOT?: MeasurementWhereInput | MeasurementWhereInput[]
+    userId?: StringFilter<"Measurement"> | string
+    date?: DateTimeFilter<"Measurement"> | Date | string
+    weight?: FloatFilter<"Measurement"> | number
+    neck?: FloatFilter<"Measurement"> | number
+    arm?: FloatFilter<"Measurement"> | number
+    waist?: FloatFilter<"Measurement"> | number
+    abdomen?: FloatFilter<"Measurement"> | number
+    hip?: FloatFilter<"Measurement"> | number
+    thigh?: FloatFilter<"Measurement"> | number
+    calfMuscle?: FloatFilter<"Measurement"> | number
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type MeasurementOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    date?: SortOrder
+    weight?: SortOrder
+    neck?: SortOrder
+    arm?: SortOrder
+    waist?: SortOrder
+    abdomen?: SortOrder
+    hip?: SortOrder
+    thigh?: SortOrder
+    calfMuscle?: SortOrder
+    _count?: MeasurementCountOrderByAggregateInput
+    _avg?: MeasurementAvgOrderByAggregateInput
+    _max?: MeasurementMaxOrderByAggregateInput
+    _min?: MeasurementMinOrderByAggregateInput
+    _sum?: MeasurementSumOrderByAggregateInput
+  }
+
+  export type MeasurementScalarWhereWithAggregatesInput = {
+    AND?: MeasurementScalarWhereWithAggregatesInput | MeasurementScalarWhereWithAggregatesInput[]
+    OR?: MeasurementScalarWhereWithAggregatesInput[]
+    NOT?: MeasurementScalarWhereWithAggregatesInput | MeasurementScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Measurement"> | string
+    userId?: StringWithAggregatesFilter<"Measurement"> | string
+    date?: DateTimeWithAggregatesFilter<"Measurement"> | Date | string
+    weight?: FloatWithAggregatesFilter<"Measurement"> | number
+    neck?: FloatWithAggregatesFilter<"Measurement"> | number
+    arm?: FloatWithAggregatesFilter<"Measurement"> | number
+    waist?: FloatWithAggregatesFilter<"Measurement"> | number
+    abdomen?: FloatWithAggregatesFilter<"Measurement"> | number
+    hip?: FloatWithAggregatesFilter<"Measurement"> | number
+    thigh?: FloatWithAggregatesFilter<"Measurement"> | number
+    calfMuscle?: FloatWithAggregatesFilter<"Measurement"> | number
   }
 
   export type TrainingBlockCreateInput = {
@@ -13417,6 +14848,7 @@ export namespace Prisma {
     sex?: $Enums.Sex | null
     blocks?: TrainingBlockCreateNestedManyWithoutUserInput
     payments?: PaymentCreateNestedManyWithoutUserInput
+    measurements?: MeasurementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -13440,6 +14872,7 @@ export namespace Prisma {
     sex?: $Enums.Sex | null
     blocks?: TrainingBlockUncheckedCreateNestedManyWithoutUserInput
     payments?: PaymentUncheckedCreateNestedManyWithoutUserInput
+    measurements?: MeasurementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -13463,6 +14896,7 @@ export namespace Prisma {
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     blocks?: TrainingBlockUpdateManyWithoutUserNestedInput
     payments?: PaymentUpdateManyWithoutUserNestedInput
+    measurements?: MeasurementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -13486,6 +14920,7 @@ export namespace Prisma {
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     blocks?: TrainingBlockUncheckedUpdateManyWithoutUserNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutUserNestedInput
+    measurements?: MeasurementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -13800,6 +15235,103 @@ export namespace Prisma {
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: FloatFieldUpdateOperationsInput | number
     isPayed?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type MeasurementCreateInput = {
+    id?: string
+    date: Date | string
+    weight: number
+    neck: number
+    arm: number
+    waist: number
+    abdomen: number
+    hip: number
+    thigh: number
+    calfMuscle: number
+    user: UserCreateNestedOneWithoutMeasurementsInput
+  }
+
+  export type MeasurementUncheckedCreateInput = {
+    id?: string
+    userId: string
+    date: Date | string
+    weight: number
+    neck: number
+    arm: number
+    waist: number
+    abdomen: number
+    hip: number
+    thigh: number
+    calfMuscle: number
+  }
+
+  export type MeasurementUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    weight?: FloatFieldUpdateOperationsInput | number
+    neck?: FloatFieldUpdateOperationsInput | number
+    arm?: FloatFieldUpdateOperationsInput | number
+    waist?: FloatFieldUpdateOperationsInput | number
+    abdomen?: FloatFieldUpdateOperationsInput | number
+    hip?: FloatFieldUpdateOperationsInput | number
+    thigh?: FloatFieldUpdateOperationsInput | number
+    calfMuscle?: FloatFieldUpdateOperationsInput | number
+    user?: UserUpdateOneRequiredWithoutMeasurementsNestedInput
+  }
+
+  export type MeasurementUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    weight?: FloatFieldUpdateOperationsInput | number
+    neck?: FloatFieldUpdateOperationsInput | number
+    arm?: FloatFieldUpdateOperationsInput | number
+    waist?: FloatFieldUpdateOperationsInput | number
+    abdomen?: FloatFieldUpdateOperationsInput | number
+    hip?: FloatFieldUpdateOperationsInput | number
+    thigh?: FloatFieldUpdateOperationsInput | number
+    calfMuscle?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type MeasurementCreateManyInput = {
+    id?: string
+    userId: string
+    date: Date | string
+    weight: number
+    neck: number
+    arm: number
+    waist: number
+    abdomen: number
+    hip: number
+    thigh: number
+    calfMuscle: number
+  }
+
+  export type MeasurementUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    weight?: FloatFieldUpdateOperationsInput | number
+    neck?: FloatFieldUpdateOperationsInput | number
+    arm?: FloatFieldUpdateOperationsInput | number
+    waist?: FloatFieldUpdateOperationsInput | number
+    abdomen?: FloatFieldUpdateOperationsInput | number
+    hip?: FloatFieldUpdateOperationsInput | number
+    thigh?: FloatFieldUpdateOperationsInput | number
+    calfMuscle?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type MeasurementUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    weight?: FloatFieldUpdateOperationsInput | number
+    neck?: FloatFieldUpdateOperationsInput | number
+    arm?: FloatFieldUpdateOperationsInput | number
+    waist?: FloatFieldUpdateOperationsInput | number
+    abdomen?: FloatFieldUpdateOperationsInput | number
+    hip?: FloatFieldUpdateOperationsInput | number
+    thigh?: FloatFieldUpdateOperationsInput | number
+    calfMuscle?: FloatFieldUpdateOperationsInput | number
   }
 
   export type BoolFilter<$PrismaModel = never> = {
@@ -14230,11 +15762,21 @@ export namespace Prisma {
     none?: PaymentWhereInput
   }
 
+  export type MeasurementListRelationFilter = {
+    every?: MeasurementWhereInput
+    some?: MeasurementWhereInput
+    none?: MeasurementWhereInput
+  }
+
   export type TrainingBlockOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type PaymentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MeasurementOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -14562,6 +16104,70 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type MeasurementCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    date?: SortOrder
+    weight?: SortOrder
+    neck?: SortOrder
+    arm?: SortOrder
+    waist?: SortOrder
+    abdomen?: SortOrder
+    hip?: SortOrder
+    thigh?: SortOrder
+    calfMuscle?: SortOrder
+  }
+
+  export type MeasurementAvgOrderByAggregateInput = {
+    weight?: SortOrder
+    neck?: SortOrder
+    arm?: SortOrder
+    waist?: SortOrder
+    abdomen?: SortOrder
+    hip?: SortOrder
+    thigh?: SortOrder
+    calfMuscle?: SortOrder
+  }
+
+  export type MeasurementMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    date?: SortOrder
+    weight?: SortOrder
+    neck?: SortOrder
+    arm?: SortOrder
+    waist?: SortOrder
+    abdomen?: SortOrder
+    hip?: SortOrder
+    thigh?: SortOrder
+    calfMuscle?: SortOrder
+  }
+
+  export type MeasurementMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    date?: SortOrder
+    weight?: SortOrder
+    neck?: SortOrder
+    arm?: SortOrder
+    waist?: SortOrder
+    abdomen?: SortOrder
+    hip?: SortOrder
+    thigh?: SortOrder
+    calfMuscle?: SortOrder
+  }
+
+  export type MeasurementSumOrderByAggregateInput = {
+    weight?: SortOrder
+    neck?: SortOrder
+    arm?: SortOrder
+    waist?: SortOrder
+    abdomen?: SortOrder
+    hip?: SortOrder
+    thigh?: SortOrder
+    calfMuscle?: SortOrder
   }
 
   export type TrainingWeekCreateNestedManyWithoutBlockInput = {
@@ -14918,6 +16524,13 @@ export namespace Prisma {
     connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
   }
 
+  export type MeasurementCreateNestedManyWithoutUserInput = {
+    create?: XOR<MeasurementCreateWithoutUserInput, MeasurementUncheckedCreateWithoutUserInput> | MeasurementCreateWithoutUserInput[] | MeasurementUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MeasurementCreateOrConnectWithoutUserInput | MeasurementCreateOrConnectWithoutUserInput[]
+    createMany?: MeasurementCreateManyUserInputEnvelope
+    connect?: MeasurementWhereUniqueInput | MeasurementWhereUniqueInput[]
+  }
+
   export type TrainingBlockUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<TrainingBlockCreateWithoutUserInput, TrainingBlockUncheckedCreateWithoutUserInput> | TrainingBlockCreateWithoutUserInput[] | TrainingBlockUncheckedCreateWithoutUserInput[]
     connectOrCreate?: TrainingBlockCreateOrConnectWithoutUserInput | TrainingBlockCreateOrConnectWithoutUserInput[]
@@ -14930,6 +16543,13 @@ export namespace Prisma {
     connectOrCreate?: PaymentCreateOrConnectWithoutUserInput | PaymentCreateOrConnectWithoutUserInput[]
     createMany?: PaymentCreateManyUserInputEnvelope
     connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+  }
+
+  export type MeasurementUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<MeasurementCreateWithoutUserInput, MeasurementUncheckedCreateWithoutUserInput> | MeasurementCreateWithoutUserInput[] | MeasurementUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MeasurementCreateOrConnectWithoutUserInput | MeasurementCreateOrConnectWithoutUserInput[]
+    createMany?: MeasurementCreateManyUserInputEnvelope
+    connect?: MeasurementWhereUniqueInput | MeasurementWhereUniqueInput[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -14984,6 +16604,20 @@ export namespace Prisma {
     deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
   }
 
+  export type MeasurementUpdateManyWithoutUserNestedInput = {
+    create?: XOR<MeasurementCreateWithoutUserInput, MeasurementUncheckedCreateWithoutUserInput> | MeasurementCreateWithoutUserInput[] | MeasurementUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MeasurementCreateOrConnectWithoutUserInput | MeasurementCreateOrConnectWithoutUserInput[]
+    upsert?: MeasurementUpsertWithWhereUniqueWithoutUserInput | MeasurementUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: MeasurementCreateManyUserInputEnvelope
+    set?: MeasurementWhereUniqueInput | MeasurementWhereUniqueInput[]
+    disconnect?: MeasurementWhereUniqueInput | MeasurementWhereUniqueInput[]
+    delete?: MeasurementWhereUniqueInput | MeasurementWhereUniqueInput[]
+    connect?: MeasurementWhereUniqueInput | MeasurementWhereUniqueInput[]
+    update?: MeasurementUpdateWithWhereUniqueWithoutUserInput | MeasurementUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: MeasurementUpdateManyWithWhereWithoutUserInput | MeasurementUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: MeasurementScalarWhereInput | MeasurementScalarWhereInput[]
+  }
+
   export type TrainingBlockUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<TrainingBlockCreateWithoutUserInput, TrainingBlockUncheckedCreateWithoutUserInput> | TrainingBlockCreateWithoutUserInput[] | TrainingBlockUncheckedCreateWithoutUserInput[]
     connectOrCreate?: TrainingBlockCreateOrConnectWithoutUserInput | TrainingBlockCreateOrConnectWithoutUserInput[]
@@ -15010,6 +16644,20 @@ export namespace Prisma {
     update?: PaymentUpdateWithWhereUniqueWithoutUserInput | PaymentUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: PaymentUpdateManyWithWhereWithoutUserInput | PaymentUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
+  }
+
+  export type MeasurementUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<MeasurementCreateWithoutUserInput, MeasurementUncheckedCreateWithoutUserInput> | MeasurementCreateWithoutUserInput[] | MeasurementUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MeasurementCreateOrConnectWithoutUserInput | MeasurementCreateOrConnectWithoutUserInput[]
+    upsert?: MeasurementUpsertWithWhereUniqueWithoutUserInput | MeasurementUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: MeasurementCreateManyUserInputEnvelope
+    set?: MeasurementWhereUniqueInput | MeasurementWhereUniqueInput[]
+    disconnect?: MeasurementWhereUniqueInput | MeasurementWhereUniqueInput[]
+    delete?: MeasurementWhereUniqueInput | MeasurementWhereUniqueInput[]
+    connect?: MeasurementWhereUniqueInput | MeasurementWhereUniqueInput[]
+    update?: MeasurementUpdateWithWhereUniqueWithoutUserInput | MeasurementUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: MeasurementUpdateManyWithWhereWithoutUserInput | MeasurementUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: MeasurementScalarWhereInput | MeasurementScalarWhereInput[]
   }
 
   export type TrainingDayCreateNestedOneWithoutDayExercisesInput = {
@@ -15130,6 +16778,20 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutPaymentsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPaymentsInput, UserUpdateWithoutPaymentsInput>, UserUncheckedUpdateWithoutPaymentsInput>
+  }
+
+  export type UserCreateNestedOneWithoutMeasurementsInput = {
+    create?: XOR<UserCreateWithoutMeasurementsInput, UserUncheckedCreateWithoutMeasurementsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMeasurementsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutMeasurementsNestedInput = {
+    create?: XOR<UserCreateWithoutMeasurementsInput, UserUncheckedCreateWithoutMeasurementsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMeasurementsInput
+    upsert?: UserUpsertWithoutMeasurementsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMeasurementsInput, UserUpdateWithoutMeasurementsInput>, UserUncheckedUpdateWithoutMeasurementsInput>
   }
 
   export type NestedBoolFilter<$PrismaModel = never> = {
@@ -15463,6 +17125,7 @@ export namespace Prisma {
     lastKOLogin?: Date | string | null
     sex?: $Enums.Sex | null
     payments?: PaymentCreateNestedManyWithoutUserInput
+    measurements?: MeasurementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutBlocksInput = {
@@ -15485,6 +17148,7 @@ export namespace Prisma {
     lastKOLogin?: Date | string | null
     sex?: $Enums.Sex | null
     payments?: PaymentUncheckedCreateNestedManyWithoutUserInput
+    measurements?: MeasurementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutBlocksInput = {
@@ -15550,6 +17214,7 @@ export namespace Prisma {
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     payments?: PaymentUpdateManyWithoutUserNestedInput
+    measurements?: MeasurementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBlocksInput = {
@@ -15572,6 +17237,7 @@ export namespace Prisma {
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     payments?: PaymentUncheckedUpdateManyWithoutUserNestedInput
+    measurements?: MeasurementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TrainingBlockCreateWithoutWeeksInput = {
@@ -16054,6 +17720,41 @@ export namespace Prisma {
     data: PaymentCreateManyUserInput | PaymentCreateManyUserInput[]
   }
 
+  export type MeasurementCreateWithoutUserInput = {
+    id?: string
+    date: Date | string
+    weight: number
+    neck: number
+    arm: number
+    waist: number
+    abdomen: number
+    hip: number
+    thigh: number
+    calfMuscle: number
+  }
+
+  export type MeasurementUncheckedCreateWithoutUserInput = {
+    id?: string
+    date: Date | string
+    weight: number
+    neck: number
+    arm: number
+    waist: number
+    abdomen: number
+    hip: number
+    thigh: number
+    calfMuscle: number
+  }
+
+  export type MeasurementCreateOrConnectWithoutUserInput = {
+    where: MeasurementWhereUniqueInput
+    create: XOR<MeasurementCreateWithoutUserInput, MeasurementUncheckedCreateWithoutUserInput>
+  }
+
+  export type MeasurementCreateManyUserInputEnvelope = {
+    data: MeasurementCreateManyUserInput | MeasurementCreateManyUserInput[]
+  }
+
   export type TrainingBlockUpsertWithWhereUniqueWithoutUserInput = {
     where: TrainingBlockWhereUniqueInput
     update: XOR<TrainingBlockUpdateWithoutUserInput, TrainingBlockUncheckedUpdateWithoutUserInput>
@@ -16107,6 +17808,39 @@ export namespace Prisma {
     dueDate?: DateTimeFilter<"Payment"> | Date | string
     amount?: FloatFilter<"Payment"> | number
     isPayed?: BoolFilter<"Payment"> | boolean
+  }
+
+  export type MeasurementUpsertWithWhereUniqueWithoutUserInput = {
+    where: MeasurementWhereUniqueInput
+    update: XOR<MeasurementUpdateWithoutUserInput, MeasurementUncheckedUpdateWithoutUserInput>
+    create: XOR<MeasurementCreateWithoutUserInput, MeasurementUncheckedCreateWithoutUserInput>
+  }
+
+  export type MeasurementUpdateWithWhereUniqueWithoutUserInput = {
+    where: MeasurementWhereUniqueInput
+    data: XOR<MeasurementUpdateWithoutUserInput, MeasurementUncheckedUpdateWithoutUserInput>
+  }
+
+  export type MeasurementUpdateManyWithWhereWithoutUserInput = {
+    where: MeasurementScalarWhereInput
+    data: XOR<MeasurementUpdateManyMutationInput, MeasurementUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type MeasurementScalarWhereInput = {
+    AND?: MeasurementScalarWhereInput | MeasurementScalarWhereInput[]
+    OR?: MeasurementScalarWhereInput[]
+    NOT?: MeasurementScalarWhereInput | MeasurementScalarWhereInput[]
+    id?: StringFilter<"Measurement"> | string
+    userId?: StringFilter<"Measurement"> | string
+    date?: DateTimeFilter<"Measurement"> | Date | string
+    weight?: FloatFilter<"Measurement"> | number
+    neck?: FloatFilter<"Measurement"> | number
+    arm?: FloatFilter<"Measurement"> | number
+    waist?: FloatFilter<"Measurement"> | number
+    abdomen?: FloatFilter<"Measurement"> | number
+    hip?: FloatFilter<"Measurement"> | number
+    thigh?: FloatFilter<"Measurement"> | number
+    calfMuscle?: FloatFilter<"Measurement"> | number
   }
 
   export type TrainingDayCreateWithoutDayExercisesInput = {
@@ -16396,6 +18130,7 @@ export namespace Prisma {
     lastKOLogin?: Date | string | null
     sex?: $Enums.Sex | null
     blocks?: TrainingBlockCreateNestedManyWithoutUserInput
+    measurements?: MeasurementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPaymentsInput = {
@@ -16418,6 +18153,7 @@ export namespace Prisma {
     lastKOLogin?: Date | string | null
     sex?: $Enums.Sex | null
     blocks?: TrainingBlockUncheckedCreateNestedManyWithoutUserInput
+    measurements?: MeasurementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPaymentsInput = {
@@ -16456,6 +18192,7 @@ export namespace Prisma {
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     blocks?: TrainingBlockUpdateManyWithoutUserNestedInput
+    measurements?: MeasurementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPaymentsInput = {
@@ -16478,6 +18215,115 @@ export namespace Prisma {
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     blocks?: TrainingBlockUncheckedUpdateManyWithoutUserNestedInput
+    measurements?: MeasurementUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutMeasurementsInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    username: string
+    email: string
+    password?: string | null
+    passwordRefreshToken?: string | null
+    isocode?: string | null
+    lastVisitedWeek?: string | null
+    registrationDate?: Date | string
+    hidingDate?: Date | string | null
+    subscriptionAmount?: number | null
+    subscriptionFrequency?: string | null
+    role?: $Enums.Role
+    hidden?: boolean
+    lastOKLogin?: Date | string | null
+    lastKOLogin?: Date | string | null
+    sex?: $Enums.Sex | null
+    blocks?: TrainingBlockCreateNestedManyWithoutUserInput
+    payments?: PaymentCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutMeasurementsInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    username: string
+    email: string
+    password?: string | null
+    passwordRefreshToken?: string | null
+    isocode?: string | null
+    lastVisitedWeek?: string | null
+    registrationDate?: Date | string
+    hidingDate?: Date | string | null
+    subscriptionAmount?: number | null
+    subscriptionFrequency?: string | null
+    role?: $Enums.Role
+    hidden?: boolean
+    lastOKLogin?: Date | string | null
+    lastKOLogin?: Date | string | null
+    sex?: $Enums.Sex | null
+    blocks?: TrainingBlockUncheckedCreateNestedManyWithoutUserInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutMeasurementsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutMeasurementsInput, UserUncheckedCreateWithoutMeasurementsInput>
+  }
+
+  export type UserUpsertWithoutMeasurementsInput = {
+    update: XOR<UserUpdateWithoutMeasurementsInput, UserUncheckedUpdateWithoutMeasurementsInput>
+    create: XOR<UserCreateWithoutMeasurementsInput, UserUncheckedCreateWithoutMeasurementsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutMeasurementsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutMeasurementsInput, UserUncheckedUpdateWithoutMeasurementsInput>
+  }
+
+  export type UserUpdateWithoutMeasurementsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    isocode?: NullableStringFieldUpdateOperationsInput | string | null
+    lastVisitedWeek?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    hidingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    subscriptionFrequency?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    hidden?: BoolFieldUpdateOperationsInput | boolean
+    lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
+    blocks?: TrainingBlockUpdateManyWithoutUserNestedInput
+    payments?: PaymentUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutMeasurementsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    isocode?: NullableStringFieldUpdateOperationsInput | string | null
+    lastVisitedWeek?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    hidingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    subscriptionFrequency?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    hidden?: BoolFieldUpdateOperationsInput | boolean
+    lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
+    blocks?: TrainingBlockUncheckedUpdateManyWithoutUserNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TrainingWeekCreateManyBlockInput = {
@@ -16735,6 +18581,19 @@ export namespace Prisma {
     isPayed?: boolean
   }
 
+  export type MeasurementCreateManyUserInput = {
+    id?: string
+    date: Date | string
+    weight: number
+    neck: number
+    arm: number
+    waist: number
+    abdomen: number
+    hip: number
+    thigh: number
+    calfMuscle: number
+  }
+
   export type TrainingBlockUpdateWithoutUserInput = {
     isVisible?: BoolFieldUpdateOperationsInput | boolean
     id?: StringFieldUpdateOperationsInput | string
@@ -16780,6 +18639,45 @@ export namespace Prisma {
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: FloatFieldUpdateOperationsInput | number
     isPayed?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type MeasurementUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    weight?: FloatFieldUpdateOperationsInput | number
+    neck?: FloatFieldUpdateOperationsInput | number
+    arm?: FloatFieldUpdateOperationsInput | number
+    waist?: FloatFieldUpdateOperationsInput | number
+    abdomen?: FloatFieldUpdateOperationsInput | number
+    hip?: FloatFieldUpdateOperationsInput | number
+    thigh?: FloatFieldUpdateOperationsInput | number
+    calfMuscle?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type MeasurementUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    weight?: FloatFieldUpdateOperationsInput | number
+    neck?: FloatFieldUpdateOperationsInput | number
+    arm?: FloatFieldUpdateOperationsInput | number
+    waist?: FloatFieldUpdateOperationsInput | number
+    abdomen?: FloatFieldUpdateOperationsInput | number
+    hip?: FloatFieldUpdateOperationsInput | number
+    thigh?: FloatFieldUpdateOperationsInput | number
+    calfMuscle?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type MeasurementUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    weight?: FloatFieldUpdateOperationsInput | number
+    neck?: FloatFieldUpdateOperationsInput | number
+    arm?: FloatFieldUpdateOperationsInput | number
+    waist?: FloatFieldUpdateOperationsInput | number
+    abdomen?: FloatFieldUpdateOperationsInput | number
+    hip?: FloatFieldUpdateOperationsInput | number
+    thigh?: FloatFieldUpdateOperationsInput | number
+    calfMuscle?: FloatFieldUpdateOperationsInput | number
   }
 
   export type DayExerciseSeriesCreateManyDayExerciseInput = {

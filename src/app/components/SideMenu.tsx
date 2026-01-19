@@ -68,7 +68,7 @@ export default function SideMenu({
         {/* Display logged-in user info */}
         <Box>
           <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: "16px" }}>
-            {[user?.firstName, user?.lastName].filter(Boolean).join(" ") || "Usuariorr"}
+            {[user?.firstName, user?.lastName].filter(Boolean).join(" ")}
           </Typography>
           <Typography variant="caption" sx={{ color: "text.secondary" }}>
             {user?.email || ""}
