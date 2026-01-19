@@ -176,18 +176,20 @@ export default function TrainingPanel({
       .then((data) => {
         setBlockOpts(data.blocks || []);
         // Enhanced selection logic:
-        // 1. If user has a selectedWeek (from weekId or lastVisitedWeek), use that.
-        // 2. If no selection, pick the first week of the last block.
+        // If user has no lastVisitedWeek and no explicit weekId, pick the first week of the last block.
+        // Otherwise, use backend's selectedWeek as before.
         let blockToSet = data.selectedBlock || null;
-        let weekToSet = data.selectedWeek || null;
+        let weekToSet = null;
 
-        if (!weekToSet && Array.isArray(data.blocks) && data.blocks.length > 0) {
+        if ((!userInfo?.lastVisitedWeek && !weekId) && Array.isArray(data.blocks) && data.blocks.length > 0) {
           const lastBlock = data.blocks[data.blocks.length - 1];
           if (lastBlock && Array.isArray(lastBlock.weeks) && lastBlock.weeks.length > 0) {
             blockToSet = lastBlock;
             weekToSet = lastBlock.weeks[0];
             setWeekId(String(weekToSet.id));
           }
+        } else {
+          weekToSet = data.selectedWeek || null;
         }
 
         if (typeof setSelectedBlock === "function") setSelectedBlock(blockToSet);
@@ -240,14 +242,13 @@ export default function TrainingPanel({
   };
 
   const handleLocalChange = (
-    day: string,
-    idx: number,
+    id: string,
     field: "effectiveReps" | "effectiveWeight" | "effectiveRir",
     value: string
   ) => {
-    setExerciseDefs(prevDefs => {
-      const updated = prevDefs.map((def, i) => {
-        if (def.day === day && i === idx) {
+    setExerciseDefs(prevDefs =>
+      prevDefs.map(def => {
+        if (def.id === id) {
           let newVal: number | null = null;
           if (field === "effectiveReps" || field === "effectiveRir") {
             newVal = value === "" ? null : Math.max(0, Math.floor(Number(value)));
@@ -257,18 +258,17 @@ export default function TrainingPanel({
           return { ...def, [field]: newVal };
         }
         return def;
-      });
-      return updated;
-    });
+      })
+    );
   };
 
   const handleBlockChange = (blockId: string) => {
     const block = blockOpts.find(b => String(b.id) === String(blockId));
     if (block && block.weeks && block.weeks.length > 0) {
       setSelectedBlock(block);
-      const lastWeek = block.weeks[block.weeks.length - 1];
-      setSelectedWeek(lastWeek);
-      setWeekId(String(lastWeek.id));
+      const firstWeek = block.weeks[0];
+      setSelectedWeek(firstWeek);
+      setWeekId(String(firstWeek.id));
       setSelectedDay?.(null);
       setFocusedExerciseKey(null);
     }
@@ -656,7 +656,7 @@ export default function TrainingPanel({
                                             pattern: "[0-9]*[.,]?[0-9]*"
                                           }}
                                           value={def.effectiveWeight ?? ""}
-                                          onChange={e => handleLocalChange(dayName, defs.indexOf(def), "effectiveWeight", e.target.value)}
+                                          onChange={e => handleLocalChange(def.id, "effectiveWeight", e.target.value)}
                                           onFocus={() => {
                                             setSelectedDay?.(dayIdx);
                                             setFocusedExerciseKey(exKey);
@@ -682,7 +682,7 @@ export default function TrainingPanel({
                                           type="text"
                                           inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                                           value={def.effectiveReps ?? ""}
-                                          onChange={e => handleLocalChange(dayName, defs.indexOf(def), "effectiveReps", e.target.value)}
+                                          onChange={e => handleLocalChange(def.id, "effectiveReps", e.target.value)}
                                           onFocus={() => {
                                             setSelectedDay?.(dayIdx);
                                             setFocusedExerciseKey(exKey);
@@ -713,7 +713,7 @@ export default function TrainingPanel({
                                           type="text"
                                           inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                                           value={def.effectiveRir ?? ""}
-                                          onChange={e => handleLocalChange(dayName, defs.indexOf(def), "effectiveRir", e.target.value)}
+                                          onChange={e => handleLocalChange(def.id, "effectiveRir", e.target.value)}
                                           onFocus={() => {
                                             setSelectedDay?.(dayIdx);
                                             setFocusedExerciseKey(exKey);
