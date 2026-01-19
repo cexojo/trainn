@@ -174,8 +174,23 @@ export default function TrainingPanel({
       })
       .then((data) => {
         setBlockOpts(data.blocks || []);
-        if (typeof setSelectedBlock === "function") setSelectedBlock(data.selectedBlock || null);
-        if (typeof setSelectedWeek === "function") setSelectedWeek(data.selectedWeek || null);
+        // Enhanced selection logic:
+        // 1. If user has a selectedWeek (from weekId or lastVisitedWeek), use that.
+        // 2. If no selection, pick the first week of the last block.
+        let blockToSet = data.selectedBlock || null;
+        let weekToSet = data.selectedWeek || null;
+
+        if (!weekToSet && Array.isArray(data.blocks) && data.blocks.length > 0) {
+          const lastBlock = data.blocks[data.blocks.length - 1];
+          if (lastBlock && Array.isArray(lastBlock.weeks) && lastBlock.weeks.length > 0) {
+            blockToSet = lastBlock;
+            weekToSet = lastBlock.weeks[0];
+            setWeekId(String(weekToSet.id));
+          }
+        }
+
+        if (typeof setSelectedBlock === "function") setSelectedBlock(blockToSet);
+        if (typeof setSelectedWeek === "function") setSelectedWeek(weekToSet);
         setExerciseDefs(data.exerciseDefs || []);
         if (data.trainingDays && Array.isArray(data.trainingDays)) {
           const sorted = [...data.trainingDays]
@@ -627,8 +642,13 @@ export default function TrainingPanel({
                                       )}
                                       <TableCell align="center" sx={{ verticalAlign: "top" }}>
                                         <TextField
-                                          type="text"
-                                          inputProps={{ inputMode: "decimal", pattern: "[0-9]*" }}
+                                          type="number"
+                                          inputProps={{
+                                            inputMode: "decimal",
+                                            step: "0.1",
+                                            min: 0,
+                                            pattern: "[0-9]*[.,]?[0-9]*"
+                                          }}
                                           value={def.effectiveWeight ?? ""}
                                           onChange={e => handleLocalChange(dayName, defs.indexOf(def), "effectiveWeight", e.target.value)}
                                           onFocus={() => {
@@ -646,9 +666,9 @@ export default function TrainingPanel({
                                           }
                                           variant="standard"
                                           size="small"
-                                        sx={{
-                                          "& .MuiInputBase-input::placeholder": { fontSize: "0.75em", opacity: 1 }
-                                        }}
+                                          sx={{
+                                            "& .MuiInputBase-input::placeholder": { fontSize: "0.75em", opacity: 1 }
+                                          }}
                                         />
                                       </TableCell>
                                       <TableCell align="center" sx={{ verticalAlign: "top" }}>
