@@ -61,6 +61,23 @@ model Exercise {
   recommendedMaxReps Int?
   measurementType MeasurementType @default(REPS)
   dayExercises DayExercise[]
+  factorQuadriceps      Float?
+  factorHamstring       Float?
+  factorGlute           Float?
+  factorAdductor        Float?
+  factorCalf            Float?
+  factorForearm         Float?
+  factorBiceps          Float?
+  factorTriceps         Float?
+  factorLateralDelt     Float?
+  factorPosteriorDelt   Float?
+  factorAnteriorDelt    Float?
+  factorPectoral        Float?
+  factorClavicularPec   Float?
+  factorUpperBack       Float?
+  factorLat             Float?
+  factorLowerBack       Float?
+  factorAbdomen         Float?
 }
 
 enum Role {
@@ -146,12 +163,12 @@ model Measurement {
   user       User     @relation(fields: [userId], references: [id])
   userId     String
   date       DateTime
-  weight     Float
-  neck       Float
-  arm        Float
-  waist      Float
-  abdomen    Float
-  hip        Float
-  thigh      Float
-  calfMuscle Float
+  weight     Float?
+  neck       Float?
+  arm        Float?
+  waist      Float?
+  abdomen    Float?
+  hip        Float?
+  thigh      Float?
+  calfMuscle Float?
 }

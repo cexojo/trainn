@@ -153,7 +153,24 @@ exports.Prisma.ExerciseScalarFieldEnum = {
   exerciseGroupId: 'exerciseGroupId',
   recommendedMinReps: 'recommendedMinReps',
   recommendedMaxReps: 'recommendedMaxReps',
-  measurementType: 'measurementType'
+  measurementType: 'measurementType',
+  factorQuadriceps: 'factorQuadriceps',
+  factorHamstring: 'factorHamstring',
+  factorGlute: 'factorGlute',
+  factorAdductor: 'factorAdductor',
+  factorCalf: 'factorCalf',
+  factorForearm: 'factorForearm',
+  factorBiceps: 'factorBiceps',
+  factorTriceps: 'factorTriceps',
+  factorLateralDelt: 'factorLateralDelt',
+  factorPosteriorDelt: 'factorPosteriorDelt',
+  factorAnteriorDelt: 'factorAnteriorDelt',
+  factorPectoral: 'factorPectoral',
+  factorClavicularPec: 'factorClavicularPec',
+  factorUpperBack: 'factorUpperBack',
+  factorLat: 'factorLat',
+  factorLowerBack: 'factorLowerBack',
+  factorAbdomen: 'factorAbdomen'
 };
 
 exports.Prisma.UserScalarFieldEnum = {

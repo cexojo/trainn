@@ -17,17 +17,7 @@ export async function POST(request: NextRequest) {
       calfMuscle,
     } = await request.json();
 
-    if (
-      !date ||
-      weight === undefined ||
-      neck === undefined ||
-      arm === undefined ||
-      waist === undefined ||
-      abdomen === undefined ||
-      hip === undefined ||
-      thigh === undefined ||
-      calfMuscle === undefined
-    ) {
+    if (!date) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
@@ -36,19 +26,21 @@ export async function POST(request: NextRequest) {
     if (!tokenPayload?.id) {
       return NextResponse.json({ error: 'No user id (not logged in)' }, { status: 401 });
     }
+    const data = {
+      userId: tokenPayload.id,
+      date: new Date(date),
+      ...(weight !== undefined && { weight }),
+      ...(neck !== undefined && { neck }),
+      ...(arm !== undefined && { arm }),
+      ...(waist !== undefined && { waist }),
+      ...(abdomen !== undefined && { abdomen }),
+      ...(hip !== undefined && { hip }),
+      ...(thigh !== undefined && { thigh }),
+      ...(calfMuscle !== undefined && { calfMuscle }),
+    };
+
     const measurement = await prisma.measurement.create({
-      data: {
-        userId: tokenPayload.id,
-        date: new Date(date),
-        weight,
-        neck,
-        arm,
-        waist,
-        abdomen,
-        hip,
-        thigh,
-        calfMuscle,
-      },
+      data: data as Parameters<typeof prisma.measurement.create>[0]['data'],
     });
 
     return NextResponse.json(measurement, { status: 201 });

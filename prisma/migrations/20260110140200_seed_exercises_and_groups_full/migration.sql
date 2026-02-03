@@ -17,6 +17,12 @@ INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('31efbc0b-5ae
 INSERT OR IGNORE INTO exerciseGroup (id, name) VALUES ('31cfdeff-d063-4b4e-98ca-9a759014d4a8', 'Aislamiento de isquio');
 INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('c8444b79-4ec2-44ad-8453-b34d397aaf91', 'Leg curl en máquina de pie', '31cfdeff-d063-4b4e-98ca-9a759014d4a8');
 INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('7da0ddcf-f2c7-4c08-9b60-31774825c616', 'Slide Leg Curl', '31cfdeff-d063-4b4e-98ca-9a759014d4a8');
+INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('55d0d3c5-60fc-464e-a8d2-40e4d8e8ae5d', 'Glute Ham Raises énfasis isquiosurales', '31cfdeff-d063-4b4e-98ca-9a759014d4a8');
+INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('2f0b9092-fc07-422a-86fd-f8e9e92909f0', 'Hiperextensiones 45º foco isquiosurales', '31cfdeff-d063-4b4e-98ca-9a759014d4a8');
+INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('89090f22-bb8f-49f4-b96d-ac19f37e9ad9', 'Leg curl en polea de pie', '31cfdeff-d063-4b4e-98ca-9a759014d4a8');
+INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('a1f72894-a07b-4c1e-a5ee-ab312f5f67df', 'Leg curl sentado', '31cfdeff-d063-4b4e-98ca-9a759014d4a8');
+INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('af8dd6a3-6660-4ad5-bde8-0741d4c6c2b1', 'Leg Curl tumbado', '31cfdeff-d063-4b4e-98ca-9a759014d4a8');
+INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('02166cd0-bbb3-426e-9095-b878bbf4d9ee', 'Leg curl tumbado con mancuerna', '31cfdeff-d063-4b4e-98ca-9a759014d4a8');
 INSERT OR IGNORE INTO exerciseGroup (id, name) VALUES ('ee681fc3-ada8-45bb-8cea-14569d722f81', 'Aislamiento delt anterior');
 INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('99ec4fc0-8741-4956-a5c1-a736591d7031', 'Elevaciones frontales con barra de pie', 'ee681fc3-ada8-45bb-8cea-14569d722f81');
 INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('54413018-6699-46c3-a0a2-6f9de1d9c215', 'Elevaciones frontales desde polea baja en banco inclinado', 'ee681fc3-ada8-45bb-8cea-14569d722f81');
@@ -31,13 +37,6 @@ INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('30cd04c1-6b1
 INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('cf6d8394-998d-43be-8c91-81601dc0c567', 'Pullover polea alta unilateral', '186ff8b7-b4fc-4c79-99d0-24f7e872a783');
 INSERT OR IGNORE INTO exerciseGroup (id, name) VALUES ('a312e6e2-aae5-418a-be7f-4e36c39f3b71', 'Aislamiento erectores');
 INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('d69a3312-3688-43d5-b6ef-37365ed52b72', 'Hiperextensiones lumbares en máquina', 'a312e6e2-aae5-418a-be7f-4e36c39f3b71');
-INSERT OR IGNORE INTO exerciseGroup (id, name) VALUES ('fc4989e5-521f-4d0f-b9cf-afe8aa44b0d0', 'Aislamiento isquio');
-INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('55d0d3c5-60fc-464e-a8d2-40e4d8e8ae5d', 'Glute Ham Raises énfasis isquiosurales', 'fc4989e5-521f-4d0f-b9cf-afe8aa44b0d0');
-INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('2f0b9092-fc07-422a-86fd-f8e9e92909f0', 'Hiperextensiones 45º foco isquiosurales', 'fc4989e5-521f-4d0f-b9cf-afe8aa44b0d0');
-INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('89090f22-bb8f-49f4-b96d-ac19f37e9ad9', 'Leg curl en polea de pie', 'fc4989e5-521f-4d0f-b9cf-afe8aa44b0d0');
-INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('a1f72894-a07b-4c1e-a5ee-ab312f5f67df', 'Leg curl sentado', 'fc4989e5-521f-4d0f-b9cf-afe8aa44b0d0');
-INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('af8dd6a3-6660-4ad5-bde8-0741d4c6c2b1', 'Leg Curl tumbado', 'fc4989e5-521f-4d0f-b9cf-afe8aa44b0d0');
-INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('02166cd0-bbb3-426e-9095-b878bbf4d9ee', 'Leg curl tumbado con mancuerna', 'fc4989e5-521f-4d0f-b9cf-afe8aa44b0d0');
 INSERT OR IGNORE INTO exerciseGroup (id, name) VALUES ('ebf96da3-f98c-4cb3-a8ab-f48b6d214f6a', 'Aislamiento pectoral');
 INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('7703dd14-0c50-420f-83b8-c31b1ee9c158', 'Cruces en polea sentado', 'ebf96da3-f98c-4cb3-a8ab-f48b6d214f6a');
 INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('b800d15f-4ec9-4735-9c35-53577a8edd4f', 'Cruces en polea de pie', 'ebf96da3-f98c-4cb3-a8ab-f48b6d214f6a');
@@ -78,7 +77,7 @@ INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('07431753-3d0
 INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('acf28010-2234-4ee9-ba1c-b23dfd0dd56d', 'Encogimientos para trapecio en polea a 1 mano', '47f6bcaf-0283-4928-b4aa-300fb164a26b');
 INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('74299593-5185-4fed-bcb8-651987c880b4', 'Encogimientos tumbado en banco inclinado', '47f6bcaf-0283-4928-b4aa-300fb164a26b');
 INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('2a780557-339b-4ced-8189-314defff9153', 'Farmer Walks', '47f6bcaf-0283-4928-b4aa-300fb164a26b');
-INSERT OR IGNORE INTO exerciseGroup (id, name) VALUES ('87ec1f84-cd1f-4b56-8087-39a5b37e7533', 'Aislamiento Antebrazo');
+INSERT OR IGNORE INTO exerciseGroup (id, name) VALUES ('87ec1f84-cd1f-4b56-8087-39a5b37e7533', 'Aislamiento antebrazo');
 INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('3061439e-a5d4-4b6b-a124-e0db42aaf0a8', 'Agarre en pinzas', '87ec1f84-cd1f-4b56-8087-39a5b37e7533');
 INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('5ff0ea53-15a1-4dc2-b6a1-e675982cbf61', 'Curl de muñeca', '87ec1f84-cd1f-4b56-8087-39a5b37e7533');
 INSERT OR IGNORE INTO exercise (id, name, exerciseGroupId) VALUES ('68afa508-c909-4710-b9ed-db789b29ec44', 'Vueltas al rodillo para antebrazo', '87ec1f84-cd1f-4b56-8087-39a5b37e7533');

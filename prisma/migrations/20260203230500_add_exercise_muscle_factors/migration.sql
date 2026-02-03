@@ -1,0 +1,19 @@
+-- turso db shell trainn-db-dev < prisma/migrations/20260203230500_add_exercise_muscle_factors/migration.sql
+-- Add muscle factor columns to Exercise table
+ALTER TABLE "Exercise" ADD COLUMN "factorQuadriceps" REAL;
+ALTER TABLE "Exercise" ADD COLUMN "factorHamstring" REAL;
+ALTER TABLE "Exercise" ADD COLUMN "factorGlute" REAL;
+ALTER TABLE "Exercise" ADD COLUMN "factorAdductor" REAL;
+ALTER TABLE "Exercise" ADD COLUMN "factorCalf" REAL;
+ALTER TABLE "Exercise" ADD COLUMN "factorForearm" REAL;
+ALTER TABLE "Exercise" ADD COLUMN "factorBiceps" REAL;
+ALTER TABLE "Exercise" ADD COLUMN "factorTriceps" REAL;
+ALTER TABLE "Exercise" ADD COLUMN "factorLateralDelt" REAL;
+ALTER TABLE "Exercise" ADD COLUMN "factorPosteriorDelt" REAL;
+ALTER TABLE "Exercise" ADD COLUMN "factorAnteriorDelt" REAL;
+ALTER TABLE "Exercise" ADD COLUMN "factorPectoral" REAL;
+ALTER TABLE "Exercise" ADD COLUMN "factorClavicularPec" REAL;
+ALTER TABLE "Exercise" ADD COLUMN "factorUpperBack" REAL;
+ALTER TABLE "Exercise" ADD COLUMN "factorLat" REAL;
+ALTER TABLE "Exercise" ADD COLUMN "factorLowerBack" REAL;
+ALTER TABLE "Exercise" ADD COLUMN "factorAbdomen" REAL;

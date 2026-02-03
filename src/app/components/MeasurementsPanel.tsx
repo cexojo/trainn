@@ -1,15 +1,21 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import {
-  Box, Typography, Button, Modal, Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Paper
+  Box, Typography, Button, Modal
 } from "@mui/material";
+import MeasurementsTable from "./MeasurementsTable";
 import AddIcon from "@mui/icons-material/Add";
 import TextField from "@mui/material/TextField";
 import { translations, Lang } from "@/app/i18n";
 import Snackbar from "@mui/material/Snackbar";
+import TablePagination from "@mui/material/TablePagination";
 
 import { useLang, useTranslations } from "../contexts/LangContext";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+
+import { LineChart } from '@mui/x-charts/LineChart';
+import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 
 export default function MeasurementsPanel() {
   const lang = useLang();
@@ -45,10 +51,17 @@ export default function MeasurementsPanel() {
   };
   const [formData, setFormData] = useState<any>(defaultFormData);
 
+  // Pagination state
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   // Snackbar for error/success states
   const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: "success" | "error" }>({
     open: false, message: "", severity: "success"
   });
+
+  // Chart dialog
+  const [openGraph, setOpenGraph] = useState(false);
+  const [graphField, setGraphField] = useState<string | null>(null);
 
   function getCookie(name: string) {
     if (typeof document === "undefined") return null;
@@ -81,74 +94,41 @@ export default function MeasurementsPanel() {
     <Box sx={{ p: 2 }}>
       <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
         <Typography variant="h4">{t.measurementsTitle}</Typography>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={() => setOpen(true)}>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => {
+            setFormData((f: any) => ({ ...f, date: new Date().toISOString().slice(0, 10) }));
+            setOpen(true);
+          }}
+        >
           {t.measurementsAdd}
         </Button>
       </Box>
-      <TableContainer component={Paper}>
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              {columns.map((col) => (
-                <TableCell key={col.id}>{col.label}</TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={columns.length}>{t.measurementsLoading}</TableCell>
-              </TableRow>
-            ) : measurements.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={columns.length}>{t.measurementsEmpty}</TableCell>
-              </TableRow>
-            ) : (
-              measurements.map((m) => (
-                <TableRow key={m.id}>
-                  <TableCell>{m.date ? m.date.slice(0,10) : ""}</TableCell>
-                  <TableCell>{m.weight}</TableCell>
-                  <TableCell>{m.neck}</TableCell>
-                  <TableCell>{m.arm}</TableCell>
-                  <TableCell>{m.waist}</TableCell>
-                  <TableCell>{m.abdomen}</TableCell>
-                  <TableCell>{m.hip}</TableCell>
-                  <TableCell>{m.thigh}</TableCell>
-                  <TableCell>{m.calfMuscle}</TableCell>
-                  <TableCell>
-                    <Button
-                      size="small"
-                      color="error"
-                      variant="outlined"
-                      onClick={async () => {
-                        if (!window.confirm(t.measurementsDeleteConfirm)) return;
-                        try {
-                          const res = await fetch("/api/measurements", {
-                            method: "DELETE",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ id: m.id })
-                          });
-                          if (!res.ok) {
-                            const r = await res.json();
-                            setSnackbar({ open: true, message: r.error || t.measurementsDeleteError, severity: "error" });
-                          } else {
-                            fetchMeasurements();
-                            setSnackbar({ open: true, message: t.measurementsDeleted, severity: "success" });
-                          }
-                        } catch {
-                          setSnackbar({ open: true, message: t.measurementsDeleteError, severity: "error" });
-                        }
-                      }}
-                    >
-                      {t.measurementsDelete}
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <MeasurementsTable
+        measurements={measurements.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)}
+        loading={loading}
+        columns={columns.filter((col) => col.id !== "actions")}
+        t={t}
+      />
+      <TablePagination
+        component="div"
+        count={measurements.length}
+        page={page}
+        onPageChange={(_, newPage) => setPage(newPage)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={e => {
+          setRowsPerPage(parseInt(e.target.value, 10));
+          setPage(0);
+        }}
+        labelRowsPerPage=""
+        labelDisplayedRows={({ from, to, count }) =>
+          `${from}-${to} ${t.of} ${count !== -1 ? count : `more than ${to}`}`
+        }
+        rowsPerPageOptions={[5, 10, 25, 50]}
+        sx={{ px: 2, py: 1 }}
+      />
+
       <Modal open={open} onClose={() => setOpen(false)}>
         <Box sx={{
           position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
@@ -261,7 +241,7 @@ export default function MeasurementsPanel() {
                 color="primary"
                 disabled={formLoading}
               >
-                {formLoading ? (lang === "es" ? "Guardando…" : "Saving…") : t.measurementsAdd}
+                {formLoading ? t.measurementsSaving : t.measurementsAdd}
               </Button>
             </Box>
           </form>
@@ -288,6 +268,77 @@ export default function MeasurementsPanel() {
         </Typography>
       </Box>
     </Snackbar>
+      <Dialog open={openGraph && !!graphField} onClose={() => setOpenGraph(false)} maxWidth="md" fullWidth>
+        <DialogTitle>
+          {graphField && columns.find(c => c.id === graphField)?.label}
+        </DialogTitle>
+        <Box sx={{ px: 3, pb: 3 }}>
+          {graphField && (() => {
+            // Prepare data
+            const ms = measurements
+              .filter(m => m[graphField] !== undefined && m[graphField] !== null && m.date)
+              .map(m => ({ date: m.date, value: Number(m[graphField]) }))
+              .filter(d => !isNaN(d.value))
+              .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+            if (ms.length === 0) return <Typography>No data for this measurement.</Typography>;
+
+            // Prepare dataset for OSS LineChart (array of points sorted by date)
+            const dataset = ms.map(d => ({
+              date: new Date(d.date),
+              value: d.value,
+            }));
+
+            return (
+              <Box sx={{
+                background: "#fafbfd",
+                boxShadow: 2,
+                borderRadius: 2,
+                px: 1,
+                py: 0.5,
+                cursor: "pointer",
+                "& .MuiChartsAxis-tickLabel": { fill: "#424242" },
+                "& .MuiChartsLegend-root": { display: "none" }
+              }}>
+                <LineChart
+                  height={360}
+                  series={[
+                    {
+                      data: dataset.map(d => d.value),
+                      label: columns.find(c => c.id === graphField)?.label || "",
+                      color: "#1565c0",
+                      showMark: true,
+                      baseline: 0,
+                    }
+                  ]}
+                  xAxis={[
+                    {
+                      scaleType: "time",
+                      data: dataset.map(d => d.date),
+                      valueFormatter: (date: Date) => {
+                        if (!(date instanceof Date)) date = new Date(date);
+                        if (!date || isNaN(date.getTime())) return "";
+                        const day = String(date.getDate()).padStart(2, "0");
+                        const month = String(date.getMonth() + 1).padStart(2, "0");
+                        const year = date.getFullYear();
+                        return `${day}/${month}/${year}`;
+                      },
+                    }
+                  ]}
+                  yAxis={[
+                    {
+                      label: columns.find(c => c.id === graphField)?.label || "",
+                      scaleType: "linear",
+                    }
+                  ]}
+                  grid={{ vertical: true, horizontal: true }}
+                  onClick={() => setOpenGraph(false)}
+                />
+              </Box>
+            );
+          })()}
+        </Box>
+      </Dialog>
     </Box>
   );
 }

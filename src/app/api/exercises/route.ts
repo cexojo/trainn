@@ -40,7 +40,33 @@ export async function GET(req: NextRequest) {
   // Cache miss/expired/error: fetch from DB & refresh cache
   try {
     const exercises = await prisma.exercise.findMany({
-      include: { exerciseGroup: true },
+      select: {
+        id: true,
+        name: true,
+        exerciseGroup: true,
+        exerciseGroupId: true,
+        recommendedMinReps: true,
+        recommendedMaxReps: true,
+        measurementType: true,
+        // muscle factor fields
+        factorQuadriceps: true,
+        factorHamstring: true,
+        factorGlute: true,
+        factorAdductor: true,
+        factorCalf: true,
+        factorForearm: true,
+        factorBiceps: true,
+        factorTriceps: true,
+        factorLateralDelt: true,
+        factorPosteriorDelt: true,
+        factorAnteriorDelt: true,
+        factorPectoral: true,
+        factorClavicularPec: true,
+        factorUpperBack: true,
+        factorLat: true,
+        factorLowerBack: true,
+        factorAbdomen: true,
+      },
       orderBy: { name: "asc" },
     });
     try {

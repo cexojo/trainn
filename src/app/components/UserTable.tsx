@@ -7,6 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import NotificationSnackbar from "./NotificationSnackbar";
+import MeasurementsTable from "./MeasurementsTable";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import EuroIcon from "@mui/icons-material/Euro";
 
@@ -535,6 +536,59 @@ function TrainingTab({ userId, lang }: { userId: string, lang: Lang }) {
   );
 }
 
+function MeasurementsTab({ userId, lang } : { userId: string, lang: Lang }) {
+  const [measurements, setMeasurements] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  const t = translations[lang];
+
+  const columns = [
+    { id: "date", label: t.measurementsColumnDate },
+    { id: "weight", label: t.measurementsColumnWeight },
+    { id: "neck", label: t.measurementsColumnNeck },
+    { id: "arm", label: t.measurementsColumnArm },
+    { id: "waist", label: t.measurementsColumnWaist },
+    { id: "abdomen", label: t.measurementsColumnAbdomen },
+    { id: "hip", label: t.measurementsColumnHip },
+    { id: "thigh", label: t.measurementsColumnThigh },
+    { id: "calfMuscle", label: t.measurementsColumnCalfMuscle }
+  ];
+
+  React.useEffect(() => {
+    let active = true;
+    async function fetchUserMeasurements() {
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/measurements/${userId}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (active) setMeasurements(Array.isArray(data) ? data : []);
+        } else if (active) {
+          setMeasurements([]);
+        }
+      } catch {
+        if (active) setMeasurements([]);
+      } finally {
+        if (active) setLoading(false);
+      }
+    }
+    fetchUserMeasurements();
+    return () => { active = false };
+  }, [userId]);
+
+  return (
+    <Box sx={{ pt: 2 }}>
+      <MeasurementsTable
+        measurements={measurements}
+        loading={loading}
+        columns={columns}
+        t={t}
+        enableChart={true}
+      />
+    </Box>
+  );
+}
+
 export default function UserTable({
   lang,
   crearAtletaButton,
@@ -547,7 +601,7 @@ export default function UserTable({
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<any | null>(null);
-  const [modalTab, setModalTab] = useState<"info" | "payments" | "training">("info");
+  const [modalTab, setModalTab] = useState<"info" | "payments" | "measurements" | "training">("info");
   const [searchTerm, setSearchTerm] = useState("");
   const [quickFilter, setQuickFilter] = useState<"active" | "all" | "hidden" | "due" | "nofuture" | "noplan" | "nopassword">("active");
   const [internalRefreshKey, setInternalRefreshKey] = useState(0);
@@ -888,6 +942,7 @@ export default function UserTable({
             <Tabs value={modalTab} onChange={(_, v) => setModalTab(v)}>
               <Tab value="info" label={translations[lang].infoTab} />
               <Tab value="payments" label={translations[lang].paymentsTab} />
+              <Tab value="measurements" label={translations[lang].measurementsTab || "Measurements"} />
             </Tabs>
             {modalTab === "info" && selected && (
               <Box sx={{ mt: 2 }}>
@@ -949,6 +1004,16 @@ export default function UserTable({
                   setNotification={setNotification}
                   field="sex"
                 />
+                <EditableNumberField
+                  label={lang === "es" ? "Cuota (€)" : "Amount (€)"}
+                  value={selected.subscriptionAmount}
+                  userId={selected.id}
+                  onUpdated={val => setSelected({ ...selected, subscriptionAmount: val })}
+                  forceRefresh={() => setInternalRefreshKey(k => k + 1)}
+                  lang={lang}
+                  setNotification={setNotification}
+                  field="subscriptionAmount"
+                />
                 <EditableDropdownField
                   label={lang === "es" ? "Frecuencia" : "Frequency"}
                   value={selected.subscriptionFrequency || ""}
@@ -963,17 +1028,7 @@ export default function UserTable({
                   lang={lang}
                   setNotification={setNotification}
                   field="subscriptionFrequency"
-                />
-                <EditableNumberField
-                  label={lang === "es" ? "Cuota (€)" : "Amount (€)"}
-                  value={selected.subscriptionAmount}
-                  userId={selected.id}
-                  onUpdated={val => setSelected({ ...selected, subscriptionAmount: val })}
-                  forceRefresh={() => setInternalRefreshKey(k => k + 1)}
-                  lang={lang}
-                  setNotification={setNotification}
-                  field="subscriptionAmount"
-                />
+                />                
                 <Typography>
                   <strong>{translations[lang].manageUsersModalLastLogin}:</strong>{" "}
                   {selected.lastOKLogin
@@ -1046,6 +1101,9 @@ export default function UserTable({
                   </Box>
                 )}
               </Box>
+            )}
+            {modalTab === "measurements" && selected && (
+              <MeasurementsTab userId={selected.id} lang={lang} />
             )}
           </DialogContent>
         </Dialog>

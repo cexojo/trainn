@@ -5,7 +5,7 @@ import { translations, Lang } from "@/app/i18n";
 // Infer lang: prefers from navigator, falls back to "en"
 function detectLang(): Lang {
   if (typeof navigator !== "undefined" && navigator.language?.toLowerCase().startsWith("es")) return "es";
-  return "en";
+  return "es";
 }
 
 interface LangContextValue {
@@ -14,7 +14,7 @@ interface LangContextValue {
 }
 
 const LangContext = createContext<LangContextValue>({
-  lang: "en",
+  lang: "es",
   t: translations.en
 });
 

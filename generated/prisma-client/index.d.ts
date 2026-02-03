@@ -6410,11 +6410,45 @@ export namespace Prisma {
   export type ExerciseAvgAggregateOutputType = {
     recommendedMinReps: number | null
     recommendedMaxReps: number | null
+    factorQuadriceps: number | null
+    factorHamstring: number | null
+    factorGlute: number | null
+    factorAdductor: number | null
+    factorCalf: number | null
+    factorForearm: number | null
+    factorBiceps: number | null
+    factorTriceps: number | null
+    factorLateralDelt: number | null
+    factorPosteriorDelt: number | null
+    factorAnteriorDelt: number | null
+    factorPectoral: number | null
+    factorClavicularPec: number | null
+    factorUpperBack: number | null
+    factorLat: number | null
+    factorLowerBack: number | null
+    factorAbdomen: number | null
   }
 
   export type ExerciseSumAggregateOutputType = {
     recommendedMinReps: number | null
     recommendedMaxReps: number | null
+    factorQuadriceps: number | null
+    factorHamstring: number | null
+    factorGlute: number | null
+    factorAdductor: number | null
+    factorCalf: number | null
+    factorForearm: number | null
+    factorBiceps: number | null
+    factorTriceps: number | null
+    factorLateralDelt: number | null
+    factorPosteriorDelt: number | null
+    factorAnteriorDelt: number | null
+    factorPectoral: number | null
+    factorClavicularPec: number | null
+    factorUpperBack: number | null
+    factorLat: number | null
+    factorLowerBack: number | null
+    factorAbdomen: number | null
   }
 
   export type ExerciseMinAggregateOutputType = {
@@ -6424,6 +6458,23 @@ export namespace Prisma {
     recommendedMinReps: number | null
     recommendedMaxReps: number | null
     measurementType: $Enums.MeasurementType | null
+    factorQuadriceps: number | null
+    factorHamstring: number | null
+    factorGlute: number | null
+    factorAdductor: number | null
+    factorCalf: number | null
+    factorForearm: number | null
+    factorBiceps: number | null
+    factorTriceps: number | null
+    factorLateralDelt: number | null
+    factorPosteriorDelt: number | null
+    factorAnteriorDelt: number | null
+    factorPectoral: number | null
+    factorClavicularPec: number | null
+    factorUpperBack: number | null
+    factorLat: number | null
+    factorLowerBack: number | null
+    factorAbdomen: number | null
   }
 
   export type ExerciseMaxAggregateOutputType = {
@@ -6433,6 +6484,23 @@ export namespace Prisma {
     recommendedMinReps: number | null
     recommendedMaxReps: number | null
     measurementType: $Enums.MeasurementType | null
+    factorQuadriceps: number | null
+    factorHamstring: number | null
+    factorGlute: number | null
+    factorAdductor: number | null
+    factorCalf: number | null
+    factorForearm: number | null
+    factorBiceps: number | null
+    factorTriceps: number | null
+    factorLateralDelt: number | null
+    factorPosteriorDelt: number | null
+    factorAnteriorDelt: number | null
+    factorPectoral: number | null
+    factorClavicularPec: number | null
+    factorUpperBack: number | null
+    factorLat: number | null
+    factorLowerBack: number | null
+    factorAbdomen: number | null
   }
 
   export type ExerciseCountAggregateOutputType = {
@@ -6442,6 +6510,23 @@ export namespace Prisma {
     recommendedMinReps: number
     recommendedMaxReps: number
     measurementType: number
+    factorQuadriceps: number
+    factorHamstring: number
+    factorGlute: number
+    factorAdductor: number
+    factorCalf: number
+    factorForearm: number
+    factorBiceps: number
+    factorTriceps: number
+    factorLateralDelt: number
+    factorPosteriorDelt: number
+    factorAnteriorDelt: number
+    factorPectoral: number
+    factorClavicularPec: number
+    factorUpperBack: number
+    factorLat: number
+    factorLowerBack: number
+    factorAbdomen: number
     _all: number
   }
 
@@ -6449,11 +6534,45 @@ export namespace Prisma {
   export type ExerciseAvgAggregateInputType = {
     recommendedMinReps?: true
     recommendedMaxReps?: true
+    factorQuadriceps?: true
+    factorHamstring?: true
+    factorGlute?: true
+    factorAdductor?: true
+    factorCalf?: true
+    factorForearm?: true
+    factorBiceps?: true
+    factorTriceps?: true
+    factorLateralDelt?: true
+    factorPosteriorDelt?: true
+    factorAnteriorDelt?: true
+    factorPectoral?: true
+    factorClavicularPec?: true
+    factorUpperBack?: true
+    factorLat?: true
+    factorLowerBack?: true
+    factorAbdomen?: true
   }
 
   export type ExerciseSumAggregateInputType = {
     recommendedMinReps?: true
     recommendedMaxReps?: true
+    factorQuadriceps?: true
+    factorHamstring?: true
+    factorGlute?: true
+    factorAdductor?: true
+    factorCalf?: true
+    factorForearm?: true
+    factorBiceps?: true
+    factorTriceps?: true
+    factorLateralDelt?: true
+    factorPosteriorDelt?: true
+    factorAnteriorDelt?: true
+    factorPectoral?: true
+    factorClavicularPec?: true
+    factorUpperBack?: true
+    factorLat?: true
+    factorLowerBack?: true
+    factorAbdomen?: true
   }
 
   export type ExerciseMinAggregateInputType = {
@@ -6463,6 +6582,23 @@ export namespace Prisma {
     recommendedMinReps?: true
     recommendedMaxReps?: true
     measurementType?: true
+    factorQuadriceps?: true
+    factorHamstring?: true
+    factorGlute?: true
+    factorAdductor?: true
+    factorCalf?: true
+    factorForearm?: true
+    factorBiceps?: true
+    factorTriceps?: true
+    factorLateralDelt?: true
+    factorPosteriorDelt?: true
+    factorAnteriorDelt?: true
+    factorPectoral?: true
+    factorClavicularPec?: true
+    factorUpperBack?: true
+    factorLat?: true
+    factorLowerBack?: true
+    factorAbdomen?: true
   }
 
   export type ExerciseMaxAggregateInputType = {
@@ -6472,6 +6608,23 @@ export namespace Prisma {
     recommendedMinReps?: true
     recommendedMaxReps?: true
     measurementType?: true
+    factorQuadriceps?: true
+    factorHamstring?: true
+    factorGlute?: true
+    factorAdductor?: true
+    factorCalf?: true
+    factorForearm?: true
+    factorBiceps?: true
+    factorTriceps?: true
+    factorLateralDelt?: true
+    factorPosteriorDelt?: true
+    factorAnteriorDelt?: true
+    factorPectoral?: true
+    factorClavicularPec?: true
+    factorUpperBack?: true
+    factorLat?: true
+    factorLowerBack?: true
+    factorAbdomen?: true
   }
 
   export type ExerciseCountAggregateInputType = {
@@ -6481,6 +6634,23 @@ export namespace Prisma {
     recommendedMinReps?: true
     recommendedMaxReps?: true
     measurementType?: true
+    factorQuadriceps?: true
+    factorHamstring?: true
+    factorGlute?: true
+    factorAdductor?: true
+    factorCalf?: true
+    factorForearm?: true
+    factorBiceps?: true
+    factorTriceps?: true
+    factorLateralDelt?: true
+    factorPosteriorDelt?: true
+    factorAnteriorDelt?: true
+    factorPectoral?: true
+    factorClavicularPec?: true
+    factorUpperBack?: true
+    factorLat?: true
+    factorLowerBack?: true
+    factorAbdomen?: true
     _all?: true
   }
 
@@ -6577,6 +6747,23 @@ export namespace Prisma {
     recommendedMinReps: number | null
     recommendedMaxReps: number | null
     measurementType: $Enums.MeasurementType
+    factorQuadriceps: number | null
+    factorHamstring: number | null
+    factorGlute: number | null
+    factorAdductor: number | null
+    factorCalf: number | null
+    factorForearm: number | null
+    factorBiceps: number | null
+    factorTriceps: number | null
+    factorLateralDelt: number | null
+    factorPosteriorDelt: number | null
+    factorAnteriorDelt: number | null
+    factorPectoral: number | null
+    factorClavicularPec: number | null
+    factorUpperBack: number | null
+    factorLat: number | null
+    factorLowerBack: number | null
+    factorAbdomen: number | null
     _count: ExerciseCountAggregateOutputType | null
     _avg: ExerciseAvgAggregateOutputType | null
     _sum: ExerciseSumAggregateOutputType | null
@@ -6605,6 +6792,23 @@ export namespace Prisma {
     recommendedMinReps?: boolean
     recommendedMaxReps?: boolean
     measurementType?: boolean
+    factorQuadriceps?: boolean
+    factorHamstring?: boolean
+    factorGlute?: boolean
+    factorAdductor?: boolean
+    factorCalf?: boolean
+    factorForearm?: boolean
+    factorBiceps?: boolean
+    factorTriceps?: boolean
+    factorLateralDelt?: boolean
+    factorPosteriorDelt?: boolean
+    factorAnteriorDelt?: boolean
+    factorPectoral?: boolean
+    factorClavicularPec?: boolean
+    factorUpperBack?: boolean
+    factorLat?: boolean
+    factorLowerBack?: boolean
+    factorAbdomen?: boolean
     exerciseGroup?: boolean | ExerciseGroupDefaultArgs<ExtArgs>
     dayExercises?: boolean | Exercise$dayExercisesArgs<ExtArgs>
     _count?: boolean | ExerciseCountOutputTypeDefaultArgs<ExtArgs>
@@ -6617,6 +6821,23 @@ export namespace Prisma {
     recommendedMinReps?: boolean
     recommendedMaxReps?: boolean
     measurementType?: boolean
+    factorQuadriceps?: boolean
+    factorHamstring?: boolean
+    factorGlute?: boolean
+    factorAdductor?: boolean
+    factorCalf?: boolean
+    factorForearm?: boolean
+    factorBiceps?: boolean
+    factorTriceps?: boolean
+    factorLateralDelt?: boolean
+    factorPosteriorDelt?: boolean
+    factorAnteriorDelt?: boolean
+    factorPectoral?: boolean
+    factorClavicularPec?: boolean
+    factorUpperBack?: boolean
+    factorLat?: boolean
+    factorLowerBack?: boolean
+    factorAbdomen?: boolean
     exerciseGroup?: boolean | ExerciseGroupDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["exercise"]>
 
@@ -6627,6 +6848,23 @@ export namespace Prisma {
     recommendedMinReps?: boolean
     recommendedMaxReps?: boolean
     measurementType?: boolean
+    factorQuadriceps?: boolean
+    factorHamstring?: boolean
+    factorGlute?: boolean
+    factorAdductor?: boolean
+    factorCalf?: boolean
+    factorForearm?: boolean
+    factorBiceps?: boolean
+    factorTriceps?: boolean
+    factorLateralDelt?: boolean
+    factorPosteriorDelt?: boolean
+    factorAnteriorDelt?: boolean
+    factorPectoral?: boolean
+    factorClavicularPec?: boolean
+    factorUpperBack?: boolean
+    factorLat?: boolean
+    factorLowerBack?: boolean
+    factorAbdomen?: boolean
     exerciseGroup?: boolean | ExerciseGroupDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["exercise"]>
 
@@ -6637,9 +6875,26 @@ export namespace Prisma {
     recommendedMinReps?: boolean
     recommendedMaxReps?: boolean
     measurementType?: boolean
+    factorQuadriceps?: boolean
+    factorHamstring?: boolean
+    factorGlute?: boolean
+    factorAdductor?: boolean
+    factorCalf?: boolean
+    factorForearm?: boolean
+    factorBiceps?: boolean
+    factorTriceps?: boolean
+    factorLateralDelt?: boolean
+    factorPosteriorDelt?: boolean
+    factorAnteriorDelt?: boolean
+    factorPectoral?: boolean
+    factorClavicularPec?: boolean
+    factorUpperBack?: boolean
+    factorLat?: boolean
+    factorLowerBack?: boolean
+    factorAbdomen?: boolean
   }
 
-  export type ExerciseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "exerciseGroupId" | "recommendedMinReps" | "recommendedMaxReps" | "measurementType", ExtArgs["result"]["exercise"]>
+  export type ExerciseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "exerciseGroupId" | "recommendedMinReps" | "recommendedMaxReps" | "measurementType" | "factorQuadriceps" | "factorHamstring" | "factorGlute" | "factorAdductor" | "factorCalf" | "factorForearm" | "factorBiceps" | "factorTriceps" | "factorLateralDelt" | "factorPosteriorDelt" | "factorAnteriorDelt" | "factorPectoral" | "factorClavicularPec" | "factorUpperBack" | "factorLat" | "factorLowerBack" | "factorAbdomen", ExtArgs["result"]["exercise"]>
   export type ExerciseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     exerciseGroup?: boolean | ExerciseGroupDefaultArgs<ExtArgs>
     dayExercises?: boolean | Exercise$dayExercisesArgs<ExtArgs>
@@ -6665,6 +6920,23 @@ export namespace Prisma {
       recommendedMinReps: number | null
       recommendedMaxReps: number | null
       measurementType: $Enums.MeasurementType
+      factorQuadriceps: number | null
+      factorHamstring: number | null
+      factorGlute: number | null
+      factorAdductor: number | null
+      factorCalf: number | null
+      factorForearm: number | null
+      factorBiceps: number | null
+      factorTriceps: number | null
+      factorLateralDelt: number | null
+      factorPosteriorDelt: number | null
+      factorAnteriorDelt: number | null
+      factorPectoral: number | null
+      factorClavicularPec: number | null
+      factorUpperBack: number | null
+      factorLat: number | null
+      factorLowerBack: number | null
+      factorAbdomen: number | null
     }, ExtArgs["result"]["exercise"]>
     composites: {}
   }
@@ -7096,6 +7368,23 @@ export namespace Prisma {
     readonly recommendedMinReps: FieldRef<"Exercise", 'Int'>
     readonly recommendedMaxReps: FieldRef<"Exercise", 'Int'>
     readonly measurementType: FieldRef<"Exercise", 'MeasurementType'>
+    readonly factorQuadriceps: FieldRef<"Exercise", 'Float'>
+    readonly factorHamstring: FieldRef<"Exercise", 'Float'>
+    readonly factorGlute: FieldRef<"Exercise", 'Float'>
+    readonly factorAdductor: FieldRef<"Exercise", 'Float'>
+    readonly factorCalf: FieldRef<"Exercise", 'Float'>
+    readonly factorForearm: FieldRef<"Exercise", 'Float'>
+    readonly factorBiceps: FieldRef<"Exercise", 'Float'>
+    readonly factorTriceps: FieldRef<"Exercise", 'Float'>
+    readonly factorLateralDelt: FieldRef<"Exercise", 'Float'>
+    readonly factorPosteriorDelt: FieldRef<"Exercise", 'Float'>
+    readonly factorAnteriorDelt: FieldRef<"Exercise", 'Float'>
+    readonly factorPectoral: FieldRef<"Exercise", 'Float'>
+    readonly factorClavicularPec: FieldRef<"Exercise", 'Float'>
+    readonly factorUpperBack: FieldRef<"Exercise", 'Float'>
+    readonly factorLat: FieldRef<"Exercise", 'Float'>
+    readonly factorLowerBack: FieldRef<"Exercise", 'Float'>
+    readonly factorAbdomen: FieldRef<"Exercise", 'Float'>
   }
     
 
@@ -12592,14 +12881,14 @@ export namespace Prisma {
     id: string
     userId: string
     date: Date
-    weight: number
-    neck: number
-    arm: number
-    waist: number
-    abdomen: number
-    hip: number
-    thigh: number
-    calfMuscle: number
+    weight: number | null
+    neck: number | null
+    arm: number | null
+    waist: number | null
+    abdomen: number | null
+    hip: number | null
+    thigh: number | null
+    calfMuscle: number | null
     _count: MeasurementCountAggregateOutputType | null
     _avg: MeasurementAvgAggregateOutputType | null
     _sum: MeasurementSumAggregateOutputType | null
@@ -12700,14 +12989,14 @@ export namespace Prisma {
       id: string
       userId: string
       date: Date
-      weight: number
-      neck: number
-      arm: number
-      waist: number
-      abdomen: number
-      hip: number
-      thigh: number
-      calfMuscle: number
+      weight: number | null
+      neck: number | null
+      arm: number | null
+      waist: number | null
+      abdomen: number | null
+      hip: number | null
+      thigh: number | null
+      calfMuscle: number | null
     }, ExtArgs["result"]["measurement"]>
     composites: {}
   }
@@ -13614,7 +13903,24 @@ export namespace Prisma {
     exerciseGroupId: 'exerciseGroupId',
     recommendedMinReps: 'recommendedMinReps',
     recommendedMaxReps: 'recommendedMaxReps',
-    measurementType: 'measurementType'
+    measurementType: 'measurementType',
+    factorQuadriceps: 'factorQuadriceps',
+    factorHamstring: 'factorHamstring',
+    factorGlute: 'factorGlute',
+    factorAdductor: 'factorAdductor',
+    factorCalf: 'factorCalf',
+    factorForearm: 'factorForearm',
+    factorBiceps: 'factorBiceps',
+    factorTriceps: 'factorTriceps',
+    factorLateralDelt: 'factorLateralDelt',
+    factorPosteriorDelt: 'factorPosteriorDelt',
+    factorAnteriorDelt: 'factorAnteriorDelt',
+    factorPectoral: 'factorPectoral',
+    factorClavicularPec: 'factorClavicularPec',
+    factorUpperBack: 'factorUpperBack',
+    factorLat: 'factorLat',
+    factorLowerBack: 'factorLowerBack',
+    factorAbdomen: 'factorAbdomen'
   };
 
   export type ExerciseScalarFieldEnum = (typeof ExerciseScalarFieldEnum)[keyof typeof ExerciseScalarFieldEnum]
@@ -14024,6 +14330,23 @@ export namespace Prisma {
     recommendedMinReps?: IntNullableFilter<"Exercise"> | number | null
     recommendedMaxReps?: IntNullableFilter<"Exercise"> | number | null
     measurementType?: EnumMeasurementTypeFilter<"Exercise"> | $Enums.MeasurementType
+    factorQuadriceps?: FloatNullableFilter<"Exercise"> | number | null
+    factorHamstring?: FloatNullableFilter<"Exercise"> | number | null
+    factorGlute?: FloatNullableFilter<"Exercise"> | number | null
+    factorAdductor?: FloatNullableFilter<"Exercise"> | number | null
+    factorCalf?: FloatNullableFilter<"Exercise"> | number | null
+    factorForearm?: FloatNullableFilter<"Exercise"> | number | null
+    factorBiceps?: FloatNullableFilter<"Exercise"> | number | null
+    factorTriceps?: FloatNullableFilter<"Exercise"> | number | null
+    factorLateralDelt?: FloatNullableFilter<"Exercise"> | number | null
+    factorPosteriorDelt?: FloatNullableFilter<"Exercise"> | number | null
+    factorAnteriorDelt?: FloatNullableFilter<"Exercise"> | number | null
+    factorPectoral?: FloatNullableFilter<"Exercise"> | number | null
+    factorClavicularPec?: FloatNullableFilter<"Exercise"> | number | null
+    factorUpperBack?: FloatNullableFilter<"Exercise"> | number | null
+    factorLat?: FloatNullableFilter<"Exercise"> | number | null
+    factorLowerBack?: FloatNullableFilter<"Exercise"> | number | null
+    factorAbdomen?: FloatNullableFilter<"Exercise"> | number | null
     exerciseGroup?: XOR<ExerciseGroupScalarRelationFilter, ExerciseGroupWhereInput>
     dayExercises?: DayExerciseListRelationFilter
   }
@@ -14035,6 +14358,23 @@ export namespace Prisma {
     recommendedMinReps?: SortOrderInput | SortOrder
     recommendedMaxReps?: SortOrderInput | SortOrder
     measurementType?: SortOrder
+    factorQuadriceps?: SortOrderInput | SortOrder
+    factorHamstring?: SortOrderInput | SortOrder
+    factorGlute?: SortOrderInput | SortOrder
+    factorAdductor?: SortOrderInput | SortOrder
+    factorCalf?: SortOrderInput | SortOrder
+    factorForearm?: SortOrderInput | SortOrder
+    factorBiceps?: SortOrderInput | SortOrder
+    factorTriceps?: SortOrderInput | SortOrder
+    factorLateralDelt?: SortOrderInput | SortOrder
+    factorPosteriorDelt?: SortOrderInput | SortOrder
+    factorAnteriorDelt?: SortOrderInput | SortOrder
+    factorPectoral?: SortOrderInput | SortOrder
+    factorClavicularPec?: SortOrderInput | SortOrder
+    factorUpperBack?: SortOrderInput | SortOrder
+    factorLat?: SortOrderInput | SortOrder
+    factorLowerBack?: SortOrderInput | SortOrder
+    factorAbdomen?: SortOrderInput | SortOrder
     exerciseGroup?: ExerciseGroupOrderByWithRelationInput
     dayExercises?: DayExerciseOrderByRelationAggregateInput
   }
@@ -14049,6 +14389,23 @@ export namespace Prisma {
     recommendedMinReps?: IntNullableFilter<"Exercise"> | number | null
     recommendedMaxReps?: IntNullableFilter<"Exercise"> | number | null
     measurementType?: EnumMeasurementTypeFilter<"Exercise"> | $Enums.MeasurementType
+    factorQuadriceps?: FloatNullableFilter<"Exercise"> | number | null
+    factorHamstring?: FloatNullableFilter<"Exercise"> | number | null
+    factorGlute?: FloatNullableFilter<"Exercise"> | number | null
+    factorAdductor?: FloatNullableFilter<"Exercise"> | number | null
+    factorCalf?: FloatNullableFilter<"Exercise"> | number | null
+    factorForearm?: FloatNullableFilter<"Exercise"> | number | null
+    factorBiceps?: FloatNullableFilter<"Exercise"> | number | null
+    factorTriceps?: FloatNullableFilter<"Exercise"> | number | null
+    factorLateralDelt?: FloatNullableFilter<"Exercise"> | number | null
+    factorPosteriorDelt?: FloatNullableFilter<"Exercise"> | number | null
+    factorAnteriorDelt?: FloatNullableFilter<"Exercise"> | number | null
+    factorPectoral?: FloatNullableFilter<"Exercise"> | number | null
+    factorClavicularPec?: FloatNullableFilter<"Exercise"> | number | null
+    factorUpperBack?: FloatNullableFilter<"Exercise"> | number | null
+    factorLat?: FloatNullableFilter<"Exercise"> | number | null
+    factorLowerBack?: FloatNullableFilter<"Exercise"> | number | null
+    factorAbdomen?: FloatNullableFilter<"Exercise"> | number | null
     exerciseGroup?: XOR<ExerciseGroupScalarRelationFilter, ExerciseGroupWhereInput>
     dayExercises?: DayExerciseListRelationFilter
   }, "id" | "name">
@@ -14060,6 +14417,23 @@ export namespace Prisma {
     recommendedMinReps?: SortOrderInput | SortOrder
     recommendedMaxReps?: SortOrderInput | SortOrder
     measurementType?: SortOrder
+    factorQuadriceps?: SortOrderInput | SortOrder
+    factorHamstring?: SortOrderInput | SortOrder
+    factorGlute?: SortOrderInput | SortOrder
+    factorAdductor?: SortOrderInput | SortOrder
+    factorCalf?: SortOrderInput | SortOrder
+    factorForearm?: SortOrderInput | SortOrder
+    factorBiceps?: SortOrderInput | SortOrder
+    factorTriceps?: SortOrderInput | SortOrder
+    factorLateralDelt?: SortOrderInput | SortOrder
+    factorPosteriorDelt?: SortOrderInput | SortOrder
+    factorAnteriorDelt?: SortOrderInput | SortOrder
+    factorPectoral?: SortOrderInput | SortOrder
+    factorClavicularPec?: SortOrderInput | SortOrder
+    factorUpperBack?: SortOrderInput | SortOrder
+    factorLat?: SortOrderInput | SortOrder
+    factorLowerBack?: SortOrderInput | SortOrder
+    factorAbdomen?: SortOrderInput | SortOrder
     _count?: ExerciseCountOrderByAggregateInput
     _avg?: ExerciseAvgOrderByAggregateInput
     _max?: ExerciseMaxOrderByAggregateInput
@@ -14077,6 +14451,23 @@ export namespace Prisma {
     recommendedMinReps?: IntNullableWithAggregatesFilter<"Exercise"> | number | null
     recommendedMaxReps?: IntNullableWithAggregatesFilter<"Exercise"> | number | null
     measurementType?: EnumMeasurementTypeWithAggregatesFilter<"Exercise"> | $Enums.MeasurementType
+    factorQuadriceps?: FloatNullableWithAggregatesFilter<"Exercise"> | number | null
+    factorHamstring?: FloatNullableWithAggregatesFilter<"Exercise"> | number | null
+    factorGlute?: FloatNullableWithAggregatesFilter<"Exercise"> | number | null
+    factorAdductor?: FloatNullableWithAggregatesFilter<"Exercise"> | number | null
+    factorCalf?: FloatNullableWithAggregatesFilter<"Exercise"> | number | null
+    factorForearm?: FloatNullableWithAggregatesFilter<"Exercise"> | number | null
+    factorBiceps?: FloatNullableWithAggregatesFilter<"Exercise"> | number | null
+    factorTriceps?: FloatNullableWithAggregatesFilter<"Exercise"> | number | null
+    factorLateralDelt?: FloatNullableWithAggregatesFilter<"Exercise"> | number | null
+    factorPosteriorDelt?: FloatNullableWithAggregatesFilter<"Exercise"> | number | null
+    factorAnteriorDelt?: FloatNullableWithAggregatesFilter<"Exercise"> | number | null
+    factorPectoral?: FloatNullableWithAggregatesFilter<"Exercise"> | number | null
+    factorClavicularPec?: FloatNullableWithAggregatesFilter<"Exercise"> | number | null
+    factorUpperBack?: FloatNullableWithAggregatesFilter<"Exercise"> | number | null
+    factorLat?: FloatNullableWithAggregatesFilter<"Exercise"> | number | null
+    factorLowerBack?: FloatNullableWithAggregatesFilter<"Exercise"> | number | null
+    factorAbdomen?: FloatNullableWithAggregatesFilter<"Exercise"> | number | null
   }
 
   export type UserWhereInput = {
@@ -14454,14 +14845,14 @@ export namespace Prisma {
     id?: StringFilter<"Measurement"> | string
     userId?: StringFilter<"Measurement"> | string
     date?: DateTimeFilter<"Measurement"> | Date | string
-    weight?: FloatFilter<"Measurement"> | number
-    neck?: FloatFilter<"Measurement"> | number
-    arm?: FloatFilter<"Measurement"> | number
-    waist?: FloatFilter<"Measurement"> | number
-    abdomen?: FloatFilter<"Measurement"> | number
-    hip?: FloatFilter<"Measurement"> | number
-    thigh?: FloatFilter<"Measurement"> | number
-    calfMuscle?: FloatFilter<"Measurement"> | number
+    weight?: FloatNullableFilter<"Measurement"> | number | null
+    neck?: FloatNullableFilter<"Measurement"> | number | null
+    arm?: FloatNullableFilter<"Measurement"> | number | null
+    waist?: FloatNullableFilter<"Measurement"> | number | null
+    abdomen?: FloatNullableFilter<"Measurement"> | number | null
+    hip?: FloatNullableFilter<"Measurement"> | number | null
+    thigh?: FloatNullableFilter<"Measurement"> | number | null
+    calfMuscle?: FloatNullableFilter<"Measurement"> | number | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
@@ -14469,14 +14860,14 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     date?: SortOrder
-    weight?: SortOrder
-    neck?: SortOrder
-    arm?: SortOrder
-    waist?: SortOrder
-    abdomen?: SortOrder
-    hip?: SortOrder
-    thigh?: SortOrder
-    calfMuscle?: SortOrder
+    weight?: SortOrderInput | SortOrder
+    neck?: SortOrderInput | SortOrder
+    arm?: SortOrderInput | SortOrder
+    waist?: SortOrderInput | SortOrder
+    abdomen?: SortOrderInput | SortOrder
+    hip?: SortOrderInput | SortOrder
+    thigh?: SortOrderInput | SortOrder
+    calfMuscle?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
   }
 
@@ -14487,14 +14878,14 @@ export namespace Prisma {
     NOT?: MeasurementWhereInput | MeasurementWhereInput[]
     userId?: StringFilter<"Measurement"> | string
     date?: DateTimeFilter<"Measurement"> | Date | string
-    weight?: FloatFilter<"Measurement"> | number
-    neck?: FloatFilter<"Measurement"> | number
-    arm?: FloatFilter<"Measurement"> | number
-    waist?: FloatFilter<"Measurement"> | number
-    abdomen?: FloatFilter<"Measurement"> | number
-    hip?: FloatFilter<"Measurement"> | number
-    thigh?: FloatFilter<"Measurement"> | number
-    calfMuscle?: FloatFilter<"Measurement"> | number
+    weight?: FloatNullableFilter<"Measurement"> | number | null
+    neck?: FloatNullableFilter<"Measurement"> | number | null
+    arm?: FloatNullableFilter<"Measurement"> | number | null
+    waist?: FloatNullableFilter<"Measurement"> | number | null
+    abdomen?: FloatNullableFilter<"Measurement"> | number | null
+    hip?: FloatNullableFilter<"Measurement"> | number | null
+    thigh?: FloatNullableFilter<"Measurement"> | number | null
+    calfMuscle?: FloatNullableFilter<"Measurement"> | number | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
 
@@ -14502,14 +14893,14 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     date?: SortOrder
-    weight?: SortOrder
-    neck?: SortOrder
-    arm?: SortOrder
-    waist?: SortOrder
-    abdomen?: SortOrder
-    hip?: SortOrder
-    thigh?: SortOrder
-    calfMuscle?: SortOrder
+    weight?: SortOrderInput | SortOrder
+    neck?: SortOrderInput | SortOrder
+    arm?: SortOrderInput | SortOrder
+    waist?: SortOrderInput | SortOrder
+    abdomen?: SortOrderInput | SortOrder
+    hip?: SortOrderInput | SortOrder
+    thigh?: SortOrderInput | SortOrder
+    calfMuscle?: SortOrderInput | SortOrder
     _count?: MeasurementCountOrderByAggregateInput
     _avg?: MeasurementAvgOrderByAggregateInput
     _max?: MeasurementMaxOrderByAggregateInput
@@ -14524,14 +14915,14 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Measurement"> | string
     userId?: StringWithAggregatesFilter<"Measurement"> | string
     date?: DateTimeWithAggregatesFilter<"Measurement"> | Date | string
-    weight?: FloatWithAggregatesFilter<"Measurement"> | number
-    neck?: FloatWithAggregatesFilter<"Measurement"> | number
-    arm?: FloatWithAggregatesFilter<"Measurement"> | number
-    waist?: FloatWithAggregatesFilter<"Measurement"> | number
-    abdomen?: FloatWithAggregatesFilter<"Measurement"> | number
-    hip?: FloatWithAggregatesFilter<"Measurement"> | number
-    thigh?: FloatWithAggregatesFilter<"Measurement"> | number
-    calfMuscle?: FloatWithAggregatesFilter<"Measurement"> | number
+    weight?: FloatNullableWithAggregatesFilter<"Measurement"> | number | null
+    neck?: FloatNullableWithAggregatesFilter<"Measurement"> | number | null
+    arm?: FloatNullableWithAggregatesFilter<"Measurement"> | number | null
+    waist?: FloatNullableWithAggregatesFilter<"Measurement"> | number | null
+    abdomen?: FloatNullableWithAggregatesFilter<"Measurement"> | number | null
+    hip?: FloatNullableWithAggregatesFilter<"Measurement"> | number | null
+    thigh?: FloatNullableWithAggregatesFilter<"Measurement"> | number | null
+    calfMuscle?: FloatNullableWithAggregatesFilter<"Measurement"> | number | null
   }
 
   export type TrainingBlockCreateInput = {
@@ -14767,6 +15158,23 @@ export namespace Prisma {
     recommendedMinReps?: number | null
     recommendedMaxReps?: number | null
     measurementType?: $Enums.MeasurementType
+    factorQuadriceps?: number | null
+    factorHamstring?: number | null
+    factorGlute?: number | null
+    factorAdductor?: number | null
+    factorCalf?: number | null
+    factorForearm?: number | null
+    factorBiceps?: number | null
+    factorTriceps?: number | null
+    factorLateralDelt?: number | null
+    factorPosteriorDelt?: number | null
+    factorAnteriorDelt?: number | null
+    factorPectoral?: number | null
+    factorClavicularPec?: number | null
+    factorUpperBack?: number | null
+    factorLat?: number | null
+    factorLowerBack?: number | null
+    factorAbdomen?: number | null
     exerciseGroup: ExerciseGroupCreateNestedOneWithoutExercisesInput
     dayExercises?: DayExerciseCreateNestedManyWithoutExerciseInput
   }
@@ -14778,6 +15186,23 @@ export namespace Prisma {
     recommendedMinReps?: number | null
     recommendedMaxReps?: number | null
     measurementType?: $Enums.MeasurementType
+    factorQuadriceps?: number | null
+    factorHamstring?: number | null
+    factorGlute?: number | null
+    factorAdductor?: number | null
+    factorCalf?: number | null
+    factorForearm?: number | null
+    factorBiceps?: number | null
+    factorTriceps?: number | null
+    factorLateralDelt?: number | null
+    factorPosteriorDelt?: number | null
+    factorAnteriorDelt?: number | null
+    factorPectoral?: number | null
+    factorClavicularPec?: number | null
+    factorUpperBack?: number | null
+    factorLat?: number | null
+    factorLowerBack?: number | null
+    factorAbdomen?: number | null
     dayExercises?: DayExerciseUncheckedCreateNestedManyWithoutExerciseInput
   }
 
@@ -14787,6 +15212,23 @@ export namespace Prisma {
     recommendedMinReps?: NullableIntFieldUpdateOperationsInput | number | null
     recommendedMaxReps?: NullableIntFieldUpdateOperationsInput | number | null
     measurementType?: EnumMeasurementTypeFieldUpdateOperationsInput | $Enums.MeasurementType
+    factorQuadriceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorHamstring?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorGlute?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAdductor?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorCalf?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorForearm?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorBiceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorTriceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLateralDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorPosteriorDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAnteriorDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorPectoral?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorClavicularPec?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorUpperBack?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLowerBack?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAbdomen?: NullableFloatFieldUpdateOperationsInput | number | null
     exerciseGroup?: ExerciseGroupUpdateOneRequiredWithoutExercisesNestedInput
     dayExercises?: DayExerciseUpdateManyWithoutExerciseNestedInput
   }
@@ -14798,6 +15240,23 @@ export namespace Prisma {
     recommendedMinReps?: NullableIntFieldUpdateOperationsInput | number | null
     recommendedMaxReps?: NullableIntFieldUpdateOperationsInput | number | null
     measurementType?: EnumMeasurementTypeFieldUpdateOperationsInput | $Enums.MeasurementType
+    factorQuadriceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorHamstring?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorGlute?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAdductor?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorCalf?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorForearm?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorBiceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorTriceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLateralDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorPosteriorDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAnteriorDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorPectoral?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorClavicularPec?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorUpperBack?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLowerBack?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAbdomen?: NullableFloatFieldUpdateOperationsInput | number | null
     dayExercises?: DayExerciseUncheckedUpdateManyWithoutExerciseNestedInput
   }
 
@@ -14808,6 +15267,23 @@ export namespace Prisma {
     recommendedMinReps?: number | null
     recommendedMaxReps?: number | null
     measurementType?: $Enums.MeasurementType
+    factorQuadriceps?: number | null
+    factorHamstring?: number | null
+    factorGlute?: number | null
+    factorAdductor?: number | null
+    factorCalf?: number | null
+    factorForearm?: number | null
+    factorBiceps?: number | null
+    factorTriceps?: number | null
+    factorLateralDelt?: number | null
+    factorPosteriorDelt?: number | null
+    factorAnteriorDelt?: number | null
+    factorPectoral?: number | null
+    factorClavicularPec?: number | null
+    factorUpperBack?: number | null
+    factorLat?: number | null
+    factorLowerBack?: number | null
+    factorAbdomen?: number | null
   }
 
   export type ExerciseUpdateManyMutationInput = {
@@ -14816,6 +15292,23 @@ export namespace Prisma {
     recommendedMinReps?: NullableIntFieldUpdateOperationsInput | number | null
     recommendedMaxReps?: NullableIntFieldUpdateOperationsInput | number | null
     measurementType?: EnumMeasurementTypeFieldUpdateOperationsInput | $Enums.MeasurementType
+    factorQuadriceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorHamstring?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorGlute?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAdductor?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorCalf?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorForearm?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorBiceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorTriceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLateralDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorPosteriorDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAnteriorDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorPectoral?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorClavicularPec?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorUpperBack?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLowerBack?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAbdomen?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type ExerciseUncheckedUpdateManyInput = {
@@ -14825,6 +15318,23 @@ export namespace Prisma {
     recommendedMinReps?: NullableIntFieldUpdateOperationsInput | number | null
     recommendedMaxReps?: NullableIntFieldUpdateOperationsInput | number | null
     measurementType?: EnumMeasurementTypeFieldUpdateOperationsInput | $Enums.MeasurementType
+    factorQuadriceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorHamstring?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorGlute?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAdductor?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorCalf?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorForearm?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorBiceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorTriceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLateralDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorPosteriorDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAnteriorDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorPectoral?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorClavicularPec?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorUpperBack?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLowerBack?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAbdomen?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type UserCreateInput = {
@@ -15240,14 +15750,14 @@ export namespace Prisma {
   export type MeasurementCreateInput = {
     id?: string
     date: Date | string
-    weight: number
-    neck: number
-    arm: number
-    waist: number
-    abdomen: number
-    hip: number
-    thigh: number
-    calfMuscle: number
+    weight?: number | null
+    neck?: number | null
+    arm?: number | null
+    waist?: number | null
+    abdomen?: number | null
+    hip?: number | null
+    thigh?: number | null
+    calfMuscle?: number | null
     user: UserCreateNestedOneWithoutMeasurementsInput
   }
 
@@ -15255,27 +15765,27 @@ export namespace Prisma {
     id?: string
     userId: string
     date: Date | string
-    weight: number
-    neck: number
-    arm: number
-    waist: number
-    abdomen: number
-    hip: number
-    thigh: number
-    calfMuscle: number
+    weight?: number | null
+    neck?: number | null
+    arm?: number | null
+    waist?: number | null
+    abdomen?: number | null
+    hip?: number | null
+    thigh?: number | null
+    calfMuscle?: number | null
   }
 
   export type MeasurementUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    weight?: FloatFieldUpdateOperationsInput | number
-    neck?: FloatFieldUpdateOperationsInput | number
-    arm?: FloatFieldUpdateOperationsInput | number
-    waist?: FloatFieldUpdateOperationsInput | number
-    abdomen?: FloatFieldUpdateOperationsInput | number
-    hip?: FloatFieldUpdateOperationsInput | number
-    thigh?: FloatFieldUpdateOperationsInput | number
-    calfMuscle?: FloatFieldUpdateOperationsInput | number
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    neck?: NullableFloatFieldUpdateOperationsInput | number | null
+    arm?: NullableFloatFieldUpdateOperationsInput | number | null
+    waist?: NullableFloatFieldUpdateOperationsInput | number | null
+    abdomen?: NullableFloatFieldUpdateOperationsInput | number | null
+    hip?: NullableFloatFieldUpdateOperationsInput | number | null
+    thigh?: NullableFloatFieldUpdateOperationsInput | number | null
+    calfMuscle?: NullableFloatFieldUpdateOperationsInput | number | null
     user?: UserUpdateOneRequiredWithoutMeasurementsNestedInput
   }
 
@@ -15283,55 +15793,55 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    weight?: FloatFieldUpdateOperationsInput | number
-    neck?: FloatFieldUpdateOperationsInput | number
-    arm?: FloatFieldUpdateOperationsInput | number
-    waist?: FloatFieldUpdateOperationsInput | number
-    abdomen?: FloatFieldUpdateOperationsInput | number
-    hip?: FloatFieldUpdateOperationsInput | number
-    thigh?: FloatFieldUpdateOperationsInput | number
-    calfMuscle?: FloatFieldUpdateOperationsInput | number
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    neck?: NullableFloatFieldUpdateOperationsInput | number | null
+    arm?: NullableFloatFieldUpdateOperationsInput | number | null
+    waist?: NullableFloatFieldUpdateOperationsInput | number | null
+    abdomen?: NullableFloatFieldUpdateOperationsInput | number | null
+    hip?: NullableFloatFieldUpdateOperationsInput | number | null
+    thigh?: NullableFloatFieldUpdateOperationsInput | number | null
+    calfMuscle?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type MeasurementCreateManyInput = {
     id?: string
     userId: string
     date: Date | string
-    weight: number
-    neck: number
-    arm: number
-    waist: number
-    abdomen: number
-    hip: number
-    thigh: number
-    calfMuscle: number
+    weight?: number | null
+    neck?: number | null
+    arm?: number | null
+    waist?: number | null
+    abdomen?: number | null
+    hip?: number | null
+    thigh?: number | null
+    calfMuscle?: number | null
   }
 
   export type MeasurementUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    weight?: FloatFieldUpdateOperationsInput | number
-    neck?: FloatFieldUpdateOperationsInput | number
-    arm?: FloatFieldUpdateOperationsInput | number
-    waist?: FloatFieldUpdateOperationsInput | number
-    abdomen?: FloatFieldUpdateOperationsInput | number
-    hip?: FloatFieldUpdateOperationsInput | number
-    thigh?: FloatFieldUpdateOperationsInput | number
-    calfMuscle?: FloatFieldUpdateOperationsInput | number
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    neck?: NullableFloatFieldUpdateOperationsInput | number | null
+    arm?: NullableFloatFieldUpdateOperationsInput | number | null
+    waist?: NullableFloatFieldUpdateOperationsInput | number | null
+    abdomen?: NullableFloatFieldUpdateOperationsInput | number | null
+    hip?: NullableFloatFieldUpdateOperationsInput | number | null
+    thigh?: NullableFloatFieldUpdateOperationsInput | number | null
+    calfMuscle?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type MeasurementUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    weight?: FloatFieldUpdateOperationsInput | number
-    neck?: FloatFieldUpdateOperationsInput | number
-    arm?: FloatFieldUpdateOperationsInput | number
-    waist?: FloatFieldUpdateOperationsInput | number
-    abdomen?: FloatFieldUpdateOperationsInput | number
-    hip?: FloatFieldUpdateOperationsInput | number
-    thigh?: FloatFieldUpdateOperationsInput | number
-    calfMuscle?: FloatFieldUpdateOperationsInput | number
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    neck?: NullableFloatFieldUpdateOperationsInput | number | null
+    arm?: NullableFloatFieldUpdateOperationsInput | number | null
+    waist?: NullableFloatFieldUpdateOperationsInput | number | null
+    abdomen?: NullableFloatFieldUpdateOperationsInput | number | null
+    hip?: NullableFloatFieldUpdateOperationsInput | number | null
+    thigh?: NullableFloatFieldUpdateOperationsInput | number | null
+    calfMuscle?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type BoolFilter<$PrismaModel = never> = {
@@ -15627,6 +16137,17 @@ export namespace Prisma {
     not?: NestedEnumMeasurementTypeFilter<$PrismaModel> | $Enums.MeasurementType
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type ExerciseGroupScalarRelationFilter = {
     is?: ExerciseGroupWhereInput
     isNot?: ExerciseGroupWhereInput
@@ -15644,11 +16165,45 @@ export namespace Prisma {
     recommendedMinReps?: SortOrder
     recommendedMaxReps?: SortOrder
     measurementType?: SortOrder
+    factorQuadriceps?: SortOrder
+    factorHamstring?: SortOrder
+    factorGlute?: SortOrder
+    factorAdductor?: SortOrder
+    factorCalf?: SortOrder
+    factorForearm?: SortOrder
+    factorBiceps?: SortOrder
+    factorTriceps?: SortOrder
+    factorLateralDelt?: SortOrder
+    factorPosteriorDelt?: SortOrder
+    factorAnteriorDelt?: SortOrder
+    factorPectoral?: SortOrder
+    factorClavicularPec?: SortOrder
+    factorUpperBack?: SortOrder
+    factorLat?: SortOrder
+    factorLowerBack?: SortOrder
+    factorAbdomen?: SortOrder
   }
 
   export type ExerciseAvgOrderByAggregateInput = {
     recommendedMinReps?: SortOrder
     recommendedMaxReps?: SortOrder
+    factorQuadriceps?: SortOrder
+    factorHamstring?: SortOrder
+    factorGlute?: SortOrder
+    factorAdductor?: SortOrder
+    factorCalf?: SortOrder
+    factorForearm?: SortOrder
+    factorBiceps?: SortOrder
+    factorTriceps?: SortOrder
+    factorLateralDelt?: SortOrder
+    factorPosteriorDelt?: SortOrder
+    factorAnteriorDelt?: SortOrder
+    factorPectoral?: SortOrder
+    factorClavicularPec?: SortOrder
+    factorUpperBack?: SortOrder
+    factorLat?: SortOrder
+    factorLowerBack?: SortOrder
+    factorAbdomen?: SortOrder
   }
 
   export type ExerciseMaxOrderByAggregateInput = {
@@ -15658,6 +16213,23 @@ export namespace Prisma {
     recommendedMinReps?: SortOrder
     recommendedMaxReps?: SortOrder
     measurementType?: SortOrder
+    factorQuadriceps?: SortOrder
+    factorHamstring?: SortOrder
+    factorGlute?: SortOrder
+    factorAdductor?: SortOrder
+    factorCalf?: SortOrder
+    factorForearm?: SortOrder
+    factorBiceps?: SortOrder
+    factorTriceps?: SortOrder
+    factorLateralDelt?: SortOrder
+    factorPosteriorDelt?: SortOrder
+    factorAnteriorDelt?: SortOrder
+    factorPectoral?: SortOrder
+    factorClavicularPec?: SortOrder
+    factorUpperBack?: SortOrder
+    factorLat?: SortOrder
+    factorLowerBack?: SortOrder
+    factorAbdomen?: SortOrder
   }
 
   export type ExerciseMinOrderByAggregateInput = {
@@ -15667,11 +16239,45 @@ export namespace Prisma {
     recommendedMinReps?: SortOrder
     recommendedMaxReps?: SortOrder
     measurementType?: SortOrder
+    factorQuadriceps?: SortOrder
+    factorHamstring?: SortOrder
+    factorGlute?: SortOrder
+    factorAdductor?: SortOrder
+    factorCalf?: SortOrder
+    factorForearm?: SortOrder
+    factorBiceps?: SortOrder
+    factorTriceps?: SortOrder
+    factorLateralDelt?: SortOrder
+    factorPosteriorDelt?: SortOrder
+    factorAnteriorDelt?: SortOrder
+    factorPectoral?: SortOrder
+    factorClavicularPec?: SortOrder
+    factorUpperBack?: SortOrder
+    factorLat?: SortOrder
+    factorLowerBack?: SortOrder
+    factorAbdomen?: SortOrder
   }
 
   export type ExerciseSumOrderByAggregateInput = {
     recommendedMinReps?: SortOrder
     recommendedMaxReps?: SortOrder
+    factorQuadriceps?: SortOrder
+    factorHamstring?: SortOrder
+    factorGlute?: SortOrder
+    factorAdductor?: SortOrder
+    factorCalf?: SortOrder
+    factorForearm?: SortOrder
+    factorBiceps?: SortOrder
+    factorTriceps?: SortOrder
+    factorLateralDelt?: SortOrder
+    factorPosteriorDelt?: SortOrder
+    factorAnteriorDelt?: SortOrder
+    factorPectoral?: SortOrder
+    factorClavicularPec?: SortOrder
+    factorUpperBack?: SortOrder
+    factorLat?: SortOrder
+    factorLowerBack?: SortOrder
+    factorAbdomen?: SortOrder
   }
 
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -15700,6 +16306,22 @@ export namespace Prisma {
     _max?: NestedEnumMeasurementTypeFilter<$PrismaModel>
   }
 
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -15723,17 +16345,6 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
-  export type FloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type EnumRoleFilter<$PrismaModel = never> = {
@@ -15880,22 +16491,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
-  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type EnumRoleWithAggregatesFilter<$PrismaModel = never> = {
@@ -16474,6 +17069,14 @@ export namespace Prisma {
     set?: $Enums.MeasurementType
   }
 
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type ExerciseGroupUpdateOneRequiredWithoutExercisesNestedInput = {
     create?: XOR<ExerciseGroupCreateWithoutExercisesInput, ExerciseGroupUncheckedCreateWithoutExercisesInput>
     connectOrCreate?: ExerciseGroupCreateOrConnectWithoutExercisesInput
@@ -16558,14 +17161,6 @@ export namespace Prisma {
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
-  }
-
-  export type NullableFloatFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type EnumRoleFieldUpdateOperationsInput = {
@@ -16919,6 +17514,17 @@ export namespace Prisma {
     not?: NestedEnumMeasurementTypeFilter<$PrismaModel> | $Enums.MeasurementType
   }
 
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | null
@@ -16935,17 +17541,6 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedEnumMeasurementTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.MeasurementType | EnumMeasurementTypeFieldRefInput<$PrismaModel>
     in?: $Enums.MeasurementType[]
@@ -16954,6 +17549,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumMeasurementTypeFilter<$PrismaModel>
     _max?: NestedEnumMeasurementTypeFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type NestedStringNullableFilter<$PrismaModel = never> = {
@@ -17024,22 +17635,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumRoleWithAggregatesFilter<$PrismaModel = never> = {
@@ -17540,6 +18135,23 @@ export namespace Prisma {
     recommendedMinReps?: number | null
     recommendedMaxReps?: number | null
     measurementType?: $Enums.MeasurementType
+    factorQuadriceps?: number | null
+    factorHamstring?: number | null
+    factorGlute?: number | null
+    factorAdductor?: number | null
+    factorCalf?: number | null
+    factorForearm?: number | null
+    factorBiceps?: number | null
+    factorTriceps?: number | null
+    factorLateralDelt?: number | null
+    factorPosteriorDelt?: number | null
+    factorAnteriorDelt?: number | null
+    factorPectoral?: number | null
+    factorClavicularPec?: number | null
+    factorUpperBack?: number | null
+    factorLat?: number | null
+    factorLowerBack?: number | null
+    factorAbdomen?: number | null
     dayExercises?: DayExerciseCreateNestedManyWithoutExerciseInput
   }
 
@@ -17549,6 +18161,23 @@ export namespace Prisma {
     recommendedMinReps?: number | null
     recommendedMaxReps?: number | null
     measurementType?: $Enums.MeasurementType
+    factorQuadriceps?: number | null
+    factorHamstring?: number | null
+    factorGlute?: number | null
+    factorAdductor?: number | null
+    factorCalf?: number | null
+    factorForearm?: number | null
+    factorBiceps?: number | null
+    factorTriceps?: number | null
+    factorLateralDelt?: number | null
+    factorPosteriorDelt?: number | null
+    factorAnteriorDelt?: number | null
+    factorPectoral?: number | null
+    factorClavicularPec?: number | null
+    factorUpperBack?: number | null
+    factorLat?: number | null
+    factorLowerBack?: number | null
+    factorAbdomen?: number | null
     dayExercises?: DayExerciseUncheckedCreateNestedManyWithoutExerciseInput
   }
 
@@ -17587,6 +18216,23 @@ export namespace Prisma {
     recommendedMinReps?: IntNullableFilter<"Exercise"> | number | null
     recommendedMaxReps?: IntNullableFilter<"Exercise"> | number | null
     measurementType?: EnumMeasurementTypeFilter<"Exercise"> | $Enums.MeasurementType
+    factorQuadriceps?: FloatNullableFilter<"Exercise"> | number | null
+    factorHamstring?: FloatNullableFilter<"Exercise"> | number | null
+    factorGlute?: FloatNullableFilter<"Exercise"> | number | null
+    factorAdductor?: FloatNullableFilter<"Exercise"> | number | null
+    factorCalf?: FloatNullableFilter<"Exercise"> | number | null
+    factorForearm?: FloatNullableFilter<"Exercise"> | number | null
+    factorBiceps?: FloatNullableFilter<"Exercise"> | number | null
+    factorTriceps?: FloatNullableFilter<"Exercise"> | number | null
+    factorLateralDelt?: FloatNullableFilter<"Exercise"> | number | null
+    factorPosteriorDelt?: FloatNullableFilter<"Exercise"> | number | null
+    factorAnteriorDelt?: FloatNullableFilter<"Exercise"> | number | null
+    factorPectoral?: FloatNullableFilter<"Exercise"> | number | null
+    factorClavicularPec?: FloatNullableFilter<"Exercise"> | number | null
+    factorUpperBack?: FloatNullableFilter<"Exercise"> | number | null
+    factorLat?: FloatNullableFilter<"Exercise"> | number | null
+    factorLowerBack?: FloatNullableFilter<"Exercise"> | number | null
+    factorAbdomen?: FloatNullableFilter<"Exercise"> | number | null
   }
 
   export type ExerciseGroupCreateWithoutExercisesInput = {
@@ -17723,27 +18369,27 @@ export namespace Prisma {
   export type MeasurementCreateWithoutUserInput = {
     id?: string
     date: Date | string
-    weight: number
-    neck: number
-    arm: number
-    waist: number
-    abdomen: number
-    hip: number
-    thigh: number
-    calfMuscle: number
+    weight?: number | null
+    neck?: number | null
+    arm?: number | null
+    waist?: number | null
+    abdomen?: number | null
+    hip?: number | null
+    thigh?: number | null
+    calfMuscle?: number | null
   }
 
   export type MeasurementUncheckedCreateWithoutUserInput = {
     id?: string
     date: Date | string
-    weight: number
-    neck: number
-    arm: number
-    waist: number
-    abdomen: number
-    hip: number
-    thigh: number
-    calfMuscle: number
+    weight?: number | null
+    neck?: number | null
+    arm?: number | null
+    waist?: number | null
+    abdomen?: number | null
+    hip?: number | null
+    thigh?: number | null
+    calfMuscle?: number | null
   }
 
   export type MeasurementCreateOrConnectWithoutUserInput = {
@@ -17833,14 +18479,14 @@ export namespace Prisma {
     id?: StringFilter<"Measurement"> | string
     userId?: StringFilter<"Measurement"> | string
     date?: DateTimeFilter<"Measurement"> | Date | string
-    weight?: FloatFilter<"Measurement"> | number
-    neck?: FloatFilter<"Measurement"> | number
-    arm?: FloatFilter<"Measurement"> | number
-    waist?: FloatFilter<"Measurement"> | number
-    abdomen?: FloatFilter<"Measurement"> | number
-    hip?: FloatFilter<"Measurement"> | number
-    thigh?: FloatFilter<"Measurement"> | number
-    calfMuscle?: FloatFilter<"Measurement"> | number
+    weight?: FloatNullableFilter<"Measurement"> | number | null
+    neck?: FloatNullableFilter<"Measurement"> | number | null
+    arm?: FloatNullableFilter<"Measurement"> | number | null
+    waist?: FloatNullableFilter<"Measurement"> | number | null
+    abdomen?: FloatNullableFilter<"Measurement"> | number | null
+    hip?: FloatNullableFilter<"Measurement"> | number | null
+    thigh?: FloatNullableFilter<"Measurement"> | number | null
+    calfMuscle?: FloatNullableFilter<"Measurement"> | number | null
   }
 
   export type TrainingDayCreateWithoutDayExercisesInput = {
@@ -17870,6 +18516,23 @@ export namespace Prisma {
     recommendedMinReps?: number | null
     recommendedMaxReps?: number | null
     measurementType?: $Enums.MeasurementType
+    factorQuadriceps?: number | null
+    factorHamstring?: number | null
+    factorGlute?: number | null
+    factorAdductor?: number | null
+    factorCalf?: number | null
+    factorForearm?: number | null
+    factorBiceps?: number | null
+    factorTriceps?: number | null
+    factorLateralDelt?: number | null
+    factorPosteriorDelt?: number | null
+    factorAnteriorDelt?: number | null
+    factorPectoral?: number | null
+    factorClavicularPec?: number | null
+    factorUpperBack?: number | null
+    factorLat?: number | null
+    factorLowerBack?: number | null
+    factorAbdomen?: number | null
     exerciseGroup: ExerciseGroupCreateNestedOneWithoutExercisesInput
   }
 
@@ -17880,6 +18543,23 @@ export namespace Prisma {
     recommendedMinReps?: number | null
     recommendedMaxReps?: number | null
     measurementType?: $Enums.MeasurementType
+    factorQuadriceps?: number | null
+    factorHamstring?: number | null
+    factorGlute?: number | null
+    factorAdductor?: number | null
+    factorCalf?: number | null
+    factorForearm?: number | null
+    factorBiceps?: number | null
+    factorTriceps?: number | null
+    factorLateralDelt?: number | null
+    factorPosteriorDelt?: number | null
+    factorAnteriorDelt?: number | null
+    factorPectoral?: number | null
+    factorClavicularPec?: number | null
+    factorUpperBack?: number | null
+    factorLat?: number | null
+    factorLowerBack?: number | null
+    factorAbdomen?: number | null
   }
 
   export type ExerciseCreateOrConnectWithoutDayExercisesInput = {
@@ -17974,6 +18654,23 @@ export namespace Prisma {
     recommendedMinReps?: NullableIntFieldUpdateOperationsInput | number | null
     recommendedMaxReps?: NullableIntFieldUpdateOperationsInput | number | null
     measurementType?: EnumMeasurementTypeFieldUpdateOperationsInput | $Enums.MeasurementType
+    factorQuadriceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorHamstring?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorGlute?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAdductor?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorCalf?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorForearm?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorBiceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorTriceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLateralDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorPosteriorDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAnteriorDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorPectoral?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorClavicularPec?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorUpperBack?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLowerBack?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAbdomen?: NullableFloatFieldUpdateOperationsInput | number | null
     exerciseGroup?: ExerciseGroupUpdateOneRequiredWithoutExercisesNestedInput
   }
 
@@ -17984,6 +18681,23 @@ export namespace Prisma {
     recommendedMinReps?: NullableIntFieldUpdateOperationsInput | number | null
     recommendedMaxReps?: NullableIntFieldUpdateOperationsInput | number | null
     measurementType?: EnumMeasurementTypeFieldUpdateOperationsInput | $Enums.MeasurementType
+    factorQuadriceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorHamstring?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorGlute?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAdductor?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorCalf?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorForearm?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorBiceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorTriceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLateralDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorPosteriorDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAnteriorDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorPectoral?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorClavicularPec?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorUpperBack?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLowerBack?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAbdomen?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type DayExerciseSeriesUpsertWithWhereUniqueWithoutDayExerciseInput = {
@@ -18500,6 +19214,23 @@ export namespace Prisma {
     recommendedMinReps?: number | null
     recommendedMaxReps?: number | null
     measurementType?: $Enums.MeasurementType
+    factorQuadriceps?: number | null
+    factorHamstring?: number | null
+    factorGlute?: number | null
+    factorAdductor?: number | null
+    factorCalf?: number | null
+    factorForearm?: number | null
+    factorBiceps?: number | null
+    factorTriceps?: number | null
+    factorLateralDelt?: number | null
+    factorPosteriorDelt?: number | null
+    factorAnteriorDelt?: number | null
+    factorPectoral?: number | null
+    factorClavicularPec?: number | null
+    factorUpperBack?: number | null
+    factorLat?: number | null
+    factorLowerBack?: number | null
+    factorAbdomen?: number | null
   }
 
   export type ExerciseUpdateWithoutExerciseGroupInput = {
@@ -18508,6 +19239,23 @@ export namespace Prisma {
     recommendedMinReps?: NullableIntFieldUpdateOperationsInput | number | null
     recommendedMaxReps?: NullableIntFieldUpdateOperationsInput | number | null
     measurementType?: EnumMeasurementTypeFieldUpdateOperationsInput | $Enums.MeasurementType
+    factorQuadriceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorHamstring?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorGlute?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAdductor?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorCalf?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorForearm?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorBiceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorTriceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLateralDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorPosteriorDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAnteriorDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorPectoral?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorClavicularPec?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorUpperBack?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLowerBack?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAbdomen?: NullableFloatFieldUpdateOperationsInput | number | null
     dayExercises?: DayExerciseUpdateManyWithoutExerciseNestedInput
   }
 
@@ -18517,6 +19265,23 @@ export namespace Prisma {
     recommendedMinReps?: NullableIntFieldUpdateOperationsInput | number | null
     recommendedMaxReps?: NullableIntFieldUpdateOperationsInput | number | null
     measurementType?: EnumMeasurementTypeFieldUpdateOperationsInput | $Enums.MeasurementType
+    factorQuadriceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorHamstring?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorGlute?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAdductor?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorCalf?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorForearm?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorBiceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorTriceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLateralDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorPosteriorDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAnteriorDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorPectoral?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorClavicularPec?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorUpperBack?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLowerBack?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAbdomen?: NullableFloatFieldUpdateOperationsInput | number | null
     dayExercises?: DayExerciseUncheckedUpdateManyWithoutExerciseNestedInput
   }
 
@@ -18526,6 +19291,23 @@ export namespace Prisma {
     recommendedMinReps?: NullableIntFieldUpdateOperationsInput | number | null
     recommendedMaxReps?: NullableIntFieldUpdateOperationsInput | number | null
     measurementType?: EnumMeasurementTypeFieldUpdateOperationsInput | $Enums.MeasurementType
+    factorQuadriceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorHamstring?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorGlute?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAdductor?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorCalf?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorForearm?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorBiceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorTriceps?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLateralDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorPosteriorDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAnteriorDelt?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorPectoral?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorClavicularPec?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorUpperBack?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorLowerBack?: NullableFloatFieldUpdateOperationsInput | number | null
+    factorAbdomen?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type DayExerciseCreateManyExerciseInput = {
@@ -18584,14 +19366,14 @@ export namespace Prisma {
   export type MeasurementCreateManyUserInput = {
     id?: string
     date: Date | string
-    weight: number
-    neck: number
-    arm: number
-    waist: number
-    abdomen: number
-    hip: number
-    thigh: number
-    calfMuscle: number
+    weight?: number | null
+    neck?: number | null
+    arm?: number | null
+    waist?: number | null
+    abdomen?: number | null
+    hip?: number | null
+    thigh?: number | null
+    calfMuscle?: number | null
   }
 
   export type TrainingBlockUpdateWithoutUserInput = {
@@ -18644,40 +19426,40 @@ export namespace Prisma {
   export type MeasurementUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    weight?: FloatFieldUpdateOperationsInput | number
-    neck?: FloatFieldUpdateOperationsInput | number
-    arm?: FloatFieldUpdateOperationsInput | number
-    waist?: FloatFieldUpdateOperationsInput | number
-    abdomen?: FloatFieldUpdateOperationsInput | number
-    hip?: FloatFieldUpdateOperationsInput | number
-    thigh?: FloatFieldUpdateOperationsInput | number
-    calfMuscle?: FloatFieldUpdateOperationsInput | number
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    neck?: NullableFloatFieldUpdateOperationsInput | number | null
+    arm?: NullableFloatFieldUpdateOperationsInput | number | null
+    waist?: NullableFloatFieldUpdateOperationsInput | number | null
+    abdomen?: NullableFloatFieldUpdateOperationsInput | number | null
+    hip?: NullableFloatFieldUpdateOperationsInput | number | null
+    thigh?: NullableFloatFieldUpdateOperationsInput | number | null
+    calfMuscle?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type MeasurementUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    weight?: FloatFieldUpdateOperationsInput | number
-    neck?: FloatFieldUpdateOperationsInput | number
-    arm?: FloatFieldUpdateOperationsInput | number
-    waist?: FloatFieldUpdateOperationsInput | number
-    abdomen?: FloatFieldUpdateOperationsInput | number
-    hip?: FloatFieldUpdateOperationsInput | number
-    thigh?: FloatFieldUpdateOperationsInput | number
-    calfMuscle?: FloatFieldUpdateOperationsInput | number
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    neck?: NullableFloatFieldUpdateOperationsInput | number | null
+    arm?: NullableFloatFieldUpdateOperationsInput | number | null
+    waist?: NullableFloatFieldUpdateOperationsInput | number | null
+    abdomen?: NullableFloatFieldUpdateOperationsInput | number | null
+    hip?: NullableFloatFieldUpdateOperationsInput | number | null
+    thigh?: NullableFloatFieldUpdateOperationsInput | number | null
+    calfMuscle?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type MeasurementUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    weight?: FloatFieldUpdateOperationsInput | number
-    neck?: FloatFieldUpdateOperationsInput | number
-    arm?: FloatFieldUpdateOperationsInput | number
-    waist?: FloatFieldUpdateOperationsInput | number
-    abdomen?: FloatFieldUpdateOperationsInput | number
-    hip?: FloatFieldUpdateOperationsInput | number
-    thigh?: FloatFieldUpdateOperationsInput | number
-    calfMuscle?: FloatFieldUpdateOperationsInput | number
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    neck?: NullableFloatFieldUpdateOperationsInput | number | null
+    arm?: NullableFloatFieldUpdateOperationsInput | number | null
+    waist?: NullableFloatFieldUpdateOperationsInput | number | null
+    abdomen?: NullableFloatFieldUpdateOperationsInput | number | null
+    hip?: NullableFloatFieldUpdateOperationsInput | number | null
+    thigh?: NullableFloatFieldUpdateOperationsInput | number | null
+    calfMuscle?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type DayExerciseSeriesCreateManyDayExerciseInput = {

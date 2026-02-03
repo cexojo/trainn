@@ -5,6 +5,7 @@ export type Translations = {
     athleteNotesModalTitle: (firstName: string, lastName?: string) => string;
     noteButtonTitle: (firstName: string, lastName?: string) => string;
     measurementsMenu: string;
+    measurementsTab: string;
     sexLabel: string;
     sexMale: string;
     sexFemale: string;
@@ -140,6 +141,7 @@ export type Translations = {
     legend8: string;
     legend9: string;
     close: string;
+    of: string;
     calendarAria: (idx: number) => string;
     athleteSeparator: string;
     language: string;
@@ -232,6 +234,7 @@ export type Translations = {
     wizardSeriesNotes: string;
     wizardDropsetNotes: string;
     wizardDragSeries: string;
+    wizardDragExercise: string;
     createBlockWizardStepConfig: string;
     createBlockWizardStepDesign: string;
     createBlockWizardStepSummary: string;
@@ -285,6 +288,7 @@ export type Translations = {
     // Measurements
     measurementsTitle: string;
     measurementsAdd: string;
+    measurementsColumnId: string;
     measurementsColumnDate: string;
     measurementsColumnWeight: string;
     measurementsColumnNeck: string;
@@ -296,6 +300,8 @@ export type Translations = {
     measurementsColumnCalfMuscle: string;
     measurementsLoading: string;
     measurementsEmpty: string;
+    measurementsSaving: string;
+    measurementsDeletedSuccess: string;
     measurementsModalTitle: string;
     measurementsModalCancel: string;
     measurementsDeleteConfirm: string;
@@ -303,6 +309,25 @@ export type Translations = {
     measurementsDeleteError: string;
     measurementsDelete: string;
     measurementsSaveError: string;
+
+    // Muscle group translations
+    muscleGroupQuadriceps: string;
+    muscleGroupHamstring: string;
+    muscleGroupGlute: string;
+    muscleGroupAdductor: string;
+    muscleGroupCalf: string;
+    muscleGroupForearm: string;
+    muscleGroupBiceps: string;
+    muscleGroupTriceps: string;
+    muscleGroupLateralDelt: string;
+    muscleGroupPosteriorDelt: string;
+    muscleGroupAnteriorDelt: string;
+    muscleGroupPectoral: string;
+    muscleGroupClavicularPec: string;
+    muscleGroupUpperBack: string;
+    muscleGroupLat: string;
+    muscleGroupLowerBack: string;
+    muscleGroupAbdomen: string;
   };
 };
 
@@ -450,6 +475,7 @@ export const translations: Translations = {
     legend8: "Metric unchanged",
     legend9: "Metric decreased",
     close: "Close",
+    of: "of",
     calendarAria: (idx: number) => `Set date for day ${idx + 1}`,
     athleteSeparator: "|",
     language: "Language",
@@ -543,6 +569,7 @@ export const translations: Translations = {
     wizardSeriesNotes: "Notes",
     wizardDropsetNotes: "Notes (dropset)",
     wizardDragSeries: "Drag to reorder",
+    wizardDragExercise: "Drag to reorder exercise",
     createBlockWizardStepConfig: "Select athlete and configuration",
     createBlockWizardStepDesign: "Program design",
     createBlockWizardStepSummary: "Summary and confirmation",
@@ -591,10 +618,12 @@ export const translations: Translations = {
     invalidEmailError: "Invalid email address",
     createUserFrequencyLabel: "Create user frequency",
     searchUserTablePlaceholder: "Search by name, username, or email",
-
-    // Measurements
+    measurementsTab: "Measurements",
     measurementsTitle: "Measurements",
     measurementsAdd: "Add measurement",
+    measurementsSaving: "Saving…",
+    measurementsDeletedSuccess: "Measurement deleted",
+    measurementsColumnId: "ID",
     measurementsColumnDate: "Date",
     measurementsColumnWeight: "Weight",
     measurementsColumnNeck: "Neck",
@@ -608,11 +637,30 @@ export const translations: Translations = {
     measurementsEmpty: "No measurements.",
     measurementsModalTitle: "Add measurement",
     measurementsModalCancel: "Cancel",
-    measurementsDeleteConfirm: "¿Eliminar esta medición?",
-    measurementsDeleted: "Medición borrada",
-    measurementsDeleteError: "Error al borrar la medición",
-    measurementsDelete: "Borrar",
-    measurementsSaveError: "Error al guardar la medida",
+    measurementsDeleteConfirm: "Delete this measurement?",
+    measurementsDeleted: "Measurement deleted",
+    measurementsDeleteError: "Error deleting measurement",
+    measurementsDelete: "Delete",
+    measurementsSaveError: "Error saving measurement",
+
+    // Muscle group translation keys
+    muscleGroupQuadriceps: "Quadriceps",
+    muscleGroupHamstring: "Hamstring",
+    muscleGroupGlute: "Glute",
+    muscleGroupAdductor: "Adductor",
+    muscleGroupCalf: "Calf",
+    muscleGroupForearm: "Forearm",
+    muscleGroupBiceps: "Biceps",
+    muscleGroupTriceps: "Triceps",
+    muscleGroupLateralDelt: "Lateral Delt",
+    muscleGroupPosteriorDelt: "Posterior Delt",
+    muscleGroupAnteriorDelt: "Anterior Delt",
+    muscleGroupPectoral: "Pectoral",
+    muscleGroupClavicularPec: "Clavicular Pec",
+    muscleGroupUpperBack: "Upper Back",
+    muscleGroupLat: "Lat",
+    muscleGroupLowerBack: "Lower Back",
+    muscleGroupAbdomen: "Abdomen",
   },
   es: {
     athleteNotesModalTitle: (firstName: string, lastName?: string) =>
@@ -767,6 +815,7 @@ export const translations: Translations = {
     legend8: "Métrica igual",
     legend9: "Métrica empeoró",
     close: "Cerrar",
+    of: "de",
     calendarAria: (idx: number) => `Seleccionar fecha del día ${idx + 1}`,
     athleteSeparator: "|",
     language: "Idioma",
@@ -851,7 +900,7 @@ export const translations: Translations = {
     blockVisibilityNotYet: "No publicarlo aún, lo haré yo en otro momento",
     wizardAddExercise: "Añadir ejercicio",
     wizardNoExercises: "No hay ejercicios asignados.",
-    wizardRemoveExercise: "Eliminar Ejercicio",
+    wizardRemoveExercise: "Eliminar ejercicio",
     wizardAddDropsetCheckbox: "Añadir serie dropset",
     wizardSeriesLabel: "Series",
     wizardSeriesCopy: "Duplicar serie",
@@ -863,7 +912,8 @@ export const translations: Translations = {
     wizardMaxRIR: "Max RIR",
     wizardSeriesNotes: "Notas",
     wizardDropsetNotes: "Notas (dropset)",
-    wizardDragSeries: "Arrastrar para reordenar",
+    wizardDragSeries: "Arrastrar para reordenar serie",
+    wizardDragExercise: "Arrastra para reordenar ejercicio",
     createBlockWizardStepConfig: "Seleccionar atleta y configuración",
     createBlockWizardStepDesign: "Diseño del programa",
     createBlockWizardStepSummary: "Resumen y confirmación",
@@ -898,10 +948,12 @@ export const translations: Translations = {
     invalidEmailError: "Correo electrónico inválido",
     createUserFrequencyLabel: "Frecuencia para crear usuario",
     searchUserTablePlaceholder: "Buscar por nombre, usuario o email",
-
-    // Measurements
+    measurementsTab: "Mediciones",
     measurementsTitle: "Medidas",
     measurementsAdd: "Añadir medida",
+    measurementsSaving: "Guardando…",
+    measurementsDeletedSuccess: "Medición guardada",
+    measurementsColumnId: "Clave",
     measurementsColumnDate: "Fecha",
     measurementsColumnWeight: "Peso (kg)",
     measurementsColumnNeck: "Cuello",
@@ -914,11 +966,30 @@ export const translations: Translations = {
     measurementsLoading: "Cargando…",
     measurementsEmpty: "No hay medidas.",
     measurementsModalTitle: "Añadir medida",
-    measurementsModalCancel: "Cancel",
-    measurementsDeleteConfirm: "Delete this measurement?",
-    measurementsDeleted: "Measurement deleted",
-    measurementsDeleteError: "Error deleting measurement",
-    measurementsDelete: "Delete",
-    measurementsSaveError: "Error saving measurement",
+    measurementsModalCancel: "Cancelar",
+    measurementsDeleteConfirm: "¿Eliminar esta medición?",
+    measurementsDeleted: "Medición borrada",
+    measurementsDeleteError: "Error al borrar la medición",
+    measurementsDelete: "Borrar",
+    measurementsSaveError: "Error al guardar la medida",
+
+    // Muscle group translation keys
+    muscleGroupQuadriceps: "Cuádriceps",
+    muscleGroupHamstring: "Femoral",
+    muscleGroupGlute: "Glúteo",
+    muscleGroupAdductor: "Adductor",
+    muscleGroupCalf: "Gemelo",
+    muscleGroupForearm: "Antebrazo",
+    muscleGroupBiceps: "Bíceps directo",
+    muscleGroupTriceps: "Tríceps directo",
+    muscleGroupLateralDelt: "Delt lateral",
+    muscleGroupPosteriorDelt: "Delt posterior",
+    muscleGroupAnteriorDelt: "Delt anterior",
+    muscleGroupPectoral: "Pectoral",
+    muscleGroupClavicularPec: "Pec (haz clavicular)",
+    muscleGroupUpperBack: "Espalda alta",
+    muscleGroupLat: "Dorsal",
+    muscleGroupLowerBack: "Espalda baja",
+    muscleGroupAbdomen: "Abdomen",
   }
 };

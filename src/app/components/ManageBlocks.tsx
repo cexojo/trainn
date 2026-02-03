@@ -565,7 +565,145 @@ exercisesForWeek.forEach((ex: any) => {
           )}
         </Box>
         );
+      })()}      {/* Muscle Volume Badges for this week */}
+      {(() => {
+        // Define the muscle group factors (should match Wizard, hardcode for robustness)
+        const muscleGroupFactorMap = [
+          { factor: "factorQuadriceps", label: "muscleGroupQuadriceps" },
+          { factor: "factorHamstring", label: "muscleGroupHamstring" },
+          { factor: "factorGlute", label: "muscleGroupGlute" },
+          { factor: "factorAdductor", label: "muscleGroupAdductor" },
+          { factor: "factorCalf", label: "muscleGroupCalf" },
+          { factor: "factorForearm", label: "muscleGroupForearm" },
+          { factor: "factorBiceps", label: "muscleGroupBiceps" },
+          { factor: "factorTriceps", label: "muscleGroupTriceps" },
+          { factor: "factorLateralDelt", label: "muscleGroupLateralDelt" },
+          { factor: "factorPosteriorDelt", label: "muscleGroupPosteriorDelt" },
+          { factor: "factorAnteriorDelt", label: "muscleGroupAnteriorDelt" },
+          { factor: "factorPectoral", label: "muscleGroupPectoral" },
+          { factor: "factorClavicularPec", label: "muscleGroupClavicularPec" },
+          { factor: "factorUpperBack", label: "muscleGroupUpperBack" },
+          { factor: "factorLat", label: "muscleGroupLat" },
+          { factor: "factorLowerBack", label: "muscleGroupLowerBack" },
+          { factor: "factorAbdomen", label: "muscleGroupAbdomen" },
+        ];
+        // Calculate volume per muscle group (sum across all exerciseDefs in exercisesForWeek)
+        const muscleVolume = Object.fromEntries(muscleGroupFactorMap.map(({ factor }) => [factor, 0]));
+        exercisesForWeek.forEach((exDef: any) => {
+          // Accept dynamic muscle group keys from exDef.exercise
+          const exData = exDef.exercise || {};
+          muscleGroupFactorMap.forEach(({ factor }) => {
+            const nSeries = 1; // Could update if series count is available
+            const fVal = typeof (exData as any)[factor] === "number" ? (exData as any)[factor]
+                          : parseFloat(((exData as any)[factor] || 0).toString());
+            if (!isNaN(fVal) && fVal !== 0) muscleVolume[factor] += nSeries * fVal;
+          });
+        });
+        const anyVolume = Object.values(muscleVolume).some(v => v > 0);
+        if (!anyVolume) return null;
+        return (
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 1.5,
+              borderRadius: 2,
+              p: 2,
+              mb: 2,
+              bgcolor: "background.paper",
+              border: "1px solid #e0e0e0",
+              alignItems: "center"
+            }}
+          >
+            {muscleGroupFactorMap
+              .filter(({ factor }) => muscleVolume[factor] > 0)
+              .sort((a, b) => muscleVolume[b.factor] - muscleVolume[a.factor])
+              .map(({ factor, label }) => (
+                <Tooltip
+                  key={factor}
+                  title={
+                    <div>
+                      {(() => {
+                        // Per-exercise (by name) breakdown, group by exercise
+                        const exerciseGroupRows: string[] = [];
+                        const exerciseGroups: Record<string, { name: string, factor: number, count: number }> = {};
+                        exercisesForWeek.forEach((exDef: any) => {
+                          const exData = exDef.exercise || {};
+                          const exId = exData.id || "";
+                          const exName = exData.name || "";
+                          const fVal = (exData as any)[factor] ?? 0;
+                          if (!isNaN(parseFloat(fVal || 0)) && fVal !== 0) {
+                            if (!exerciseGroups[exId]) {
+                              exerciseGroups[exId] = { name: exName, factor: fVal, count: 1 };
+                            } else {
+                              exerciseGroups[exId].count++;
+                            }
+                          }
+                        });
+                        Object.values(exerciseGroups).forEach(({ name, factor, count }) => {
+                          exerciseGroupRows.push(`${name}: ${count} × ${factor} = ${count * factor}`);
+                        });
+                        return (
+                          <>
+                            {exerciseGroupRows.length > 0 ? (
+                              <>
+                                {exerciseGroupRows.map((row, i) => (
+                                  <div key={i} style={{ whiteSpace: "nowrap" }}>{row}</div>
+                                ))}
+                                <div style={{ borderBottom: "1px solid #bbb", margin: "4px 0" }} />
+                                <div style={{ fontWeight: 600 }}>Total {muscleVolume[factor]}</div>
+                              </>
+                            ) : (
+                              <div>N/A</div>
+                            )}
+                          </>
+                        );
+                      })()}
+                    </div>
+                  }
+                  arrow
+                  slotProps={{
+                    tooltip: {
+                      sx: {
+                        fontSize: "0.68em",
+                        maxWidth: 290,
+                        bgcolor: "#fff",
+                        color: "#1a1a1a",
+                        border: "1px solid #bbb",
+                        boxShadow: 3,
+                        p: 1.2
+                      }
+                    }
+                  }}
+                >
+                  <Box
+                    component="span"
+                    sx={{
+                      px: 0.7,
+                      py: 0.1,
+                      borderRadius: "9999px",
+                      bgcolor: "#eeeeee",
+                      color: "#222",
+                      fontWeight: 500,
+                      fontSize: "0.69em",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: 1,
+                      border: "1px solid #cfcfcf",
+                      minHeight: 18,
+                      cursor: "help"
+                    }}
+                  >
+                    {(translations[lang] as any)[label] || factor.replace(/^factor/, "")}:&nbsp;
+                    <span style={{ fontWeight: 700 }}>{muscleVolume[factor]}</span>
+                  </Box>
+                </Tooltip>
+              ))}
+          </Box>
+        );
       })()}
+
       {daysForWeek.length === 0 && (
         <Typography color="text.secondary" sx={{ mb: 2 }}>
           {translations[lang].blockNoDaysInWeek}
