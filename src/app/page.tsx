@@ -195,9 +195,9 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               alignSelf: 'center',
               marginTop: 4,
               marginBottom: 4,
-              border: '3px solid #fff',
+              border: '3px solid #000000',
               borderRadius: '12px',
-              background: '#fff',
+              background: '#000000',
               objectFit: 'contain'
             }}
             loading="eager"
