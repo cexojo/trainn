@@ -11,33 +11,48 @@ import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import SideMenuMobile from './SideMenuMobile';
 import MenuButton from './MenuButton';
 import { translations, type Lang } from "@/app/i18n";
+import DashboardProgressTable from "./DashboardProgressTable";
 
 const Toolbar = styled(MuiToolbar)({
   width: '100%',
-  padding: '12px',
+  padding: '2px',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'start',
   justifyContent: 'center',
-  gap: '12px',
+  gap: '2px',
   flexShrink: 0,
   [`& ${tabsClasses.flexContainer}`]: {
-    gap: '8px',
-    p: '8px',
+    gap: '6px',
+    p: '0px',
     pb: 0,
   },
 });
 
 export default function AppNavbar({
   setSection,
-  userRole,
-  currentSection,
   blockWeekLabel,
+  selectedBlock,
+  setSelectedBlock,
+  selectedWeek,
+  setSelectedWeek,
+  blockOpts,
+  selectedDay,
+  exerciseDefs,
+  lang
 }: {
   setSection: (section: string | null) => void;
   userRole?: string | null;
   currentSection?: string | null;
   blockWeekLabel?: string;
+  selectedBlock?: any | null;
+  setSelectedBlock?: (block: any) => void;
+  selectedWeek?: any | null;
+  setSelectedWeek?: (week: any) => void;
+  blockOpts?: any[];
+  selectedDay?: number | null;
+  exerciseDefs?: any[];
+  lang?: Lang;
 }) {
   const [open, setOpen] = React.useState(false);
 
@@ -75,13 +90,22 @@ export default function AppNavbar({
           >
             <CustomIcon />
             <Box>
-              <Typography variant="h4" component="h1" sx={{ color: 'text.primary' }}>
+              <Typography variant="h6" component="h1" sx={{ color: 'text.primary' }}>
                 {translations["es"].dashboard}
               </Typography>
-              {blockWeekLabel && (
-                <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.25 }}>
-                  {blockWeekLabel}
-                </Typography>
+              {blockWeekLabel && setSelectedBlock && setSelectedWeek && (
+                <>
+                  <DashboardProgressTable
+                    selectedBlock={selectedBlock}
+                    setSelectedBlock={setSelectedBlock}
+                    selectedWeek={selectedWeek}
+                    setSelectedWeek={setSelectedWeek}
+                    blockOpts={blockOpts || []}
+                    selectedDay={typeof selectedDay === "number" ? selectedDay : null}
+                    exerciseDefs={exerciseDefs || []}
+                    lang={lang || "es"}
+                  />
+                </>
               )}
             </Box>
           </Stack>

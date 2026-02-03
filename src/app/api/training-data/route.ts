@@ -313,20 +313,78 @@ export async function GET(req: NextRequest) {
       });
     }
 
+    // Gather all week IDs for a single batch query
+    const allWeekIds: string[] = blocks.flatMap((b: any) => b.weeks.map((w: any) => String(w.id)));
+
+    const allSeries = await prisma.dayExerciseSeries.findMany({
+      where: { trainingWeekId: { in: allWeekIds } },
+      select: {
+        id: true,
+        trainingWeekId: true,
+        effectiveWeight: true,
+        effectiveReps: true
+      }
+    });
+
+    // Group and count
+    const weekStats: Record<string, { total: number, completed: number }> = {};
+    for (const s of allSeries) {
+      const weekId = String(s.trainingWeekId);
+      if (!weekStats[weekId]) weekStats[weekId] = { total: 0, completed: 0 };
+      weekStats[weekId].total += 1;
+      if (
+        s.effectiveWeight != null &&
+        s.effectiveReps != null
+      ) {
+        weekStats[weekId].completed += 1;
+      }
+    }
+
+    // Attach stats to each week
+    const blocksWithStats = blocks.map((b: any) => ({
+      id: b.id,
+      blockNumber: b.blockNumber,
+      description: b.description,
+      weeks: b.weeks.map((w: any) => {
+        const stats = weekStats[String(w.id)] || { total: 0, completed: 0 };
+        return {
+          ...w,
+          numExerciseSeriesTotal: stats.total,
+          numExerciseSeriesCompleted: stats.completed
+        };
+      }),
+    }));
+
+    // Find the enriched selectedBlock from blocksWithStats (to ensure weeks have stats)
+    let selectedBlockWithStats = null;
+    if (selectedBlock) {
+      selectedBlockWithStats = blocksWithStats.find((b: any) => b.id === selectedBlock.id) || null;
+    }
+
+    // Find the selectedDay: first trainingDay in selectedWeek, or null if none
+    let selectedDay = null;
+    if (selectedWeek && trainingDays && trainingDays.length > 0) {
+      selectedDay = trainingDays.find((d: any) => d.weekId === selectedWeek.id) || null;
+    }
+
     const responseObj: any = {
-      blocks: blocks.map((b: any) => ({
-        id: b.id,
-        blockNumber: b.blockNumber,
-        description: b.description,
-        weeks: b.weeks,
-      })),
-      selectedBlock: selectedBlock || null,
+      blocks: blocksWithStats,
+      selectedBlock: selectedBlockWithStats,
       selectedWeek: selectedWeek ? {
         id: selectedWeek.id,
         weekNumber: selectedWeek.weekNumber,
         weekStart: selectedWeek.weekStart,
         weekEnd: selectedWeek.weekEnd
       } : null,
+      selectedDay: selectedDay
+        ? {
+            id: selectedDay.id,
+            weekId: selectedDay.weekId,
+            date: selectedDay.date,
+            dayLabel: selectedDay.dayLabel,
+            dayNumber: selectedDay.dayNumber,
+          }
+        : null,
       exerciseDefs,
       trainingDays
     };

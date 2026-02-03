@@ -24,7 +24,9 @@ export default function MainGrid({
   selectedWeek,
   setSelectedWeek,
   selectedDay,
-  setSelectedDay
+  setSelectedDay,
+  exerciseDefs,
+  setExerciseDefs
 }: {
   section?: string | null,
   userRole?: "admin" | "athlete" | null,
@@ -33,7 +35,9 @@ export default function MainGrid({
   selectedWeek?: any,
   setSelectedWeek: (week: any) => void,
   selectedDay?: number | null,
-  setSelectedDay?: (dayIdx: number | null) => void
+  setSelectedDay?: (dayIdx: number | null) => void,
+  exerciseDefs: any[],
+  setExerciseDefs: (update: any) => void
 }) {
   const lang = "es"; // Replace with current language context if available
 
@@ -314,6 +318,8 @@ export default function MainGrid({
             setSelectedWeek={setSelectedWeek}
             selectedDay={selectedDay}
             setSelectedDay={setSelectedDay}
+            exerciseDefs={exerciseDefs}
+            setExerciseDefs={setExerciseDefs}
           />
         </Box>
       )}

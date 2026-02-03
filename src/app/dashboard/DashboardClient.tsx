@@ -38,6 +38,9 @@ export default function DashboardClient(props: { disableCustomTheme?: boolean })
   const [selectedWeek, setSelectedWeek] = React.useState<any | null>(null);
   const [selectedDay, setSelectedDay] = React.useState<number | null>(null);
 
+  // Hoisted exerciseDefs state
+  const [exerciseDefs, setExerciseDefs] = React.useState<any[]>([]);
+
   // Default section logic: for athlete show "training", admin stays as null (Inicio)
   const [userRole, setUserRole] = React.useState<"admin" | "athlete" | null>(null);
   React.useEffect(() => {
@@ -75,15 +78,21 @@ export default function DashboardClient(props: { disableCustomTheme?: boolean })
         <SideMenu setSection={section => setCurrentSection(section)} role={userRole} />
         <AppNavbar
           setSection={section => setCurrentSection(section)}
-          userRole={userRole}
-          currentSection={currentSection}
           blockWeekLabel={
             userRole === "athlete" && currentSection === "training" && selectedBlock && selectedWeek && selectedDay !== null
-              ? translations[lang].blockWeekDayLabel(selectedBlock.blockNumber ?? "", selectedWeek.weekNumber ?? "", (selectedDay as number) + 1)
+              ? translations[lang].blockWeekDayLabel(selectedBlock?.blockNumber ?? "", selectedWeek?.weekNumber ?? "", (selectedDay as number) + 1)
               : userRole === "athlete" && currentSection === "training" && selectedBlock && selectedWeek
-              ? translations[lang].blockWeekLabel(selectedBlock.blockNumber ?? "", selectedWeek.weekNumber ?? "")
+              ? translations[lang].blockWeekLabel(selectedBlock?.blockNumber ?? "", selectedWeek?.weekNumber ?? "")
               : undefined
           }
+          selectedBlock={selectedBlock}
+          setSelectedBlock={setSelectedBlock}
+          selectedWeek={selectedWeek}
+          setSelectedWeek={setSelectedWeek}
+          blockOpts={[]}
+          selectedDay={selectedDay}
+          exerciseDefs={exerciseDefs}
+          lang={lang}
         />
         {/* Main content */}
         <Box
@@ -116,6 +125,8 @@ export default function DashboardClient(props: { disableCustomTheme?: boolean })
               setSelectedWeek={setSelectedWeek}
               selectedDay={selectedDay}
               setSelectedDay={setSelectedDay}
+              exerciseDefs={exerciseDefs}
+              setExerciseDefs={setExerciseDefs}
             />
           </Stack>
         </Box>

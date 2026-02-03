@@ -47,13 +47,17 @@ export default function TrainingPanel({
   setSelectedWeek,
   selectedDay,
   setSelectedDay,
+  exerciseDefs,
+  setExerciseDefs,
 }: {
-  selectedBlock: any | null,
+  selectedBlock: any,
   setSelectedBlock: (block: any) => void,
-  selectedWeek: any | null,
+  selectedWeek: any,
   setSelectedWeek: (week: any) => void,
   selectedDay?: number | null,
   setSelectedDay?: (dayIdx: number | null) => void,
+  exerciseDefs: any[],
+  setExerciseDefs: (update: any) => void
 }) {
   // Modal state/hooks, must be inside the function!
   const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
@@ -72,8 +76,8 @@ export default function TrainingPanel({
         body: JSON.stringify({ athleteNotes: modalNotes }),
       });
       // Update athleteNotes in exerciseDefs in state for immediate UI refresh
-      setExerciseDefs(prevDefs =>
-        prevDefs.map(def =>
+      setExerciseDefs((prevDefs: any[]) =>
+        prevDefs.map((def: any) =>
           def.id === editingSeries
             ? { ...def, athleteNotes: modalNotes }
             : def
@@ -91,7 +95,6 @@ export default function TrainingPanel({
   // const [selectedBlock, setSelectedBlock] = useState<any | null>(null);
   // const [selectedWeek, setSelectedWeek] = useState<any | null>(null);
   const [weekId, setWeekId] = useState<string | null>(null);
-  const [exerciseDefs, setExerciseDefs] = useState<any[]>([]);
 
   // Ensure modalNotes always reflects the latest notes for the editing series when modal opens
   useEffect(() => {
@@ -211,12 +214,35 @@ export default function TrainingPanel({
   }, [userInfo?.id, weekId]);
 
   const handleBlur = async (defId: string, field: "effectiveReps" | "effectiveWeight" | "effectiveRir", value: string | number) => {
+    // Normalize the value the same way as handleLocalChange
+    let normVal: number | null;
+    if (field === "effectiveReps" || field === "effectiveRir") {
+      const numStr = String(value).trim();
+      if (/^\d+$/.test(numStr)) {
+        normVal = Math.max(0, parseInt(numStr, 10));
+      } else {
+        normVal = null;
+      }
+    } else if (field === "effectiveWeight") {
+      let sanitized = String(value).replace(',', '.').trim();
+      // Only set to null if empty string, ".", or ","
+      if (/^([.,]|\s*)$/.test(sanitized)) {
+        normVal = null;
+      } else {
+        sanitized = sanitized.replace(/[.,]$/, ""); // Remove trailing dot/comma if present
+        normVal = sanitized === "" ? null : Math.round(Math.max(0, parseFloat(sanitized)) * 10) / 10;
+      }
+    }
+    else {
+      normVal = value === "" ? null : Number(value);
+    }
+    // Always issue PATCH on blur (avoid comparing to mutated in-memory state)
     setChanged(c => ({ ...c, [defId + field]: true }));
     try {
       const res = await fetch(`/api/day-exercise-series/${defId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ [field]: value }),
+        body: JSON.stringify({ [field]: normVal }),
       });
       if (!res.ok) {
         let showRangeError = false;
@@ -246,14 +272,26 @@ export default function TrainingPanel({
     field: "effectiveReps" | "effectiveWeight" | "effectiveRir",
     value: string
   ) => {
-    setExerciseDefs(prevDefs =>
-      prevDefs.map(def => {
+    setExerciseDefs((prevDefs: any[]) =>
+      prevDefs.map((def: any) => {
         if (def.id === id) {
           let newVal: number | null = null;
           if (field === "effectiveReps" || field === "effectiveRir") {
-            newVal = value === "" ? null : Math.max(0, Math.floor(Number(value)));
+            const numStr = String(value).trim();
+            if (/^\d+$/.test(numStr)) {
+              newVal = Math.max(0, parseInt(numStr, 10));
+            } else {
+              newVal = null;
+            }
           } else if (field === "effectiveWeight") {
-            newVal = value === "" ? null : Math.round(Math.max(0, parseFloat(value)) * 10) / 10;
+            let sanitized = value.replace(',', '.').trim();
+            // Only set to null if empty string, ".", or ","
+            if (/^([.,]|\s*)$/.test(sanitized)) {
+              newVal = null;
+            } else {
+              sanitized = sanitized.replace(/[.,]$/, "");
+              newVal = sanitized === "" ? null : Math.round(Math.max(0, parseFloat(sanitized)) * 10) / 10;
+            }
           }
           return { ...def, [field]: newVal };
         }
@@ -656,13 +694,26 @@ export default function TrainingPanel({
                                             pattern: "[0-9]*[.,]?[0-9]*"
                                           }}
                                           value={def.effectiveWeight ?? ""}
+                                          inputRef={el => {
+                                            // Set the attribute only once on initial mount
+                                            if (el && el.dataset && el.dataset.lastValue === undefined) {
+                                              el.dataset.lastValue = def.effectiveWeight == null ? "" : String(def.effectiveWeight);
+                                            }
+                                          }}
                                           onChange={e => handleLocalChange(def.id, "effectiveWeight", e.target.value)}
-                                          onFocus={() => {
+                                          onFocus={e => {
                                             setSelectedDay?.(dayIdx);
                                             setFocusedExerciseKey(exKey);
                                           }}
                                           onBlur={e => {
-                                            handleBlur(def.id, "effectiveWeight", e.target.value);
+                                            const input = e.target as HTMLInputElement;
+                                            const lastVal = input.dataset.lastValue ?? "";
+                                            const currentVal = e.target.value ?? "";
+                                            if (lastVal !== currentVal) {
+                                              handleBlur(def.id, "effectiveWeight", e.target.value);
+                                              // After PATCH, update lastValue to new value
+                                              input.dataset.lastValue = currentVal;
+                                            }
                                             setSelectedDay?.(dayIdx);
                                           }}
                                           placeholder={
@@ -682,13 +733,24 @@ export default function TrainingPanel({
                                           type="text"
                                           inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                                           value={def.effectiveReps ?? ""}
+                                          inputRef={el => {
+                                            if (el && el.dataset && el.dataset.lastValue === undefined) {
+                                              el.dataset.lastValue = def.effectiveReps == null ? "" : String(def.effectiveReps);
+                                            }
+                                          }}
                                           onChange={e => handleLocalChange(def.id, "effectiveReps", e.target.value)}
-                                          onFocus={() => {
+                                          onFocus={e => {
                                             setSelectedDay?.(dayIdx);
                                             setFocusedExerciseKey(exKey);
                                           }}
                                           onBlur={e => {
-                                            handleBlur(def.id, "effectiveReps", e.target.value);
+                                            const input = e.target as HTMLInputElement;
+                                            const lastVal = input.dataset.lastValue ?? "";
+                                            const currentVal = e.target.value ?? "";
+                                            if (lastVal !== currentVal) {
+                                              handleBlur(def.id, "effectiveReps", e.target.value);
+                                              input.dataset.lastValue = currentVal;
+                                            }
                                             setSelectedDay?.(dayIdx);
                                           }}
                                           placeholder={
@@ -713,13 +775,24 @@ export default function TrainingPanel({
                                           type="text"
                                           inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                                           value={def.effectiveRir ?? ""}
+                                          inputRef={el => {
+                                            if (el && el.dataset && el.dataset.lastValue === undefined) {
+                                              el.dataset.lastValue = def.effectiveRir == null ? "" : String(def.effectiveRir);
+                                            }
+                                          }}
                                           onChange={e => handleLocalChange(def.id, "effectiveRir", e.target.value)}
-                                          onFocus={() => {
+                                          onFocus={e => {
                                             setSelectedDay?.(dayIdx);
                                             setFocusedExerciseKey(exKey);
                                           }}
                                           onBlur={e => {
-                                            handleBlur(def.id, "effectiveRir", e.target.value);
+                                            const input = e.target as HTMLInputElement;
+                                            const lastVal = input.dataset.lastValue ?? "";
+                                            const currentVal = e.target.value ?? "";
+                                            if (lastVal !== currentVal) {
+                                              handleBlur(def.id, "effectiveRir", e.target.value);
+                                              input.dataset.lastValue = currentVal;
+                                            }
                                             setSelectedDay?.(dayIdx);
                                           }}
                                           placeholder={
