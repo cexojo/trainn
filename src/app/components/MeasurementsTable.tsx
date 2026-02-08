@@ -52,13 +52,13 @@ export default function MeasurementsTable({
 
     return (
       <Box sx={{
-        background: "#fafbfd",
+        background: "#000000",
         boxShadow: 2,
         borderRadius: 2,
         px: 1,
         py: 0.5,
         cursor: "pointer",
-        "& .MuiChartsAxis-tickLabel": { fill: "#424242" },
+        "& .MuiChartsAxis-tickLabel": { fill: "#a3a3a3" },
         "& .MuiChartsLegend-root": { display: "none" }
       }}>
         <LineChart
@@ -79,10 +79,14 @@ export default function MeasurementsTable({
               valueFormatter: (date: Date) => {
                 if (!(date instanceof Date)) date = new Date(date);
                 if (!date || isNaN(date.getTime())) return "";
-                const day = String(date.getDate()).padStart(2, "0");
-                const month = String(date.getMonth() + 1).padStart(2, "0");
-                const year = date.getFullYear();
-                return `${day}/${month}/${year}`;
+                // Always use translations (already injected in t)
+                const months = t.measurementsChartMonthsShort;
+                const month =
+                  Array.isArray(months) && months[date.getMonth()]
+                    ? months[date.getMonth()]
+                    : "";
+                const year = String(date.getFullYear()).slice(-2);
+                return `${month}'${year}`;
               },
             }
           ]}
@@ -110,7 +114,8 @@ export default function MeasurementsTable({
                   key={col.id}
                   sx={{
                     cursor: enableChart && col.id !== "date" ? "pointer" : "default",
-                    textDecoration: enableChart && col.id !== "date" ? "underline dashed #bdbdbd" : undefined
+                    textDecoration: enableChart && col.id !== "date" ? "underline dashed #bdbdbd" : undefined,
+                    padding: "4px 8px"
                   }}
                   onClick={() => handleHeaderClick(col.id)}
                 >
@@ -122,24 +127,33 @@ export default function MeasurementsTable({
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={columns.length}>{t.measurementsLoading}</TableCell>
+                <TableCell colSpan={columns.length} sx={{ padding: "4px 8px" }}>{t.measurementsLoading}</TableCell>
               </TableRow>
             ) : measurements.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={columns.length}>{t.measurementsEmpty}</TableCell>
+                <TableCell colSpan={columns.length} sx={{ padding: "4px 8px" }}>{t.measurementsEmpty}</TableCell>
               </TableRow>
             ) : (
               measurements.map((m: any) => (
                 <TableRow key={m.id}>
-                  <TableCell>{m.date ? m.date.slice(0,10) : ""}</TableCell>
-                  <TableCell>{m.weight}</TableCell>
-                  <TableCell>{m.neck}</TableCell>
-                  <TableCell>{m.arm}</TableCell>
-                  <TableCell>{m.waist}</TableCell>
-                  <TableCell>{m.abdomen}</TableCell>
-                  <TableCell>{m.hip}</TableCell>
-                  <TableCell>{m.thigh}</TableCell>
-                  <TableCell>{m.calfMuscle}</TableCell>
+                  <TableCell sx={{ padding: "4px 8px" }}>
+                    {m.date ? (() => {
+                      const d = new Date(m.date);
+                      if (isNaN(d.getTime())) return "";
+                      const day = String(d.getDate()).padStart(2, '0');
+                      const month = String(d.getMonth() + 1).padStart(2, '0');
+                      const year = d.getFullYear();
+                      return `${day}/${month}/${year}`;
+                    })() : ""}
+                  </TableCell>
+                  <TableCell sx={{ padding: "4px 8px" }}>{m.weight}</TableCell>
+                  <TableCell sx={{ padding: "4px 8px" }}>{m.neck}</TableCell>
+                  <TableCell sx={{ padding: "4px 8px" }}>{m.arm}</TableCell>
+                  <TableCell sx={{ padding: "4px 8px" }}>{m.waist}</TableCell>
+                  <TableCell sx={{ padding: "4px 8px" }}>{m.abdomen}</TableCell>
+                  <TableCell sx={{ padding: "4px 8px" }}>{m.hip}</TableCell>
+                  <TableCell sx={{ padding: "4px 8px" }}>{m.thigh}</TableCell>
+                  <TableCell sx={{ padding: "4px 8px" }}>{m.calfMuscle}</TableCell>
                 </TableRow>
               ))
             )}

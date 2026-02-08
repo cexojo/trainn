@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
 import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import { Box, Typography, Button, IconButton, Tooltip, Dialog, DialogTitle, DialogContent, Tabs, Tab, CircularProgress, TextField, Select, MenuItem, Menu } from "@mui/material";
+import { Box, Typography, Button, IconButton, Tooltip, Dialog, DialogTitle, DialogContent, Tabs, Tab, CircularProgress, TextField, Select, MenuItem, Menu, Switch, FormControl, InputLabel, Popover } from "@mui/material";
 import { translations, type Lang } from "@/app/i18n";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -10,6 +10,7 @@ import NotificationSnackbar from "./NotificationSnackbar";
 import MeasurementsTable from "./MeasurementsTable";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import EuroIcon from "@mui/icons-material/Euro";
+import MuscleGroupBadges from "./MuscleGroupBadges";
 
 import { useRef } from "react";
 
@@ -88,9 +89,9 @@ function EditableDropdownField({
           onClick={() => setEditing(true)}
           tabIndex={0}
           role="button"
-          title={lang === "es" ? "Editar frecuencia" : "Edit frequency"}
+          title={translations[lang].editFrequencyTooltip}
         >
-          {options.find(o => o.value === value)?.label || <span style={{color:"#888"}}>---</span>}
+          {(options.find(o => o.value === value)?.label ?? translations[lang].emptyValue)}
         </Typography>
       )}
       {loading && <CircularProgress size={18} />}
@@ -180,11 +181,11 @@ function EditableNumberField({
           onClick={() => setEditing(true)}
           tabIndex={0}
           role="button"
-          title={lang === "es" ? "Editar cuota" : "Edit amount"}
+          title={translations[lang].editAmountTooltip}
         >
           {value !== null && value !== undefined
             ? Number(value).toFixed(2)
-            : <span style={{color:"#888"}}>---</span>}
+            : translations[lang].emptyValue}
         </Typography>
       )}
       {loading && <CircularProgress size={18} />}
@@ -297,241 +298,545 @@ function EditableUserField({ label, value, field, userId, onUpdated, forceRefres
 }
 
 function TrainingTab({ userId, lang }: { userId: string, lang: Lang }) {
-  const [blocks, setBlocks] = useState<any[]>([]);
-  const [blockId, setBlockId] = useState<string | undefined>();
-  const [weekId, setWeekId] = useState<string | undefined>();
-  const [weeks, setWeeks] = useState<any[]>([]);
-  const [selectedBlock, setSelectedBlock] = useState<any | null>(null);
-  const [selectedWeek, setSelectedWeek] = useState<any | null>(null);
-  const [exerciseDefs, setExerciseDefs] = useState<any[]>([]);
-  const [trainingDays, setTrainingDays] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [blocks, setBlocks] = React.useState<any[]>([]);
+  const [selectedBlock, setSelectedBlock] = React.useState<any | null>(null);
+  const [trainingDays, setTrainingDays] = React.useState<any[]>([]);
+  const [exerciseSeries, setExerciseSeries] = React.useState<any[]>([]);
+  const [weekDialog, setWeekDialog] = React.useState<{open: boolean, week: any | null}>({ open: false, week: null });
+  const [notesPopover, setNotesPopover] = React.useState<{ anchorEl: HTMLElement | null, notes: string }>({ anchorEl: null, notes: "" });
 
-  // Fetch training data on load or when block or week changes
-  useEffect(() => {
-    if (!userId) return;
-    setLoading(true);
-    const params = new URLSearchParams({ userId });
-    if (weekId) params.append("weekId", weekId);
-    fetch(`/api/training-data?${params.toString()}`)
+  // Always fetch all blocks for this athlete on mount, but per-block data when block changes
+  React.useEffect(() => {
+    fetch(`/api/training-data?userId=${userId}`)
       .then(r => r.json())
-      .then(res => {
-        setBlocks(res.blocks || []);
-        setExerciseDefs(res.exerciseDefs || []);
-        setTrainingDays(res.trainingDays || []);
-        setSelectedBlock(res.selectedBlock || null);
-        setSelectedWeek(res.selectedWeek || null);
-        setWeeks(res.selectedBlock?.weeks || []);
-        setLoading(false);
+      .then((data) => {
+        if (Array.isArray(data.blocks)) {
+          setBlocks(data.blocks);
+          setSelectedBlock(data.blocks.length > 0 ? data.blocks[data.blocks.length - 1] : null);
+        }
       });
-  }, [userId, blockId, weekId]);
+  }, [userId]);
 
-  // Ensure default block/week selection
-  useEffect(() => {
-    if (blocks.length && !blockId) setBlockId(blocks[blocks.length - 1].id);
-  }, [blocks, blockId]);
-  useEffect(() => {
-    if (weeks.length && !weekId) setWeekId(weeks[weeks.length - 1].id);
-  }, [weeks, weekId]);
+  React.useEffect(() => {
+    // Fetch block-specific details (weeks, trainingDays, exerciseDefs) each time the selected block changes
+    if (!selectedBlock) {
+      setTrainingDays([]);
+      setExerciseSeries([]);
+      return;
+    }
+    fetch(`/api/training-data?userId=${userId}&blockId=${selectedBlock.id}`)
+      .then(r => r.json())
+      .then((data) => {
+        // Update block weeks structure directly from response, for consistency
+        if (Array.isArray(data.selectedBlock?.weeks)) {
+          // we could update block in place, but only setTrainingDays/series since block list always loaded above
+        }
+        if (Array.isArray(data.trainingDays)) {
+          setTrainingDays(data.trainingDays);
+        }
+        if (Array.isArray(data.exerciseDefs)) {
+          setExerciseSeries(data.exerciseDefs);
+        }
+      });
+  }, [selectedBlock, userId]);
 
-  // Flatten all exercises with their associated day label for table rendering
-  const dayLabelByNumber: Record<string, string> = {};
-  trainingDays.forEach((d: any) => {
-    dayLabelByNumber[d.dayNumber] = d.dayLabel;
-  });
-  const allExercises: any[] = exerciseDefs.map((ex: any) => ({
-    ...ex,
-    dayLabel: dayLabelByNumber[ex.trainingDay?.dayNumber ?? ""] ?? "",
-    dayNumber: ex.trainingDay?.dayNumber ?? ""
-  }));
-
-  // Sort by dayNumber, exerciseNumber, seriesNumber
-  // Ensure proper sorting: day (asc), day exercise (asc), seriesNumber (asc)
-  allExercises.sort((a, b) => {
-    const dayA = Number(a.dayNumber) || 0;
-    const dayB = Number(b.dayNumber) || 0;
-    if (dayA !== dayB) return dayA - dayB;
-    const exA = Number(a.exerciseNumber) || 0;
-    const exB = Number(b.exerciseNumber) || 0;
-    if (exA !== exB) return exA - exB;
-    const seriesA = Number(a.seriesNumber) || 0;
-    const seriesB = Number(b.seriesNumber) || 0;
-    return seriesA - seriesB;
-  });
-
-  // Only include training days for the selected week (if found)
-  const trainingDayIdsInSelectedWeek = trainingDays
-    .filter((d: any) =>
-      selectedWeek && d.date
-        ? new Date(d.date).getTime() >= new Date(selectedWeek.weekStart).getTime() &&
-          new Date(d.date).getTime() <= new Date(selectedWeek.weekEnd).getTime()
-        : true
-    )
-    .map((d: any) => d.id);
-
-  // Show all series for the selected week (no requirement for user-provided values)
-  const filteredExercises = allExercises.filter(
-    ex => trainingDayIdsInSelectedWeek.includes(ex.trainingDay?.id)
-  );
-
-  // Group by dayNumber for rendering
-  const exercisesByDay: Record<string, any[]> = {};
-  filteredExercises.forEach(ex => {
-    if (!exercisesByDay[ex.dayNumber]) exercisesByDay[ex.dayNumber] = [];
-    exercisesByDay[ex.dayNumber].push(ex);
-  });
-
-  // Debug rendering if no results
-  const debugInfo = (
-    <pre style={{ fontSize: "11px", background: "#eee", color: "#a33", padding: 8, margin: 4, maxHeight: 240, overflow: "auto" }}>
-      {JSON.stringify({ filteredExercises, exercisesByDay }, null, 2)}
-    </pre>
-  );
   return (
-    <Box sx={{ mt: 2 }}>
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
-        <strong>Block:</strong>
-        <Select
-          size="small"
-          value={blockId || ""}
-          onChange={e => {
-            setBlockId(e.target.value);
-            setWeekId(undefined);
-          }}
-          sx={{ minWidth: 100 }}
-        >
-          {blocks.map((b: any) => (
-            <MenuItem key={b.id} value={b.id}>
-              {`#${b.blockNumber}`}
-            </MenuItem>
-          ))}
-        </Select>
-        <strong>Week:</strong>
-        <Select
-          size="small"
-          value={weekId || ""}
-          onChange={e => setWeekId(e.target.value)}
-          sx={{ minWidth: 100 }}
-        >
-          {weeks.map((w: any) => (
-            <MenuItem key={w.id} value={w.id}>
-              {`#${w.weekNumber}`}
-            </MenuItem>
-          ))}
-        </Select>
+    <Box sx={{ p: 2 }}>
+      <Box sx={{ maxWidth: 320 }}>
+        <FormControl size="small" fullWidth>
+          <InputLabel id="block-selector-label">{translations[lang].block}</InputLabel>
+          <Select
+            labelId="block-selector-label"
+            label={translations[lang].block}
+            value={selectedBlock ? selectedBlock.id : ""}
+            onChange={e => {
+              const blk = blocks.find(b => String(b.id) === String(e.target.value));
+              setSelectedBlock(blk || null);
+            }}
+            MenuProps={{
+              PaperProps: {
+                style: { minWidth: 250 }
+              }
+            }}
+          >
+            {blocks
+              .slice()
+              .sort((a, b) => b.blockNumber - a.blockNumber)
+              .map(b => {
+                // Calculate block progress (sum completed and total series for all weeks in block)
+                const weeks = Array.isArray(b.weeks) ? b.weeks : [];
+                let totalCompleted = 0;
+                let totalSeries = 0;
+                weeks.forEach((w: { numExerciseSeriesCompleted?: number, numExerciseSeriesTotal?: number }) => {
+                  totalCompleted += Number(w.numExerciseSeriesCompleted || 0);
+                  totalSeries += Number(w.numExerciseSeriesTotal || 0);
+                });
+                const percent = totalSeries > 0 ? Math.round((totalCompleted / totalSeries) * 100) : 0;
+                return (
+                  <MenuItem key={b.id} value={b.id} divider>
+                    <Box sx={{
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1.3,
+                    }}>
+                      <Box sx={{
+                        fontWeight: 500,
+                        minWidth: 70,
+                        flex: "none",
+                        whiteSpace: "nowrap",
+                      }}>
+                        {translations[lang].block} {b.blockNumber}
+                      </Box>
+                      <Box sx={{
+                        position: "relative",
+                        height: 13,
+                        width: 88,
+                        minWidth: 66,
+                        maxWidth: 125,
+                        bgcolor: "#eee",
+                        borderRadius: 1,
+                        overflow: "hidden",
+                        mx: 0.5,
+                        flex: "0 0 88px"
+                      }}>
+                        <Box sx={{
+                          width: `${percent}%`,
+                          height: "100%",
+                          background: "#4caf50",
+                          borderRadius: 1,
+                          transition: "width 0.35s"
+                        }} />
+                        <Box sx={{
+                          position: "absolute", left: 0, top: 0, width: "100%", height: "100%",
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          color: percent > 45 ? "#fff" : "#333",
+                          fontSize: "0.89em",
+                          fontWeight: 600,
+                          pointerEvents: "none",
+                          zIndex: 1,
+                          textShadow: percent > 40 ? "0 1px 2px rgba(0,0,0,0.27)" : "none"
+                        }}>
+                          {percent}{translations[lang].percentLabel}
+                        </Box>
+                      </Box>
+                      <Box sx={{
+                        fontSize: "0.87em",
+                        minWidth: 36,
+                        color: percent > 60 ? "#168C1f" : "#444",
+                        fontWeight: 500,
+                        textAlign: "right",
+                        flex: "none",
+                        whiteSpace: "nowrap"
+                      }}>
+                        {totalCompleted}/{totalSeries}
+                      </Box>
+                    </Box>
+                  </MenuItem>
+                );
+              })}
+          </Select>
+        </FormControl>
       </Box>
-      {loading ? (
-        <Box sx={{ textAlign: "center", mt: 5 }}>
-          <CircularProgress />
+      {/* Block details: weeks progress table */}
+      {selectedBlock?.weeks && selectedBlock.weeks.length > 0 && (
+        <Box sx={{ mt: 3 }}>
+          <Typography variant="caption" sx={{ color: 'text.secondary', mb: 0.5, fontWeight: 500 }}>
+            {translations[lang].muscleGroupsLabel}
+          </Typography>
+          <MuscleGroupBadges exerciseSeries={exerciseSeries} lang={lang} />
+          {(() => {
+            // Build trainingDaysByWeekId mapping for current block
+            const trainingDaysByWeekId: Record<string, any[]> = {};
+            trainingDays.forEach((td) => {
+              if (!td.weekId) return;
+              if (!trainingDaysByWeekId[td.weekId]) trainingDaysByWeekId[td.weekId] = [];
+              trainingDaysByWeekId[td.weekId].push(td);
+            });
+
+            // For the weeks in the selected block, find dayNumbers across all weeks
+            const uniqueDayNumbers: Set<number> = new Set();
+            selectedBlock.weeks.forEach((week: any) => {
+              const tds = trainingDaysByWeekId[week.id] || [];
+              tds.forEach(td => {
+                if (typeof td.dayNumber === "number") uniqueDayNumbers.add(td.dayNumber);
+              });
+            });
+
+            // Sort dayNumbers as columns
+            const dayNumbersSorted = Array.from(uniqueDayNumbers).sort((a, b) => a - b);
+            const hasDayCols = dayNumbersSorted.length > 0;
+
+            // Build a mapping of (trainingDayId -> exerciseSeries in that day)
+            const seriesByTrainingDayId: Record<string, any[]> = {};
+            exerciseSeries.forEach(series => {
+              const tdid = series.trainingDay?.id || series.trainingDayId;
+              if (tdid) {
+                if (!seriesByTrainingDayId[tdid]) seriesByTrainingDayId[tdid] = [];
+                seriesByTrainingDayId[tdid].push(series);
+              }
+            });
+
+            // Build table headers: one col per day number
+            if (!hasDayCols) {
+              return (
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 56, mt: 2 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    {translations[lang].noDaysForWeek}
+                  </Typography>
+                </Box>
+              );
+            }
+
+            return (
+              <React.Fragment>
+                <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 500, mb: 0 }}>
+                  {translations[lang].weeklyProgressTitle}
+                </Typography>
+                <Box component="table" sx={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  border: "1px solid #e0e0e0"
+                }}>
+                  <Box component="thead">
+                    <Box component="tr">
+                      <Box component="th" sx={{ textAlign: "left", p: 1, border: "1px solid #e0e0e0" }}>{translations[lang].weekLabel}</Box>
+                      <Box component="th" sx={{ textAlign: "center", p: 1, minWidth: 120, border: "1px solid #e0e0e0" }}>{translations[lang].weekProgressLabel}</Box>
+                      {dayNumbersSorted.map(dayNum => (
+                        <Box
+                          component="th"
+                          key={`head-${String(dayNum)}`}
+                          sx={{ textAlign: "center", p: 1, minWidth: 70, border: "1px solid #e0e0e0" }}
+                        >
+                          {translations[lang].day} {dayNum}
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
+                  <Box component="tbody">
+                    {selectedBlock.weeks
+                      .slice()
+                      .sort((a: any, b: any) => b.weekNumber - a.weekNumber)
+                      .map((week: any) => {
+                        const weekDays = trainingDaysByWeekId[week.id] || [];
+                        const weekDaysByNumber: Record<number, any> = {};
+                        weekDays.forEach(td => {
+                          if (typeof td.dayNumber === "number") weekDaysByNumber[td.dayNumber] = td;
+                        });
+                        // Calculate week progress
+                        const weekCompleted = week.numExerciseSeriesCompleted || 0;
+                        const weekTotal = week.numExerciseSeriesTotal || 0;
+                        const weekPercent = weekTotal > 0 ? Math.round((weekCompleted / weekTotal) * 100) : 0;
+
+                        return (
+                          <Box component="tr" key={String(week.id)}>
+                            <Box component="td" sx={{ p: 1, border: "1px solid #e0e0e0" }}>
+                              <Typography
+                                sx={{
+                                  textDecoration: "underline dotted",
+                                  cursor: "pointer",
+                                  color: "#1976d2",
+                                  display: "inline-block"
+                                }}
+                                onClick={() => setWeekDialog({ open: true, week })}
+                                role="button"
+                                tabIndex={0}
+                              >
+                                {translations[lang].weekLabel} {week.weekNumber}
+                              </Typography>
+                            </Box>
+                            <Box component="td" sx={{ p: 1, width: 140, border: "1px solid #e0e0e0" }}>
+                              <Box sx={{ position: "relative", width: "100%", minWidth: 70, maxWidth: 140, height: 18, display: "flex", alignItems: "center" }}>
+                                <Box
+                                  sx={{
+                                    position: "absolute",
+                                    left: 0, top: 0, height: "100%", width: "100%",
+                                    bgcolor: "#eee", borderRadius: 1, overflow: "hidden"
+                                  }}
+                                >
+                                  <Box
+                                    sx={{
+                                      bgcolor: "#4caf50",
+                                      width: `${weekPercent}%`,
+                                      height: "100%",
+                                      transition: "width 0.4s",
+                                    }}
+                                  />
+                                </Box>
+                                <Box
+                                  sx={{
+                                    position: "absolute",
+                                    left: 0, top: 0,
+                                    width: "100%",
+                                    height: "100%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    color: weekPercent > 45 ? "#fff" : "#333",
+                                    fontWeight: 600,
+                                    pointerEvents: "none",
+                                    zIndex: 1,
+                                    fontSize: "0.93em"
+                                  }}
+                                >
+                                  {weekPercent}{translations[lang].percentLabel}
+                                </Box>
+                                <Box sx={{ position: "absolute", right: 6, color: weekPercent > 60 ? "#fff" : "#555", fontVariantNumeric: "tabular-nums", fontSize: "0.85em", zIndex: 2 }}>
+                                  {weekCompleted}/{weekTotal}
+                                </Box>
+                              </Box>
+                            </Box>
+                            {dayNumbersSorted.map(dayNum => {
+                              const td = weekDaysByNumber[dayNum];
+                              if (!td)
+                                return (
+                                  <Box component="td" key={`empty-${String(dayNum)}`} sx={{ p: 1, background: "#fafafa", border: "1px solid #e0e0e0" }} />
+                                );
+                              // compute daily series
+                              const series = seriesByTrainingDayId[td.id] || [];
+                              const completed = series.filter(
+                                (s) => s.effectiveWeight != null && s.effectiveReps != null
+                              ).length;
+                              const total = series.length;
+                              const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+                              return (
+                                <Box
+                                  component="td"
+                                  key={`dcell-${String(dayNum)}`}
+                                  sx={{ p: 1, minWidth: 80, maxWidth: 120, border: "1px solid #e0e0e0" }}
+                                >
+                                  <Box sx={{ position: "relative", width: "100%", height: 16, minWidth: 60 }}>
+                                    <Box
+                                      sx={{
+                                        position: "absolute",
+                                        left: 0, top: 0,
+                                        width: "100%",
+                                        height: "100%",
+                                        bgcolor: "#eee",
+                                        borderRadius: 1,
+                                        overflow: "hidden"
+                                      }}
+                                    >
+                                      <Box
+                                        sx={{
+                                          bgcolor: "#4caf50",
+                                          width: `${percent}%`,
+                                          height: "100%",
+                                          transition: "width 0.4s"
+                                        }}
+                                      />
+                                    </Box>
+                                    <Box
+                                      sx={{
+                                        position: "absolute",
+                                        left: 0, top: 0,
+                                        width: "100%",
+                                        height: "100%",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        color: percent > 45 ? "#fff" : "#333",
+                                        fontWeight: 600,
+                                        fontSize: "0.9em",
+                                        pointerEvents: "none",
+                                        zIndex: 1
+                                      }}
+                                    >
+                                      {percent}{translations[lang].percentLabel}
+                                    </Box>
+                                    <Box sx={{
+                                      position: "absolute",
+                                      right: 4,
+                                      color: percent > 60 ? "#fff" : "#555",
+                                      fontVariantNumeric: "tabular-nums",
+                                      fontSize: "0.80em",
+                                      zIndex: 2
+                                    }}>
+                                      {completed}/{total}
+                                    </Box>
+                                  </Box>
+                                </Box>
+                              );
+                            })}
+                          </Box>
+                        );
+                      })}
+                  </Box>
+                </Box>
+              </React.Fragment>
+            );
+          })()}
         </Box>
-      ) : (
-        Object.entries(exercisesByDay)
-          .sort(([a], [b]) => Number(a) - Number(b))
-          .map(([dayNumber, dayExercises], i) => (
-            <Box key={dayNumber} sx={{ mb: 4 }}>
-              <Typography variant="caption" sx={{ mb: 0.5, mt: 2, pl: 1, fontWeight: 600, color: "#555", fontSize: 13 }}>
-                {`${translations[lang].day} ${dayExercises[0]?.dayNumber ?? dayNumber}`}
-              </Typography>
-              {dayExercises.length === 0 ? (
-                <Box sx={{ color: "#a33" }}>{translations[lang].noExercisesForDay} {debugInfo}</Box>
-              ) : (
-                <Box sx={{ width: "100%", overflowX: "auto" }}>
-                  <table style={{ borderCollapse: "collapse", width: "100%" }}>
-                    <thead>
-                      <tr>
-                        <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].trainingTableExercise}</th>
-                        <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].trainingTableSeries}</th>
-                        <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].trainingTableDS}</th>
-                        <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].trainingTableWeight}</th>
-                        <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].trainingTableReps}</th>
-                        <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].trainingTableRIR}</th>
-                        <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].trainingTableProgress}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
+      )}
+      {/* Week Details Dialog */}
+      <Dialog
+        open={weekDialog.open}
+        onClose={() => setWeekDialog({ open: false, week: null })}
+        maxWidth="lg"
+        fullWidth
+      >
+        <DialogTitle>
+          {weekDialog.week ? `${translations[lang].weekLabel} ${weekDialog.week.weekNumber} - Details` : ""}
+        </DialogTitle>
+        <DialogContent>
+          {weekDialog.week && (
+            <Box>
+              {/* Days list */}
+              {(() => {
+                // Get training days for this week
+                const days = trainingDays.filter(td => td.weekId === weekDialog.week.id);
+                // If data might still be loading (trainingDays or exerciseSeries not yet loaded
+                // for this week), show spinner. Only show empty after load.
+                const loadingWeek = !trainingDays.length && !exerciseSeries.length;
+                if (loadingWeek) {
+                  return (
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2, py: 3 }}>
+                      <CircularProgress size={24} />
+                      <Typography variant="body2">{translations[lang].measurementsLoading || "Loading..."}</Typography>
+                    </Box>
+                  );
+                }
+                if (days.length === 0) {
+                  return <Typography variant="body2" color="text.secondary">{translations[lang].noDaysForWeek}</Typography>;
+                }
+                // Sort days by dayNumber ascending
+                const sortedDays = days.slice().sort((a, b) => (a.dayNumber ?? 0) - (b.dayNumber ?? 0));
+                return sortedDays.map((day) => (
+                  <Box key={day.id} sx={{ mb: 3 }}>
+                    <Typography variant="h6" sx={{ mb: 1 }}>
+                      {translations[lang].day} {day.dayNumber}
+                    </Typography>
+                    <Box>
+                      {/* Exercises grouped by name for this day */}
                       {(() => {
-                        // Merge cells for consecutive series with the same exercise id
-                        const mergedRows = [];
-                        let lastExerciseId = null;
-                        let groupStartIdx = 0;
-                        for (let idx = 0; idx < dayExercises.length; ++idx) {
-                          const ex = dayExercises[idx];
-                          const isFirst = idx === 0 || dayExercises[idx].exercise?.id !== dayExercises[idx - 1].exercise?.id;
-                          const isLast = idx === dayExercises.length - 1 || dayExercises[idx].exercise?.id !== dayExercises[idx + 1].exercise?.id;
-                          if (isFirst) groupStartIdx = idx;
-                          let rowspan = 1;
-                          if (isFirst) {
-                            // compute rowspan for this exercise group
-                            for (let j = idx + 1; j < dayExercises.length; ++j) {
-                              if (dayExercises[j].exercise?.id !== ex.exercise?.id) break;
-                              rowspan++;
-                            }
-                          }
-                          mergedRows.push(
-                            <tr key={ex.id + "-" + idx} style={{ borderBottom: "1px solid #eee" }}>
-                              {isFirst ? (
-                                <td rowSpan={rowspan} style={{ padding: "4px 8px", verticalAlign: "middle", fontWeight: 500 }}>{ex.exercise?.name ?? ""}</td>
-                              ) : null}
-                              <td style={{ padding: "4px 8px" }}>{ex.seriesNumber ?? ""}</td>
-                              <td style={{ padding: "4px 8px", color: "#e67300", fontWeight: ex.isDropset ? 700 : 400 }}>
-                                {ex.isDropset ? "DS" : ""}
-                              </td>
-                              <td style={{ padding: "4px 8px" }}>{ex.effectiveWeight ?? "-"}</td>
-                              <td style={{ padding: "4px 8px" }}>
-                                {ex.effectiveReps ?? "-"}
-                                {(ex.minReps !== undefined || ex.maxReps !== undefined) && (() => {
-                                  function renderRange(
-                                    min: number | string | null | undefined,
-                                    max: number | string | null | undefined
-                                  ) {
-                                    const isEmpty = (v: number | string | null | undefined) =>
-                                      v === undefined || v === null || v === "";
-                                    if (isEmpty(min) && isEmpty(max)) return "";
-                                    if (!isEmpty(min) && isEmpty(max)) return `Min. ${min}`;
-                                    if (isEmpty(min) && !isEmpty(max)) return `Max. ${max}`;
-                                    if (!isEmpty(min) && !isEmpty(max) && min === max) return min;
-                                    return `${min}-${max}`;
-                                  }
-                                  const range = renderRange(ex.minReps, ex.maxReps);
-                                  return range
-                                    ? <span style={{ color: "#888", fontSize: 12, marginLeft: 4 }}>{range}</span>
-                                    : null;
-                                })()}
-                              </td>
-                              <td style={{ padding: "4px 8px" }}>
-                                {ex.effectiveRir ?? "-"}
-                                {(ex.minRir !== undefined || ex.maxRir !== undefined) && (() => {
-                                  function renderRange(
-                                    min: number | string | null | undefined,
-                                    max: number | string | null | undefined
-                                  ) {
-                                    const isEmpty = (v: number | string | null | undefined) =>
-                                      v === undefined || v === null || v === "";
-                                    if (isEmpty(min) && isEmpty(max)) return "";
-                                    if (!isEmpty(min) && isEmpty(max)) return `Min. ${min}`;
-                                    if (isEmpty(min) && !isEmpty(max)) return `Max ${max}`;
-                                    if (!isEmpty(min) && !isEmpty(max) && min === max) return min;
-                                    return `${min}-${max}`;
-                                  }
-                                  const range = renderRange(ex.minRir, ex.maxRir);
-                                  return range
-                                    ? <span style={{ color: "#888", fontSize: 12, marginLeft: 4 }}>{range}</span>
-                                    : null;
-                                })()}
-                              </td>
-                              <td style={{ padding: "4px 8px" }}>{ex.progress ?? ""}</td>
-                            </tr>
+                        // Find all series for this day from exerciseSeries
+                        const seriesList = exerciseSeries.filter(
+                          s =>
+                            (s.trainingDay?.id || s.trainingDayId) === day.id
+                        );
+                        if (seriesList.length === 0) {
+                          return (
+                            <Typography variant="body2" color="text.secondary">
+                              No exercises for this day.
+                            </Typography>
                           );
                         }
-                        return mergedRows;
+                        // Group by exercise name (s.exercise?.name)
+                        const byExercise: Record<string, any[]> = {};
+                        seriesList.forEach(s => {
+                          const key = s.exercise?.name || s.exerciseName || "Exercise";
+                          if (!byExercise[key]) byExercise[key] = [];
+                          byExercise[key].push(s);
+                        });
+
+                        return (
+                          <Box sx={{ overflowX: "auto" }}>
+                            <Box component="table" sx={{
+                              borderCollapse: "collapse",
+                              width: "100%",
+                              border: "1px solid #e0e0e0"
+                            }}>
+                              <Box component="thead">
+                                <Box component="tr">
+                                  <Box component="th" sx={{ textAlign: "left", p: 1, minWidth: 130, border: "1px solid #e0e0e0" }}>
+                                    {translations[lang].exercise}
+                                  </Box>
+                                  <Box component="th" sx={{ textAlign: "center", p: 1, minWidth: 80, border: "1px solid #e0e0e0" }}>
+                                    {translations[lang].series}
+                                  </Box>
+                                  <Box component="th" sx={{ textAlign: "center", p: 1, minWidth: 70, border: "1px solid #e0e0e0" }}>
+                                    {translations[lang].weight}
+                                  </Box>
+                                  <Box component="th" sx={{ textAlign: "center", p: 1, minWidth: 70, border: "1px solid #e0e0e0" }}>
+                                    {translations[lang].reps}
+                                  </Box>
+                                  <Box component="th" sx={{ textAlign: "center", p: 1, minWidth: 70, border: "1px solid #e0e0e0" }}>
+                                    {translations[lang].rir}
+                                  </Box>
+                                  <Box component="th" sx={{ textAlign: "center", p: 1, minWidth: 48, border: "1px solid #e0e0e0" }}>
+                                    {translations[lang].notes}
+                                  </Box>
+                                </Box>
+                              </Box>
+                              <Box component="tbody">
+                                {Object.entries(byExercise).map(([exName, series]) =>
+                                  series.map((s, idx) => (
+                                    <Box component="tr" key={s.id || exName + idx}>
+                                      {idx === 0 ? (
+                                        <Box component="td" rowSpan={series.length} sx={{ p: 1, fontWeight: 500, verticalAlign: "middle", border: "1px solid #e0e0e0" }}>
+                                          {exName}
+                                        </Box>
+                                      ) : null}
+                                      <Box component="td" sx={{ textAlign: "center", p: 1, border: "1px solid #e0e0e0" }}>
+                                        {s.isDropSet ? "DS" : s.seriesNumber != null ? s.seriesNumber + 1 : idx + 1}
+                                      </Box>
+                                      <Box component="td" sx={{ textAlign: "center", p: 1, border: "1px solid #e0e0e0" }}>
+                                        <span style={{ fontWeight: 500 }}>{s.effectiveWeight ?? ""}</span>
+                                      </Box>
+                                      <Box component="td" sx={{ textAlign: "center", p: 1, border: "1px solid #e0e0e0" }}>
+                                        <span style={{ fontWeight: 500 }}>{s.effectiveReps ?? ""}</span>
+                                        <br />
+                                        <span style={{
+                                          display: "block",
+                                          fontSize: "0.73em",
+                                          color: "#9e9e9e",
+                                          fontStyle: "italic",
+                                          lineHeight: 1.1,
+                                          marginTop: 2
+                                        }}>
+                                          {typeof s.minReps === "number" && typeof s.maxReps === "number"
+                                            ? (s.minReps === s.maxReps
+                                              ? s.minReps
+                                              : `[${s.minReps} - ${s.maxReps}]`)
+                                            : ""}
+                                        </span>
+                                      </Box>
+                                      <Box component="td" sx={{ textAlign: "center", p: 1, border: "1px solid #e0e0e0" }}>
+                                        <span style={{ fontWeight: 500 }}>{s.effectiveRir ?? ""}</span>
+                                        <br />
+                                        <span style={{
+                                          display: "block",
+                                          fontSize: "0.73em",
+                                          color: "#9e9e9e",
+                                          fontStyle: "italic",
+                                          lineHeight: 1.1,
+                                          marginTop: 2
+                                        }}>
+                                          {typeof s.minRir === "number" && typeof s.maxRir === "number"
+                                            ? (s.minRir === s.maxRir
+                                              ? s.minRir
+                                              : `[${s.minRir} - ${s.maxRir}]`)
+                                            : ""}
+                                        </span>
+                                      </Box>
+                                      <Box component="td" sx={{ textAlign: "center", p: 1, border: "1px solid #e0e0e0", whiteSpace: "pre-line" }}>
+                                        {s.trainerNotes && (
+                                          <Typography variant="body2" sx={{ color: "#1976d2" }}>
+                                            {translations[lang].trainerNoteLabel}: {s.trainerNotes}
+                                          </Typography>
+                                        )}
+                                        {s.athleteNotes && (
+                                          <Typography variant="body2" sx={{ color: "#388e3c" }}>
+                                            {translations[lang].athleteNoteLabel}: {s.athleteNotes}
+                                          </Typography>
+                                        )}
+                                      </Box>
+                                    </Box>
+                                  ))
+                                )}
+                              </Box>
+                            </Box>
+                          </Box>
+                        );
                       })()}
-                    </tbody>
-                  </table>
-                </Box>
-              )}
+                    </Box>
+                  </Box>
+                ));
+              })()}
             </Box>
-          ))
-      )}
+          )}
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 }
@@ -589,6 +894,74 @@ function MeasurementsTab({ userId, lang } : { userId: string, lang: Lang }) {
   );
 }
 
+function AddPaymentDialog({ open, onClose, userId, onCreated, lang }: { open: boolean, onClose: () => void, userId: string, onCreated: (payment: any) => void, lang: Lang }) {
+  const [dueDate, setDueDate] = useState(() => new Date().toISOString().slice(0,10));
+  const [amount, setAmount] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errMsg, setErrMsg] = useState<string | null>(null);
+
+  const handleCreate = async () => {
+    setLoading(true);
+    setErrMsg(null);
+    const res = await fetch(`/api/payment/${userId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json"},
+      body: JSON.stringify({
+        dueDate,
+        amount: parseFloat(amount),
+      }),
+    });
+    setLoading(false);
+    if (res.ok) {
+      const body = await res.json();
+      onCreated(body.payment);
+      setAmount("");
+    } else {
+      let msg = lang === "es" ? "Fallo al añadir el pago" : "Failed to add payment";
+      try {
+        const b = await res.json();
+        if (b && b.error) msg = msg + ": " + b.error;
+      } catch {}
+      setErrMsg(msg);
+    }
+  };
+
+  return (
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle>{translations[lang].addPaymentDialogTitle}</DialogTitle>
+      <DialogContent>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, pt: 1 }}>
+          <TextField
+            type="date"
+            label={translations[lang].addPaymentDialogDate}
+            value={dueDate}
+            onChange={e => setDueDate(e.target.value)}
+            size="small"
+            InputLabelProps={{ shrink: true }}
+          />
+          <TextField
+            type="number"
+            label={translations[lang].addPaymentDialogAmount}
+            value={amount}
+            onChange={e => setAmount(e.target.value)}
+            size="small"
+            inputProps={{ min: 0, step: "0.01" }}
+          />
+          {errMsg && <Typography color="error">{errMsg}</Typography>}
+        </Box>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}>
+          <Button variant="text" onClick={onClose}>
+            {translations[lang].addPaymentDialogCancel}
+          </Button>
+          <Button variant="contained" onClick={handleCreate} sx={{ ml: 1 }} disabled={loading || !amount || !dueDate}>
+            {translations[lang].addPaymentDialogAdd}
+          </Button>
+        </Box>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 export default function UserTable({
   lang,
   crearAtletaButton,
@@ -598,10 +971,13 @@ export default function UserTable({
   crearAtletaButton?: React.ReactNode,
   refreshKey?: number
 }) {
+  // Payments tab dialog state must be at top level for hooks rules
+  const [showAddPayment, setShowAddPayment] = useState(false);
+  const [showOnlyPendingPayments, setShowOnlyPendingPayments] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<any | null>(null);
-  const [modalTab, setModalTab] = useState<"info" | "payments" | "measurements" | "training">("info");
+  const [modalTab, setModalTab] = useState<"info" | "payments" | "measurements" | "blocks">("info");
   const [searchTerm, setSearchTerm] = useState("");
   const [quickFilter, setQuickFilter] = useState<"active" | "all" | "hidden" | "due" | "nofuture" | "noplan" | "nopassword">("active");
   const [internalRefreshKey, setInternalRefreshKey] = useState(0);
@@ -644,12 +1020,18 @@ export default function UserTable({
       valueGetter: (params: any) => {
         const row = params?.row;
         if (!row) return "";
-        return (row.firstName || "") + " " + (row.lastName || "");
+        const hasFirst = !!row.firstName;
+        const hasLast = !!row.lastName;
+        if (!hasFirst && !hasLast) return translations[lang].emptyValue;
+        return [row.firstName, row.lastName].filter(Boolean).join(" ");
       },
       renderCell: (params: any) => {
         const row = params?.row;
-        if (!row) return "";
-        return (row.firstName || "") + " " + (row.lastName || "");
+        if (!row) return translations[lang].emptyValue;
+        const hasFirst = !!row.firstName;
+        const hasLast = !!row.lastName;
+        if (!hasFirst && !hasLast) return translations[lang].emptyValue;
+        return [row.firstName, row.lastName].filter(Boolean).join(" ");
       },
     },
     { field: "username", headerName: translations[lang].manageUsersModalUsername, flex: 1, minWidth: 130, sortable: false },
@@ -901,8 +1283,8 @@ export default function UserTable({
                   open: true,
                   user: contextMenuRow,
                   message: contextMenuRow.hidden
-                    ? "Si habilitas de nuevo a este usuario podrá volver a acceder a la plataforma con su nombre de usuario y contraseña, ¿deseas continuar?"
-                    : "Si ocultas el usuario no aparecerá como activo hasta que lo vuelvas a habilitar y no podrá acceder a la aplicación con su nombre de usuario y contraseña, ¿deseas continuar?"
+                    ? translations[lang].hideUserDialogUnhideMsg
+                    : translations[lang].hideUserDialogHideMsg
                 });
               }
             }}
@@ -935,14 +1317,15 @@ export default function UserTable({
             }
           }}
         >
-          <DialogTitle>
+          <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             👤 {(selected?.firstName || "") + " " + (selected?.lastName || "")}
           </DialogTitle>
           <DialogContent sx={{ height: 'calc(50vh - 64px)', overflowY: 'auto' }}>
             <Tabs value={modalTab} onChange={(_, v) => setModalTab(v)}>
               <Tab value="info" label={translations[lang].infoTab} />
               <Tab value="payments" label={translations[lang].paymentsTab} />
-              <Tab value="measurements" label={translations[lang].measurementsTab || "Measurements"} />
+              <Tab value="measurements" label={translations[lang].measurementsTab} />
+              <Tab value="blocks" label={translations[lang].blocksTab} />
             </Tabs>
             {modalTab === "info" && selected && (
               <Box sx={{ mt: 2 }}>
@@ -1005,7 +1388,7 @@ export default function UserTable({
                   field="sex"
                 />
                 <EditableNumberField
-                  label={lang === "es" ? "Cuota (€)" : "Amount (€)"}
+                  label={translations[lang].subscriptionAmountLabel}
                   value={selected.subscriptionAmount}
                   userId={selected.id}
                   onUpdated={val => setSelected({ ...selected, subscriptionAmount: val })}
@@ -1015,12 +1398,12 @@ export default function UserTable({
                   field="subscriptionAmount"
                 />
                 <EditableDropdownField
-                  label={lang === "es" ? "Frecuencia" : "Frequency"}
+                  label={translations[lang].subscriptionFrequencyLabel}
                   value={selected.subscriptionFrequency || ""}
                   options={[
-                    { value: "monthly", label: lang === "es" ? "Mensual" : "Monthly" },
-                    { value: "quarterly", label: lang === "es" ? "Trimestral" : "Quarterly" },
-                    { value: "yearly", label: lang === "es" ? "Anual" : "Yearly" }
+                    { value: "monthly", label: translations[lang].subscriptionFrequencyMonthly },
+                    { value: "quarterly", label: translations[lang].subscriptionFrequencyQuarterly },
+                    { value: "yearly", label: translations[lang].subscriptionFrequencyYearly }
                   ]}
                   userId={selected.id}
                   onUpdated={val => setSelected({ ...selected, subscriptionFrequency: val })}
@@ -1033,7 +1416,7 @@ export default function UserTable({
                   <strong>{translations[lang].manageUsersModalLastLogin}:</strong>{" "}
                   {selected.lastOKLogin
                     ? new Date(selected.lastOKLogin).toLocaleString(lang === "es" ? "es-ES" : "en-GB")
-                    : <span style={{color: "#888"}}>---</span>}
+                    : translations[lang].emptyValue}
                 </Typography>
                 <Typography>
                   <strong>{translations[lang].manageUsersTableStatus}:</strong> {selected.hidden ? translations[lang].hideUser : translations[lang].paymentsTablePaid}
@@ -1042,68 +1425,169 @@ export default function UserTable({
             )}
             {modalTab === "payments" && selected && (
               <Box sx={{ mt: 2 }}>
-                <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                  {translations[lang].paymentsTablePaidHeader}
-                </Typography>
-                {!selected.payments || selected.payments.length === 0 ? (
-                  <Typography variant="body2" color="text.secondary">
-                    {translations[lang].manageUsersAddPaymentNone}
-                  </Typography>
-                ) : (
-                  <Box sx={{ width: '100%', minWidth: 360 }}>
-                    <DataGrid
-                      rows={selected.payments}
-                      columns={[
-                        {
-                          field: 'dueDate',
-                          headerName: translations[lang].paymentsTableDate,
-                          minWidth: 120,
-                          renderCell: (params: any) =>
-                            params.row && params.row.dueDate
-                              ? new Date(params.row.dueDate).toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-GB')
-                              : '—'
-                        },
-                        {
-                          field: 'amount',
-                          headerName: translations[lang].paymentsTableAmount,
-                          minWidth: 100,
-                          valueFormatter: (params: any) =>
-                            typeof params.value === 'number'
-                              ? params.value.toFixed(2)
-                              : params.value
-                        },
-                        {
-                          field: 'isPayed',
-                          headerName: translations[lang].paymentsTablePaid,
-                          minWidth: 80,
-                          sortable: false,
-                          renderCell: (params: any) =>
-                            params.value ? (
-                              <Tooltip title={translations[lang].paymentsTablePaid}>
-                                <EuroIcon sx={{ color: "#23b802" }} />
-                              </Tooltip>
-                            ) : (
-                              <Tooltip title={translations[lang].paymentsTableUnpaid}>
-                                <EuroIcon sx={{ color: "#E53935" }} />
-                              </Tooltip>
-                            ),
-                        },
-                      ]}
-                      pageSizeOptions={[5]}
-                      initialState={{
-                        pagination: { paginationModel: { pageSize: 6, page: 0 } }
-                      }}
-                      getRowId={row => row.id}
-                      hideFooterSelectedRowCount
-                      autoHeight
-                      disableColumnMenu
+                <Box sx={{
+                  display: "flex", alignItems: "center", gap: 1, mb: 1
+                }}>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    onClick={() => setShowAddPayment(true)}
+                  >
+                    {translations[lang].addPaymentButton}
+                  </Button>
+                  <label style={{ display: "flex", alignItems: "center", gap: 4, marginLeft: 10, cursor: "pointer" }}>
+                    <input
+                      type="checkbox"
+                      checked={showOnlyPendingPayments}
+                      onChange={e => setShowOnlyPendingPayments(e.target.checked)}
+                      style={{ marginRight: 4 }}
                     />
-                  </Box>
-                )}
-              </Box>
+                    {translations[lang].addPaymentDialogShowOnlyPending}
+                  </label>
+                </Box>
+                <AddPaymentDialog
+                  open={showAddPayment}
+                  onClose={() => setShowAddPayment(false)}
+                  userId={selected.id}
+                  onCreated={(payment) => {
+                    setShowAddPayment(false);
+                    setSelected((sel: any) => ({
+                      ...sel,
+                      payments: [payment, ...(sel.payments || [])]
+                    }));
+                    setNotification({ type: "success", message: translations[lang].paymentAdded });
+                  }}
+                  lang={lang}
+                />
+              {!selected.payments || selected.payments.length === 0 ? (
+                <Typography variant="body2" color="text.secondary">
+                  {translations[lang].manageUsersAddPaymentNone}
+                </Typography>
+              ) : (
+                <Box sx={{ width: '100%', minWidth: 360 }}>
+                  <DataGrid
+                    rows={
+                      showOnlyPendingPayments
+                        ? selected.payments.filter((p: any) => !p.isPayed)
+                        : selected.payments
+                    }
+                    columns={[
+                      {
+                        field: 'dueDate',
+                        headerName: translations[lang].paymentsTableDate,
+                        width: 100,
+                        minWidth: 80,
+                        maxWidth: 120,
+                        flex: 0,
+                        renderCell: (params: any) =>
+                          params.row && params.row.dueDate
+                            ? new Date(params.row.dueDate).toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-GB')
+                            : translations[lang].emptyValue,
+                        sortable: false,
+                      },
+                      {
+                        field: 'amount',
+                        headerName: translations[lang].paymentsTableAmount,
+                        renderCell: (params: any) =>
+                          typeof params.value === 'number'
+                            ? params.value.toLocaleString(lang === "es" ? "es-ES" : "en-GB", {
+                                style: "currency",
+                                currency: "EUR",
+                                minimumFractionDigits: 2
+                              })
+                            : params.value,
+                        flex: 1,
+                        minWidth: 80,
+                        sortable: false,
+                      },
+                      {
+                        field: 'isPayed',
+                        headerName: translations[lang].paymentsTablePaid,
+                        width: 120,
+                        minWidth: 120,
+                        maxWidth: 120,
+                        flex: 0,
+                        sortable: false,
+                        renderCell: (params: any) => (
+                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                            <Tooltip
+                              title={
+                                Boolean(params.value)
+                                  ? translations[lang].paymentsTablePaid
+                                  : translations[lang].paymentsTableUnpaid
+                              }
+                            >
+                              <Switch
+                                checked={Boolean(params.value)}
+                                size="small"
+                                color={Boolean(params.value) ? "success" : "error"}
+                                inputProps={{
+                                  "aria-label": Boolean(params.value)
+                                    ? translations[lang].paymentsTablePaid
+                                    : translations[lang].paymentsTableUnpaid
+                                }}
+                                sx={{
+                                  mx: 'auto',
+                                  display: 'inline-flex',
+                                  '& .MuiSwitch-track': {
+                                    minWidth: 28, // ensure the track is visible even in small size
+                                    borderRadius: 13,
+                                  },
+                                  ...(Boolean(params.value)
+                                    ? {}
+                                    : {
+                                        '& .MuiSwitch-thumb': {
+                                          backgroundColor: '#E53935'
+                                        },
+                                        '& .Mui-checked': {},
+                                        '& .MuiSwitch-switchBase:not(.Mui-checked) .MuiSwitch-track':
+                                          { backgroundColor: '#F4C7C3' }
+                                      })
+                                }}
+                                onChange={async (e) => {
+                                  const newValue = e.target.checked;
+                                  await fetch(`/api/payment/${params.row.id}`, {
+                                    method: "PATCH",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ isPayed: newValue }),
+                                  });
+                                  setSelected((sel: any) => ({
+                                    ...sel,
+                                    payments: sel.payments.map((p: any) =>
+                                      p.id === params.row.id ? { ...p, isPayed: newValue } : p
+                                    )
+                                  }));
+                                }}
+                              />
+                            </Tooltip>
+                          </Box>
+                        ),
+                      },
+                    ]}
+                    pageSizeOptions={[6]}
+                    initialState={{
+                      pagination: { paginationModel: { pageSize: 6, page: 0 } }
+                    }}
+                    getRowId={row => row.id}
+                    hideFooterSelectedRowCount
+                    autoHeight
+                    disableColumnMenu
+                    sx={{
+                      '& .MuiDataGrid-root, .MuiDataGrid-cell, .MuiDataGrid-columnHeader': {
+                        fontSize: '0.9em',
+                        padding: '4px 8px'
+                      }
+                    }}
+                  />
+                </Box>
+              )}
+            </Box>
             )}
             {modalTab === "measurements" && selected && (
               <MeasurementsTab userId={selected.id} lang={lang} />
+            )}
+            {modalTab === "blocks" && selected && (
+              <TrainingTab userId={selected.id} lang={lang} />
             )}
           </DialogContent>
         </Dialog>
@@ -1167,7 +1651,7 @@ export default function UserTable({
           open={confirmationDialog.open}
           onClose={() => setConfirmationDialog({ ...confirmationDialog, open: false })}
         >
-          <DialogTitle>Confirmación</DialogTitle>
+          <DialogTitle>{translations[lang].hideUserDialogTitle}</DialogTitle>
           <DialogContent>
             <Typography>{confirmationDialog.message}</Typography>
             <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end", gap: 2 }}>
@@ -1175,7 +1659,7 @@ export default function UserTable({
                 onClick={() => setConfirmationDialog({ ...confirmationDialog, open: false })}
                 color="inherit"
               >
-                Cancelar
+                {translations[lang].hideUserDialogCancel}
               </Button>
               <Button
                 color="primary"
@@ -1185,7 +1669,7 @@ export default function UserTable({
                   if (confirmationDialog.user) await handleHideUser(confirmationDialog.user);
                 }}
               >
-                Confirmar
+                {translations[lang].hideUserDialogConfirm}
               </Button>
             </Box>
           </DialogContent>

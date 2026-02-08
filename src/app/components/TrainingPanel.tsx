@@ -491,9 +491,9 @@ export default function TrainingPanel({
                   onChange={e => handleBlockChange(e.target.value)}
                 >
                   {blockOpts.map(b => (
-                    <MenuItem key={b.id} value={b.id}>
-                      {`${translations[lang].block} ${b.blockNumber}`}
-                    </MenuItem>
+                      <MenuItem key={b.id} value={b.id}>
+                          {`${translations[lang].block} ${b.blockNumber}`}
+                      </MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -602,13 +602,14 @@ export default function TrainingPanel({
                             </TableHead>
                             <TableBody>
                               {exDefs.map((def: any, i: number) => {
-                                const hasTrainer = def.trainerNotes && def.trainerNotes.trim() !== "";
-                                const hasAthlete = def.athleteNotes && def.athleteNotes.trim() !== "";
-                                const rowSpan = 1 + (hasTrainer ? 1 : 0) + (hasAthlete ? 1 : 0);
+                                const hasTrainerNotes = def.trainerNotes && def.trainerNotes.trim() !== "";
+                                const hasAthleteCurrentWeekNotes = def.athleteNotes && def.athleteNotes.trim() !== "";
+                                const hasAthleteLastWeekNotes = def.lastWeekValues && def.lastWeekValues.athleteNotes && def.lastWeekValues.athleteNotes.trim() !== "";
+                                const rowSpan = 1 + (hasTrainerNotes ? 1 : 0) + ((hasAthleteCurrentWeekNotes || hasAthleteLastWeekNotes) ? 1 : 0);
                                 let currentRow = 0;
                                 return (
                                   <React.Fragment key={def.id}>
-                                    {hasTrainer && (
+                                    {hasTrainerNotes && (
                                       <TableRow>
                                         <TableCell
                                           rowSpan={rowSpan}
@@ -651,7 +652,7 @@ export default function TrainingPanel({
                                       </TableRow>
                                     )}
                                     <TableRow>
-                                      {!hasTrainer && (
+                                      {!hasTrainerNotes && (
                                         <TableCell
                                           rowSpan={rowSpan}
                                           align="center"
@@ -724,7 +725,15 @@ export default function TrainingPanel({
                                           variant="standard"
                                           size="small"
                                           sx={{
-                                            "& .MuiInputBase-input::placeholder": { fontSize: "0.75em", opacity: 1 }
+                                            "& .MuiInputBase-input::placeholder": { fontSize: "0.75em", opacity: 1 },
+                                            // Remove up/down arrows in Chrome/Safari/Edge and Firefox
+                                            "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button": {
+                                              WebkitAppearance: "none",
+                                              margin: 0,
+                                            },
+                                            "& input[type=number]": {
+                                              MozAppearance: "textfield",
+                                            },
                                           }}
                                         />
                                       </TableCell>
@@ -817,12 +826,24 @@ export default function TrainingPanel({
                                         />
                                       </TableCell>
                                     </TableRow>
-                                    {hasAthlete && (
-                                      <TableRow>
-                                        <TableCell colSpan={5} sx={{ bgcolor: "#565656ff", fontSize: "0.75em", color: "#a7a7a7ff", px: 2, py: 0.5 }}>
-                                          <span style={{ fontStyle: "italic", fontWeight: 1000, color: "white" }}>Yo: </span>{def.athleteNotes}
-                                        </TableCell>
-                                      </TableRow>
+                                    {(hasAthleteCurrentWeekNotes || hasAthleteLastWeekNotes) && (
+                                    <TableRow>
+                                      <TableCell colSpan={5} sx={{ bgcolor: "#565656ff", fontSize: "0.75em", color: "#a7a7a7ff", px: 2, py: 0.5 }}>
+                                        {hasAthleteLastWeekNotes && (
+                                          <>
+                                            <span style={{ fontStyle: "italic", fontWeight: 1000, color: "yellow" }}>Yo (sem. pas.): </span>
+                                            {def.lastWeekValues.athleteNotes}
+                                            <br />
+                                          </>
+                                        )}
+                                        {hasAthleteCurrentWeekNotes && (
+                                          <>
+                                            <span style={{ fontStyle: "italic", fontWeight: 1000, color: "white" }}>Yo: </span>
+                                            {def.athleteNotes}
+                                          </>
+                                        )}
+                                      </TableCell>
+                                    </TableRow>
                                     )}
                                   </React.Fragment>
                                 )

@@ -182,11 +182,19 @@ export async function GET(req: NextRequest) {
       if (prevWeek) {
         prevWeekDefs = await prisma.dayExerciseSeries.findMany({
           where: { trainingWeekId: prevWeek.id },
-          include: {
+          select: {
+            id: true,
+            seriesNumber: true,
+            effectiveReps: true,
+            effectiveWeight: true,
+            effectiveRir: true,
+            athleteNotes: true,
             dayExercise: {
-              include: {
+              select: {
+                id: true,
+                exerciseNumber: true,
                 trainingDay: { select: { id: true, dayNumber: true } },
-                exercise: true,
+                exercise: true
               }
             }
           }
@@ -204,11 +212,14 @@ export async function GET(req: NextRequest) {
           effectiveRir: d.effectiveRir
         }));
 
+        // Build prevDefsByKey based strictly on (dayNumber, exerciseNumber, exerciseId, seriesNumber)
         prevWeekDefs.forEach((def: any) => {
-          // Use the exerciseNumber for DayExercise (not dayNumber)
+          // These fields must have the same meaning for both weeks to match!
+          const dayNum = def.dayExercise?.trainingDay?.dayNumber ?? "NA";
           const exerciseNum = def.dayExercise?.exerciseNumber ?? "NA";
-          const exId = def.dayExercise?.exercise?.id ?? def.dayExerciseId ?? "NA";
-          const k = `${exerciseNum}|${exId}|${def.seriesNumber}`;
+          const exId = def.dayExercise?.exercise?.id ?? "NA";
+          const seriesNumber = def.seriesNumber ?? "NA";
+          const k = `${dayNum}|${exerciseNum}|${exId}|${seriesNumber}`;
           prevDefsByKey[k] = def;
         });
         debugObj.prevDefsByKey = Object.entries(prevDefsByKey).reduce((acc: Record<string, any>, [k, v]) => {
@@ -230,17 +241,20 @@ export async function GET(req: NextRequest) {
       // Assign lastWeekValues using same day number, exercise, and series in previous week of block
       debugObj.debugPlaceholders = [];
       exerciseDefs = exerciseDefs.map((def: any) => {
+        // Formulate current week key for lookup using only stable properties
         let lastValues = null;
-        const exerciseNum =
-          def.dayExercise?.exerciseNumber ?? "NA";
-        const exId = def.dayExercise?.exercise?.id ?? def.dayExerciseId ?? "NA";
-        const k = exerciseNum + "|" + exId + "|" + def.seriesNumber;
+        const dayNum = def.dayExercise?.trainingDay?.dayNumber ?? "NA";
+        const exerciseNum = def.dayExercise?.exerciseNumber ?? "NA";
+        const exId = def.dayExercise?.exercise?.id ?? "NA";
+        const seriesNumber = def.seriesNumber ?? "NA";
+        const k = `${dayNum}|${exerciseNum}|${exId}|${seriesNumber}`;
         if (prevDefsByKey[k]) {
           const pv = prevDefsByKey[k];
           lastValues = {
             effectiveReps: pv.effectiveReps,
             effectiveWeight: pv.effectiveWeight,
-            effectiveRir: pv.effectiveRir
+            effectiveRir: pv.effectiveRir,
+            athleteNotes: pv.athleteNotes ?? ""
           };
           debugObj.debugPlaceholders.push({
             match: 'HIT',

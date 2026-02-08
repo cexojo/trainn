@@ -2,6 +2,12 @@ export type Lang = "en" | "es";
 
 export type Translations = {
   [K in Lang]: {
+    // --- UserTable additions:
+    notesPopoverTitle: string;
+    notesPopoverTooltip: string;
+    noDaysForWeek: string;
+    // ---
+    measurementsChartMonthsShort: string[];
     athleteNotesModalTitle: (firstName: string, lastName?: string) => string;
     noteButtonTitle: (firstName: string, lastName?: string) => string;
     measurementsMenu: string;
@@ -113,6 +119,7 @@ export type Translations = {
     createUserFrequencyQuarterly: string;
     createUserFrequencyYearly: string;
     muscleGroup: string;
+    muscleGroupsLabel: string;
     reps: string;
     weight: string;
     rir: string;
@@ -178,6 +185,27 @@ export type Translations = {
     paymentsTableActions: string;
     infoTab: string;
     paymentsTab: string;
+    blocksTab: string;
+    addPaymentDialogTitle: string;
+    addPaymentDialogDate: string;
+    addPaymentDialogAmount: string;
+    addPaymentDialogCancel: string;
+    addPaymentDialogAdd: string;
+    addPaymentDialogShowOnlyPending: string;
+    addPaymentButton: string;
+    paymentAdded: string;
+    subscriptionAmountLabel: string;
+    subscriptionFrequencyLabel: string;
+    subscriptionFrequencyMonthly: string;
+    subscriptionFrequencyQuarterly: string;
+    subscriptionFrequencyYearly: string;
+    editFrequencyTooltip: string;
+    editAmountTooltip: string;
+    hideUserDialogTitle: string;
+    hideUserDialogHideMsg: string;
+    hideUserDialogUnhideMsg: string;
+    hideUserDialogCancel: string;
+    hideUserDialogConfirm: string;
     actionsMarkPayed: string;
     actionsMarkUnpayed: string;
     actionsRemovePayment: string;
@@ -328,11 +356,23 @@ export type Translations = {
     muscleGroupLat: string;
     muscleGroupLowerBack: string;
     muscleGroupAbdomen: string;
+    emptyValue: string;
+    weekProgressLabel: string;
+    percentLabel: string;
+    weeklyProgressTitle: string;
   };
 };
 
 export const translations: Translations = {
   en: {
+    // Added for UserTable/Popover:
+    notesPopoverTitle: "Notes",
+    notesPopoverTooltip: "View Notes",
+    noDaysForWeek: "No days available for this week.",
+    measurementsChartMonthsShort: [
+      "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+      "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
+    ],
     athleteNotesModalTitle: (firstName: string, lastName?: string) =>
       `Notes for ${(firstName ?? "") + (lastName ? " " + lastName : "")}`,
 
@@ -447,6 +487,7 @@ export const translations: Translations = {
     createUserFrequencyQuarterly: "Quarterly",
     createUserFrequencyYearly: "Yearly",
     muscleGroup: "Muscle Group",
+    muscleGroupsLabel: "Muscle groups",
     reps: "Reps",
     weight: "Weight (kg)",
     rir: "RIR",
@@ -513,6 +554,27 @@ export const translations: Translations = {
     paymentsTableActions: "Actions",
     infoTab: "Info",
     paymentsTab: "Payments",
+    blocksTab: "Blocks",
+    addPaymentDialogTitle: "New Payment",
+    addPaymentDialogDate: "Due Date",
+    addPaymentDialogAmount: "Amount (€)",
+    addPaymentDialogCancel: "Cancel",
+    addPaymentDialogAdd: "Add",
+    addPaymentDialogShowOnlyPending: "Show only pending payments",
+    addPaymentButton: "Add payment",
+    paymentAdded: "Payment added",
+    subscriptionAmountLabel: "Amount (€)",
+    subscriptionFrequencyLabel: "Frequency",
+    subscriptionFrequencyMonthly: "Monthly",
+    subscriptionFrequencyQuarterly: "Quarterly",
+    subscriptionFrequencyYearly: "Yearly",
+    editFrequencyTooltip: "Edit frequency",
+    editAmountTooltip: "Edit amount",
+    hideUserDialogTitle: "Confirmation",
+    hideUserDialogHideMsg: "If you hide this user, they will not appear as active until you unhide them, and they will not be able to access the platform with their username and password. Do you want to continue?",
+    hideUserDialogUnhideMsg: "If you enable this user again, they will be able to access the platform with their username and password. Do you want to continue?",
+    hideUserDialogCancel: "Cancel",
+    hideUserDialogConfirm: "Confirm",
     actionsMarkPayed: "Mark this payment as payed?",
     actionsMarkUnpayed: "Mark this payment as unpaid?",
     actionsRemovePayment: "Remove this payment?",
@@ -661,8 +723,20 @@ export const translations: Translations = {
     muscleGroupLat: "Lat",
     muscleGroupLowerBack: "Lower Back",
     muscleGroupAbdomen: "Abdomen",
+    emptyValue: "—",
+    weekProgressLabel: "Progress",
+    percentLabel: "%",
+    weeklyProgressTitle: "Weekly progress",
   },
   es: {
+    // Añadido para UserTable/Popover:
+    notesPopoverTitle: "Notas",
+    notesPopoverTooltip: "Ver notas",
+    noDaysForWeek: "No hay días disponibles en esta semana.",
+    measurementsChartMonthsShort: [
+      "ENE", "FEB", "MAR", "ABR", "MAY", "JUN",
+      "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"
+    ],
     athleteNotesModalTitle: (firstName: string, lastName?: string) =>
       `Notas de ${(firstName ?? "") + (lastName ? " " + lastName : "")}`,
 
@@ -787,6 +861,7 @@ export const translations: Translations = {
     createUserFrequencyQuarterly: "Trimestral",
     createUserFrequencyYearly: "Anual",
     muscleGroup: "Grupo muscular",
+    muscleGroupsLabel: "Grupos musculares",
     reps: "Reps",
     weight: "Peso",
     rir: "RIR",
@@ -853,6 +928,27 @@ export const translations: Translations = {
     paymentsTableActions: "Acciones",
     infoTab: "Información",
     paymentsTab: "Pagos",
+    blocksTab: "Bloques",
+    addPaymentDialogTitle: "Nuevo pago",
+    addPaymentDialogDate: "Fecha",
+    addPaymentDialogAmount: "Importe (€)",
+    addPaymentDialogCancel: "Cancelar",
+    addPaymentDialogAdd: "Añadir",
+    addPaymentDialogShowOnlyPending: "Mostrar solo pendientes",
+    addPaymentButton: "Añadir pago",
+    paymentAdded: "Pago añadido",
+    subscriptionAmountLabel: "Cuota (€)",
+    subscriptionFrequencyLabel: "Frecuencia",
+    subscriptionFrequencyMonthly: "Mensual",
+    subscriptionFrequencyQuarterly: "Trimestral",
+    subscriptionFrequencyYearly: "Anual",
+    editFrequencyTooltip: "Editar frecuencia",
+    editAmountTooltip: "Editar cuota",
+    hideUserDialogTitle: "Confirmación",
+    hideUserDialogHideMsg: "Si ocultas el usuario no aparecerá como activo hasta que lo vuelvas a habilitar y no podrá acceder a la aplicación con su nombre de usuario y contraseña, ¿deseas continuar?",
+    hideUserDialogUnhideMsg: "Si habilitas de nuevo a este usuario podrá volver a acceder a la plataforma con su nombre de usuario y contraseña, ¿deseas continuar?",
+    hideUserDialogCancel: "Cancelar",
+    hideUserDialogConfirm: "Confirmar",
     actionsMarkPayed: "¿Confirmas marcar este pago como pagado?",
     actionsMarkUnpayed: "¿Confirmas marcar este pago como NO pagado?",
     actionsRemovePayment: "¿Confirmas borrar este pago?",
@@ -991,5 +1087,9 @@ export const translations: Translations = {
     muscleGroupLat: "Dorsal",
     muscleGroupLowerBack: "Espalda baja",
     muscleGroupAbdomen: "Abdomen",
+    emptyValue: "—",
+    weekProgressLabel: "Progreso",
+    percentLabel: "%",
+    weeklyProgressTitle: "Progreso semanal",
   }
 };
