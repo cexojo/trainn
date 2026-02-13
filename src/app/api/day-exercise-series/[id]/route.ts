@@ -108,6 +108,9 @@ export async function PATCH(req: NextRequest, ctx: any) {
   }
 
   try {
+    // Always update modifiedAt
+    updateData.modifiedAt = new Date();
+
     const updated = await prisma.dayExerciseSeries.update({
       where: { id },
       data: updateData,

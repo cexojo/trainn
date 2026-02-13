@@ -10352,6 +10352,7 @@ export namespace Prisma {
     athleteNotes: string | null
     trainerNotes: string | null
     athleteUserRead: boolean | null
+    modifiedAt: Date | null
   }
 
   export type DayExerciseSeriesMaxAggregateOutputType = {
@@ -10370,6 +10371,7 @@ export namespace Prisma {
     athleteNotes: string | null
     trainerNotes: string | null
     athleteUserRead: boolean | null
+    modifiedAt: Date | null
   }
 
   export type DayExerciseSeriesCountAggregateOutputType = {
@@ -10388,6 +10390,7 @@ export namespace Prisma {
     athleteNotes: number
     trainerNotes: number
     athleteUserRead: number
+    modifiedAt: number
     _all: number
   }
 
@@ -10430,6 +10433,7 @@ export namespace Prisma {
     athleteNotes?: true
     trainerNotes?: true
     athleteUserRead?: true
+    modifiedAt?: true
   }
 
   export type DayExerciseSeriesMaxAggregateInputType = {
@@ -10448,6 +10452,7 @@ export namespace Prisma {
     athleteNotes?: true
     trainerNotes?: true
     athleteUserRead?: true
+    modifiedAt?: true
   }
 
   export type DayExerciseSeriesCountAggregateInputType = {
@@ -10466,6 +10471,7 @@ export namespace Prisma {
     athleteNotes?: true
     trainerNotes?: true
     athleteUserRead?: true
+    modifiedAt?: true
     _all?: true
   }
 
@@ -10571,6 +10577,7 @@ export namespace Prisma {
     athleteNotes: string | null
     trainerNotes: string | null
     athleteUserRead: boolean
+    modifiedAt: Date | null
     _count: DayExerciseSeriesCountAggregateOutputType | null
     _avg: DayExerciseSeriesAvgAggregateOutputType | null
     _sum: DayExerciseSeriesSumAggregateOutputType | null
@@ -10608,6 +10615,7 @@ export namespace Prisma {
     athleteNotes?: boolean
     trainerNotes?: boolean
     athleteUserRead?: boolean
+    modifiedAt?: boolean
     dayExercise?: boolean | DayExerciseDefaultArgs<ExtArgs>
     trainingWeek?: boolean | TrainingWeekDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dayExerciseSeries"]>
@@ -10628,6 +10636,7 @@ export namespace Prisma {
     athleteNotes?: boolean
     trainerNotes?: boolean
     athleteUserRead?: boolean
+    modifiedAt?: boolean
     dayExercise?: boolean | DayExerciseDefaultArgs<ExtArgs>
     trainingWeek?: boolean | TrainingWeekDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dayExerciseSeries"]>
@@ -10648,6 +10657,7 @@ export namespace Prisma {
     athleteNotes?: boolean
     trainerNotes?: boolean
     athleteUserRead?: boolean
+    modifiedAt?: boolean
     dayExercise?: boolean | DayExerciseDefaultArgs<ExtArgs>
     trainingWeek?: boolean | TrainingWeekDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dayExerciseSeries"]>
@@ -10668,9 +10678,10 @@ export namespace Prisma {
     athleteNotes?: boolean
     trainerNotes?: boolean
     athleteUserRead?: boolean
+    modifiedAt?: boolean
   }
 
-  export type DayExerciseSeriesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dayExerciseId" | "seriesNumber" | "minReps" | "maxReps" | "minRir" | "maxRir" | "effectiveReps" | "effectiveWeight" | "effectiveRir" | "trainingWeekId" | "isDropset" | "athleteNotes" | "trainerNotes" | "athleteUserRead", ExtArgs["result"]["dayExerciseSeries"]>
+  export type DayExerciseSeriesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dayExerciseId" | "seriesNumber" | "minReps" | "maxReps" | "minRir" | "maxRir" | "effectiveReps" | "effectiveWeight" | "effectiveRir" | "trainingWeekId" | "isDropset" | "athleteNotes" | "trainerNotes" | "athleteUserRead" | "modifiedAt", ExtArgs["result"]["dayExerciseSeries"]>
   export type DayExerciseSeriesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     dayExercise?: boolean | DayExerciseDefaultArgs<ExtArgs>
     trainingWeek?: boolean | TrainingWeekDefaultArgs<ExtArgs>
@@ -10706,6 +10717,7 @@ export namespace Prisma {
       athleteNotes: string | null
       trainerNotes: string | null
       athleteUserRead: boolean
+      modifiedAt: Date | null
     }, ExtArgs["result"]["dayExerciseSeries"]>
     composites: {}
   }
@@ -11146,6 +11158,7 @@ export namespace Prisma {
     readonly athleteNotes: FieldRef<"DayExerciseSeries", 'String'>
     readonly trainerNotes: FieldRef<"DayExerciseSeries", 'String'>
     readonly athleteUserRead: FieldRef<"DayExerciseSeries", 'Boolean'>
+    readonly modifiedAt: FieldRef<"DayExerciseSeries", 'DateTime'>
   }
     
 
@@ -13978,7 +13991,8 @@ export namespace Prisma {
     isDropset: 'isDropset',
     athleteNotes: 'athleteNotes',
     trainerNotes: 'trainerNotes',
-    athleteUserRead: 'athleteUserRead'
+    athleteUserRead: 'athleteUserRead',
+    modifiedAt: 'modifiedAt'
   };
 
   export type DayExerciseSeriesScalarFieldEnum = (typeof DayExerciseSeriesScalarFieldEnum)[keyof typeof DayExerciseSeriesScalarFieldEnum]
@@ -14690,6 +14704,7 @@ export namespace Prisma {
     athleteNotes?: StringNullableFilter<"DayExerciseSeries"> | string | null
     trainerNotes?: StringNullableFilter<"DayExerciseSeries"> | string | null
     athleteUserRead?: BoolFilter<"DayExerciseSeries"> | boolean
+    modifiedAt?: DateTimeNullableFilter<"DayExerciseSeries"> | Date | string | null
     dayExercise?: XOR<DayExerciseScalarRelationFilter, DayExerciseWhereInput>
     trainingWeek?: XOR<TrainingWeekScalarRelationFilter, TrainingWeekWhereInput>
   }
@@ -14710,6 +14725,7 @@ export namespace Prisma {
     athleteNotes?: SortOrderInput | SortOrder
     trainerNotes?: SortOrderInput | SortOrder
     athleteUserRead?: SortOrder
+    modifiedAt?: SortOrderInput | SortOrder
     dayExercise?: DayExerciseOrderByWithRelationInput
     trainingWeek?: TrainingWeekOrderByWithRelationInput
   }
@@ -14733,6 +14749,7 @@ export namespace Prisma {
     athleteNotes?: StringNullableFilter<"DayExerciseSeries"> | string | null
     trainerNotes?: StringNullableFilter<"DayExerciseSeries"> | string | null
     athleteUserRead?: BoolFilter<"DayExerciseSeries"> | boolean
+    modifiedAt?: DateTimeNullableFilter<"DayExerciseSeries"> | Date | string | null
     dayExercise?: XOR<DayExerciseScalarRelationFilter, DayExerciseWhereInput>
     trainingWeek?: XOR<TrainingWeekScalarRelationFilter, TrainingWeekWhereInput>
   }, "id">
@@ -14753,6 +14770,7 @@ export namespace Prisma {
     athleteNotes?: SortOrderInput | SortOrder
     trainerNotes?: SortOrderInput | SortOrder
     athleteUserRead?: SortOrder
+    modifiedAt?: SortOrderInput | SortOrder
     _count?: DayExerciseSeriesCountOrderByAggregateInput
     _avg?: DayExerciseSeriesAvgOrderByAggregateInput
     _max?: DayExerciseSeriesMaxOrderByAggregateInput
@@ -14779,6 +14797,7 @@ export namespace Prisma {
     athleteNotes?: StringNullableWithAggregatesFilter<"DayExerciseSeries"> | string | null
     trainerNotes?: StringNullableWithAggregatesFilter<"DayExerciseSeries"> | string | null
     athleteUserRead?: BoolWithAggregatesFilter<"DayExerciseSeries"> | boolean
+    modifiedAt?: DateTimeNullableWithAggregatesFilter<"DayExerciseSeries"> | Date | string | null
   }
 
   export type PaymentWhereInput = {
@@ -15582,6 +15601,7 @@ export namespace Prisma {
     athleteNotes?: string | null
     trainerNotes?: string | null
     athleteUserRead?: boolean
+    modifiedAt?: Date | string | null
     dayExercise: DayExerciseCreateNestedOneWithoutSeriesInput
     trainingWeek: TrainingWeekCreateNestedOneWithoutDayExerciseSeriesInput
   }
@@ -15602,6 +15622,7 @@ export namespace Prisma {
     athleteNotes?: string | null
     trainerNotes?: string | null
     athleteUserRead?: boolean
+    modifiedAt?: Date | string | null
   }
 
   export type DayExerciseSeriesUpdateInput = {
@@ -15618,6 +15639,7 @@ export namespace Prisma {
     athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
     trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     athleteUserRead?: BoolFieldUpdateOperationsInput | boolean
+    modifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dayExercise?: DayExerciseUpdateOneRequiredWithoutSeriesNestedInput
     trainingWeek?: TrainingWeekUpdateOneRequiredWithoutDayExerciseSeriesNestedInput
   }
@@ -15638,6 +15660,7 @@ export namespace Prisma {
     athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
     trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     athleteUserRead?: BoolFieldUpdateOperationsInput | boolean
+    modifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type DayExerciseSeriesCreateManyInput = {
@@ -15656,6 +15679,7 @@ export namespace Prisma {
     athleteNotes?: string | null
     trainerNotes?: string | null
     athleteUserRead?: boolean
+    modifiedAt?: Date | string | null
   }
 
   export type DayExerciseSeriesUpdateManyMutationInput = {
@@ -15672,6 +15696,7 @@ export namespace Prisma {
     athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
     trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     athleteUserRead?: BoolFieldUpdateOperationsInput | boolean
+    modifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type DayExerciseSeriesUncheckedUpdateManyInput = {
@@ -15690,6 +15715,7 @@ export namespace Prisma {
     athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
     trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     athleteUserRead?: BoolFieldUpdateOperationsInput | boolean
+    modifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type PaymentCreateInput = {
@@ -16582,6 +16608,7 @@ export namespace Prisma {
     athleteNotes?: SortOrder
     trainerNotes?: SortOrder
     athleteUserRead?: SortOrder
+    modifiedAt?: SortOrder
   }
 
   export type DayExerciseSeriesAvgOrderByAggregateInput = {
@@ -16611,6 +16638,7 @@ export namespace Prisma {
     athleteNotes?: SortOrder
     trainerNotes?: SortOrder
     athleteUserRead?: SortOrder
+    modifiedAt?: SortOrder
   }
 
   export type DayExerciseSeriesMinOrderByAggregateInput = {
@@ -16629,6 +16657,7 @@ export namespace Prisma {
     athleteNotes?: SortOrder
     trainerNotes?: SortOrder
     athleteUserRead?: SortOrder
+    modifiedAt?: SortOrder
   }
 
   export type DayExerciseSeriesSumOrderByAggregateInput = {
@@ -17897,6 +17926,7 @@ export namespace Prisma {
     athleteNotes?: string | null
     trainerNotes?: string | null
     athleteUserRead?: boolean
+    modifiedAt?: Date | string | null
     dayExercise: DayExerciseCreateNestedOneWithoutSeriesInput
   }
 
@@ -17915,6 +17945,7 @@ export namespace Prisma {
     athleteNotes?: string | null
     trainerNotes?: string | null
     athleteUserRead?: boolean
+    modifiedAt?: Date | string | null
   }
 
   export type DayExerciseSeriesCreateOrConnectWithoutTrainingWeekInput = {
@@ -18017,6 +18048,7 @@ export namespace Prisma {
     athleteNotes?: StringNullableFilter<"DayExerciseSeries"> | string | null
     trainerNotes?: StringNullableFilter<"DayExerciseSeries"> | string | null
     athleteUserRead?: BoolFilter<"DayExerciseSeries"> | boolean
+    modifiedAt?: DateTimeNullableFilter<"DayExerciseSeries"> | Date | string | null
   }
 
   export type TrainingWeekCreateWithoutTrainingDaysInput = {
@@ -18581,6 +18613,7 @@ export namespace Prisma {
     athleteNotes?: string | null
     trainerNotes?: string | null
     athleteUserRead?: boolean
+    modifiedAt?: Date | string | null
     trainingWeek: TrainingWeekCreateNestedOneWithoutDayExerciseSeriesInput
   }
 
@@ -18599,6 +18632,7 @@ export namespace Prisma {
     athleteNotes?: string | null
     trainerNotes?: string | null
     athleteUserRead?: boolean
+    modifiedAt?: Date | string | null
   }
 
   export type DayExerciseSeriesCreateOrConnectWithoutDayExerciseInput = {
@@ -19094,6 +19128,7 @@ export namespace Prisma {
     athleteNotes?: string | null
     trainerNotes?: string | null
     athleteUserRead?: boolean
+    modifiedAt?: Date | string | null
   }
 
   export type TrainingDayUpdateWithoutWeekInput = {
@@ -19133,6 +19168,7 @@ export namespace Prisma {
     athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
     trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     athleteUserRead?: BoolFieldUpdateOperationsInput | boolean
+    modifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dayExercise?: DayExerciseUpdateOneRequiredWithoutSeriesNestedInput
   }
 
@@ -19151,6 +19187,7 @@ export namespace Prisma {
     athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
     trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     athleteUserRead?: BoolFieldUpdateOperationsInput | boolean
+    modifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type DayExerciseSeriesUncheckedUpdateManyWithoutTrainingWeekInput = {
@@ -19168,6 +19205,7 @@ export namespace Prisma {
     athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
     trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     athleteUserRead?: BoolFieldUpdateOperationsInput | boolean
+    modifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type DayExerciseCreateManyTrainingDayInput = {
@@ -19477,6 +19515,7 @@ export namespace Prisma {
     athleteNotes?: string | null
     trainerNotes?: string | null
     athleteUserRead?: boolean
+    modifiedAt?: Date | string | null
   }
 
   export type DayExerciseSeriesUpdateWithoutDayExerciseInput = {
@@ -19493,6 +19532,7 @@ export namespace Prisma {
     athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
     trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     athleteUserRead?: BoolFieldUpdateOperationsInput | boolean
+    modifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     trainingWeek?: TrainingWeekUpdateOneRequiredWithoutDayExerciseSeriesNestedInput
   }
 
@@ -19511,6 +19551,7 @@ export namespace Prisma {
     athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
     trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     athleteUserRead?: BoolFieldUpdateOperationsInput | boolean
+    modifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type DayExerciseSeriesUncheckedUpdateManyWithoutDayExerciseInput = {
@@ -19528,6 +19569,7 @@ export namespace Prisma {
     athleteNotes?: NullableStringFieldUpdateOperationsInput | string | null
     trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     athleteUserRead?: BoolFieldUpdateOperationsInput | boolean
+    modifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
 

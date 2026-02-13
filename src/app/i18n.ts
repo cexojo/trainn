@@ -1,11 +1,51 @@
+import { enUS as dataGridEnUS } from "@mui/x-data-grid/locales";
+import { esES as dataGridEsES } from "@mui/x-data-grid/locales";
+import { enUS as pickersEnUS } from "@mui/x-date-pickers/locales";
+import { esES as pickersEsES } from "@mui/x-date-pickers/locales";
+import { enUS as coreEnUS } from "@mui/material/locale";
+import { esES as coreEsES } from "@mui/material/locale";
+
 export type Lang = "en" | "es";
 
 export type Translations = {
   [K in Lang]: {
+    followup: string;
+    followupActivity: string;
+    followupBlock: string;
+    blockCompletionThreshold: string;
+    blockNumberLabel: string;
+    blockCreatedAtLabel: string;
+    blockCompletionPercentLabel: string;
+    blockCompletionInfo: string;
+    followUpTabInactivity: string;
+    dataGridLocale: any;
+    neverLabel: string;
+    pickersLocale: any;
+    coreLocale: any;
+    athleteFirstName: string;
+    athleteLastName: string;
+    email: string;
+    lastActivityDate: string;
+    daysSinceLastActivity: string;
+    periodUnitLabel: string;
+    daysLabel: string;
+    weeksLabel: string;
+    monthsLabel: string;
+    unitsLabel: string;
+    searchButton: string;
+    datagridNoRowsLabel: string;
+    datagridRowsPerPage: string;
     // --- UserTable additions:
     notesPopoverTitle: string;
     notesPopoverTooltip: string;
     noDaysForWeek: string;
+    // Future Payment Dialog additions:
+    futurePaymentDialogMessage: (athleteName: string) => string;
+    futurePaymentDialogTitle: string;
+    futurePaymentDialogAmount: string;
+    futurePaymentDialogDate: string;
+    futurePaymentDialogYes: string;
+    futurePaymentDialogNo: string;
     // ---
     measurementsChartMonthsShort: string[];
     athleteNotesModalTitle: (firstName: string, lastName?: string) => string;
@@ -360,11 +400,46 @@ export type Translations = {
     weekProgressLabel: string;
     percentLabel: string;
     weeklyProgressTitle: string;
+    followUpInfoBox: string;
   };
 };
 
 export const translations: Translations = {
   en: {
+    followup: "Follow-up",
+    followupActivity: "Activity",
+    followupBlock: "Last block",
+    blockCompletionThreshold: "Completion %",
+    blockNumberLabel: "Block #",
+    blockCreatedAtLabel: "Created on",
+    blockCompletionPercentLabel: "Completion %",
+    blockCompletionInfo: "Shows athletes whose last block has a completion percentage equal to or higher than specified. You should schedule a new block for these athletes soon.",
+    followUpTabInactivity: "Inactivity",
+    dataGridLocale: dataGridEsES,
+    // --- Future Payment Dialog additions:
+    futurePaymentDialogMessage: (athleteName: string) =>
+      `The current payment has been paid. Do you want to create a future payment for ${athleteName}?`,
+    futurePaymentDialogTitle: "Create future payment",
+    futurePaymentDialogAmount: "Next payment amount",
+    futurePaymentDialogDate: "Next payment due date",
+    futurePaymentDialogYes: "Yes",
+    futurePaymentDialogNo: "No",
+    neverLabel: "Never",
+    pickersLocale: pickersEnUS,
+    coreLocale: coreEnUS,
+    athleteFirstName: "First name",
+    athleteLastName: "Last name",
+    email: "Email",
+    lastActivityDate: "Last activity date",
+    daysSinceLastActivity: "Days since last activity",
+    periodUnitLabel: "Period unit",
+    daysLabel: "Day(s)",
+    weeksLabel: "Week(s)",
+    monthsLabel: "Month(s)",
+    unitsLabel: "Units",
+    searchButton: "Search",
+    datagridNoRowsLabel: "No rows",
+    datagridRowsPerPage: "Rows per page:",
     // Added for UserTable/Popover:
     notesPopoverTitle: "Notes",
     notesPopoverTooltip: "View Notes",
@@ -727,8 +802,43 @@ export const translations: Translations = {
     weekProgressLabel: "Progress",
     percentLabel: "%",
     weeklyProgressTitle: "Weekly progress",
+    followUpInfoBox: "From this panel you can track the most inactive users. The last activity date indicates the last time the athlete recorded a training activity in their form. In the filter, you can set the minimum inactivity period you want to apply."
   },
   es: {
+    followup: "Seguimiento",
+    followupActivity: "Actividad",
+    followupBlock: "Último bloque",
+    blockCompletionThreshold: "% completado",
+    blockNumberLabel: "Bloque #",
+    blockCreatedAtLabel: "Creado el",
+    blockCompletionPercentLabel: "% completado",
+    blockCompletionInfo: "Consulta atletas cuyo último bloque tiene un porcentaje igual o superior al especificado. Para estos atletas deberás crear un nuevo bloque próximamente.",
+    followUpTabInactivity: "Inactividad",
+    dataGridLocale: dataGridEsES,
+    // --- Future Payment Dialog additions:
+    futurePaymentDialogMessage: (athleteName: string) =>
+      `El pago actual ha sido marcado como pagado. ¿Deseas crear un pago futuro para ${athleteName}?`,
+    futurePaymentDialogTitle: "Crear pago futuro",
+    futurePaymentDialogAmount: "Nuevo importe de pago",
+    futurePaymentDialogDate: "Fecha del próximo pago",
+    futurePaymentDialogYes: "Sí",
+    futurePaymentDialogNo: "No",
+    neverLabel: "Nunca",
+    pickersLocale: pickersEsES,
+    coreLocale: coreEsES,
+    athleteFirstName: "Nombre",
+    athleteLastName: "Apellidos",
+    email: "Correo",
+    lastActivityDate: "Última actividad",
+    daysSinceLastActivity: "Días de inactividad",
+    periodUnitLabel: "Unidad de tiempo",
+    daysLabel: "Día(s)",
+    weeksLabel: "Semana(s)",
+    monthsLabel: "Mes(es)",
+    unitsLabel: "Cantidad",
+    searchButton: "Buscar",
+    datagridNoRowsLabel: "Sin filas",
+    datagridRowsPerPage: "Filas por página:",
     // Añadido para UserTable/Popover:
     notesPopoverTitle: "Notas",
     notesPopoverTooltip: "Ver notas",
@@ -1091,5 +1201,6 @@ export const translations: Translations = {
     weekProgressLabel: "Progreso",
     percentLabel: "%",
     weeklyProgressTitle: "Progreso semanal",
+    followUpInfoBox: "Desde este panel podrás hacer seguimiento de los usuarios más inactivos. La fecha de última actividad indica cuál fue la última vez que el atleta registró una actividad de entrenamiento en su formulario. En el filtro podrás indicar la inactividad mínima que quieras aplicar."
   }
 };

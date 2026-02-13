@@ -24,9 +24,6 @@ import type { Lang } from '../i18n';
 // Default to Spanish; adapt as needed for language support.
 const lang: Lang = "es";
 
-
-import { usePathname } from "next/navigation";
-
 export default function MenuContent({
   setSection,
   selectedSection,
@@ -51,6 +48,15 @@ export default function MenuContent({
     ...mainHome,
     { text: translations[lang].adminMenuAthletes, icon: <PeopleRoundedIcon />, section: "athletes" },
     { 
+      text: translations[lang].followup,
+      icon: <AnalyticsRoundedIcon />, 
+      section: "seguimiento-parent",
+      children: [
+        { text: translations[lang].followupActivity, icon: <AssignmentRoundedIcon />, section: "followup-activity" },
+        { text: translations[lang].followupBlock, icon: <ViewModuleRoundedIcon />, section: "followup-block" }
+      ]
+    },
+    { 
       text: translations[lang].adminMenuTrainingBlocks, 
       icon: <ViewModuleRoundedIcon />, 
       section: "training-blocks-parent",
@@ -74,6 +80,9 @@ export default function MenuContent({
   const [trainingBlocksOpen, setTrainingBlocksOpen] = React.useState(
     selectedSection === "create-block" || selectedSection === "manage-blocks"
   );
+  const [seguimientoOpen, setSeguimientoOpen] = React.useState(
+    selectedSection === "seguimiento-actividad"
+  );
 
   return (
     <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>
@@ -95,36 +104,73 @@ export default function MenuContent({
               </ListItem>
             );
           }
-          // Collapsible parent: Training Blocks
-          return (
-            <React.Fragment key={index}>
-              <ListItem disablePadding sx={{ display: 'block' }}>
-                <ListItemButton onClick={() => setTrainingBlocksOpen((o) => !o)}>
-                  <ListItemIcon>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.text} />
-                  {trainingBlocksOpen ? <ExpandLess /> : <ExpandMore />}
-                </ListItemButton>
-              </ListItem>
-              <Collapse in={trainingBlocksOpen} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding dense>
-                  {(item.children as any[]).map((child: any, cidx: number) => (
-                    <ListItem key={child.section} disablePadding sx={{ pl: 4 }}>
-                      <ListItemButton
-                        onClick={() => {
-                          setSection(child.section);
-                          if (onMenuItemClick) onMenuItemClick();
-                        }}
-                        selected={selectedSection === child.section}
-                      >
-                        <ListItemIcon>{child.icon}</ListItemIcon>
-                        <ListItemText primary={child.text} />
-                      </ListItemButton>
-                    </ListItem>
-                  ))}
-                </List>
-              </Collapse>
-            </React.Fragment>
-          );
+
+          // Collapsible parent: Training Blocks or Seguimiento
+          if (item.section === "training-blocks-parent") {
+            return (
+              <React.Fragment key={index}>
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton onClick={() => setTrainingBlocksOpen((o) => !o)}>
+                    <ListItemIcon>{item.icon}</ListItemIcon>
+                    <ListItemText primary={item.text} />
+                    {trainingBlocksOpen ? <ExpandLess /> : <ExpandMore />}
+                  </ListItemButton>
+                </ListItem>
+                <Collapse in={trainingBlocksOpen} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding dense>
+                    {(item.children as any[]).map((child: any, cidx: number) => (
+                      <ListItem key={child.section} disablePadding sx={{ pl: 4 }}>
+                        <ListItemButton
+                          onClick={() => {
+                            setSection(child.section);
+                            if (onMenuItemClick) onMenuItemClick();
+                          }}
+                          selected={selectedSection === child.section}
+                        >
+                          <ListItemIcon>{child.icon}</ListItemIcon>
+                          <ListItemText primary={child.text} />
+                        </ListItemButton>
+                      </ListItem>
+                    ))}
+                  </List>
+                </Collapse>
+              </React.Fragment>
+            );
+          }
+          if (item.section === "seguimiento-parent") {
+            return (
+              <React.Fragment key={index}>
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton onClick={() => setSeguimientoOpen((o) => !o)}>
+                    <ListItemIcon>{item.icon}</ListItemIcon>
+                    <ListItemText primary={item.text} />
+                    {seguimientoOpen ? <ExpandLess /> : <ExpandMore />}
+                  </ListItemButton>
+                </ListItem>
+                <Collapse in={seguimientoOpen} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding dense>
+                    {(item.children as any[]).map((child: any, cidx: number) => (
+                      <ListItem key={child.section} disablePadding sx={{ pl: 4 }}>
+                        <ListItemButton
+                          onClick={() => {
+                            setSection(child.section);
+                            if (onMenuItemClick) onMenuItemClick();
+                          }}
+                          selected={selectedSection === child.section}
+                        >
+                          <ListItemIcon>{child.icon}</ListItemIcon>
+                          <ListItemText primary={child.text} />
+                        </ListItemButton>
+                      </ListItem>
+                    ))}
+                  </List>
+                </Collapse>
+              </React.Fragment>
+            );
+          }
+
+          // fallback for future collapsible menus
+          return null;
         })}
       </List>
       {secondaryList.length > 0 && (

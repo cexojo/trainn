@@ -12,6 +12,8 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import EuroIcon from "@mui/icons-material/Euro";
 import MuscleGroupBadges from "./MuscleGroupBadges";
 
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { useRef } from "react";
 
 function EditableDropdownField({
@@ -768,7 +770,7 @@ function TrainingTab({ userId, lang }: { userId: string, lang: Lang }) {
                                         </Box>
                                       ) : null}
                                       <Box component="td" sx={{ textAlign: "center", p: 1, border: "1px solid #e0e0e0" }}>
-                                        {s.isDropSet ? "DS" : s.seriesNumber != null ? s.seriesNumber + 1 : idx + 1}
+                                        {s.isDropSet ? "DS" : (s.seriesNumber != null ? s.seriesNumber : "")}
                                       </Box>
                                       <Box component="td" sx={{ textAlign: "center", p: 1, border: "1px solid #e0e0e0" }}>
                                         <span style={{ fontWeight: 500 }}>{s.effectiveWeight ?? ""}</span>
@@ -1163,6 +1165,37 @@ export default function UserTable({
     setActionLoading(false);
   };
 
+  // Future payment dialog state
+  const [futurePaymentDialog, setFuturePaymentDialog] = useState<{
+    open: boolean,
+    userId: string | null,
+    athleteName: string,
+    amount: number,
+    dueDate: string, // yyyy-mm-dd
+    paymentId: string | null
+  }>({
+    open: false,
+    userId: null,
+    athleteName: "",
+    amount: 0,
+    dueDate: "",
+    paymentId: null
+  });
+
+  // Helper: get next payment due date based on freq
+  function getNextPaymentDate(curr: string, freq: string) {
+    try {
+      const date = new Date(curr);
+      if (freq === "monthly") date.setMonth(date.getMonth() + 1);
+      else if (freq === "quarterly") date.setMonth(date.getMonth() + 3);
+      else if (freq === "yearly") date.setFullYear(date.getFullYear() + 1);
+      // Format YYYY-MM-DD for datestring input
+      return date.toISOString().slice(0, 10);
+    } catch {
+      return curr;
+    }
+  }
+
   // Payment/user info modal dialog
   const handleRowClick = (params: GridRowParams) => setSelected(params.row);
 
@@ -1530,7 +1563,7 @@ export default function UserTable({
                                   mx: 'auto',
                                   display: 'inline-flex',
                                   '& .MuiSwitch-track': {
-                                    minWidth: 28, // ensure the track is visible even in small size
+                                    minWidth: 28,
                                     borderRadius: 13,
                                   },
                                   ...(Boolean(params.value)
@@ -1557,6 +1590,53 @@ export default function UserTable({
                                       p.id === params.row.id ? { ...p, isPayed: newValue } : p
                                     )
                                   }));
+                                  // Only show future payment dialog on marking paid -- but only for latest unpaid payment
+                                  if (newValue && selected && Array.isArray(selected.payments)) {
+                                    // Find all unpaid (not paid yet)
+                                    const unpaid = selected.payments.filter(
+                                      (p: any) => !p.isPayed
+                                    );
+                                    if (unpaid.length > 0) {
+                                      // Find the latest unpaid by dueDate (chronologically largest)
+                                      const sortedUnpaid = unpaid.slice().sort((a: any, b: any) =>
+                                        new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
+                                      );
+                                      const latestUnpaid = sortedUnpaid[sortedUnpaid.length - 1];
+                                      if (latestUnpaid && latestUnpaid.id === params.row.id) {
+                                        // Show dialog only if this is the latest unpaid
+                                        const user = selected;
+                                        let freq = "monthly";
+                                        let defaultAmount = 0;
+                                        if (user && user.subscriptionFrequency) {
+                                          freq = user.subscriptionFrequency;
+                                        }
+                                        // Prefer user default amount, else from payment row
+                                        if (user && user.subscriptionAmount != null) {
+                                          defaultAmount = user.subscriptionAmount;
+                                        } else if (typeof params.row.amount === "number") {
+                                          defaultAmount = params.row.amount;
+                                        }
+                                        // Use user's full name (or username/email fallback)
+                                        let athleteName = user
+                                          ? [user.firstName, user.lastName].filter(Boolean).join(" ") || user.username || user.email || ""
+                                          : "";
+                                        // Determine next payment due date
+                                        let baseDate = params.row.dueDate;
+                                        let nextDueDate = baseDate;
+                                        if (baseDate && typeof baseDate === "string") {
+                                          nextDueDate = getNextPaymentDate(baseDate, freq);
+                                        }
+                                        setFuturePaymentDialog({
+                                          open: true,
+                                          userId: user?.id || null,
+                                          athleteName,
+                                          amount: defaultAmount,
+                                          dueDate: nextDueDate,
+                                          paymentId: params.row.id
+                                        });
+                                      }
+                                    }
+                                  }
                                 }}
                               />
                             </Tooltip>
@@ -1680,6 +1760,88 @@ export default function UserTable({
           notification={notification}
           onClose={() => setNotification(null)}
         />
+
+        {/* Future Payment Dialog */}
+        <Dialog open={futurePaymentDialog.open} onClose={() => setFuturePaymentDialog(d => ({ ...d, open: false }))}>
+          <DialogTitle>{translations[lang].futurePaymentDialogTitle}</DialogTitle>
+          <DialogContent>
+            <Typography sx={{ mb: 2 }}>
+              {translations[lang].futurePaymentDialogMessage(futurePaymentDialog.athleteName)}
+            </Typography>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <TextField
+                label={translations[lang].futurePaymentDialogAmount}
+                type="number"
+                size="small"
+                value={futurePaymentDialog.amount}
+                onChange={e =>
+                  setFuturePaymentDialog(d => ({ ...d, amount: Number(e.target.value) }))
+                }
+                inputProps={{ min: 0, step: "0.01" }}
+              />
+              <LocalizationProvider
+                dateAdapter={AdapterDateFns}
+                adapterLocale={translations[lang].pickersLocale?.locale || undefined}
+                localeText={translations[lang].pickersLocale?.components?.MuiLocalizationProvider?.defaultProps?.localeText}
+              >
+                <DatePicker
+                  label={translations[lang].futurePaymentDialogDate}
+                  value={futurePaymentDialog.dueDate ? new Date(futurePaymentDialog.dueDate) : null}
+                  onChange={(d) =>
+                    setFuturePaymentDialog(v => ({
+                      ...v,
+                      dueDate: d instanceof Date && !isNaN(d.getTime()) ? d.toISOString().slice(0, 10) : ""
+                    }))
+                  }
+                  slotProps={{
+                    textField: { size: "small", fullWidth: true }
+                  }}
+                  format="dd/MM/yyyy"
+                />
+              </LocalizationProvider>
+            </Box>
+            <Box sx={{ display: "flex", mt: 3, gap: 2, justifyContent: "flex-end" }}>
+              <Button
+                variant="text"
+                onClick={() => setFuturePaymentDialog(d => ({ ...d, open: false }))}
+              >
+                {translations[lang].futurePaymentDialogNo}
+              </Button>
+              <Button
+                variant="contained"
+                onClick={async () => {
+                  // POST create new payment
+                  if (!futurePaymentDialog.userId || !futurePaymentDialog.dueDate || !futurePaymentDialog.amount) {
+                    setFuturePaymentDialog(d => ({ ...d, open: false }));
+                    return;
+                  }
+                  const res = await fetch(`/api/payment/${futurePaymentDialog.userId}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      dueDate: futurePaymentDialog.dueDate,
+                      amount: futurePaymentDialog.amount
+                    }),
+                  });
+                  setFuturePaymentDialog(d => ({ ...d, open: false }));
+                  if (res.ok) {
+                    const body = await res.json();
+                    setSelected((sel: any) => ({
+                      ...sel,
+                      payments: [body.payment, ...(sel.payments || [])]
+                    }));
+                    setNotification({ type: "success", message: translations[lang].paymentAdded });
+                  } else {
+                    setNotification({ type: "error", message: translations[lang].manageUsersAddPaymentFail });
+                  }
+                }}
+              >
+                {translations[lang].futurePaymentDialogYes}
+              </Button>
+            </Box>
+          </DialogContent>
+        </Dialog>
+
       </Box>
     </Box>
   );

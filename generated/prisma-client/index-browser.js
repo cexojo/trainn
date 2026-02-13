@@ -219,7 +219,8 @@ exports.Prisma.DayExerciseSeriesScalarFieldEnum = {
   isDropset: 'isDropset',
   athleteNotes: 'athleteNotes',
   trainerNotes: 'trainerNotes',
-  athleteUserRead: 'athleteUserRead'
+  athleteUserRead: 'athleteUserRead',
+  modifiedAt: 'modifiedAt'
 };
 
 exports.Prisma.PaymentScalarFieldEnum = {
