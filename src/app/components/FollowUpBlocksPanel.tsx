@@ -166,6 +166,13 @@ export default function FollowUpBlocksPanel({ lang = "es" }: { lang?: Lang }) {
           autoHeight
           disableRowSelectionOnClick
           sx={{ backgroundColor: "background.paper" }}
+          initialState={{
+            sorting: {
+              sortModel: [
+                { field: "completionPercent", sort: "desc" }
+              ]
+            }
+          }}
         />
       </ThemeProvider>
     </Box>
