@@ -14,6 +14,9 @@ import {
 
 interface ButtonFieldProps extends DatePickerFieldProps {}
 
+function isDayjs(v: any): v is Dayjs {
+  return v && typeof v.format === 'function';
+}
 function ButtonField(props: ButtonFieldProps) {
   const { forwardedProps } = useSplitFieldProps(props, 'date');
   const pickerContext = usePickerContext();
@@ -22,7 +25,11 @@ function ButtonField(props: ButtonFieldProps) {
   const valueStr =
     pickerContext.value == null
       ? parsedFormat
-      : pickerContext.value.format(pickerContext.fieldFormat);
+      : isDayjs(pickerContext.value)
+      ? pickerContext.value.format(pickerContext.fieldFormat)
+      : pickerContext.value instanceof Date
+      ? dayjs(pickerContext.value).format(pickerContext.fieldFormat)
+      : parsedFormat;
 
   // Forward all props except those that cause React warnings (none here)
   return (
@@ -48,7 +55,7 @@ export default function CustomDatePicker() {
       <DatePicker
         value={value}
         label={value == null ? null : value.format('MMM DD, YYYY')}
-        onChange={(newValue) => setValue(newValue)}
+        onChange={(newValue) => setValue(newValue ? dayjs(newValue) : null)}
         slots={{ field: ButtonField }}
         slotProps={{
           nextIconButton: { size: 'small' },
