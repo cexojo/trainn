@@ -147,7 +147,7 @@ model DayExerciseSeries {
   athleteNotes      String?
   trainerNotes      String?
   athleteUserRead   Boolean      @default(false)
-  modifiedAt        DateTime?    @updatedAt
+  modifiedAt        DateTime?
 }
 
 model Payment {

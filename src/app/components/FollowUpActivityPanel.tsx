@@ -36,6 +36,10 @@ export default function FollowUpActivityPanel({ lang = "es" }: { lang?: Lang }) 
       .finally(() => setLoading(false));
   }, [measurement, units]);
 
+  // Locale map for proper date formatting
+  const localeMap = { en: "en-GB", es: "es-ES" };
+  const dateOptions = { day: "2-digit", month: "2-digit", year: "numeric" } as const;
+
   // Table columns for inactivity mode
   const columnsInactivity: GridColDef[] = [
     { field: "firstName", headerName: translations[lang].athleteFirstName, flex: 1, minWidth: 120 },
@@ -51,7 +55,8 @@ export default function FollowUpActivityPanel({ lang = "es" }: { lang?: Lang }) 
         if (value) {
           const date = new Date(value);
           if (!isNaN(date.getTime())) {
-            return date.toLocaleDateString();
+            // Use user-selected language to determine locale
+            return date.toLocaleDateString(localeMap[lang] || "en-GB", dateOptions);
           }
         }
         if (typeof params.row?.daysSinceLastActivity === "number" && params.row.daysSinceLastActivity > 0) {
