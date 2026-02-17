@@ -9,6 +9,8 @@ export type Lang = "en" | "es";
 
 export type Translations = {
   [K in Lang]: {
+    loadingBlocks: string;
+    loadingBlockDetails: string;
     followup: string;
     followupActivity: string;
     followupBlock: string;
@@ -406,6 +408,8 @@ export type Translations = {
 
 export const translations: Translations = {
   en: {
+    loadingBlocks: "Loading blocks...",
+    loadingBlockDetails: "Loading block details...",
     followup: "Follow-up",
     followupActivity: "Activity",
     followupBlock: "Last block",
@@ -805,6 +809,8 @@ export const translations: Translations = {
     followUpInfoBox: "From this panel you can track the most inactive users. The last activity date indicates the last time the athlete recorded a training activity in their form. In the filter, you can set the minimum inactivity period you want to apply."
   },
   es: {
+    loadingBlocks: "Cargando bloques...",
+    loadingBlockDetails: "Cargando detalles de bloque...",
     followup: "Seguimiento",
     followupActivity: "Actividad",
     followupBlock: "Último bloque",

@@ -308,7 +308,9 @@ export default function MeasurementsPanel() {
                       label: columns.find(c => c.id === graphField)?.label || "",
                       color: "#1565c0",
                       showMark: true,
-                      baseline: 0,
+                      valueFormatter: (v, { dataIndex }) => {
+                        return `has ${JSON.stringify(v)} points and is ranked.`;
+                      },
                     }
                   ]}
                   xAxis={[
