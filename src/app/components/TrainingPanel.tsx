@@ -173,6 +173,49 @@ export default function TrainingPanel({
           didInit = true;
         }
       });
+
+    // [NEW LOGIC] PENDING PATCHES: patch exerciseDefs with values of pending sync items
+    const patchDefsWithPending = () => {
+      try {
+        const patches = getOfflinePatchQueue();
+        if (
+          !patches ||
+          !Array.isArray(patches) ||
+          patches.length === 0
+        )
+          return;
+
+        // Group by def key (series/field)
+        // Delay patching until after initial exerciseDefs are loaded
+        const patchQueue = () => {
+          setTimeout(() => {
+            setExerciseDefs((prevDefs: ExerciseDef[]) => {
+              let nextDefs = [...prevDefs];
+              patches.forEach(patch => {
+                const { meta, body } = patch;
+                if (!meta || !meta.seriesNumber || !meta.exerciseName || !meta.field || typeof meta.value === "undefined") return;
+                // Find the corresponding def
+                const idx = nextDefs.findIndex(
+                  (def: ExerciseDef) =>
+                    def.seriesNumber?.toString() === meta.seriesNumber?.toString() &&
+                    def.exercise?.name === meta.exerciseName
+                );
+                if (idx === -1) return;
+                // Patch the value
+                nextDefs[idx] = {
+                  ...nextDefs[idx],
+                  [meta.field]: meta.value
+                };
+              });
+              return nextDefs;
+            });
+          }, 350); // Allow state population by backend fetch
+        };
+        patchQueue();
+      } catch { }
+    };
+
+    patchDefsWithPending();
   }, []);
 
   const handleLangChange = (e: SelectChangeEvent) => {
@@ -227,7 +270,30 @@ export default function TrainingPanel({
 
         if (typeof setSelectedBlock === "function") setSelectedBlock(blockToSet);
         if (typeof setSelectedWeek === "function") setSelectedWeek(weekToSet);
-        setExerciseDefs(data.exerciseDefs || []);
+        // Apply backend exerciseDefs first, then overlay pending local patches if present
+        setExerciseDefs((serverDefs: ExerciseDef[]) => {
+          const patches = getOfflinePatchQueue();
+          if (!patches || !Array.isArray(patches) || patches.length === 0) {
+            return data.exerciseDefs || [];
+          }
+          let nextDefs = (data.exerciseDefs || []).map((def: ExerciseDef) => ({ ...def }));
+          patches.forEach(patch => {
+            const { meta } = patch;
+            if (!meta || !meta.seriesNumber || !meta.exerciseName || !meta.field || typeof meta.value === "undefined") return;
+            // Find the matching def
+            const idx = nextDefs.findIndex(
+              (def: ExerciseDef) =>
+                def.seriesNumber?.toString() === meta.seriesNumber?.toString() &&
+                def.exercise?.name === meta.exerciseName
+            );
+            if (idx === -1) return;
+            nextDefs[idx] = {
+              ...nextDefs[idx],
+              [meta.field]: meta.value
+            };
+          });
+          return nextDefs;
+        });
         if (data.trainingDays && Array.isArray(data.trainingDays)) {
           const sorted = [...data.trainingDays]
             .sort((a, b) => {
@@ -979,7 +1045,7 @@ export default function TrainingPanel({
                                           </IconButton>
                                         </TableCell>
                                         <TableCell colSpan={5} sx={{ bgcolor: "#565656ff", fontSize: "0.75em", color: "#a7a7a7ff", px: 2, py: 0.5 }}>
-                                          <span style={{ fontStyle: "italic", fontWeight: 1000, color: "white" }}>{translations[lang].trainerNoteLabel} </span>{def.trainerNotes}
+                                          <span style={{ fontStyle: "italic", fontWeight: 1000, color: "white" }}>Elena: </span>{def.trainerNotes}
                                         </TableCell>
                                       </TableRow>
                                     )}
@@ -1194,14 +1260,14 @@ export default function TrainingPanel({
                                       <TableCell colSpan={5} sx={{ bgcolor: "#565656ff", fontSize: "0.75em", color: "#a7a7a7ff", px: 2, py: 0.5 }}>
                                         {hasAthleteLastWeekNotes && (
                                           <>
-                                            <span style={{ fontStyle: "italic", fontWeight: 1000, color: "yellow" }}> {translations[lang].lastWeekShort}{translations[lang].athleteNoteLabel}: </span>
+                                            <span style={{ fontStyle: "italic", fontWeight: 1000, color: "yellow" }}> {translations[lang].lastWeekShort}Yo: </span>
                                             {def.lastWeekValues.athleteNotes}
                                             <br />
                                           </>
                                         )}
                                         {hasAthleteCurrentWeekNotes && (
                                           <>
-                                            <span style={{ fontStyle: "italic", fontWeight: 1000, color: "white" }}>{translations[lang].athleteNoteLabel} </span>
+                                            <span style={{ fontStyle: "italic", fontWeight: 1000, color: "white" }}>Yo </span>
                                             {def.athleteNotes}
                                           </>
                                         )}
