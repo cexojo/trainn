@@ -20,6 +20,8 @@ import ViewModuleRoundedIcon from '@mui/icons-material/ViewModuleRounded';
 
 import { translations } from '../i18n';
 import type { Lang } from '../i18n';
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import { useRouter } from 'next/navigation';
 
 // Default to Spanish; adapt as needed for language support.
 const lang: Lang = "es";
@@ -35,6 +37,20 @@ export default function MenuContent({
   role: "admin" | "athlete";
   onMenuItemClick?: () => void;
 }) {
+  const router = useRouter();
+
+  async function handleLogout() {
+    try {
+      await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+    } catch (e) {
+      // Ignore errors, just redirect
+    }
+    router.replace("/");
+  }
   // For admin, make Home reset to dashboard cards (section: null)
   const mainHome = [{ text: translations[lang].adminMenuHome, icon: <HomeRoundedIcon />, section: null }];
 
@@ -68,14 +84,11 @@ export default function MenuContent({
     { text: translations[lang].adminMenuExercises, icon: <FitnessCenterRoundedIcon />, section: "exercises" },
   ];
 
-  const commonSecondary = [
-    { text: translations[lang].adminMenuSettings, icon: <SettingsRoundedIcon /> },
-    { text: translations[lang].adminMenuAbout, icon: <InfoRoundedIcon /> },
-    { text: translations[lang].adminMenuFeedback, icon: <HelpRoundedIcon /> },
+  const secondaryActionsList = [
+    { text: translations[lang].adminMenuSettings, icon: <SettingsRoundedIcon />, onClick: handleLogout },
   ];
 
   const mainList = role === "admin" ? adminListItems : athleteListItems;
-  const secondaryList = role === "admin" ? commonSecondary : [];
 
   const [trainingBlocksOpen, setTrainingBlocksOpen] = React.useState(
     selectedSection === "create-block" || selectedSection === "manage-blocks"
@@ -173,18 +186,18 @@ export default function MenuContent({
           return null;
         })}
       </List>
-      {secondaryList.length > 0 && (
+      {secondaryActionsList.length > 0 && (
         <List dense>
-          {secondaryList.map((item, index) => (
+          {secondaryActionsList.map((item, index) => (
             <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton>
+              <ListItemButton onClick={item.onClick}>
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.text} />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
-      )}
+      )}      
     </Stack>
   );
 }

@@ -117,10 +117,19 @@ export default function FollowUpBlocksPanel({ lang = "es" }: { lang?: Lang }) {
           label={translations[lang].blockCompletionThreshold}
           type="number"
           size="small"
+          sx={{
+            minWidth: 140,
+            '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+              WebkitAppearance: 'none',
+              margin: 0
+            },
+            '& input[type=number]': {
+              MozAppearance: 'textfield'
+            }
+          }}
           value={threshold}
           inputProps={{ min: 0, max: 100 }}
           onChange={e => setThreshold(Number(e.target.value))}
-          sx={{ minWidth: 140 }}
         />
 
         <Button

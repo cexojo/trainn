@@ -98,10 +98,19 @@ export default function FollowUpActivityPanel({ lang = "es" }: { lang?: Lang }) 
           label={translations[lang].unitsLabel}
           type="number"
           size="small"
+          sx={{
+            minWidth: 100,
+            '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+              WebkitAppearance: 'none',
+              margin: 0
+            },
+            '& input[type=number]': {
+              MozAppearance: 'textfield'
+            }
+          }}
           value={units}
-          inputProps={{ min: 1 }}
+          inputProps={{ min: 0 }}
           onChange={e => setUnits(Number(e.target.value))}
-          sx={{ minWidth: 100 }}
         />
         <Button
           variant="contained"

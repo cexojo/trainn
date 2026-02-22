@@ -403,6 +403,7 @@ export type Translations = {
     percentLabel: string;
     weeklyProgressTitle: string;
     followUpInfoBox: string;
+    logout: string;
   };
 };
 
@@ -602,7 +603,7 @@ export const translations: Translations = {
     nameDefault: "John Doe",
     progressRLabel: "R",
     progressWLabel: "W",
-    lastWeekShort: "→ ",
+    lastWeekShort: "→",
     loadingAthletes: "Loading athletes...",
     creatingBlock: "Creating block...",
     blockCreated: "Block created!",
@@ -806,7 +807,8 @@ export const translations: Translations = {
     weekProgressLabel: "Progress",
     percentLabel: "%",
     weeklyProgressTitle: "Weekly progress",
-    followUpInfoBox: "From this panel you can track the most inactive users. The last activity date indicates the last time the athlete recorded a training activity in their form. In the filter, you can set the minimum inactivity period you want to apply."
+    followUpInfoBox: "From this panel you can track the most inactive users. The last activity date indicates the last time the athlete recorded a training activity in their form. In the filter, you can set the minimum inactivity period you want to apply.",
+    logout: "Logout"
   },
   es: {
     loadingBlocks: "Cargando bloques...",
@@ -1013,7 +1015,7 @@ export const translations: Translations = {
     nameDefault: "John Doe",
     progressRLabel: "R",
     progressWLabel: "P",
-    lastWeekShort: "→ ",
+    lastWeekShort: "→",
     loadingAthletes: "Cargando atletas...",
     creatingBlock: "Creando bloque...",
     blockCreated: "¡Bloque creado!",
@@ -1207,6 +1209,7 @@ export const translations: Translations = {
     weekProgressLabel: "Progreso",
     percentLabel: "%",
     weeklyProgressTitle: "Progreso semanal",
-    followUpInfoBox: "Desde este panel podrás hacer seguimiento de los usuarios más inactivos. La fecha de última actividad indica cuál fue la última vez que el atleta registró una actividad de entrenamiento en su formulario. En el filtro podrás indicar la inactividad mínima que quieras aplicar."
+    followUpInfoBox: "Desde este panel podrás hacer seguimiento de los usuarios más inactivos. La fecha de última actividad indica cuál fue la última vez que el atleta registró una actividad de entrenamiento en su formulario. En el filtro podrás indicar la inactividad mínima que quieras aplicar.",
+    logout: "Cerrar sesión"
   }
 };

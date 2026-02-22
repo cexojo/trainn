@@ -8,6 +8,12 @@ import { Box, Typography, FormControl, Select, MenuItem, InputLabel, Button, Tex
 import type { SelectChangeEvent } from "@mui/material";
 import { translations, Lang } from "../i18n";
 import { Progress } from "./Progress";
+import {
+  addOfflinePatch,
+  getOfflinePatchQueue,
+  getOfflinePatchCount,
+  synchronizeOfflinePatches
+} from "../utils/offlineSync";
 import type { ExerciseDef } from "../../types/ExerciseDef";
 import StatusModal from "./StatusModal";
 import { Line } from "react-chartjs-2";
@@ -37,8 +43,8 @@ function EditableDayDate({ dayIdx, dayDate, setDayDate, lang }: { dayIdx: number
 }
 
 
-import CancelIcon from "@mui/icons-material/Cancel";
 import NotificationSnackbar from "./NotificationSnackbar";
+import { getUsernameFromCookie } from "../utils/jwt";
 
 export default function TrainingPanel({
   selectedBlock,
@@ -60,7 +66,14 @@ export default function TrainingPanel({
   setExerciseDefs: (update: any) => void
 }) {
   // Modal state/hooks, must be inside the function!
-  const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [notification, setNotification] = useState<{ type: "success" | "error" | "warning"; message: string } | null>(null);
+  // --- Username extraction stateful; fetch from /api/me ---
+  const [username, setUsername] = useState("");
+  useEffect(() => {
+    fetch("/api/me")
+      .then(r => r.json())
+      .then(data => setUsername(data.username || ""));
+  }, []);
   const [openNotesModal, setOpenNotesModal] = useState(false);
   const [editingSeries, setEditingSeries] = useState<string | null>(null);
   const [modalNotes, setModalNotes] = useState<string>("");
@@ -70,10 +83,23 @@ export default function TrainingPanel({
   const handleCloseNotesModal = async () => {
     setOpenNotesModal(false);
     if (editingSeries !== null) {
+      // Get extra info
+      const fullDef = exerciseDefs.find((def: any) => def.id === editingSeries);
+
+      const patchBody = {
+        athleteNotes: modalNotes,
+        username: username,
+        blockNumber: selectedBlock?.blockNumber ?? "",
+        weekNumber: selectedWeek?.weekNumber ?? "",
+        dayNumber: fullDef?.day ?? "",
+        exerciseName: fullDef?.exercise?.name ?? "",
+        seriesNumber: fullDef?.seriesNumber ?? ""
+      };
+
       await fetch(`/api/day-exercise-series/${editingSeries}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ athleteNotes: modalNotes }),
+        body: JSON.stringify(patchBody),
       });
       // Update athleteNotes in exerciseDefs in state for immediate UI refresh
       setExerciseDefs((prevDefs: any[]) =>
@@ -126,8 +152,9 @@ export default function TrainingPanel({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // User info fetch effect
+  // User info fetch effect (avoid loops by only setting lang/weekId on initial load)
   useEffect(() => {
+    let didInit = false;
     fetch("/api/get-user-id")
       .then(r => r.json())
       .then((d) => {
@@ -138,9 +165,12 @@ export default function TrainingPanel({
           isocode: d.isocode || "en",
           lastVisitedWeek: d.lastVisitedWeek || null,
         });
-        setLang((d.isocode || "es") as Lang);
-        if (d.lastVisitedWeek) {
-          setWeekId(d.lastVisitedWeek);
+        if (!didInit) {
+          setLang((d.isocode || "es") as Lang);
+          if (d.lastVisitedWeek) {
+            setWeekId(d.lastVisitedWeek);
+          }
+          didInit = true;
         }
       });
   }, []);
@@ -213,6 +243,25 @@ export default function TrainingPanel({
       .finally(() => setLoading(false));
   }, [userInfo?.id, weekId]);
 
+  // Get offline keys (to highlight pending fields)
+  function isFieldPending(defId: string, field: string) {
+    try {
+      const queue = getOfflinePatchQueue();
+      return queue.some(
+        (p) =>
+          p.meta &&
+          p.meta.seriesNumber == null
+            ? false
+            : p.meta.seriesNumber.toString() ===
+                  exerciseDefs.find(d => d.id === defId)?.seriesNumber?.toString() &&
+              p.meta.exerciseName === exerciseDefs.find(d => d.id === defId)?.exercise?.name &&
+              p.meta.field === field
+      );
+    } catch {
+      return false;
+    }
+  }
+
   const handleBlur = async (defId: string, field: "effectiveReps" | "effectiveWeight" | "effectiveRir", value: string | number) => {
     // Normalize the value the same way as handleLocalChange
     let normVal: number | null;
@@ -238,30 +287,100 @@ export default function TrainingPanel({
     }
     // Always issue PATCH on blur (avoid comparing to mutated in-memory state)
     setChanged(c => ({ ...c, [defId + field]: true }));
+    // Get extra info
+    const fullDef = exerciseDefs.find((def: any) => def.id === defId);
+
+    const patchBody = {
+      [field]: normVal,
+      username: username,
+      blockNumber: selectedBlock?.blockNumber ?? "",
+      weekNumber: selectedWeek?.weekNumber ?? "",
+      dayNumber: fullDef?.day ?? "",
+      exerciseName: fullDef?.exercise?.name ?? "",
+      seriesNumber: fullDef?.seriesNumber ?? ""
+    };
+
     try {
       const res = await fetch(`/api/day-exercise-series/${defId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ [field]: normVal }),
+        body: JSON.stringify(patchBody),
       });
       if (!res.ok) {
         let showRangeError = false;
+        let isPermanent = false;
         try {
           const result = await res.json();
           showRangeError = res.status === 400 && result && result.error === "out_of_range_value";
+          isPermanent = res.status === 400;
         } catch {}
         if (showRangeError) {
           const msg = lang === "es"
             ? "El valor debe estar entre 0 y 999"
             : "Value must be between 0 and 999";
           setNotification({ type: "error", message: msg });
+        } else if (!isPermanent) {
+          // For all non-400 failures (e.g. 500 from internal, ENOTFOUND, disconnected, etc) — queue for offline sync
+          addOfflinePatch({
+            url: `/api/day-exercise-series/${defId}`,
+            body: patchBody,
+            meta: {
+              blockNumber: patchBody.blockNumber,
+              weekNumber: patchBody.weekNumber,
+              dayNumber: patchBody.dayNumber,
+              exerciseName: patchBody.exerciseName,
+              seriesNumber: patchBody.seriesNumber,
+              field,
+              value: normVal
+            }
+          });
+          setNotification({ type: "error", message: lang === "es"
+            ? "Error de red o servidor. El dato se sincronizará más tarde."
+            : "Network or server error. Value will synchronize later."
+          });
         } else {
-          // fallback generic
           setNotification({ type: "error", message: lang === "es" ? "Error al guardar resultado" : "Error saving result" });
         }
+      } else {
+        // PATCH SUCCESS: Remove from pending queue if present (clear highlight immediately)
+        try {
+          const queue = getOfflinePatchQueue();
+          // "Field" uniqueness logic: match as in addOfflinePatch
+          const idx = queue.findIndex(
+            (p) =>
+              p.url === `/api/day-exercise-series/${defId}` &&
+              p.meta.blockNumber === patchBody.blockNumber &&
+              p.meta.weekNumber === patchBody.weekNumber &&
+              p.meta.dayNumber === patchBody.dayNumber &&
+              p.meta.exerciseName === patchBody.exerciseName &&
+              p.meta.seriesNumber === patchBody.seriesNumber &&
+              p.meta.field === field
+          );
+          if (idx >= 0) {
+            queue.splice(idx, 1);
+            localStorage.setItem("offline_patch_queue_v1", JSON.stringify(queue));
+          }
+        } catch {}
       }
-    } catch {
-      setNotification({ type: "error", message: lang === "es" ? "Error de red" : "Network error" });
+    } catch (err: any) {
+      // Network error: queue for offline sync
+      addOfflinePatch({
+        url: `/api/day-exercise-series/${defId}`,
+        body: patchBody,
+        meta: {
+          blockNumber: patchBody.blockNumber,
+          weekNumber: patchBody.weekNumber,
+          dayNumber: patchBody.dayNumber,
+          exerciseName: patchBody.exerciseName,
+          seriesNumber: patchBody.seriesNumber,
+          field,
+          value: normVal
+        }
+      });
+      setNotification({ type: "error", message: lang === "es"
+        ? "Sin conexión. El dato se sincronizará cuando vuelvas a tener señal."
+        : "No connection. Value will be synchronized once you're online."
+      });
     } finally {
       setChanged(c => ({ ...c, [defId + field]: false }));
     }
@@ -332,8 +451,222 @@ export default function TrainingPanel({
     }
   };
 
+  // === Offline sync UI state ===
+  const [syncOpen, setSyncOpen] = useState(false);
+  const [pendingCount, setPendingCount] = useState(getOfflinePatchCount());
+  const [syncing, setSyncing] = useState(false);
+  const [syncProgress, setSyncProgress] = useState({ idx: 0, total: 0, meta: null as null | any, status: "" as string });
+  const [syncResults, setSyncResults] = useState<{meta: any, status: string}[]>([]);
+
+  // Poll for pending offline patches (update count as user edits, etc)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPendingCount(getOfflinePatchCount());
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // After each successful patch or when opening, update pendingCount
+  const refreshPendingCount = () => setPendingCount(getOfflinePatchCount());
+
+  // When badge pressed, open modal and clear previous results
+  const handleOpenSync = () => {
+    setSyncOpen(true);
+    setSyncResults([]);
+    setSyncProgress({ idx: 0, total: getOfflinePatchCount(), meta: null, status: "" });
+  };
+  // On close, clear out results and progress
+  const handleCloseSync = () => {
+    setSyncOpen(false);
+    setSyncProgress({ idx: 0, total: 0, meta: null, status: "" });
+    setSyncResults([]);
+    refreshPendingCount();
+  };
+
+  // Kick off synchronization and update UI
+  const handleStartSync = async () => {
+    setSyncing(true);
+    setSyncResults([]);
+    const queue = getOfflinePatchQueue();
+    let results: {meta: any, status: string}[] = [];
+    let syncedCount = 0;
+    await synchronizeOfflinePatches((_idx, total, meta, status) => {
+      if (status === "success") {
+        syncedCount++;
+      }
+      setSyncProgress({ idx: syncedCount, total, meta, status });
+      results.push({ meta, status });
+      setSyncResults([...results]);
+    });
+    setSyncing(false);
+    refreshPendingCount();
+
+    // Compute sync result statistics
+    const total = results.length;
+    const successes = results.filter(r => r.status === "success").length;
+    const failures = total - successes;
+
+    // Prepare localized snackbar messages
+    let notifType: "success" | "warning" | "error";
+    let notifMsg: string;
+    if (successes === total && total > 0) {
+      notifType = "success";
+      notifMsg = lang === "es"
+        ? `Se sincronizaron correctamente los ${total} valores pendientes.`
+        : `All ${total} values were synced successfully.`;
+    } else if (successes > 0 && failures > 0) {
+      notifType = "warning";
+      notifMsg = lang === "es"
+        ? `${successes} valores sincronizados, pero ${failures} aún pendientes. Intenta más tarde.`
+        : `${successes} values synced, but ${failures} still pending. Retry later.`;
+    } else {
+      notifType = "error";
+      notifMsg = lang === "es"
+        ? `Ningún valor pudo sincronizarse. Intenta más tarde.`
+        : `None of the values could be synced yet. Retry later.`;
+    }
+
+    // After sync, close popup and show snackbar as feedback
+    setTimeout(() => {
+      setSyncOpen(false);
+      setNotification({ type: notifType, message: notifMsg });
+    }, 750);
+  };
+
+  // Compose badge text
+  const badgeText = pendingCount === 1
+    ? (lang === "es" ? "1 valor pendiente de sincronizar" : "1 value pending to synchronize")
+    : (lang === "es"
+        ? `${pendingCount} valores pendientes de sincronizar`
+        : `${pendingCount} values pending to synchronize`);
+
+  // Compose details label for each patch
+  function metaLabel(meta: any) {
+    if (!meta) return "";
+    // Compose using Exercise/Series/field/value
+    return `${meta.exerciseName ?? ""}`
+      + (meta.seriesNumber ? ` / ${lang === "es" ? "Serie" : "Series"} ${meta.seriesNumber}` : "")
+      + (meta.field ? ` / ${meta.field}` : "")
+      + (meta.value !== undefined && meta.value !== null ? ` / ${meta.value}` : "");
+  }
+
   return (
     <>
+      {/* Floating offline sync badge (top right) */}
+      {pendingCount > 0 && (
+        <Box
+          sx={{
+            position: "fixed",
+            top: 3,
+            right: 3,
+            bgcolor: "#f8d400",
+            color: "#1a1a1a",
+            px: 2,
+            py: 0.8,
+            borderRadius: "30px",
+            boxShadow: 2,
+            zIndex: 1700,
+          fontWeight: 600,
+          fontSize: "0.72em",
+          letterSpacing: 0,
+          cursor: "pointer",
+          display: "inline-flex",
+          alignItems: "center"
+        }}
+          onClick={handleOpenSync}
+        >
+          <span role="img" aria-label={lang === "es" ? "Sincronizar" : "Sync"} style={{ marginRight: 8 }}>⏳</span>
+          {badgeText}
+        </Box>
+      )}
+      {/* Offline synchronization modal */}
+      <Modal
+        open={syncOpen}
+        onClose={handleCloseSync}
+        aria-labelledby="offline-sync-modal-title"
+        aria-describedby="offline-sync-modal-desc"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            minWidth: 370,
+            maxWidth: "90vw",
+            bgcolor: 'background.paper',
+            border: '2px solid #1976d2',
+            boxShadow: 24,
+            p: 3,
+            borderRadius: 2,
+            outline: "none",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center"
+          }}
+        >
+          <Typography
+            id="offline-sync-modal-title"
+            fontWeight="bold"
+            sx={{ mb: 2, fontSize: "1.1em", textAlign: "center", width: "100%" }}
+          >
+            {lang === "es"
+              ? "Sincronizar valores pendientes"
+              : "Synchronize Pending Values"}
+          </Typography>
+          <Typography
+            id="offline-sync-modal-desc"
+            sx={{ mb: 2, textAlign: "center", width: "100%" }}
+          >
+            {lang === "es"
+              ? "Intenta enviar los valores que no pudieron guardarse por problemas de red."
+              : "Attempt to send values which failed to save due to network issues."}
+          </Typography>
+          {syncing ? (
+            <Box sx={{ width: "80%", mb: 3 }}>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Box sx={{
+                  height: 10,
+                  width: "80%",
+                  mr: 2,
+                  background: "#e0e0e0",
+                  borderRadius: 5,
+                  position: "relative"
+                }}>
+                  <Box sx={{
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                    height: "100%",
+                    background: "#1976d2",
+                    borderRadius: 5,
+                    transition: "width 0.2s",
+                    width: `${syncProgress.total > 0 ? 100 * syncProgress.idx / syncProgress.total : 0}%`
+                  }} />
+                </Box>
+                <Typography
+                  variant="body2"
+                  sx={{ minWidth: 65, fontWeight: 600, color: "#1976d2" }}
+                >
+                  {`${Math.min(syncProgress.idx, syncProgress.total)} / ${syncProgress.total}`}
+                </Typography>
+              </Box>
+            </Box>
+          ) : (
+            <Box sx={{ mb: 3, width: "80%" }}>
+              <Box sx={{ mb: 1, height: 10, width: "100%", background: "#ccc", borderRadius: 5 }} />
+            </Box>
+          )}
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <Button variant="contained" color="primary" onClick={handleStartSync} disabled={syncing || pendingCount === 0}>
+              {lang === "es" ? "Sincronizar ahora" : "Synchronize now"}
+            </Button>
+            <Button variant="outlined" onClick={handleCloseSync} disabled={syncing}>
+              {lang === "es" ? "Cerrar" : "Close"}
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
       <Box>
       {(statusModalOpen) && (
         <Box
@@ -696,7 +1029,6 @@ export default function TrainingPanel({
                                           }}
                                           value={def.effectiveWeight ?? ""}
                                           inputRef={el => {
-                                            // Set the attribute only once on initial mount
                                             if (el && el.dataset && el.dataset.lastValue === undefined) {
                                               el.dataset.lastValue = def.effectiveWeight == null ? "" : String(def.effectiveWeight);
                                             }
@@ -712,7 +1044,6 @@ export default function TrainingPanel({
                                             const currentVal = e.target.value ?? "";
                                             if (lastVal !== currentVal) {
                                               handleBlur(def.id, "effectiveWeight", e.target.value);
-                                              // After PATCH, update lastValue to new value
                                               input.dataset.lastValue = currentVal;
                                             }
                                             setSelectedDay?.(dayIdx);
@@ -726,6 +1057,9 @@ export default function TrainingPanel({
                                           size="small"
                                           sx={{
                                             "& .MuiInputBase-input::placeholder": { fontSize: "0.75em", opacity: 1 },
+                                            "& .MuiInputBase-input": {
+                                              color: isFieldPending(def.id, "effectiveWeight") ? "#c62828 !important" : undefined,
+                                            },
                                             // Remove up/down arrows in Chrome/Safari/Edge and Firefox
                                             "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button": {
                                               WebkitAppearance: "none",
@@ -734,6 +1068,7 @@ export default function TrainingPanel({
                                             "& input[type=number]": {
                                               MozAppearance: "textfield",
                                             },
+                                            bgcolor: isFieldPending(def.id, "effectiveWeight") ? "#fff5cf" : undefined,
                                           }}
                                         />
                                       </TableCell>
@@ -769,9 +1104,13 @@ export default function TrainingPanel({
                                           }
                                           variant="standard"
                                           size="small"
-                                        sx={{
-                                          "& .MuiInputBase-input::placeholder": { fontSize: "0.75em", opacity: 1 }
-                                        }}
+                                          sx={{
+                                            "& .MuiInputBase-input::placeholder": { fontSize: "0.75em", opacity: 1 },
+                                            "& .MuiInputBase-input": {
+                                              color: isFieldPending(def.id, "effectiveReps") ? "#c62828" : undefined,
+                                            },
+                                            bgcolor: isFieldPending(def.id, "effectiveReps") ? "#fff5cf" : undefined,
+                                          }}
                                         />
                                         {(def.minReps != null && def.maxReps != null) && (
                                           <span style={{ marginLeft: 4, fontSize: "0.85em", color: "#888" }}>
@@ -811,9 +1150,13 @@ export default function TrainingPanel({
                                           }
                                           variant="standard"
                                           size="small"
-                                        sx={{
-                                          "& .MuiInputBase-input::placeholder": { fontSize: "0.75em", opacity: 1 }
-                                        }}
+                                          sx={{
+                                            "& .MuiInputBase-input::placeholder": { fontSize: "0.75em", opacity: 1 },
+                                            "& .MuiInputBase-input": {
+                                              color: isFieldPending(def.id, "effectiveRir") ? "#c62828" : undefined,
+                                            },
+                                            bgcolor: isFieldPending(def.id, "effectiveRir") ? "#fff5cf" : undefined,
+                                          }}
                                         />
                                       </TableCell>
                                       <TableCell align="center">

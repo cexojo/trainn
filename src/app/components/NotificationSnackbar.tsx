@@ -3,7 +3,7 @@ import React from "react";
 import { Box, IconButton } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 
-export type NotificationType = "success" | "error";
+export type NotificationType = "success" | "error" | "warning";
 
 export interface NotificationProps {
   notification: { type: NotificationType; message: string } | null;
@@ -11,6 +11,14 @@ export interface NotificationProps {
 }
 
 export default function NotificationSnackbar({ notification, onClose }: NotificationProps) {
+  React.useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [notification, onClose]);
   if (!notification) return null;
   return (
     <Box
@@ -26,7 +34,11 @@ export default function NotificationSnackbar({ notification, onClose }: Notifica
     >
       <Box
         sx={{
-          bgcolor: notification.type === "success" ? "#1AAF4B" : "#E53935",
+          bgcolor: notification.type === "success"
+            ? "#1AAF4B"
+            : notification.type === "warning"
+              ? "#FFA726"
+              : "#E53935",
           color: "#fff",
           px: 3,
           py: 1.2,

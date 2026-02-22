@@ -267,6 +267,9 @@ export default function UserTable({
   // Payment/user info modal dialog
   const handleRowClick = (params: GridRowParams) => setSelected(params.row);
 
+  // Payment Edit Dialog state for editing a payment row
+  const [editingPayment, setEditingPayment] = useState<any | null>(null);
+
   const placeholder = translations[lang].searchUserTablePlaceholder;
 
   return (
@@ -526,6 +529,15 @@ export default function UserTable({
             )}
             {modalTab === "payments" && selected && (
               <Box sx={{ mt: 2 }}>
+                {/* Payment edit dialog state */}
+                {/*
+                  Add state for editing a payment.
+                  When a payment row is clicked, set `editingPayment`.
+                  Show a dialog to edit fields and delete payment, refetching after changes.
+                */}
+                {/* --- Add this state at component top level --- */}
+                {/* const [editingPayment, setEditingPayment] = useState<any | null>(null); */}
+                {/* <PaymentEditDialog ... /> */}
                 <Box sx={{
                   display: "flex", alignItems: "center", gap: 1, mb: 1
                 }}>
@@ -726,7 +738,93 @@ export default function UserTable({
                         padding: '4px 8px'
                       }
                     }}
+                    onRowClick={(params) => {
+                      setEditingPayment(params.row);
+                    }}
                   />
+                  {/* Payment Edit Dialog (Modal) renders below */}
+                  <Dialog
+                    open={!!editingPayment}
+                    onClose={() => setEditingPayment(null)}
+                  >
+                    <DialogTitle>
+                      {translations[lang].paymentsTableDate} / {translations[lang].paymentsTableAmount}
+                    </DialogTitle>
+                    <DialogContent>
+                      <Box sx={{ display: "flex", flexDirection: "column", gap: 2, minWidth: 260 }}>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                          <DatePicker
+                            label={translations[lang].paymentsTableDate}
+                            value={editingPayment?.dueDate ? new Date(editingPayment.dueDate) : null}
+                            onChange={(d) =>
+                              setEditingPayment((p: any) => ({
+                                ...p,
+                                dueDate: d instanceof Date && !isNaN(d.getTime()) ? d.toISOString().slice(0, 10) : ""
+                              }))
+                            }
+                            slotProps={{
+                              textField: { size: "small", fullWidth: true }
+                            }}
+                            format="dd/MM/yyyy"
+                          />
+                        </LocalizationProvider>
+                        <TextField
+                          label={translations[lang].paymentsTableAmount}
+                          type="number"
+                          size="small"
+                          value={editingPayment?.amount ?? ""}
+                          onChange={e =>
+                            setEditingPayment((p: any) => ({
+                              ...p,
+                              amount: Number(e.target.value)
+                            }))
+                          }
+                          inputProps={{ min: 0, step: "0.01" }}
+                        />
+                        <Box sx={{ display: "flex", gap: 1, mt: 2, justifyContent: "flex-end" }}>
+                          <Button
+                            color="inherit"
+                            onClick={() => setEditingPayment(null)}
+                            startIcon={<CancelIcon />}
+                          >
+                            {translations[lang].cancel}
+                          </Button>
+                          <Button
+                            color="error"
+                            onClick={async () => {
+                              // Delete payment
+                              await fetch(`/api/payment/${editingPayment.id}`, { method: "DELETE" });
+                              setEditingPayment(null);
+                              // Refresh by refetching user payments
+                              setInternalRefreshKey(k => k + 1);
+                            }}
+                            startIcon={<DeleteIcon />}
+                          >
+                            {translations[lang].delete}
+                          </Button>
+                          <Button
+                            color="primary"
+                            variant="contained"
+                            onClick={async () => {
+                              await fetch(`/api/payment/${editingPayment.id}`, {
+                                method: "PATCH",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                  dueDate: editingPayment.dueDate,
+                                  amount: editingPayment.amount
+                                })
+                              });
+                              setEditingPayment(null);
+                              setInternalRefreshKey(k => k + 1);
+                            }}
+                            startIcon={<CheckCircleIcon />}
+                          >
+                            {translations[lang].copy}
+                          </Button>
+                        </Box>
+                      </Box>
+                    </DialogContent>
+                  </Dialog>
                 </Box>
               )}
             </Box>

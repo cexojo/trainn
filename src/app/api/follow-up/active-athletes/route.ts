@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
         AND u.hidden = 0
       GROUP BY u.id
       HAVING MAX(des.modifiedAt) IS NULL OR MAX(des.modifiedAt) <= ?
-      ORDER BY (MAX(des.modifiedAt) IS NOT NULL) ASC, daysSinceLastActivity DESC
+      ORDER BY (MAX(des.modifiedAt) IS NOT NULL) ASC
       `,
       earliestAllowedDate.toISOString()
     );
