@@ -489,12 +489,11 @@ export default function TrainingPanel({
     setSyncResults([]);
     const queue = getOfflinePatchQueue();
     let results: {meta: any, status: string}[] = [];
-    let syncedCount = 0;
+    let processedCount = 0;
+    const totalToSync = queue.length;
     await synchronizeOfflinePatches((_idx, total, meta, status) => {
-      if (status === "success") {
-        syncedCount++;
-      }
-      setSyncProgress({ idx: syncedCount, total, meta, status });
+      processedCount++;
+      setSyncProgress({ idx: processedCount, total: totalToSync, meta, status });
       results.push({ meta, status });
       setSyncResults([...results]);
     });
@@ -980,7 +979,7 @@ export default function TrainingPanel({
                                           </IconButton>
                                         </TableCell>
                                         <TableCell colSpan={5} sx={{ bgcolor: "#565656ff", fontSize: "0.75em", color: "#a7a7a7ff", px: 2, py: 0.5 }}>
-                                          <span style={{ fontStyle: "italic", fontWeight: 1000, color: "white" }}>Elena: </span>{def.trainerNotes}
+                                          <span style={{ fontStyle: "italic", fontWeight: 1000, color: "white" }}>{translations[lang].trainerNoteLabel} </span>{def.trainerNotes}
                                         </TableCell>
                                       </TableRow>
                                     )}
@@ -1056,9 +1055,14 @@ export default function TrainingPanel({
                                           variant="standard"
                                           size="small"
                                           sx={{
-                                            "& .MuiInputBase-input::placeholder": { fontSize: "0.75em", opacity: 1 },
+                                            "& .MuiInputBase-input::placeholder": {
+                                              fontSize: "0.75em",
+                                              opacity: 1,
+                                              textAlign: "center"
+                                            },
                                             "& .MuiInputBase-input": {
                                               color: isFieldPending(def.id, "effectiveWeight") ? "#c62828 !important" : undefined,
+                                              textAlign: "center"
                                             },
                                             // Remove up/down arrows in Chrome/Safari/Edge and Firefox
                                             "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button": {
@@ -1069,6 +1073,8 @@ export default function TrainingPanel({
                                               MozAppearance: "textfield",
                                             },
                                             bgcolor: isFieldPending(def.id, "effectiveWeight") ? "#fff5cf" : undefined,
+                                            border: isFieldPending(def.id, "effectiveWeight") ? "1.5px solid #c62828" : undefined,
+                                            borderRadius: "6px"
                                           }}
                                         />
                                       </TableCell>
@@ -1105,11 +1111,18 @@ export default function TrainingPanel({
                                           variant="standard"
                                           size="small"
                                           sx={{
-                                            "& .MuiInputBase-input::placeholder": { fontSize: "0.75em", opacity: 1 },
+                                            "& .MuiInputBase-input::placeholder": {
+                                              fontSize: "0.75em",
+                                              opacity: 1,
+                                              textAlign: "center"
+                                            },
                                             "& .MuiInputBase-input": {
                                               color: isFieldPending(def.id, "effectiveReps") ? "#c62828" : undefined,
+                                              textAlign: "center"
                                             },
                                             bgcolor: isFieldPending(def.id, "effectiveReps") ? "#fff5cf" : undefined,
+                                            border: isFieldPending(def.id, "effectiveReps") ? "1.5px solid #c62828" : undefined,
+                                            borderRadius: "6px"
                                           }}
                                         />
                                         {(def.minReps != null && def.maxReps != null) && (
@@ -1151,11 +1164,18 @@ export default function TrainingPanel({
                                           variant="standard"
                                           size="small"
                                           sx={{
-                                            "& .MuiInputBase-input::placeholder": { fontSize: "0.75em", opacity: 1 },
+                                            "& .MuiInputBase-input::placeholder": {
+                                              fontSize: "0.75em",
+                                              opacity: 1,
+                                              textAlign: "center"
+                                            },
                                             "& .MuiInputBase-input": {
                                               color: isFieldPending(def.id, "effectiveRir") ? "#c62828" : undefined,
+                                              textAlign: "center"
                                             },
                                             bgcolor: isFieldPending(def.id, "effectiveRir") ? "#fff5cf" : undefined,
+                                            border: isFieldPending(def.id, "effectiveRir") ? "1.5px solid #c62828" : undefined,
+                                            borderRadius: "6px"
                                           }}
                                         />
                                       </TableCell>
@@ -1174,14 +1194,14 @@ export default function TrainingPanel({
                                       <TableCell colSpan={5} sx={{ bgcolor: "#565656ff", fontSize: "0.75em", color: "#a7a7a7ff", px: 2, py: 0.5 }}>
                                         {hasAthleteLastWeekNotes && (
                                           <>
-                                            <span style={{ fontStyle: "italic", fontWeight: 1000, color: "yellow" }}>Yo (sem. pas.): </span>
+                                            <span style={{ fontStyle: "italic", fontWeight: 1000, color: "yellow" }}> {translations[lang].lastWeekShort}{translations[lang].athleteNoteLabel}: </span>
                                             {def.lastWeekValues.athleteNotes}
                                             <br />
                                           </>
                                         )}
                                         {hasAthleteCurrentWeekNotes && (
                                           <>
-                                            <span style={{ fontStyle: "italic", fontWeight: 1000, color: "white" }}>Yo: </span>
+                                            <span style={{ fontStyle: "italic", fontWeight: 1000, color: "white" }}>{translations[lang].athleteNoteLabel} </span>
                                             {def.athleteNotes}
                                           </>
                                         )}
