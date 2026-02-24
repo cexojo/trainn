@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
         passwordRefreshToken,
         sex: sex === "MALE" || sex === "FEMALE" ? sex : undefined,
         isocode: typeof isocode === "string" ? isocode : "es",
-        // Optionally: add password after hashing
+        ownerId: tokenPayload.id,
       }
     });
 

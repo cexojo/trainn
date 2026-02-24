@@ -14,7 +14,7 @@ export default function StatCardActiveAthletes() {
   const lang = "es"; // Replace with your language context logic if available
 
   useEffect(() => {
-    fetch(`/api/active-athletes?lang=${lang}`, {
+    fetch(`/api/stats/active-athletes?lang=${lang}`, {
       credentials: "include"
     })
       .then(res => {

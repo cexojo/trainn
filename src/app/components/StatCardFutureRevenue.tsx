@@ -12,7 +12,7 @@ export default function StatCardFutureRevenue() {
   const lang = "es"; // Replace with current language context if available
 
   useEffect(() => {
-    fetch(`/api/future-revenue?lang=${lang}`, {
+    fetch(`/api/stats/future-revenue?lang=${lang}`, {
       credentials: "include"
     })
       .then(res => {

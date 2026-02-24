@@ -1889,12 +1889,14 @@ export namespace Prisma {
     blocks: number
     payments: number
     measurements: number
+    athletes: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     blocks?: boolean | UserCountOutputTypeCountBlocksArgs
     payments?: boolean | UserCountOutputTypeCountPaymentsArgs
     measurements?: boolean | UserCountOutputTypeCountMeasurementsArgs
+    athletes?: boolean | UserCountOutputTypeCountAthletesArgs
   }
 
   // Custom InputTypes
@@ -1927,6 +1929,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountMeasurementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MeasurementWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAthletesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
   }
 
 
@@ -7860,6 +7869,7 @@ export namespace Prisma {
     lastOKLogin: Date | null
     lastKOLogin: Date | null
     sex: $Enums.Sex | null
+    ownerId: string | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -7881,6 +7891,7 @@ export namespace Prisma {
     lastOKLogin: Date | null
     lastKOLogin: Date | null
     sex: $Enums.Sex | null
+    ownerId: string | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -7902,6 +7913,7 @@ export namespace Prisma {
     lastOKLogin: number
     lastKOLogin: number
     sex: number
+    ownerId: number
     _all: number
   }
 
@@ -7933,6 +7945,7 @@ export namespace Prisma {
     lastOKLogin?: true
     lastKOLogin?: true
     sex?: true
+    ownerId?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -7954,6 +7967,7 @@ export namespace Prisma {
     lastOKLogin?: true
     lastKOLogin?: true
     sex?: true
+    ownerId?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -7975,6 +7989,7 @@ export namespace Prisma {
     lastOKLogin?: true
     lastKOLogin?: true
     sex?: true
+    ownerId?: true
     _all?: true
   }
 
@@ -8083,6 +8098,7 @@ export namespace Prisma {
     lastOKLogin: Date | null
     lastKOLogin: Date | null
     sex: $Enums.Sex | null
+    ownerId: string | null
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -8123,9 +8139,12 @@ export namespace Prisma {
     lastOKLogin?: boolean
     lastKOLogin?: boolean
     sex?: boolean
+    ownerId?: boolean
     blocks?: boolean | User$blocksArgs<ExtArgs>
     payments?: boolean | User$paymentsArgs<ExtArgs>
     measurements?: boolean | User$measurementsArgs<ExtArgs>
+    owner?: boolean | User$ownerArgs<ExtArgs>
+    athletes?: boolean | User$athletesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -8148,6 +8167,8 @@ export namespace Prisma {
     lastOKLogin?: boolean
     lastKOLogin?: boolean
     sex?: boolean
+    ownerId?: boolean
+    owner?: boolean | User$ownerArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -8169,6 +8190,8 @@ export namespace Prisma {
     lastOKLogin?: boolean
     lastKOLogin?: boolean
     sex?: boolean
+    ownerId?: boolean
+    owner?: boolean | User$ownerArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -8190,17 +8213,24 @@ export namespace Prisma {
     lastOKLogin?: boolean
     lastKOLogin?: boolean
     sex?: boolean
+    ownerId?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "firstName" | "lastName" | "username" | "email" | "password" | "passwordRefreshToken" | "isocode" | "lastVisitedWeek" | "registrationDate" | "hidingDate" | "subscriptionAmount" | "subscriptionFrequency" | "role" | "hidden" | "lastOKLogin" | "lastKOLogin" | "sex", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "firstName" | "lastName" | "username" | "email" | "password" | "passwordRefreshToken" | "isocode" | "lastVisitedWeek" | "registrationDate" | "hidingDate" | "subscriptionAmount" | "subscriptionFrequency" | "role" | "hidden" | "lastOKLogin" | "lastKOLogin" | "sex" | "ownerId", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     blocks?: boolean | User$blocksArgs<ExtArgs>
     payments?: boolean | User$paymentsArgs<ExtArgs>
     measurements?: boolean | User$measurementsArgs<ExtArgs>
+    owner?: boolean | User$ownerArgs<ExtArgs>
+    athletes?: boolean | User$athletesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | User$ownerArgs<ExtArgs>
+  }
+  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | User$ownerArgs<ExtArgs>
+  }
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
@@ -8208,6 +8238,8 @@ export namespace Prisma {
       blocks: Prisma.$TrainingBlockPayload<ExtArgs>[]
       payments: Prisma.$PaymentPayload<ExtArgs>[]
       measurements: Prisma.$MeasurementPayload<ExtArgs>[]
+      owner: Prisma.$UserPayload<ExtArgs> | null
+      athletes: Prisma.$UserPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8228,6 +8260,7 @@ export namespace Prisma {
       lastOKLogin: Date | null
       lastKOLogin: Date | null
       sex: $Enums.Sex | null
+      ownerId: string | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -8625,6 +8658,8 @@ export namespace Prisma {
     blocks<T extends User$blocksArgs<ExtArgs> = {}>(args?: Subset<T, User$blocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrainingBlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     payments<T extends User$paymentsArgs<ExtArgs> = {}>(args?: Subset<T, User$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     measurements<T extends User$measurementsArgs<ExtArgs> = {}>(args?: Subset<T, User$measurementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MeasurementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    owner<T extends User$ownerArgs<ExtArgs> = {}>(args?: Subset<T, User$ownerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    athletes<T extends User$athletesArgs<ExtArgs> = {}>(args?: Subset<T, User$athletesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8672,6 +8707,7 @@ export namespace Prisma {
     readonly lastOKLogin: FieldRef<"User", 'DateTime'>
     readonly lastKOLogin: FieldRef<"User", 'DateTime'>
     readonly sex: FieldRef<"User", 'Sex'>
+    readonly ownerId: FieldRef<"User", 'String'>
   }
     
 
@@ -8919,6 +8955,10 @@ export namespace Prisma {
      * The data used to create many Users.
      */
     data: UserCreateManyInput | UserCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -8989,6 +9029,10 @@ export namespace Prisma {
      * Limit how many Users to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -9127,6 +9171,49 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: MeasurementScalarFieldEnum | MeasurementScalarFieldEnum[]
+  }
+
+  /**
+   * User.owner
+   */
+  export type User$ownerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * User.athletes
+   */
+  export type User$athletesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    cursor?: UserWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
   }
 
   /**
@@ -13957,7 +14044,8 @@ export namespace Prisma {
     hidden: 'hidden',
     lastOKLogin: 'lastOKLogin',
     lastKOLogin: 'lastKOLogin',
-    sex: 'sex'
+    sex: 'sex',
+    ownerId: 'ownerId'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -14506,9 +14594,12 @@ export namespace Prisma {
     lastOKLogin?: DateTimeNullableFilter<"User"> | Date | string | null
     lastKOLogin?: DateTimeNullableFilter<"User"> | Date | string | null
     sex?: EnumSexNullableFilter<"User"> | $Enums.Sex | null
+    ownerId?: StringNullableFilter<"User"> | string | null
     blocks?: TrainingBlockListRelationFilter
     payments?: PaymentListRelationFilter
     measurements?: MeasurementListRelationFilter
+    owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    athletes?: UserListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -14530,9 +14621,12 @@ export namespace Prisma {
     lastOKLogin?: SortOrderInput | SortOrder
     lastKOLogin?: SortOrderInput | SortOrder
     sex?: SortOrderInput | SortOrder
+    ownerId?: SortOrderInput | SortOrder
     blocks?: TrainingBlockOrderByRelationAggregateInput
     payments?: PaymentOrderByRelationAggregateInput
     measurements?: MeasurementOrderByRelationAggregateInput
+    owner?: UserOrderByWithRelationInput
+    athletes?: UserOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -14557,9 +14651,12 @@ export namespace Prisma {
     lastOKLogin?: DateTimeNullableFilter<"User"> | Date | string | null
     lastKOLogin?: DateTimeNullableFilter<"User"> | Date | string | null
     sex?: EnumSexNullableFilter<"User"> | $Enums.Sex | null
+    ownerId?: StringNullableFilter<"User"> | string | null
     blocks?: TrainingBlockListRelationFilter
     payments?: PaymentListRelationFilter
     measurements?: MeasurementListRelationFilter
+    owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    athletes?: UserListRelationFilter
   }, "id" | "username" | "email" | "passwordRefreshToken">
 
   export type UserOrderByWithAggregationInput = {
@@ -14581,6 +14678,7 @@ export namespace Prisma {
     lastOKLogin?: SortOrderInput | SortOrder
     lastKOLogin?: SortOrderInput | SortOrder
     sex?: SortOrderInput | SortOrder
+    ownerId?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -14610,6 +14708,7 @@ export namespace Prisma {
     lastOKLogin?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     lastKOLogin?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     sex?: EnumSexNullableWithAggregatesFilter<"User"> | $Enums.Sex | null
+    ownerId?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
 
   export type DayExerciseWhereInput = {
@@ -15378,6 +15477,8 @@ export namespace Prisma {
     blocks?: TrainingBlockCreateNestedManyWithoutUserInput
     payments?: PaymentCreateNestedManyWithoutUserInput
     measurements?: MeasurementCreateNestedManyWithoutUserInput
+    owner?: UserCreateNestedOneWithoutAthletesInput
+    athletes?: UserCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -15399,9 +15500,11 @@ export namespace Prisma {
     lastOKLogin?: Date | string | null
     lastKOLogin?: Date | string | null
     sex?: $Enums.Sex | null
+    ownerId?: string | null
     blocks?: TrainingBlockUncheckedCreateNestedManyWithoutUserInput
     payments?: PaymentUncheckedCreateNestedManyWithoutUserInput
     measurements?: MeasurementUncheckedCreateNestedManyWithoutUserInput
+    athletes?: UserUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUpdateInput = {
@@ -15426,6 +15529,8 @@ export namespace Prisma {
     blocks?: TrainingBlockUpdateManyWithoutUserNestedInput
     payments?: PaymentUpdateManyWithoutUserNestedInput
     measurements?: MeasurementUpdateManyWithoutUserNestedInput
+    owner?: UserUpdateOneWithoutAthletesNestedInput
+    athletes?: UserUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -15447,9 +15552,11 @@ export namespace Prisma {
     lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     blocks?: TrainingBlockUncheckedUpdateManyWithoutUserNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutUserNestedInput
     measurements?: MeasurementUncheckedUpdateManyWithoutUserNestedInput
+    athletes?: UserUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -15471,6 +15578,7 @@ export namespace Prisma {
     lastOKLogin?: Date | string | null
     lastKOLogin?: Date | string | null
     sex?: $Enums.Sex | null
+    ownerId?: string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -15513,6 +15621,7 @@ export namespace Prisma {
     lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DayExerciseCreateInput = {
@@ -16405,6 +16514,17 @@ export namespace Prisma {
     none?: MeasurementWhereInput
   }
 
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
+  export type UserListRelationFilter = {
+    every?: UserWhereInput
+    some?: UserWhereInput
+    none?: UserWhereInput
+  }
+
   export type TrainingBlockOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -16414,6 +16534,10 @@ export namespace Prisma {
   }
 
   export type MeasurementOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -16436,6 +16560,7 @@ export namespace Prisma {
     lastOKLogin?: SortOrder
     lastKOLogin?: SortOrder
     sex?: SortOrder
+    ownerId?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
@@ -16461,6 +16586,7 @@ export namespace Prisma {
     lastOKLogin?: SortOrder
     lastKOLogin?: SortOrder
     sex?: SortOrder
+    ownerId?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -16482,6 +16608,7 @@ export namespace Prisma {
     lastOKLogin?: SortOrder
     lastKOLogin?: SortOrder
     sex?: SortOrder
+    ownerId?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
@@ -17163,6 +17290,19 @@ export namespace Prisma {
     connect?: MeasurementWhereUniqueInput | MeasurementWhereUniqueInput[]
   }
 
+  export type UserCreateNestedOneWithoutAthletesInput = {
+    create?: XOR<UserCreateWithoutAthletesInput, UserUncheckedCreateWithoutAthletesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAthletesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<UserCreateWithoutOwnerInput, UserUncheckedCreateWithoutOwnerInput> | UserCreateWithoutOwnerInput[] | UserUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutOwnerInput | UserCreateOrConnectWithoutOwnerInput[]
+    createMany?: UserCreateManyOwnerInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
   export type TrainingBlockUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<TrainingBlockCreateWithoutUserInput, TrainingBlockUncheckedCreateWithoutUserInput> | TrainingBlockCreateWithoutUserInput[] | TrainingBlockUncheckedCreateWithoutUserInput[]
     connectOrCreate?: TrainingBlockCreateOrConnectWithoutUserInput | TrainingBlockCreateOrConnectWithoutUserInput[]
@@ -17182,6 +17322,13 @@ export namespace Prisma {
     connectOrCreate?: MeasurementCreateOrConnectWithoutUserInput | MeasurementCreateOrConnectWithoutUserInput[]
     createMany?: MeasurementCreateManyUserInputEnvelope
     connect?: MeasurementWhereUniqueInput | MeasurementWhereUniqueInput[]
+  }
+
+  export type UserUncheckedCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<UserCreateWithoutOwnerInput, UserUncheckedCreateWithoutOwnerInput> | UserCreateWithoutOwnerInput[] | UserUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutOwnerInput | UserCreateOrConnectWithoutOwnerInput[]
+    createMany?: UserCreateManyOwnerInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -17242,6 +17389,30 @@ export namespace Prisma {
     deleteMany?: MeasurementScalarWhereInput | MeasurementScalarWhereInput[]
   }
 
+  export type UserUpdateOneWithoutAthletesNestedInput = {
+    create?: XOR<UserCreateWithoutAthletesInput, UserUncheckedCreateWithoutAthletesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAthletesInput
+    upsert?: UserUpsertWithoutAthletesInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAthletesInput, UserUpdateWithoutAthletesInput>, UserUncheckedUpdateWithoutAthletesInput>
+  }
+
+  export type UserUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<UserCreateWithoutOwnerInput, UserUncheckedCreateWithoutOwnerInput> | UserCreateWithoutOwnerInput[] | UserUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutOwnerInput | UserCreateOrConnectWithoutOwnerInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutOwnerInput | UserUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: UserCreateManyOwnerInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutOwnerInput | UserUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutOwnerInput | UserUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
   export type TrainingBlockUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<TrainingBlockCreateWithoutUserInput, TrainingBlockUncheckedCreateWithoutUserInput> | TrainingBlockCreateWithoutUserInput[] | TrainingBlockUncheckedCreateWithoutUserInput[]
     connectOrCreate?: TrainingBlockCreateOrConnectWithoutUserInput | TrainingBlockCreateOrConnectWithoutUserInput[]
@@ -17282,6 +17453,20 @@ export namespace Prisma {
     update?: MeasurementUpdateWithWhereUniqueWithoutUserInput | MeasurementUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: MeasurementUpdateManyWithWhereWithoutUserInput | MeasurementUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: MeasurementScalarWhereInput | MeasurementScalarWhereInput[]
+  }
+
+  export type UserUncheckedUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<UserCreateWithoutOwnerInput, UserUncheckedCreateWithoutOwnerInput> | UserCreateWithoutOwnerInput[] | UserUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutOwnerInput | UserCreateOrConnectWithoutOwnerInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutOwnerInput | UserUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: UserCreateManyOwnerInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutOwnerInput | UserUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutOwnerInput | UserUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
   export type TrainingDayCreateNestedOneWithoutDayExercisesInput = {
@@ -17750,6 +17935,8 @@ export namespace Prisma {
     sex?: $Enums.Sex | null
     payments?: PaymentCreateNestedManyWithoutUserInput
     measurements?: MeasurementCreateNestedManyWithoutUserInput
+    owner?: UserCreateNestedOneWithoutAthletesInput
+    athletes?: UserCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutBlocksInput = {
@@ -17771,8 +17958,10 @@ export namespace Prisma {
     lastOKLogin?: Date | string | null
     lastKOLogin?: Date | string | null
     sex?: $Enums.Sex | null
+    ownerId?: string | null
     payments?: PaymentUncheckedCreateNestedManyWithoutUserInput
     measurements?: MeasurementUncheckedCreateNestedManyWithoutUserInput
+    athletes?: UserUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutBlocksInput = {
@@ -17839,6 +18028,8 @@ export namespace Prisma {
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     payments?: PaymentUpdateManyWithoutUserNestedInput
     measurements?: MeasurementUpdateManyWithoutUserNestedInput
+    owner?: UserUpdateOneWithoutAthletesNestedInput
+    athletes?: UserUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBlocksInput = {
@@ -17860,8 +18051,10 @@ export namespace Prisma {
     lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     payments?: PaymentUncheckedUpdateManyWithoutUserNestedInput
     measurements?: MeasurementUncheckedUpdateManyWithoutUserNestedInput
+    athletes?: UserUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type TrainingBlockCreateWithoutWeeksInput = {
@@ -18433,6 +18626,120 @@ export namespace Prisma {
     data: MeasurementCreateManyUserInput | MeasurementCreateManyUserInput[]
   }
 
+  export type UserCreateWithoutAthletesInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    username: string
+    email: string
+    password?: string | null
+    passwordRefreshToken?: string | null
+    isocode?: string | null
+    lastVisitedWeek?: string | null
+    registrationDate?: Date | string
+    hidingDate?: Date | string | null
+    subscriptionAmount?: number | null
+    subscriptionFrequency?: string | null
+    role?: $Enums.Role
+    hidden?: boolean
+    lastOKLogin?: Date | string | null
+    lastKOLogin?: Date | string | null
+    sex?: $Enums.Sex | null
+    blocks?: TrainingBlockCreateNestedManyWithoutUserInput
+    payments?: PaymentCreateNestedManyWithoutUserInput
+    measurements?: MeasurementCreateNestedManyWithoutUserInput
+    owner?: UserCreateNestedOneWithoutAthletesInput
+  }
+
+  export type UserUncheckedCreateWithoutAthletesInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    username: string
+    email: string
+    password?: string | null
+    passwordRefreshToken?: string | null
+    isocode?: string | null
+    lastVisitedWeek?: string | null
+    registrationDate?: Date | string
+    hidingDate?: Date | string | null
+    subscriptionAmount?: number | null
+    subscriptionFrequency?: string | null
+    role?: $Enums.Role
+    hidden?: boolean
+    lastOKLogin?: Date | string | null
+    lastKOLogin?: Date | string | null
+    sex?: $Enums.Sex | null
+    ownerId?: string | null
+    blocks?: TrainingBlockUncheckedCreateNestedManyWithoutUserInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutUserInput
+    measurements?: MeasurementUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAthletesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAthletesInput, UserUncheckedCreateWithoutAthletesInput>
+  }
+
+  export type UserCreateWithoutOwnerInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    username: string
+    email: string
+    password?: string | null
+    passwordRefreshToken?: string | null
+    isocode?: string | null
+    lastVisitedWeek?: string | null
+    registrationDate?: Date | string
+    hidingDate?: Date | string | null
+    subscriptionAmount?: number | null
+    subscriptionFrequency?: string | null
+    role?: $Enums.Role
+    hidden?: boolean
+    lastOKLogin?: Date | string | null
+    lastKOLogin?: Date | string | null
+    sex?: $Enums.Sex | null
+    blocks?: TrainingBlockCreateNestedManyWithoutUserInput
+    payments?: PaymentCreateNestedManyWithoutUserInput
+    measurements?: MeasurementCreateNestedManyWithoutUserInput
+    athletes?: UserCreateNestedManyWithoutOwnerInput
+  }
+
+  export type UserUncheckedCreateWithoutOwnerInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    username: string
+    email: string
+    password?: string | null
+    passwordRefreshToken?: string | null
+    isocode?: string | null
+    lastVisitedWeek?: string | null
+    registrationDate?: Date | string
+    hidingDate?: Date | string | null
+    subscriptionAmount?: number | null
+    subscriptionFrequency?: string | null
+    role?: $Enums.Role
+    hidden?: boolean
+    lastOKLogin?: Date | string | null
+    lastKOLogin?: Date | string | null
+    sex?: $Enums.Sex | null
+    blocks?: TrainingBlockUncheckedCreateNestedManyWithoutUserInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutUserInput
+    measurements?: MeasurementUncheckedCreateNestedManyWithoutUserInput
+    athletes?: UserUncheckedCreateNestedManyWithoutOwnerInput
+  }
+
+  export type UserCreateOrConnectWithoutOwnerInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutOwnerInput, UserUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type UserCreateManyOwnerInputEnvelope = {
+    data: UserCreateManyOwnerInput | UserCreateManyOwnerInput[]
+  }
+
   export type TrainingBlockUpsertWithWhereUniqueWithoutUserInput = {
     where: TrainingBlockWhereUniqueInput
     update: XOR<TrainingBlockUpdateWithoutUserInput, TrainingBlockUncheckedUpdateWithoutUserInput>
@@ -18519,6 +18826,108 @@ export namespace Prisma {
     hip?: FloatNullableFilter<"Measurement"> | number | null
     thigh?: FloatNullableFilter<"Measurement"> | number | null
     calfMuscle?: FloatNullableFilter<"Measurement"> | number | null
+  }
+
+  export type UserUpsertWithoutAthletesInput = {
+    update: XOR<UserUpdateWithoutAthletesInput, UserUncheckedUpdateWithoutAthletesInput>
+    create: XOR<UserCreateWithoutAthletesInput, UserUncheckedCreateWithoutAthletesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAthletesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAthletesInput, UserUncheckedUpdateWithoutAthletesInput>
+  }
+
+  export type UserUpdateWithoutAthletesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    isocode?: NullableStringFieldUpdateOperationsInput | string | null
+    lastVisitedWeek?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    hidingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    subscriptionFrequency?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    hidden?: BoolFieldUpdateOperationsInput | boolean
+    lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
+    blocks?: TrainingBlockUpdateManyWithoutUserNestedInput
+    payments?: PaymentUpdateManyWithoutUserNestedInput
+    measurements?: MeasurementUpdateManyWithoutUserNestedInput
+    owner?: UserUpdateOneWithoutAthletesNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAthletesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    isocode?: NullableStringFieldUpdateOperationsInput | string | null
+    lastVisitedWeek?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    hidingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    subscriptionFrequency?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    hidden?: BoolFieldUpdateOperationsInput | boolean
+    lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    blocks?: TrainingBlockUncheckedUpdateManyWithoutUserNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutUserNestedInput
+    measurements?: MeasurementUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUpsertWithWhereUniqueWithoutOwnerInput = {
+    where: UserWhereUniqueInput
+    update: XOR<UserUpdateWithoutOwnerInput, UserUncheckedUpdateWithoutOwnerInput>
+    create: XOR<UserCreateWithoutOwnerInput, UserUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type UserUpdateWithWhereUniqueWithoutOwnerInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutOwnerInput, UserUncheckedUpdateWithoutOwnerInput>
+  }
+
+  export type UserUpdateManyWithWhereWithoutOwnerInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutOwnerInput>
+  }
+
+  export type UserScalarWhereInput = {
+    AND?: UserScalarWhereInput | UserScalarWhereInput[]
+    OR?: UserScalarWhereInput[]
+    NOT?: UserScalarWhereInput | UserScalarWhereInput[]
+    id?: StringFilter<"User"> | string
+    firstName?: StringFilter<"User"> | string
+    lastName?: StringFilter<"User"> | string
+    username?: StringFilter<"User"> | string
+    email?: StringFilter<"User"> | string
+    password?: StringNullableFilter<"User"> | string | null
+    passwordRefreshToken?: StringNullableFilter<"User"> | string | null
+    isocode?: StringNullableFilter<"User"> | string | null
+    lastVisitedWeek?: StringNullableFilter<"User"> | string | null
+    registrationDate?: DateTimeFilter<"User"> | Date | string
+    hidingDate?: DateTimeNullableFilter<"User"> | Date | string | null
+    subscriptionAmount?: FloatNullableFilter<"User"> | number | null
+    subscriptionFrequency?: StringNullableFilter<"User"> | string | null
+    role?: EnumRoleFilter<"User"> | $Enums.Role
+    hidden?: BoolFilter<"User"> | boolean
+    lastOKLogin?: DateTimeNullableFilter<"User"> | Date | string | null
+    lastKOLogin?: DateTimeNullableFilter<"User"> | Date | string | null
+    sex?: EnumSexNullableFilter<"User"> | $Enums.Sex | null
+    ownerId?: StringNullableFilter<"User"> | string | null
   }
 
   export type TrainingDayCreateWithoutDayExercisesInput = {
@@ -18879,6 +19288,8 @@ export namespace Prisma {
     sex?: $Enums.Sex | null
     blocks?: TrainingBlockCreateNestedManyWithoutUserInput
     measurements?: MeasurementCreateNestedManyWithoutUserInput
+    owner?: UserCreateNestedOneWithoutAthletesInput
+    athletes?: UserCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutPaymentsInput = {
@@ -18900,8 +19311,10 @@ export namespace Prisma {
     lastOKLogin?: Date | string | null
     lastKOLogin?: Date | string | null
     sex?: $Enums.Sex | null
+    ownerId?: string | null
     blocks?: TrainingBlockUncheckedCreateNestedManyWithoutUserInput
     measurements?: MeasurementUncheckedCreateNestedManyWithoutUserInput
+    athletes?: UserUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutPaymentsInput = {
@@ -18941,6 +19354,8 @@ export namespace Prisma {
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     blocks?: TrainingBlockUpdateManyWithoutUserNestedInput
     measurements?: MeasurementUpdateManyWithoutUserNestedInput
+    owner?: UserUpdateOneWithoutAthletesNestedInput
+    athletes?: UserUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPaymentsInput = {
@@ -18962,8 +19377,10 @@ export namespace Prisma {
     lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     blocks?: TrainingBlockUncheckedUpdateManyWithoutUserNestedInput
     measurements?: MeasurementUncheckedUpdateManyWithoutUserNestedInput
+    athletes?: UserUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserCreateWithoutMeasurementsInput = {
@@ -18987,6 +19404,8 @@ export namespace Prisma {
     sex?: $Enums.Sex | null
     blocks?: TrainingBlockCreateNestedManyWithoutUserInput
     payments?: PaymentCreateNestedManyWithoutUserInput
+    owner?: UserCreateNestedOneWithoutAthletesInput
+    athletes?: UserCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutMeasurementsInput = {
@@ -19008,8 +19427,10 @@ export namespace Prisma {
     lastOKLogin?: Date | string | null
     lastKOLogin?: Date | string | null
     sex?: $Enums.Sex | null
+    ownerId?: string | null
     blocks?: TrainingBlockUncheckedCreateNestedManyWithoutUserInput
     payments?: PaymentUncheckedCreateNestedManyWithoutUserInput
+    athletes?: UserUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutMeasurementsInput = {
@@ -19049,6 +19470,8 @@ export namespace Prisma {
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     blocks?: TrainingBlockUpdateManyWithoutUserNestedInput
     payments?: PaymentUpdateManyWithoutUserNestedInput
+    owner?: UserUpdateOneWithoutAthletesNestedInput
+    athletes?: UserUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMeasurementsInput = {
@@ -19070,8 +19493,10 @@ export namespace Prisma {
     lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     blocks?: TrainingBlockUncheckedUpdateManyWithoutUserNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutUserNestedInput
+    athletes?: UserUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type TrainingWeekCreateManyBlockInput = {
@@ -19414,6 +19839,27 @@ export namespace Prisma {
     calfMuscle?: number | null
   }
 
+  export type UserCreateManyOwnerInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    username: string
+    email: string
+    password?: string | null
+    passwordRefreshToken?: string | null
+    isocode?: string | null
+    lastVisitedWeek?: string | null
+    registrationDate?: Date | string
+    hidingDate?: Date | string | null
+    subscriptionAmount?: number | null
+    subscriptionFrequency?: string | null
+    role?: $Enums.Role
+    hidden?: boolean
+    lastOKLogin?: Date | string | null
+    lastKOLogin?: Date | string | null
+    sex?: $Enums.Sex | null
+  }
+
   export type TrainingBlockUpdateWithoutUserInput = {
     isVisible?: BoolFieldUpdateOperationsInput | boolean
     id?: StringFieldUpdateOperationsInput | string
@@ -19498,6 +19944,77 @@ export namespace Prisma {
     hip?: NullableFloatFieldUpdateOperationsInput | number | null
     thigh?: NullableFloatFieldUpdateOperationsInput | number | null
     calfMuscle?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type UserUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    isocode?: NullableStringFieldUpdateOperationsInput | string | null
+    lastVisitedWeek?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    hidingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    subscriptionFrequency?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    hidden?: BoolFieldUpdateOperationsInput | boolean
+    lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
+    blocks?: TrainingBlockUpdateManyWithoutUserNestedInput
+    payments?: PaymentUpdateManyWithoutUserNestedInput
+    measurements?: MeasurementUpdateManyWithoutUserNestedInput
+    athletes?: UserUpdateManyWithoutOwnerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    isocode?: NullableStringFieldUpdateOperationsInput | string | null
+    lastVisitedWeek?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    hidingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    subscriptionFrequency?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    hidden?: BoolFieldUpdateOperationsInput | boolean
+    lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
+    blocks?: TrainingBlockUncheckedUpdateManyWithoutUserNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutUserNestedInput
+    measurements?: MeasurementUncheckedUpdateManyWithoutUserNestedInput
+    athletes?: UserUncheckedUpdateManyWithoutOwnerNestedInput
+  }
+
+  export type UserUncheckedUpdateManyWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    isocode?: NullableStringFieldUpdateOperationsInput | string | null
+    lastVisitedWeek?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    hidingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    subscriptionFrequency?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    hidden?: BoolFieldUpdateOperationsInput | boolean
+    lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
   }
 
   export type DayExerciseSeriesCreateManyDayExerciseInput = {

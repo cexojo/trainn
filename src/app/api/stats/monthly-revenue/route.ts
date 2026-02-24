@@ -34,6 +34,13 @@ export async function GET(req: NextRequest) {
   const urlLang = req.nextUrl.searchParams.get("lang");
   const lang = urlLang || "es";
 
+  // Admin-specific: get athlete IDs for current admin (ownerId)
+  const myAthletes = await prisma.user.findMany({
+    where: { role: "athlete", ownerId: tokenPayload.id },
+    select: { id: true }
+  });
+  const athleteIds = myAthletes.map(a => a.id);
+
   // Compute a list of the last 12 months, newest last
   const now = new Date();
   const months: { iso: string; label: string; start: Date; end: Date }[] = [];
@@ -52,14 +59,15 @@ export async function GET(req: NextRequest) {
   const startOfFirstMonth = months[0].start;
   const endOfLastMonth = months[months.length - 1].end;
 
-  // Single query for all payments in the year
+  // Single query for all payments in the year, scoped to owned athletes
   const payments = await prisma.payment.findMany({
     where: {
       isPayed: true,
       dueDate: {
         gte: startOfFirstMonth,
         lte: endOfLastMonth
-      }
+      },
+      userId: { in: athleteIds }
     },
     select: { amount: true, dueDate: true }
   });

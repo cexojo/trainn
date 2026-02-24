@@ -191,7 +191,8 @@ exports.Prisma.UserScalarFieldEnum = {
   hidden: 'hidden',
   lastOKLogin: 'lastOKLogin',
   lastKOLogin: 'lastKOLogin',
-  sex: 'sex'
+  sex: 'sex',
+  ownerId: 'ownerId'
 };
 
 exports.Prisma.DayExerciseScalarFieldEnum = {

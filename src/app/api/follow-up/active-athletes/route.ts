@@ -85,10 +85,12 @@ export async function POST(req: NextRequest) {
       WHERE 
         u.role = 'athlete' 
         AND u.hidden = 0
+        AND u.ownerId = ?
       GROUP BY u.id
       HAVING MAX(des.modifiedAt) IS NULL OR MAX(des.modifiedAt) <= ?
       ORDER BY (MAX(des.modifiedAt) IS NOT NULL) ASC
       `,
+      tokenPayload.id,
       earliestAllowedDate.toISOString()
     );
 

@@ -34,9 +34,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  // Only include athletes
+  // Only include athletes *owned* by this admin user
   const users = await prisma.user.findMany({
-    where: { role: 'athlete' },
+    where: {
+      role: 'athlete',
+      ownerId: tokenPayload.id,
+    },
     select: {
       registrationDate: true,
       hidingDate: true,

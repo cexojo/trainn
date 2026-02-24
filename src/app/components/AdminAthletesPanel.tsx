@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from "@mui/material/Button";
@@ -83,6 +83,21 @@ export default function AdminAthletesPanel({ lang = "es" }: { lang?: Lang }) {
     }
   };
 
+  // Fetch users once and share with both UserTable and TrainingBlocksWizard
+  const [users, setUsers] = useState<any[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(true);
+
+  useEffect(() => {
+    setLoadingUsers(true);
+    fetch("/api/athletes")
+      .then(r => r.json())
+      .then(data => {
+        setUsers(Array.isArray(data) ? data : []);
+        setLoadingUsers(false);
+      })
+      .catch(() => setLoadingUsers(false));
+  }, [athletesRefreshKey]);
+
   return (
     <Box sx={{ mt: 3, mb: 3 }}>
       <Typography variant="h5" sx={{ mb: 2 }}>
@@ -91,6 +106,7 @@ export default function AdminAthletesPanel({ lang = "es" }: { lang?: Lang }) {
       <UserTable
         lang={lang}
         refreshKey={athletesRefreshKey}
+        usersProp={users}
         crearAtletaButton={
           <>
             <Button
@@ -245,6 +261,8 @@ export default function AdminAthletesPanel({ lang = "es" }: { lang?: Lang }) {
           </>
         }
       />
+      {/* Now also pass athlete list as prop to TrainingBlocksWizard if rendered here */}
+      {/* <TrainingBlocksWizard athleteOptions={users.filter(u => u.role === "athlete")} /> */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}

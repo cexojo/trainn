@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma/client";
 import { getTokenPayload } from "@/app/api/utils/auth";
 
-// GET /api/get-active-athletes-list
-// Returns all non-hidden athletes (id, firstName, lastName, email)
+// GET /api/athletes/active
+// Returns all non-hidden athletes for current admin (id, firstName, lastName, email)
 export async function GET(req: NextRequest) {
   // Auth: only allow admins
   const tokenPayload = getTokenPayload(req);
@@ -15,7 +15,8 @@ export async function GET(req: NextRequest) {
   const athletes = await prisma.user.findMany({
     where: {
       role: "athlete",
-      hidden: { not: true }
+      hidden: { not: true },
+      ownerId: tokenPayload.id
     },
     select: {
       id: true,

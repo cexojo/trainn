@@ -11,7 +11,7 @@ export default function StatCardUnpaidRevenue() {
   const lang = "es"; // Replace with dynamic lang if available
 
   useEffect(() => {
-    fetch(`/api/unpaid-payments?lang=${lang}`, { credentials: "include" })
+    fetch(`/api/stats/unpaid-payments?lang=${lang}`, { credentials: "include" })
       .then((res) => {
         if (!res.ok) throw new Error();
         return res.json();

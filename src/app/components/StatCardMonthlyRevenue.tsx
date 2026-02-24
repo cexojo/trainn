@@ -12,7 +12,7 @@ export default function StatCardMonthlyRevenue() {
   const lang = "es"; // Replace with current language context if available
 
   useEffect(() => {
-    fetch(`/api/monthly-revenue?lang=${lang}`, {
+    fetch(`/api/stats/monthly-revenue?lang=${lang}`, {
       credentials: "include"
     })
       .then(res => {

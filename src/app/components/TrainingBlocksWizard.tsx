@@ -209,13 +209,26 @@ export default function TrainingBlocksWizard() {
   const [bannerMessage, setBannerMessage] = useState("");
   const [bannerSeverity, setBannerSeverity] = useState<"success" | "error" | "info">("info");
 
-  // Step 1 state
+  // Athlete fetch state
   const [athleteOptions, setAthleteOptions] = useState<any[]>([]);
-  const [athleteLoading, setAthleteLoading] = useState(false);
+  const [athleteLoading, setAthleteLoading] = useState<boolean>(false);
+
+  // Step 1 state
   const [selectedAthlete, setSelectedAthlete] = useState<any>(null);
   const [weeks, setWeeks] = useState<number>(6);
   const [daysPerWeek, setDaysPerWeek] = useState<number>(3);
   const [visible, setVisible] = useState<boolean>(true);
+
+  // Fetch athletes for step 1 (on mount)
+  useEffect(() => {
+    setAthleteLoading(true);
+    fetch("/api/athletes/active")
+      .then((r) => r.json())
+      .then((arr) => {
+        setAthleteOptions(Array.isArray(arr) ? arr.filter(a => !a.hidden) : []);
+      })
+      .finally(() => setAthleteLoading(false));
+  }, []);
 
   // Step 2 state
   const [exercisesPerDay, setExercisesPerDay] = useState<ExerciseConfig[][]>([]);
@@ -226,19 +239,6 @@ export default function TrainingBlocksWizard() {
   // UI helper state for exercise selection per day
   const [addingExerciseIdx, setAddingExerciseIdx] = useState<number | null>(null);
   const [exerciseSearchValue, setExerciseSearchValue] = useState<string>("");
-
-  // Fetch active athletes
-  useEffect(() => {
-    setAthleteLoading(true);
-    fetch("/api/get-user-management-info")
-      .then(r => r.json())
-      .then(arr => {
-        if (Array.isArray(arr)) {
-          setAthleteOptions(arr.filter(a => !a.hidden));
-        }
-      })
-      .finally(() => setAthleteLoading(false));
-  }, []);
 
   // Fetch exercises when entering step 2
   useEffect(() => {
@@ -362,7 +362,7 @@ export default function TrainingBlocksWizard() {
                 value={selectedAthlete}
                 onChange={(_, value) => setSelectedAthlete(value)}
                 renderOption={(props, option) => (
-                  <li {...props} key={option.id}>
+                  <li {...props}>
                     <span>
                       {option.firstName && option.lastName
                         ? `${option.firstName} ${option.lastName}`

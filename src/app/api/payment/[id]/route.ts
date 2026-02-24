@@ -35,15 +35,26 @@ export async function POST(req: NextRequest, context: any) {
 export async function PATCH(req: NextRequest, context: any) {
   try {
     const { id: paymentId } = await context.params;
-    const { isPayed } = await req.json();
+    const body = await req.json();
+    const { isPayed, dueDate, amount } = body;
 
-    if (typeof isPayed !== "boolean") {
-      return NextResponse.json({ error: "Invalid isPayed value" }, { status: 400 });
+    // Validate presence/types of allowed fields
+    if (typeof isPayed !== "boolean" && typeof dueDate !== "string" && typeof amount !== "number") {
+      return NextResponse.json({ error: "No valid fields to update" }, { status: 400 });
+    }
+
+    const updateData: any = {};
+    if (typeof isPayed === "boolean") updateData.isPayed = isPayed;
+    if (typeof dueDate === "string" && dueDate.trim() !== "") updateData.dueDate = new Date(dueDate);
+    if (typeof amount === "number" && !isNaN(amount) && amount > 0) updateData.amount = amount;
+
+    if (Object.keys(updateData).length === 0) {
+      return NextResponse.json({ error: "No valid fields to update" }, { status: 400 });
     }
 
     const payment = await prisma.payment.update({
       where: { id: paymentId },
-      data: { isPayed }
+      data: updateData
     });
 
     return NextResponse.json({ success: true, payment });

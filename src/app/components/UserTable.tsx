@@ -35,11 +35,13 @@ import { useRef } from "react";
 export default function UserTable({
   lang,
   crearAtletaButton,
-  refreshKey
+  refreshKey,
+  usersProp = [],
 }: {
   lang: Lang,
   crearAtletaButton?: React.ReactNode,
-  refreshKey?: number
+  refreshKey?: number,
+  usersProp?: any[],
 }) {
   // Payments tab dialog state must be at top level for hooks rules
   const [showAddPayment, setShowAddPayment] = useState(false);
@@ -69,15 +71,21 @@ export default function UserTable({
   const logAdminError = require("@/app/utils/logAdminError").logAdminError;
 
   useEffect(() => {
+    // If usersProp is defined (even if empty array), always use it, never fetch.
+    if (usersProp !== undefined) {
+      setUsers(usersProp);
+      setLoading(false);
+      return;
+    }
     setLoading(true);
-    fetch("/api/get-user-management-info")
+    fetch("/api/athletes")
       .then(r => r.json())
       .then(d => {
         setUsers(Array.isArray(d) ? d : []);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [refreshKey, internalRefreshKey]);
+  }, [refreshKey, internalRefreshKey, usersProp]);
 
   // Column definitions
   const columns: GridColDef[] = [
@@ -207,6 +215,13 @@ export default function UserTable({
       return matchesSearch;
     });
   }, [athletes, searchTerm, quickFilter]);
+  // Sync selected user with latest users after refresh
+  React.useEffect(() => {
+    if (selected && Array.isArray(users) && users.length) {
+      const fresh = users.find(u => u.id === selected.id);
+      if (fresh) setSelected(fresh);
+    }
+  }, [users]);
 
   const handleHideUser = async (user: any) => {
     setActionLoading(true);
@@ -780,6 +795,7 @@ export default function UserTable({
                             }))
                           }
                           inputProps={{ min: 0, step: "0.01" }}
+                          id="edit-payment-amount"
                         />
                         <Box sx={{ display: "flex", gap: 1, mt: 2, justifyContent: "flex-end" }}>
                           <Button
@@ -806,12 +822,17 @@ export default function UserTable({
                             color="primary"
                             variant="contained"
                             onClick={async () => {
+                              // Extract latest values directly from UI (to ensure no race condition from setState)
+                              const dueDateInput = (document.querySelector('#edit-payment-dueDate') as HTMLInputElement | null)?.value || editingPayment.dueDate;
+                              const amountInput = parseFloat((document.querySelector('#edit-payment-amount') as HTMLInputElement | null)?.value || editingPayment.amount);
+
                               await fetch(`/api/payment/${editingPayment.id}`, {
                                 method: "PATCH",
                                 headers: { "Content-Type": "application/json" },
                                 body: JSON.stringify({
-                                  dueDate: editingPayment.dueDate,
-                                  amount: editingPayment.amount
+                                  dueDate: dueDateInput,
+                                  amount: amountInput,
+                                  isPayed: editingPayment.isPayed
                                 })
                               });
                               setEditingPayment(null);
@@ -819,7 +840,7 @@ export default function UserTable({
                             }}
                             startIcon={<CheckCircleIcon />}
                           >
-                            {translations[lang].copy}
+                            {"Aceptar"}
                           </Button>
                         </Box>
                       </Box>
@@ -950,20 +971,20 @@ export default function UserTable({
                 adapterLocale={translations[lang].pickersLocale?.locale || undefined}
                 localeText={translations[lang].pickersLocale?.components?.MuiLocalizationProvider?.defaultProps?.localeText}
               >
-                <DatePicker
-                  label={translations[lang].futurePaymentDialogDate}
-                  value={futurePaymentDialog.dueDate ? new Date(futurePaymentDialog.dueDate) : null}
-                  onChange={(d) =>
-                    setFuturePaymentDialog(v => ({
-                      ...v,
-                      dueDate: d instanceof Date && !isNaN(d.getTime()) ? d.toISOString().slice(0, 10) : ""
-                    }))
-                  }
-                  slotProps={{
-                    textField: { size: "small", fullWidth: true }
-                  }}
-                  format="dd/MM/yyyy"
-                />
+                          <DatePicker
+                            label={translations[lang].paymentsTableDate}
+                            value={editingPayment?.dueDate ? new Date(editingPayment.dueDate) : null}
+                            onChange={(d) =>
+                              setEditingPayment((p: any) => ({
+                                ...p,
+                                dueDate: d instanceof Date && !isNaN(d.getTime()) ? d.toISOString().slice(0, 10) : ""
+                              }))
+                            }
+                            slotProps={{
+                              textField: { size: "small", fullWidth: true, id: "edit-payment-dueDate" }
+                            }}
+                            format="dd/MM/yyyy"
+                          />
               </LocalizationProvider>
             </Box>
             <Box sx={{ display: "flex", mt: 3, gap: 2, justifyContent: "flex-end" }}>

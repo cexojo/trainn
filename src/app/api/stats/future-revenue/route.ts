@@ -45,6 +45,9 @@ export async function GET(req: NextRequest) {
       dueDate: {
         gte: startOfFirstMonth,
         lte: endOfLastMonth
+      },
+      user: {
+        ownerId: tokenPayload.id
       }
     },
     select: { amount: true, dueDate: true }

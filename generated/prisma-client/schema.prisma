@@ -112,6 +112,9 @@ model User {
   lastOKLogin           DateTime?
   lastKOLogin           DateTime?
   sex                   Sex?
+  ownerId               String?
+  owner                 User?           @relation("AdminOwner", fields: [ownerId], references: [id])
+  athletes              User[]          @relation("AdminOwner")
 }
 
 // New middle entity between TrainingDay and Exercise

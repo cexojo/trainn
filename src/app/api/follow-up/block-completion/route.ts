@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
       LEFT JOIN TrainingDay td ON td.weekId = tw.id
       LEFT JOIN DayExercise de ON de.trainingDayId = td.id
       LEFT JOIN DayExerciseSeries des ON des.dayExerciseId = de.id
-      WHERE u.role = 'athlete' AND u.hidden = 0
+      WHERE u.role = 'athlete' AND u.hidden = 0 AND u.ownerId = ?
       GROUP BY u.id, u.firstName, u.lastName, u.email, b.blockNumber
       HAVING COUNT(des.id) > 0 AND
         ROUND(
@@ -80,6 +80,7 @@ export async function POST(req: NextRequest) {
           END
         , 0) >= ?
       `,
+      tokenPayload.id,
       threshold
     );
 

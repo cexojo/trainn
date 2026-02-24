@@ -14,11 +14,20 @@ export async function GET(req: NextRequest) {
 
   const now = new Date();
 
+  // Find athletes owned by this admin
+  const myAthletes = await prisma.user.findMany({
+    where: { role: "athlete", ownerId: tokenPayload.id },
+    select: { id: true }
+  });
+  const athleteIds = myAthletes.map(a => a.id);
+
+  // Sum unpaid, overdue payments only for those athletes
   const unpaid = await prisma.payment.aggregate({
     _sum: { amount: true },
     where: {
       isPayed: false,
-      dueDate: { lt: now }
+      dueDate: { lt: now },
+      userId: { in: athleteIds }
     }
   });
 

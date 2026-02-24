@@ -10,9 +10,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Get all athletes with their payments
+  // Get all athletes owned by this admin, with their payments
   const users = await prisma.user.findMany({
-    where: { role: "athlete" },
+    where: { 
+      role: "athlete",
+      ownerId: tokenPayload.id,
+    },
     orderBy: [
       { firstName: "asc" },
       { lastName: "asc" }
