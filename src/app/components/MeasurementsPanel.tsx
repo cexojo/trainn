@@ -156,7 +156,8 @@ export default function MeasurementsPanel() {
                   "calfMuscle"
                 ].forEach((key) => {
                   if (formData[key] !== "" && formData[key] !== null && formData[key] !== undefined) {
-                    body[key] = parseFloat(formData[key]);
+                    const sanitized = String(formData[key]).replace(',', '.').trim();
+                    body[key] = sanitized === "" ? null : parseFloat(sanitized);
                   }
                 });
                 const res = await fetch("/api/measurements", {
@@ -208,7 +209,7 @@ export default function MeasurementsPanel() {
                 ].map((input) => (
                   <TextField
                     key={input.id}
-                    type="number"
+                    type="text"
                     label={input.label}
                     inputProps={{
                       inputMode: "decimal",
@@ -222,6 +223,16 @@ export default function MeasurementsPanel() {
                     onChange={(e) =>
                       setFormData((f: any) => ({ ...f, [input.id]: e.target.value }))
                     }
+                    onBlur={e => {
+                      // sanitize to consistent decimal notation, show as number string or empty after blur
+                      let val = e.target.value.replace(",", ".").trim();
+                      if (val === "" || isNaN(Number(val))) {
+                        setFormData((f: any) => ({ ...f, [input.id]: "" }));
+                      } else {
+                        // Format trimmed float with max 1 decimal
+                        setFormData((f: any) => ({ ...f, [input.id]: String(Number(Number(val).toFixed(1))) }));
+                      }
+                    }}
                   />
                 ))}
               </Box>

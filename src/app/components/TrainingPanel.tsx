@@ -140,6 +140,9 @@ export default function TrainingPanel({
   // Track focused exercise for highlight
   const [focusedExerciseKey, setFocusedExerciseKey] = useState<string | null>(null);
 
+  // Map of exerciseDef.id to string value being edited for effectiveWeight
+  const [editingWeight, setEditingWeight] = useState<{[id: string]: string}>({});
+
   // Sticky header effect
   useEffect(() => {
     const handleScroll = () => {
@@ -329,6 +332,18 @@ export default function TrainingPanel({
   }
 
   const handleBlur = async (defId: string, field: "effectiveReps" | "effectiveWeight" | "effectiveRir", value: string | number) => {
+    // EditingWeight for weight: hold during PATCH
+    let clearEditingWeight = () => {};
+    if (field === "effectiveWeight") {
+      clearEditingWeight = () => {
+        setEditingWeight(e => {
+          const rest = { ...e };
+          delete rest[defId];
+          return rest;
+        });
+      };
+    }
+
     // Normalize the value the same way as handleLocalChange
     let normVal: number | null;
     if (field === "effectiveReps" || field === "effectiveRir") {
@@ -345,7 +360,13 @@ export default function TrainingPanel({
         normVal = null;
       } else {
         sanitized = sanitized.replace(/[.,]$/, ""); // Remove trailing dot/comma if present
-        normVal = sanitized === "" ? null : Math.round(Math.max(0, parseFloat(sanitized)) * 10) / 10;
+        // Parse number normally
+        const parsed = Number(sanitized);
+        // Accept null if invalid or negative, else keep up to 1 decimal (but do not round to int!)
+        normVal =
+          isNaN(parsed) || parsed < 0
+            ? null
+            : Math.floor(parsed * 10) / 10;
       }
     }
     else {
@@ -408,7 +429,17 @@ export default function TrainingPanel({
           setNotification({ type: "error", message: lang === "es" ? "Error al guardar resultado" : "Error saving result" });
         }
       } else {
-        // PATCH SUCCESS: Remove from pending queue if present (clear highlight immediately)
+        // PATCH SUCCESS: Immediately update value in local state for instant feedback
+        if (field === "effectiveWeight") {
+          setExerciseDefs((prevDefs: any[]) =>
+            prevDefs.map((def: any) =>
+              def.id === defId ? { ...def, [field]: normVal } : def
+            )
+          );
+          // now clear editingWeight only after local state update
+          clearEditingWeight();
+        }
+        // Remove from pending queue if present (clear highlight immediately)
         try {
           const queue = getOfflinePatchQueue();
           // "Field" uniqueness logic: match as in addOfflinePatch
@@ -457,32 +488,31 @@ export default function TrainingPanel({
     field: "effectiveReps" | "effectiveWeight" | "effectiveRir",
     value: string
   ) => {
-    setExerciseDefs((prevDefs: any[]) =>
-      prevDefs.map((def: any) => {
-        if (def.id === id) {
-          let newVal: number | null = null;
-          if (field === "effectiveReps" || field === "effectiveRir") {
-            const numStr = String(value).trim();
-            if (/^\d+$/.test(numStr)) {
-              newVal = Math.max(0, parseInt(numStr, 10));
-            } else {
-              newVal = null;
+    if (field === "effectiveWeight") {
+      setEditingWeight(e => ({ ...e, [id]: value }));
+    } else {
+      // Only process value if purely digits, otherwise ignore the keystroke
+      if(!/^\d*$/.test(value)) {
+        return; // discard dots/commas/letters etc
+      }
+      setExerciseDefs((prevDefs: any[]) =>
+        prevDefs.map((def: any) => {
+          if (def.id === id) {
+            let newVal: number | null = null;
+            if (field === "effectiveReps" || field === "effectiveRir") {
+              const numStr = String(value).trim();
+              if (/^\d+$/.test(numStr)) {
+                newVal = Math.max(0, parseInt(numStr, 10));
+              } else {
+                newVal = null;
+              }
             }
-          } else if (field === "effectiveWeight") {
-            let sanitized = value.replace(',', '.').trim();
-            // Only set to null if empty string, ".", or ","
-            if (/^([.,]|\s*)$/.test(sanitized)) {
-              newVal = null;
-            } else {
-              sanitized = sanitized.replace(/[.,]$/, "");
-              newVal = sanitized === "" ? null : Math.round(Math.max(0, parseFloat(sanitized)) * 10) / 10;
-            }
+            return { ...def, [field]: newVal };
           }
-          return { ...def, [field]: newVal };
-        }
-        return def;
-      })
-    );
+          return def;
+        })
+      );
+    }
   };
 
   const handleBlockChange = (blockId: string) => {
@@ -1084,15 +1114,15 @@ export default function TrainingPanel({
                                         </TableCell>
                                       )}
                                       <TableCell align="center" sx={{ verticalAlign: "top" }}>
-                                        <TextField
-                                          type="number"
-                                          inputProps={{
-                                            inputMode: "decimal",
-                                            step: "0.1",
-                                            min: 0,
-                                            pattern: "[0-9]*[.,]?[0-9]*"
-                                          }}
-                                          value={def.effectiveWeight ?? ""}
+                                      <TextField
+                                        type="text"
+                                        inputProps={{
+                                          inputMode: "decimal",
+                                          step: "1",
+                                          min: 0,
+                                          pattern: "[0-9]*[.,]?[0-9]*"
+                                        }}
+                                          value={editingWeight[def.id] !== undefined ? editingWeight[def.id] : (def.effectiveWeight ?? "")}
                                           inputRef={el => {
                                             if (el && el.dataset && el.dataset.lastValue === undefined) {
                                               el.dataset.lastValue = def.effectiveWeight == null ? "" : String(def.effectiveWeight);
@@ -1147,7 +1177,11 @@ export default function TrainingPanel({
                                       <TableCell align="center" sx={{ verticalAlign: "top" }}>
                                         <TextField
                                           type="text"
-                                          inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                                          inputProps={{
+                                            inputMode: "numeric",
+                                            min: 0,
+                                            pattern: "[0-9]*"
+                                          }}
                                           value={def.effectiveReps ?? ""}
                                           inputRef={el => {
                                             if (el && el.dataset && el.dataset.lastValue === undefined) {
