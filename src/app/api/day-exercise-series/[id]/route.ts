@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/prisma/client";
-import { getTokenPayload } from "@/app/api/utils/auth";
+import prisma from "../../../../prisma/client";
+import { getTokenPayload } from "../../utils/auth";
 import * as Sentry from "@sentry/nextjs";
 
 function buildSentryDayExerciseSeriesMsg({
@@ -82,13 +82,12 @@ export async function PATCH(req: NextRequest, ctx: any) {
     );
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const params = await ctx.params;
-  const id = params.id;
+  const { id } = await ctx.params;
   if (!id) {
     Sentry.logger.info(
       buildSentryDayExerciseSeriesMsg({
         payload,
-        params,
+        params: { id },
         outcome: "missing series ID",
       })
     );
@@ -102,7 +101,7 @@ export async function PATCH(req: NextRequest, ctx: any) {
     Sentry.logger.info(
       buildSentryDayExerciseSeriesMsg({
         payload,
-        params: { ...params, id },
+        params: { id },
         outcome: "invalid JSON body",
       })
     );
@@ -176,7 +175,7 @@ export async function PATCH(req: NextRequest, ctx: any) {
                 buildSentryDayExerciseSeriesMsg({
                   data,
                   payload,
-                  params,
+                  params: { id },
                   outcome: `failed: out_of_range_value for ${key} to ${data[key]}`,
                 })
               );
@@ -202,7 +201,7 @@ export async function PATCH(req: NextRequest, ctx: any) {
       buildSentryDayExerciseSeriesMsg({
         data,
         payload,
-        params,
+        params: { id },
         outcome: `attempted PATCH day-exercise-series, but no valid fields provided. updateData=${JSON.stringify(
           updateData
         )}, data=${JSON.stringify(data)}`,
@@ -223,10 +222,42 @@ export async function PATCH(req: NextRequest, ctx: any) {
     buildSentryDayExerciseSeriesMsg({
       data,
       payload,
-      params,
+      params: { id },
       outcome: "successfully",
     })
   );
 
   return new Response(null, { status: 200 });
+}
+
+// DELETE /api/day-exercise-series/[id]
+export async function DELETE(req: NextRequest, context: { params: Promise<{ id: string }> }) {
+  // AUTH CHECK (admin only)
+  const payload = getTokenPayload(req);
+  if (!payload || payload.role !== "admin") {
+    Sentry.logger.info(
+      buildSentryDayExerciseSeriesMsg({
+        payload,
+        outcome: "unauthorized (delete)"
+      })
+    );
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const { id } = await context.params;
+  if (!id) {
+    Sentry.logger.info(
+      buildSentryDayExerciseSeriesMsg({
+        payload,
+        params: { id },
+        outcome: "missing series ID (delete)"
+      })
+    );
+    return NextResponse.json({ error: "Series id required" }, { status: 400 });
+  }
+  try {
+    await prisma.dayExerciseSeries.delete({ where: { id } });
+    return NextResponse.json({ ok: true });
+  } catch (e: any) {
+    return NextResponse.json({ error: "Failed to delete: " + (e?.message || e) }, { status: 500 });
+  }
 }

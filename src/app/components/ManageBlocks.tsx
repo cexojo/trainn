@@ -94,6 +94,13 @@ function BlockContentTable({ athleteId, blockId, lang, block, onRequestBlockVisi
     dayObj: any;
     exercisesGrouped: any[];
   }>(null);
+  // Pending delete state for individual series
+  const [pendingDeleteSeries, setPendingDeleteSeries] = useState<null | {
+    seriesId: string;
+    group: any[];
+    dayObj: any;
+    exercisesGrouped: any[];
+  }>(null);
   // DnD-kit sensors (MUST be first, before ANY returns or other hooks to fix Rules of Hooks)
   const sensors = useSensors(useSensor(PointerSensor));
   // Spinner state for week deletion (must be first hook after sensors!)
@@ -309,7 +316,7 @@ function EditableSeriesField({ label, value, field, seriesId, onUpdated, lang, m
           role="button"
           title={label}
         >
-          {value !== undefined && value !== null && value !== "" ? value : "-"}
+          {value !== undefined && value !== null && value !== "" ? value : "---"}
         </Typography>
       )}
       {loading && <CircularProgress size={16} />}
@@ -866,6 +873,57 @@ exercisesForWeek.forEach((ex: any) => {
           </Button>
         </DialogActions>
       </Dialog>
+      {/* Series delete confirmation dialog - SIBLING, not NESTED! */}
+      <Dialog
+        open={!!pendingDeleteSeries}
+        onClose={() => setPendingDeleteSeries(null)}
+      >
+        <DialogTitle>Eliminar serie</DialogTitle>
+        <DialogContent>
+          <Typography color="error" fontWeight={600} gutterBottom>
+            ¿Seguro que quieres eliminar esta serie? Se borrará por completo, incluyendo la información aportada por el atleta.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setPendingDeleteSeries(null)} color="inherit">
+            Cancelar
+          </Button>
+          <Button
+            color="error"
+            onClick={async () => {
+              const del = pendingDeleteSeries;
+              if (!del) return;
+              setPendingDeleteSeries(null);
+              const { seriesId, group, dayObj, exercisesGrouped } = del;
+              // Remove this series
+              await fetch(`/api/day-exercise-series/${seriesId}`, {
+                method: "DELETE",
+                credentials: "include"
+              });
+
+              // Resequence remaining: find all remaining series in group after deletion, re-assign seriesNumber as (current order)
+              const remaining = group.filter((row: any) => row.id !== seriesId);
+              await Promise.all(
+                remaining.map((row: any, idx: number) => fetch(`/api/day-exercise-series/${row.id}`, {
+                  method: "PATCH",
+                  headers: { "Content-Type": "application/json" },
+                  credentials: "include",
+                  body: JSON.stringify({ seriesNumber: idx + 1 })
+                }))
+              );
+              // Always refetch updated block data after mutation to avoid gaps
+              setLoading(true);
+              await fetch(`/api/training-data?userId=${athleteId}&blockId=${blockId}`)
+                .then(r => r.json())
+                .then((res: any) => setContent(res))
+                .finally(() => setLoading(false));
+            }}
+            autoFocus
+          >
+            Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
       {/* Add Exercise Dialog */}
       <Dialog
         open={!!addExerciseDialog}
@@ -1026,17 +1084,14 @@ exercisesForWeek.forEach((ex: any) => {
             }
             orderCounter++;
           }
-          // Persist the updated exerciseNumber for each dayExercise
-          await Promise.all(
-            Object.entries(updatedDayExerciseNumbers).map(([dayExerciseId, exerciseNumber]) =>
-              fetch(`/api/day-exercise/${dayExerciseId}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify({ exerciseNumber }),
-              })
-            )
-          );
+          // Persist the updated exerciseNumber for each dayExercise - now in a transaction
+          const bulkUpdates = Object.entries(updatedDayExerciseNumbers).map(([id, exerciseNumber]) => ({ id, exerciseNumber }));
+          await fetch(`/api/day-exercise/number-reorder`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ updates: bulkUpdates }),
+          });
           // Optimistically update UI (mutate exercisesByDayId and content)
           setContent((cur) => {
             if (!cur) return cur;
@@ -1166,9 +1221,110 @@ exercisesForWeek.forEach((ex: any) => {
                                   </span>
                           ) : <span style={{ width: 20, display: "inline-block" }} />}
                                 </td>
-                                <td style={{ padding: "4px 8px" }}>{rowEx.seriesNumber ?? ""}</td>
+                                <td style={{ padding: "4px 8px", position: "relative" }}>
+                                  <span style={{ display: "inline-flex", alignItems: "center" }}>
+                                    {/* Remove series icon */}
+                                    <span
+                                      style={{
+                                        marginRight: 4,
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        cursor: "pointer",
+                                        color: "#ae1a1a",
+                                        opacity: 0.65,
+                                      }}
+                                      tabIndex={0}
+                                      role="button"
+                                      title="Eliminar serie"
+                                      onClick={e => {
+                                        e.stopPropagation?.();
+                                        const groupForSeries = group || (dayExercises.length > 0 && dayExercises.filter(d => d.exercise?.id === rowEx.exercise?.id));
+                                        const dayObjForSeries = dayObj || (rowEx.trainingDay || {});
+                                        const exercisesGroupedForSeries = exercisesGrouped || [];
+                                        setPendingDeleteSeries({
+                                          seriesId: rowEx.id,
+                                          group: groupForSeries,
+                                          dayObj: dayObjForSeries,
+                                          exercisesGrouped: exercisesGroupedForSeries
+                                        });
+                                      }}
+                                      onKeyDown={e => {
+                                        if (e.key === "Enter" || e.key === " ") { (e.target as HTMLElement).click(); }
+                                      }}
+                                    >
+                                      <DeleteOutlineIcon fontSize="small" />
+                                    </span>
+                                    {/* Add series icon */}
+                                    <span
+                                      style={{
+                                        marginRight: 8,
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        cursor: "pointer",
+                                        color: "#2daa32",
+                                        opacity: 0.7,
+                                      }}
+                                      tabIndex={0}
+                                      role="button"
+                                      title="Añadir serie"
+                                      onClick={async e => {
+                                        e.stopPropagation?.();
+                                        // Find subsequent series in this group
+                                        const groupForSeries = group || (dayExercises.length > 0 && dayExercises.filter(d => d.exercise?.id === rowEx.exercise?.id));
+                                        if (!groupForSeries?.length) return;
+                                        const thisSeriesIdx = groupForSeries.findIndex((s: any) => s.id === rowEx.id);
+                                        if (thisSeriesIdx === -1) return;
+                                        const afterSeriesNumber = rowEx.seriesNumber ?? thisSeriesIdx + 1;
+                                        const dayExerciseId =
+                                          rowEx.dayExerciseId ||
+                                          rowEx.day_exercise_id ||
+                                          (rowEx.dayExercise?.id ?? rowEx.id);
+
+                                        // Insert new series via API
+                                        await fetch(`/api/day-exercise-series`, {
+                                          method: "POST",
+                                          headers: { "Content-Type": "application/json" },
+                                          credentials: "include",
+                                          body: JSON.stringify({
+                                            dayExerciseId: dayExerciseId,
+                                            seriesNumber: afterSeriesNumber + 1 // Insert AFTER this row
+                                          })
+                                        });
+
+                                        // Roll over any following series (increment seriesNumber by 1 for those after)
+                                        const subsequent = groupForSeries.filter((s: any) =>
+                                          (s.seriesNumber ?? 0) > afterSeriesNumber
+                                        );
+                                        await Promise.all(
+                                          subsequent.map((s: any) =>
+                                            fetch(`/api/day-exercise-series/${s.id}`, {
+                                              method: "PATCH",
+                                              headers: { "Content-Type": "application/json" },
+                                              credentials: "include",
+                                              body: JSON.stringify({
+                                                seriesNumber: (s.seriesNumber ?? 0) + 1
+                                              })
+                                            })
+                                          )
+                                        );
+
+                                        // Refresh block content to show update
+                                        setLoading(true);
+                                        await fetch(`/api/training-data?userId=${athleteId}&blockId=${blockId}`)
+                                          .then(r => r.json())
+                                          .then((res: any) => setContent(res))
+                                          .finally(() => setLoading(false));
+                                      }}
+                                      onKeyDown={e => {
+                                        if (e.key === "Enter" || e.key === " ") { (e.target as HTMLElement).click(); }
+                                      }}
+                                    >
+                                      <AddCircleOutlineIcon fontSize="small" />
+                                    </span>
+                                    {rowEx.seriesNumber ?? ""}
+                                  </span>
+                                </td>
                                 <td style={{ padding: "4px 8px" }}>
-                                  {/* ...DS icon logic as before... */}
                                   {rowEx.isDropset ? (
                                     <svg
                                       width="20"
