@@ -4,6 +4,22 @@ import {
 } from "@mui/material";
 import { logAdminError } from "../utils/logAdminError";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+// DnD kit for exercises reordering
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { translations, type Lang } from "../i18n";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -71,7 +87,16 @@ type BlockContentTableProps = {
 import { Tabs, Tab } from "@mui/material";
 
 function BlockContentTable({ athleteId, blockId, lang, block, onRequestBlockVisibility, onRequestBlockDelete, onWeeksReordered }: BlockContentTableProps & { onRequestBlockDelete?: () => void }) {
-  // Spinner state for week deletion (must be first hook!)
+  // ...existing hooks...
+  // Pending delete state for exercise group
+  const [pendingDeleteDayExercise, setPendingDeleteDayExercise] = useState<null | {
+    group: any[];
+    dayObj: any;
+    exercisesGrouped: any[];
+  }>(null);
+  // DnD-kit sensors (MUST be first, before ANY returns or other hooks to fix Rules of Hooks)
+  const sensors = useSensors(useSensor(PointerSensor));
+  // Spinner state for week deletion (must be first hook after sensors!)
   const [deletingWeek, setDeletingWeek] = useState(false);
   // Spinner state for copying week (blocks UI)
   const [copyingWeek, setCopyingWeek] = useState(false);
@@ -85,11 +110,40 @@ function BlockContentTable({ athleteId, blockId, lang, block, onRequestBlockVisi
   const [pendingDeleteWeekId, setPendingDeleteWeekId] = useState<string | null>(null);
   const [pendingCopyWeekId, setPendingCopyWeekId] = useState<string | null>(null);
 
-  // Generic error banner state for week copy
-  const [errorBanner, setErrorBanner] = useState(false);
-  const [seriesErrorBanner, setSeriesErrorBanner] = useState<string | null>(null);
+      // Generic error banner state for week copy
+      const [errorBanner, setErrorBanner] = useState(false);
+      const [seriesErrorBanner, setSeriesErrorBanner] = useState<string | null>(null);
 
-  React.useEffect(() => {
+      // Add-exercise dialog global state + local state for dialog internals
+      const [addExerciseDialog, setAddExerciseDialog] = useState<{ dayObj: any, group: any[], exercisesGrouped: any[] } | null>(null);
+      const [exerciseOptions, setExerciseOptions] = useState<{ id: string, name: string }[]>([]);
+      const [loadingExercises, setLoadingExercises] = useState(false);
+      const [selectedExercise, setSelectedExercise] = useState<{ id: string, name: string } | null>(null);
+      const [seriesCount, setSeriesCount] = useState<number | "">("");
+      const [addingExercise, setAddingExercise] = useState(false);
+
+      // Fetch exercise options on dialog open
+      React.useEffect(() => {
+        if (!addExerciseDialog) return;
+        if (exerciseOptions.length > 0) return;
+        setLoadingExercises(true);
+        fetch("/api/exercise-definitions?distinct=1")
+          .then(r => r.json())
+          .then((arr) => {
+            if (Array.isArray(arr)) setExerciseOptions(arr);
+          })
+          .finally(() => setLoadingExercises(false));
+      }, [addExerciseDialog, exerciseOptions.length]);
+
+      // Reset fields whenever dialog is closed
+      React.useEffect(() => {
+        if (!addExerciseDialog) {
+          setSelectedExercise(null);
+          setSeriesCount("");
+        }
+      }, [addExerciseDialog]);
+
+      React.useEffect(() => {
     if (!athleteId || !blockId) return;
     setLoading(true);
     fetch(`/api/training-data?userId=${athleteId}&blockId=${blockId}`)
@@ -274,6 +328,8 @@ exercisesForWeek.forEach((ex: any) => {
 
   // Helper: get week by id
   const getWeekById = (id: string | null) => sortedWeeks.find(w => w.id === id);
+
+  // Remove duplicated sensors declaration
 
   // Helper: delete week
   async function handleDeleteWeek() {
@@ -469,6 +525,23 @@ exercisesForWeek.forEach((ex: any) => {
         >
           {seriesErrorBanner}
         </Alert>
+      )}
+      {/* Fullscreen overlay spinner during exercise add */}
+      {addingExercise && (
+        <Box sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 2100,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          bgcolor: "rgba(255,255,255,0.75)"
+        }}>
+          <CircularProgress size={64} />
+        </Box>
       )}
       {/* Actions Bar */}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', mb: 2, px: 1, gap: 1 }}>
@@ -709,8 +782,275 @@ exercisesForWeek.forEach((ex: any) => {
           {translations[lang].blockNoDaysInWeek}
         </Typography>
       )}
+      {/* Exercise delete confirmation dialog */}
+      <Dialog
+        open={!!pendingDeleteDayExercise}
+        onClose={() => setPendingDeleteDayExercise(null)}
+      >
+        <DialogTitle>
+          {translations[lang].deleteDayExerciseTitle}
+        </DialogTitle>
+        <DialogContent>
+          <Typography color="error" fontWeight={600} gutterBottom>
+            {translations[lang].deleteDayExerciseConfirm}
+          </Typography>
+          <Typography>
+            {translations[lang].deleteDayExerciseWarning}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setPendingDeleteDayExercise(null)} color="inherit">
+            {translations[lang].cancel}
+          </Button>
+          <Button
+            color="error"
+            onClick={async () => {
+              const del = pendingDeleteDayExercise;
+              if (!del) return;
+              setPendingDeleteDayExercise(null);
+              const thisGroup = del.group;
+              const allGroups = del.exercisesGrouped;
+              const dayObj = del.dayObj;
+              const deleteDayExerciseId =
+                thisGroup[0]?.dayExerciseId ||
+                thisGroup[0]?.day_exercise_id ||
+                (thisGroup[0]?.dayExercise?.id ?? thisGroup[0]?.id);
+
+              if (!deleteDayExerciseId) return;
+
+              await fetch(`/api/day-exercise/${deleteDayExerciseId}`, {
+                method: "DELETE",
+                credentials: "include"
+              });
+
+              const newGroups = allGroups.filter(gr =>
+                (gr[0]?.dayExerciseId || gr[0]?.day_exercise_id || (gr[0]?.dayExercise?.id ?? gr[0]?.id)) !== deleteDayExerciseId
+              );
+              let orderCounter = 1;
+              await Promise.all(
+                newGroups.map(gr => {
+                  const groupDayExerciseId =
+                    gr[0]?.dayExerciseId ||
+                    gr[0]?.day_exercise_id ||
+                    (gr[0]?.dayExercise?.id ?? gr[0]?.id);
+                  if (!groupDayExerciseId) return null;
+                  return fetch(`/api/day-exercise/${groupDayExerciseId}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({ exerciseNumber: orderCounter++ }),
+                  });
+                })
+              );
+              setContent(cur => {
+                if (!cur) return cur;
+                const byId = { ...exercisesByDayId };
+                const newGroupsFlat = newGroups.flat().map((e, idx, arr) => ({
+                  ...e,
+                  exerciseNumber: arr.slice(0, idx).filter(item =>
+                    (item.dayExerciseId || item.day_exercise_id || (item.dayExercise?.id ?? item.id)) === (e.dayExerciseId || e.day_exercise_id || (e.dayExercise?.id ?? e.id))
+                  ).length + 1,
+                }));
+                byId[dayObj.id] = newGroupsFlat;
+                const deletedIds = new Set(thisGroup.map(e => e.id));
+                const otherDefs = cur.exerciseDefs.filter(e => !deletedIds.has(e.id));
+                return {
+                  ...cur,
+                  exerciseDefs: [...otherDefs.filter(e => e.trainingDay?.id !== dayObj.id), ...newGroupsFlat],
+                };
+              });
+            }}
+            autoFocus
+          >
+            {translations[lang].delete}
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* Add Exercise Dialog */}
+      <Dialog
+        open={!!addExerciseDialog}
+        onClose={() => setAddExerciseDialog(null)}
+      >
+        <DialogTitle>Añadir ejercicio</DialogTitle>
+        <DialogContent sx={{ minWidth: 320 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
+            <Autocomplete
+              options={exerciseOptions}
+              getOptionLabel={opt => opt?.name ?? ""}
+              loading={loadingExercises}
+              value={selectedExercise}
+              onChange={(_, val) => setSelectedExercise(val)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Ejercicio"
+                  placeholder="Selecciona ejercicio"
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                      <>
+                        {loadingExercises ? <CircularProgress color="inherit" size={16} /> : null}
+                        {params.InputProps.endAdornment}
+                      </>
+                    )
+                  }}
+                />
+              )}
+            />
+            <TextField
+              label="Número de series"
+              type="number"
+              inputProps={{ min: 1, max: 20 }}
+              value={seriesCount}
+              onChange={e => {
+                const raw = e.target.value;
+                const n = Number(raw);
+                if (raw === "") setSeriesCount("");
+                else if (n > 0 && n <= 20) setSeriesCount(n);
+              }}
+              placeholder="Introduce número de series"
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setAddExerciseDialog(null)} color="inherit">Cancelar</Button>
+          <Button
+            color="primary"
+            disabled={!selectedExercise || !seriesCount || Number(seriesCount) < 1 || addingExercise}
+            onClick={async () => {
+              if (!addExerciseDialog || !selectedExercise || !seriesCount || Number(seriesCount) < 1) return;
+              setAddingExercise(true);
+              try {
+                const { dayObj, group, exercisesGrouped } = addExerciseDialog;
+                // Place after the clicked group
+                const afterExerciseNumber = (group?.[0]?.exerciseNumber ?? 0);
+                await fetch("/api/day-exercise", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    trainingDayId: dayObj.id,
+                    exerciseId: selectedExercise.id,
+                    exerciseNumber: afterExerciseNumber + 1,
+                    seriesCount: Number(seriesCount)
+                  }),
+                  credentials: "include"
+                });
+                setAddExerciseDialog(null);
+                // Refetch block content to show change, no navigation
+                setLoading(true);
+                await fetch(`/api/training-data?userId=${athleteId}&blockId=${blockId}`)
+                  .then(r => r.json())
+                  .then((res: TrainingDataResponse) => setContent(res))
+                  .finally(() => setLoading(false));
+              } finally {
+                setAddingExercise(false);
+              }
+            }}
+          >
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {daysForWeek.map((dayObj) => {
         const dayExercises = exercisesByDayId[dayObj.id] || [];
+
+        // Group all ExerciseDefs by exercise.id for this day
+        const exercisesGrouped = Object.values(
+          dayExercises.reduce((acc: Record<string, any[]>, rowEx: any) => {
+            const exId = rowEx.exercise?.id || rowEx.id;
+            if (!acc[exId]) acc[exId] = [];
+            acc[exId].push(rowEx);
+            return acc;
+          }, {})
+        ).map(group =>
+          group.sort((a, b) => (a.seriesNumber ?? 0) - (b.seriesNumber ?? 0))
+        );
+
+        // Deprecated: State for add-exercise dialog (per day)
+        // const [addExerciseDialog, setAddExerciseDialog] = useState<{ dayObj: any, group: any[], exercisesGrouped: any[] } | null>(null);
+
+        function SortableExerciseGroup({ group, children }: { group: any[]; children: any }) {
+          const exerciseId = group[0]?.exercise?.id || group[0]?.id;
+          const {
+            attributes,
+            listeners,
+            setNodeRef,
+            transform,
+            transition,
+            isDragging,
+          } = useSortable({ id: exerciseId });
+
+          const style = {
+            transform: CSS.Transform.toString(transform),
+            transition,
+            opacity: isDragging ? 0.85 : 1,
+            background: isDragging ? "#ffe082" : undefined,
+          };
+
+          return (
+            <tbody ref={setNodeRef} style={style} {...attributes}>
+              {children(listeners, isDragging)}
+            </tbody>
+          );
+        }
+
+        // Drag end for exercises (group) within the same day
+        const handleDayExerciseDragEnd = async (event: any) => {
+          const { active, over } = event;
+          if (!over || active.id === over.id) return;
+          // Get the index of the group by exercise id
+          const exerciseIds = exercisesGrouped.map(group => group[0]?.exercise?.id || group[0]?.id);
+          const oldIdx = exerciseIds.findIndex(id => id === active.id);
+          const newIdx = exerciseIds.findIndex(id => id === over.id);
+          if (oldIdx === -1 || newIdx === -1) return;
+          // Move group
+          const newGroupOrder = arrayMove(exercisesGrouped, oldIdx, newIdx);
+          // Flatten back to exerciseDefs (series), but update their exerciseNumber sequentially in new order
+          const allSeriesInOrder = newGroupOrder.flat();
+          // Assign new exerciseNumber for all series in an exercise group (use index of group in array + 1)
+          let orderCounter = 1;
+          // Map of dayExerciseId (parent) to new exerciseNumber
+          const updatedDayExerciseNumbers: Record<string, number> = {};
+          for (const group of newGroupOrder) {
+            // Find all unique dayExerciseIds in the group (should only be one per group)
+            const groupDayExerciseId =
+              group[0]?.dayExerciseId ||
+              group[0]?.day_exercise_id ||
+              (group[0]?.dayExercise?.id ?? group[0]?.id); // fallback for legacy shape
+            if (groupDayExerciseId) {
+              updatedDayExerciseNumbers[groupDayExerciseId] = orderCounter;
+            }
+            for (const rowEx of group) {
+              rowEx.exerciseNumber = orderCounter;
+            }
+            orderCounter++;
+          }
+          // Persist the updated exerciseNumber for each dayExercise
+          await Promise.all(
+            Object.entries(updatedDayExerciseNumbers).map(([dayExerciseId, exerciseNumber]) =>
+              fetch(`/api/day-exercise/${dayExerciseId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ exerciseNumber }),
+              })
+            )
+          );
+          // Optimistically update UI (mutate exercisesByDayId and content)
+          setContent((cur) => {
+            if (!cur) return cur;
+            const byId = { ...exercisesByDayId };
+            byId[dayObj.id] = allSeriesInOrder;
+            const allIds: Set<string> = new Set(allSeriesInOrder.map((e: any) => e.id));
+            const otherDefs = cur.exerciseDefs.filter((e) => !allIds.has(e.id));
+            return {
+              ...cur,
+              exerciseDefs: [...otherDefs, ...allSeriesInOrder],
+            };
+          });
+        };
+
         return (
           <Box key={dayObj.id} sx={{ mb: 4 }}>
             <Typography variant="subtitle2" sx={{ mb: 0.5, mt: 2, pl: 1, fontWeight: 600, color: "#555", fontSize: 13 }}>
@@ -720,198 +1060,248 @@ exercisesForWeek.forEach((ex: any) => {
               <Box sx={{ color: "#a33" }}>{translations[lang].blockNoExerciseForDay}</Box>
             ) : (
               <Box sx={{ width: "100%", overflowX: "auto" }}>
-                <table style={{ borderCollapse: "collapse", width: "100%" }}>
-                  <thead>
-                    <tr>
-                      <th rowSpan={2} style={{ borderBottom: "1px solid #ccc", padding: "4px 8px", verticalAlign: "middle" }}>{translations[lang].exercise}</th>
-                      <th rowSpan={2} style={{ borderBottom: "1px solid #ccc", padding: "4px 8px", verticalAlign: "middle" }}>{translations[lang].series}</th>
-                      <th rowSpan={2} style={{ borderBottom: "1px solid #ccc", padding: "4px 8px", verticalAlign: "middle" }}>{translations[lang].dropsetAbbr}</th>
-                      <th colSpan={3} style={{ borderBottom: "1px solid #ccc", padding: "4px 8px", textAlign: "center" }}>{translations[lang].athleteDataGroup}</th>
-                      <th colSpan={2} style={{ borderBottom: "1px solid #ccc", padding: "4px 8px", textAlign: "center" }}>{translations[lang].reps}</th>
-                      <th colSpan={2} style={{ borderBottom: "1px solid #ccc", padding: "4px 8px", textAlign: "center" }}>{translations[lang].rir}</th>
-                      <th rowSpan={2} style={{ borderBottom: "1px solid #ccc", padding: "4px 8px", verticalAlign: "middle" }}>{translations[lang].notes}</th>
-                    </tr>
-                    <tr>
-                      <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].weight}</th>
-                      <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].reps}</th>
-                      <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].rir}</th>
-                      <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].min}</th>
-                      <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].max}</th>
-                      <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].min}</th>
-                      <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].max}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(() => {
-                      const rows = [];
-                      let i = 0;
-                      while (i < dayExercises.length) {
-                        const ex = dayExercises[i];
-                        const exerciseId = ex.exercise?.id;
-                        // Find out how many consecutive rows have this exercise
-                        let rowspan = 1;
-                        for (let j = i + 1; j < dayExercises.length; ++j) {
-                          if (dayExercises[j].exercise?.id !== exerciseId) break;
-                          rowspan++;
-                        }
-                        for (let k = 0; k < rowspan; ++k) {
-                          const rowEx = dayExercises[i + k];
-                          rows.push(
-                            <tr key={rowEx.id} style={{ borderBottom: "1px solid #eee" }}>
-                              {/* Exercise name with rowspan only for the first row in group */}
-                              {k === 0 ? (
-                                <td rowSpan={rowspan} style={{ padding: "4px 8px", verticalAlign: "middle", fontWeight: 500 }}>
-                                  {rowEx.exercise?.name ?? ""}
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDayExerciseDragEnd}
+                >
+                  <SortableContext
+                    items={exercisesGrouped.map(group => group[0]?.exercise?.id || group[0]?.id)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    <table style={{ borderCollapse: "collapse", width: "100%" }}>
+                      <thead>
+                        <tr>
+                          <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px", verticalAlign: "middle" }}>{translations[lang].exercise}</th>
+                          <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px", verticalAlign: "middle" }}>{translations[lang].series}</th>
+                          <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px", verticalAlign: "middle" }}>{translations[lang].dropsetAbbr}</th>
+                          <th colSpan={3} style={{ borderBottom: "1px solid #ccc", padding: "4px 8px", textAlign: "center" }}>{translations[lang].athleteDataGroup}</th>
+                          <th colSpan={2} style={{ borderBottom: "1px solid #ccc", padding: "4px 8px", textAlign: "center" }}>{translations[lang].reps}</th>
+                          <th colSpan={2} style={{ borderBottom: "1px solid #ccc", padding: "4px 8px", textAlign: "center" }}>{translations[lang].rir}</th>
+                          <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px", verticalAlign: "middle" }}>{translations[lang].notes}</th>
+                        </tr>
+                        <tr>
+                          <th />
+                          <th />
+                          <th />
+                          <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].weight}</th>
+                          <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].reps}</th>
+                          <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].rir}</th>
+                          <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].min}</th>
+                          <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].max}</th>
+                          <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].min}</th>
+                          <th style={{ borderBottom: "1px solid #ccc", padding: "4px 8px" }}>{translations[lang].max}</th>
+                          <th />
+                        </tr>
+                      </thead>
+                      {exercisesGrouped.map((group, idx) => (
+                        <SortableExerciseGroup key={group[0]?.exercise?.id || group[0]?.id} group={group}>
+                          {(listeners: any, isDragging: boolean) =>
+                            group.map((rowEx: any, i: number) => (
+                              <tr key={rowEx.id} style={{ background: isDragging ? "#ffe082" : undefined }}>
+                                <td style={{ padding: "4px 8px", verticalAlign: "middle", fontWeight: 500 }}>
+                          {/* Only show DnD handle AND delete icon on the FIRST row of the group */}
+                          {i === 0 ? (
+                                  <span style={{ display: "flex", alignItems: "center" }}>
+                                    {/* DnD handle */}
+                                    <span style={{ cursor: "grab", marginRight: 6, opacity: 0.7 }} {...listeners}>
+                                      <span role="img" aria-label="drag">⋮⋮</span>
+                                    </span>
+                                    {/* Delete icon */}
+                                    <span
+                                      style={{
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        marginRight: 4,
+                                        cursor: "pointer",
+                                        color: "#ae1a1a",
+                                        opacity: 0.65,
+                                        transition: "opacity 0.15s",
+                                        padding: 0,
+                                      }}
+                                      role="button"
+                                      title={translations[lang].remove}
+                                      tabIndex={0}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        // Set up pending exercise delete dialog for this group
+                                        setPendingDeleteDayExercise({
+                                          group,
+                                          dayObj,
+                                          exercisesGrouped
+                                        });
+                                      }}
+                                      onKeyDown={e => {
+                                        if (e.key === "Enter" || e.key === " ") { (e.target as HTMLElement).click(); }
+                                      }}
+                                    >
+                                      <DeleteOutlineIcon fontSize="small" />
+                                    </span>
+                                    {/* Add Exercise icon */}
+                                    <span
+                                      style={{
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        marginRight: 4,
+                                        cursor: "pointer",
+                                        color: "#2daa32",
+                                        opacity: 0.7,
+                                        transition: "opacity 0.15s",
+                                        padding: 0,
+                                      }}
+                                      role="button"
+                                      title="Añadir ejercicio"
+                                      tabIndex={0}
+                                      onClick={e => {
+                                        e.stopPropagation();
+                                        setAddExerciseDialog({ dayObj, group, exercisesGrouped });
+                                      }}
+                                      onKeyDown={e => {
+                                        if (e.key === "Enter" || e.key === " ") { (e.target as HTMLElement).click(); }
+                                      }}
+                                    >
+                                      <AddCircleOutlineIcon fontSize="small" />
+                                    </span>
+                                    {rowEx.exercise?.name ?? ""}
+                                  </span>
+                          ) : <span style={{ width: 20, display: "inline-block" }} />}
                                 </td>
-                              ) : null}
-                              {/* Series number */}
-                              <td style={{ padding: "4px 8px" }}>{rowEx.seriesNumber ?? ""}</td>
-                              {/* DS */}
-                              <td style={{ padding: "4px 8px" }}>
-                                {rowEx.isDropset ? (
-                                  <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    style={{ cursor: "pointer", display: "inline-block" }}
-                                    onClick={async () => {
-                                      // Explicitly set to false when clicking check
-                                      const res = await fetch(`/api/day-exercise-series/${rowEx.id}`, {
-                                        method: "PATCH",
-                                        headers: { "Content-Type": "application/json" },
-                                        credentials: "include",
-                                        body: JSON.stringify({ isDropset: false }),
-                                      });
-                                      if (res.ok) {
-                                        rowEx.isDropset = false;
-                                        setContent({ ...content });
-                                      } else {
-                                        setSeriesErrorBanner(translations[lang].updateDsError ?? "Failed to update DS field");
-                                      }
-                                    }}
-                                  >
-                                    <title>{translations[lang].setDsOffTitle ?? "Set Dropset OFF"}</title>
-                                    <circle cx="12" cy="12" r="10" fill="#fff"/>
-                                    <path d="M7 13l3 3 6-6" stroke="#111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                  </svg>
-                                ) : (
-                                  <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    style={{ cursor: "pointer", display: "inline-block" }}
-                                    onClick={async () => {
-                                      // Explicitly set to true when clicking cross
-                                      const res = await fetch(`/api/day-exercise-series/${rowEx.id}`, {
-                                        method: "PATCH",
-                                        headers: { "Content-Type": "application/json" },
-                                        credentials: "include",
-                                        body: JSON.stringify({ isDropset: true }),
-                                      });
-                                      if (res.ok) {
-                                        rowEx.isDropset = true;
-                                        setContent({ ...content });
-                                      } else {
-                                        setSeriesErrorBanner("Failed to update DS field");
-                                      }
-                                    }}
-                                  >
-                                    <title>{translations[lang].setDsOnTitle ?? "Set Dropset ON"}</title>
-                                    <circle cx="12" cy="12" r="10" fill="#fff"/>
-                                    <path d="M9 9l6 6" stroke="#111" strokeWidth="2" strokeLinecap="round" />
-                                    <path d="M15 9l-6 6" stroke="#111" strokeWidth="2" strokeLinecap="round" />
-                                  </svg>
-                                )}
-                              </td>
-                              {/* Weight */}
-                              <td style={{ padding: "4px 8px" }}>
-                                <EditableSeriesField label={translations[lang].weight} value={rowEx.effectiveWeight} field="effectiveWeight" seriesId={rowEx.id} onUpdated={(val) => { rowEx.effectiveWeight = val === "" ? undefined : Number(val); setContent({...content}); }} lang={lang} onError={setSeriesErrorBanner} />
-                              </td>
-                              {/* Reps */}
-                              <td style={{ padding: "4px 8px" }}>
-                                <EditableSeriesField label={translations[lang].reps} value={rowEx.effectiveReps} field="effectiveReps" seriesId={rowEx.id} onUpdated={(val) => { rowEx.effectiveReps = val === "" ? undefined : Number(val); setContent({...content}); }} lang={lang} onError={setSeriesErrorBanner} />
-                              </td>
-                              {/* RIR */}
-                              <td style={{ padding: "4px 8px" }}>
-                                <EditableSeriesField label={translations[lang].rir} value={rowEx.effectiveRir} field="effectiveRir" seriesId={rowEx.id} onUpdated={(val) => { rowEx.effectiveRir = val === "" ? undefined : Number(val); setContent({...content}); }} lang={lang} onError={setSeriesErrorBanner} />
-                              </td>
-                              {/* Reps Min */}
-                              <td style={{ padding: "4px 8px" }}>
-                                <EditableSeriesField label={translations[lang].min} value={rowEx.minReps} field="minReps" seriesId={rowEx.id} onUpdated={(val) => { rowEx.minReps = val === "" ? undefined : Number(val); setContent({...content}); }} lang={lang} onError={setSeriesErrorBanner} />
-                              </td>
-                              {/* Reps Max */}
-                              <td style={{ padding: "4px 8px" }}>
-                                <EditableSeriesField label={translations[lang].max} value={rowEx.maxReps} field="maxReps" seriesId={rowEx.id} onUpdated={(val) => { rowEx.maxReps = val === "" ? undefined : Number(val); setContent({...content}); }} lang={lang} onError={setSeriesErrorBanner} />
-                              </td>
-                              {/* RIR Min */}
-                              <td style={{ padding: "4px 8px" }}>
-                                <EditableSeriesField label={translations[lang].min} value={rowEx.minRir} field="minRir" seriesId={rowEx.id} onUpdated={(val) => { rowEx.minRir = val === "" ? undefined : Number(val); setContent({...content}); }} lang={lang} onError={setSeriesErrorBanner} />
-                              </td>
-                              {/* RIR Max */}
-                              <td style={{ padding: "4px 8px" }}>
-                                <EditableSeriesField label={translations[lang].max} value={rowEx.maxRir} field="maxRir" seriesId={rowEx.id} onUpdated={(val) => { rowEx.maxRir = val === "" ? undefined : Number(val); setContent({...content}); }} lang={lang} onError={setSeriesErrorBanner} />
-                              </td>
-                              {/* Notes */}
-                              <td style={{ padding: "4px 8px; white-space: pre-line" }}>
-                                <div>
-                                  <span>
-                                    <span style={{ fontWeight: 500 }}>{translations[lang].trainerNoteLabel}</span>{" "}
-                                    <EditableSeriesField
-                                      label={translations[lang].trainerNoteLabel ?? "Trainer Note"}
-                                      value={rowEx.trainerNotes}
-                                      field="trainerNotes"
-                                      seriesId={rowEx.id}
-                                      onUpdated={(val) => {
-                                        setContent(content => {
-                                          if (!content) return content;
-                                          const updated = { ...content };
-                                          updated.exerciseDefs = updated.exerciseDefs.map(ed =>
-                                            ed.id === rowEx.id ? { ...ed, trainerNotes: val } : ed
-                                          );
-                                          return updated;
+                                <td style={{ padding: "4px 8px" }}>{rowEx.seriesNumber ?? ""}</td>
+                                <td style={{ padding: "4px 8px" }}>
+                                  {/* ...DS icon logic as before... */}
+                                  {rowEx.isDropset ? (
+                                    <svg
+                                      width="20"
+                                      height="20"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      style={{ cursor: "pointer", display: "inline-block" }}
+                                      onClick={async () => {
+                                        const res = await fetch(`/api/day-exercise-series/${rowEx.id}`, {
+                                          method: "PATCH",
+                                          headers: { "Content-Type": "application/json" },
+                                          credentials: "include",
+                                          body: JSON.stringify({ isDropset: false }),
                                         });
+                                        if (res.ok) {
+                                          rowEx.isDropset = false;
+                                          setContent({ ...content });
+                                        } else {
+                                          setSeriesErrorBanner(translations[lang].updateDsError ?? "Failed to update DS field");
+                                        }
                                       }}
-                                      lang={lang}
-                                      multiline
-                                      onError={setSeriesErrorBanner}
-                                    />
-                                  </span>
-                                  <br />
-                                  <span>
-                                    <span style={{ fontWeight: 500 }}>{translations[lang].athleteNoteLabel}</span>{" "}
-                                    <EditableSeriesField
-                                      label={translations[lang].athleteNoteLabel ?? "Athlete Note"}
-                                      value={rowEx.athleteNotes}
-                                      field="athleteNotes"
-                                      seriesId={rowEx.id}
-                                      onUpdated={(val) => {
-                                        setContent(content => {
-                                          if (!content) return content;
-                                          const updated = { ...content };
-                                          updated.exerciseDefs = updated.exerciseDefs.map(ed =>
-                                            ed.id === rowEx.id ? { ...ed, athleteNotes: val } : ed
-                                          );
-                                          return updated;
+                                    >
+                                      <title>{translations[lang].setDsOffTitle ?? "Set Dropset OFF"}</title>
+                                      <circle cx="12" cy="12" r="10" fill="#fff" />
+                                      <path d="M7 13l3 3 6-6" stroke="#111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                  ) : (
+                                    <svg
+                                      width="20"
+                                      height="20"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      style={{ cursor: "pointer", display: "inline-block" }}
+                                      onClick={async () => {
+                                        const res = await fetch(`/api/day-exercise-series/${rowEx.id}`, {
+                                          method: "PATCH",
+                                          headers: { "Content-Type": "application/json" },
+                                          credentials: "include",
+                                          body: JSON.stringify({ isDropset: true }),
                                         });
+                                        if (res.ok) {
+                                          rowEx.isDropset = true;
+                                          setContent({ ...content });
+                                        } else {
+                                          setSeriesErrorBanner("Failed to update DS field");
+                                        }
                                       }}
-                                      lang={lang}
-                                      multiline
-                                      onError={setSeriesErrorBanner}
-                                    />
-                                  </span>
-                                </div>
-                              </td>
-                            </tr>
-                          );
-                        }
-                        i += rowspan;
-                      }
-                      return rows;
-                    })()}
-                  </tbody>
-                </table>
+                                    >
+                                      <title>{translations[lang].setDsOnTitle}</title>
+                                      <circle cx="12" cy="12" r="10" fill="#fff" />
+                                      <path d="M9 9l6 6" stroke="#111" strokeWidth="2" strokeLinecap="round" />
+                                      <path d="M15 9l-6 6" stroke="#111" strokeWidth="2" strokeLinecap="round" />
+                                    </svg>
+                                  )}
+                                </td>
+                                <td style={{ padding: "4px 8px" }}>
+                                  <EditableSeriesField label={translations[lang].weight} value={rowEx.effectiveWeight} field="effectiveWeight" seriesId={rowEx.id} onUpdated={(val) => { rowEx.effectiveWeight = val === "" ? undefined : Number(val); setContent({ ...content }); }} lang={lang} onError={setSeriesErrorBanner} />
+                                </td>
+                                <td style={{ padding: "4px 8px" }}>
+                                  <EditableSeriesField label={translations[lang].reps} value={rowEx.effectiveReps} field="effectiveReps" seriesId={rowEx.id} onUpdated={(val) => { rowEx.effectiveReps = val === "" ? undefined : Number(val); setContent({ ...content }); }} lang={lang} onError={setSeriesErrorBanner} />
+                                </td>
+                                <td style={{ padding: "4px 8px" }}>
+                                  <EditableSeriesField label={translations[lang].rir} value={rowEx.effectiveRir} field="effectiveRir" seriesId={rowEx.id} onUpdated={(val) => { rowEx.effectiveRir = val === "" ? undefined : Number(val); setContent({ ...content }); }} lang={lang} onError={setSeriesErrorBanner} />
+                                </td>
+                                <td style={{ padding: "4px 8px" }}>
+                                  <EditableSeriesField label={translations[lang].min} value={rowEx.minReps} field="minReps" seriesId={rowEx.id} onUpdated={(val) => { rowEx.minReps = val === "" ? undefined : Number(val); setContent({ ...content }); }} lang={lang} onError={setSeriesErrorBanner} />
+                                </td>
+                                <td style={{ padding: "4px 8px" }}>
+                                  <EditableSeriesField label={translations[lang].max} value={rowEx.maxReps} field="maxReps" seriesId={rowEx.id} onUpdated={(val) => { rowEx.maxReps = val === "" ? undefined : Number(val); setContent({ ...content }); }} lang={lang} onError={setSeriesErrorBanner} />
+                                </td>
+                                <td style={{ padding: "4px 8px" }}>
+                                  <EditableSeriesField label={translations[lang].min} value={rowEx.minRir} field="minRir" seriesId={rowEx.id} onUpdated={(val) => { rowEx.minRir = val === "" ? undefined : Number(val); setContent({ ...content }); }} lang={lang} onError={setSeriesErrorBanner} />
+                                </td>
+                                <td style={{ padding: "4px 8px" }}>
+                                  <EditableSeriesField label={translations[lang].max} value={rowEx.maxRir} field="maxRir" seriesId={rowEx.id} onUpdated={(val) => { rowEx.maxRir = val === "" ? undefined : Number(val); setContent({ ...content }); }} lang={lang} onError={setSeriesErrorBanner} />
+                                </td>
+                                <td style={{ padding: "4px 8px; white-space: pre-line" }}>
+                                  <div>
+                                    <span>
+                                      <span style={{ fontWeight: 500 }}>{translations[lang].trainerNoteLabel}</span>{" "}
+                                      <EditableSeriesField
+                                        label={translations[lang].trainerNoteLabel ?? "Trainer Note"}
+                                        value={rowEx.trainerNotes}
+                                        field="trainerNotes"
+                                        seriesId={rowEx.id}
+                                        onUpdated={(val) => {
+                                          setContent((content) => {
+                                            if (!content) return content;
+                                            const updated = { ...content };
+                                            updated.exerciseDefs = updated.exerciseDefs.map((ed) =>
+                                              ed.id === rowEx.id ? { ...ed, trainerNotes: val } : ed
+                                            );
+                                            return updated;
+                                          });
+                                        }}
+                                        lang={lang}
+                                        multiline
+                                        onError={setSeriesErrorBanner}
+                                      />
+                                    </span>
+                                    <br />
+                                    <span>
+                                      <span style={{ fontWeight: 500 }}>{translations[lang].athleteNoteLabel}</span>{" "}
+                                      <EditableSeriesField
+                                        label={translations[lang].athleteNoteLabel}
+                                        value={rowEx.athleteNotes}
+                                        field="athleteNotes"
+                                        seriesId={rowEx.id}
+                                        onUpdated={(val) => {
+                                          setContent((content) => {
+                                            if (!content) return content;
+                                            const updated = { ...content };
+                                            updated.exerciseDefs = updated.exerciseDefs.map((ed) =>
+                                              ed.id === rowEx.id ? { ...ed, athleteNotes: val } : ed
+                                            );
+                                            return updated;
+                                          });
+                                        }}
+                                        lang={lang}
+                                        multiline
+                                        onError={setSeriesErrorBanner}
+                                      />
+                                    </span>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))
+                          }
+                        </SortableExerciseGroup>
+                      ))}
+                    </table>
+                  </SortableContext>
+                </DndContext>
               </Box>
             )}
           </Box>
@@ -1106,12 +1496,13 @@ export default function ManageBlocks() {
           value={selectedAthlete}
           onChange={(_, val) => setSelectedAthlete(val)}
           renderOption={(props, option) => {
+            const { key, ...rest } = props;
             const label =
               option.firstName && option.lastName
                 ? `${option.firstName} ${option.lastName}`
                 : (option.firstName || option.lastName || option.username || option.email || "");
             return (
-              <li {...props} style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+              <li key={key} {...rest} style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                 <span>{label}</span>
                 {option.email && (
                   <span style={{ fontSize: 12, color: "#888" }}>{option.email}</span>

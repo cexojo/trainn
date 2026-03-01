@@ -9,6 +9,10 @@ export type Lang = "en" | "es";
 
 export type Translations = {
   [K in Lang]: {
+    deleteDayExerciseTitle: string;
+    deleteDayExerciseConfirm: string;
+    deleteDayExerciseWarning: string;
+    remove: string;
     loadingBlocks: string;
     loadingBlockDetails: string;
     followup: string;
@@ -422,8 +426,7 @@ export const translations: Translations = {
     followUpTabInactivity: "Inactivity",
     dataGridLocale: dataGridEsES,
     // --- Future Payment Dialog additions:
-    futurePaymentDialogMessage: (athleteName: string) =>
-      `The current payment has been paid. Do you want to create a future payment for ${athleteName}?`,
+    futurePaymentDialogMessage: (athleteName: string) => `The current payment has been paid. Do you want to create a future payment for ${athleteName}?`,
     futurePaymentDialogTitle: "Create future payment",
     futurePaymentDialogAmount: "Next payment amount",
     futurePaymentDialogDate: "Next payment due date",
@@ -453,11 +456,9 @@ export const translations: Translations = {
       "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
       "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
     ],
-    athleteNotesModalTitle: (firstName: string, lastName?: string) =>
-      `Notes for ${(firstName ?? "") + (lastName ? " " + lastName : "")}`,
+    athleteNotesModalTitle: (firstName: string, lastName?: string) => `Notes for ${(firstName ?? "") + (lastName ? " " + lastName : "")}`,
 
-    noteButtonTitle: (firstName: string, lastName?: string) =>
-      `${(firstName ?? "") + (lastName ? " " + lastName : "") || "Athlete"}'s notes`,
+    noteButtonTitle: (firstName: string, lastName?: string) => `${(firstName ?? "") + (lastName ? " " + lastName : "") || "Athlete"}'s notes`,
     measurementsMenu: "Measurements",
     sexLabel: "Sex",
     sexMale: "Male",
@@ -495,8 +496,7 @@ export const translations: Translations = {
     deleteWeekTooltip: "Delete week",
     series: "Series",
     copyWeekTitle: "Copy week",
-    copyWeekConfirm: (from, to) =>
-      `Are you sure you want to copy week ${from}? This will move all subsequent weeks forward and create a new week ${to} with the same days, exercises, series and values.`,
+    copyWeekConfirm: (from, to) => `Are you sure you want to copy week ${from}? This will move all subsequent weeks forward and create a new week ${to} with the same days, exercises, series and values.`,
     cancel: "Cancel",
     copy: "Copy",
     deleteWeekTitle: "Delete week",
@@ -679,8 +679,7 @@ export const translations: Translations = {
     sendWelcomeEmail: "Send welcome email",
     sendWelcomeEmailSuccess: "Welcome email sent!",
     sendWelcomeEmailError: "Could not send the welcome email.",
-    sendWelcomeEmailConfirm: (name, email) =>
-      `A welcome email will be sent to ${name} (${email}) so they can generate a new password. Do you want to continue?`,
+    sendWelcomeEmailConfirm: (name, email) => `A welcome email will be sent to ${name} (${email}) so they can generate a new password. Do you want to continue?`,
     manageUsersTableEmpty: "No users.",
     manageUsersTableShowing: "Showing {from}–{to} of {total} users",
     hideUser: "Hide user",
@@ -808,7 +807,11 @@ export const translations: Translations = {
     percentLabel: "%",
     weeklyProgressTitle: "Weekly progress",
     followUpInfoBox: "From this panel you can track the most inactive users. The last activity date indicates the last time the athlete recorded a training activity in their form. In the filter, you can set the minimum inactivity period you want to apply.",
-    logout: "Logout"
+    logout: "Logout",
+    deleteDayExerciseTitle: "Eliminar ejercicio del día",
+    deleteDayExerciseConfirm: "¿Seguro que quieres eliminar este ejercicio?",
+    deleteDayExerciseWarning: "Toda la información introducida para este ejercicio y todas sus series de este día, incluyendo los datos introducidos por el atleta, se eliminará permanentemente.",
+    remove: ""
   },
   es: {
     loadingBlocks: "Cargando bloques...",
@@ -824,8 +827,7 @@ export const translations: Translations = {
     followUpTabInactivity: "Inactividad",
     dataGridLocale: dataGridEsES,
     // --- Future Payment Dialog additions:
-    futurePaymentDialogMessage: (athleteName: string) =>
-      `El pago actual ha sido marcado como pagado. ¿Deseas crear un pago futuro para ${athleteName}?`,
+    futurePaymentDialogMessage: (athleteName: string) => `El pago actual ha sido marcado como pagado. ¿Deseas crear un pago futuro para ${athleteName}?`,
     futurePaymentDialogTitle: "Crear pago futuro",
     futurePaymentDialogAmount: "Nuevo importe de pago",
     futurePaymentDialogDate: "Fecha del próximo pago",
@@ -855,11 +857,9 @@ export const translations: Translations = {
       "ENE", "FEB", "MAR", "ABR", "MAY", "JUN",
       "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"
     ],
-    athleteNotesModalTitle: (firstName: string, lastName?: string) =>
-      `Notas de ${(firstName ?? "") + (lastName ? " " + lastName : "")}`,
+    athleteNotesModalTitle: (firstName: string, lastName?: string) => `Notas de ${(firstName ?? "") + (lastName ? " " + lastName : "")}`,
 
-    noteButtonTitle: (firstName: string, lastName?: string) =>
-      `Notas de ${(firstName ?? "") + (lastName ? " " + lastName : "") || "Atleta"}`,
+    noteButtonTitle: (firstName: string, lastName?: string) => `Notas de ${(firstName ?? "") + (lastName ? " " + lastName : "") || "Atleta"}`,
     measurementsMenu: "Medidas",
     sexLabel: "Sexo",
     sexMale: "Hombre",
@@ -897,8 +897,7 @@ export const translations: Translations = {
     deleteWeekTooltip: "Eliminar semana",
     series: "Series",
     copyWeekTitle: "Copiar semana",
-    copyWeekConfirm: (from, to) =>
-      `¿Seguro que quieres copiar la semana ${from}? Esta acción moverá hacia delante todas las semanas siguientes y creará una nueva semana ${to} con los mismos días, ejercicios, series y valores.`,
+    copyWeekConfirm: (from, to) => `¿Seguro que quieres copiar la semana ${from}? Esta acción moverá hacia delante todas las semanas siguientes y creará una nueva semana ${to} con los mismos días, ejercicios, series y valores.`,
     cancel: "Cancelar",
     copy: "Copiar",
     deleteWeekTitle: "Eliminar semana",
@@ -1091,8 +1090,7 @@ export const translations: Translations = {
     sendWelcomeEmail: "Enviar correo de bienvenida",
     sendWelcomeEmailSuccess: "¡Correo de bienvenida enviado!",
     sendWelcomeEmailError: "No se pudo enviar el correo de bienvenida.",
-    sendWelcomeEmailConfirm: (name, email) =>
-      `Se enviará a ${name} (${email}) un correo de bienvenida para que genere una nueva contraseña, ¿desea continuar?`,
+    sendWelcomeEmailConfirm: (name, email) => `Se enviará a ${name} (${email}) un correo de bienvenida para que genere una nueva contraseña, ¿desea continuar?`,
     manageUsersTableEmpty: "No hay usuarios.",
     manageUsersTableShowing: "Mostrando {from}–{to} de {total} usuarios",
     hideUser: "Ocultar usuario",
@@ -1210,6 +1208,10 @@ export const translations: Translations = {
     percentLabel: "%",
     weeklyProgressTitle: "Progreso semanal",
     followUpInfoBox: "Desde este panel podrás hacer seguimiento de los usuarios más inactivos. La fecha de última actividad indica cuál fue la última vez que el atleta registró una actividad de entrenamiento en su formulario. En el filtro podrás indicar la inactividad mínima que quieras aplicar.",
-    logout: "Cerrar sesión"
+    logout: "Cerrar sesión",
+    deleteDayExerciseTitle: "Eliminar ejercicio del día",
+    deleteDayExerciseConfirm: "¿Seguro que quieres eliminar este ejercicio?",
+    deleteDayExerciseWarning: "Toda la información introducida para este ejercicio y todas sus series de este día, incluyendo los datos introducidos por el atleta, se eliminará permanentemente.",
+    remove: ""
   }
 };
