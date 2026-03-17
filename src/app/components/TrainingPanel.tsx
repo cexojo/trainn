@@ -1279,6 +1279,11 @@ export default function TrainingPanel({
                                             borderRadius: "6px"
                                           }}
                                         />
+                                        {(def.minRir != null && def.maxRir != null) && (
+                                          <span style={{ marginLeft: 4, fontSize: "0.85em", color: "#888" }}>
+                                            {def.minRir}&ndash;{def.maxRir}
+                                          </span>
+                                        )}
                                       </TableCell>
                                       <TableCell align="center">
                                         <Progress
