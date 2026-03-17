@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
 
   // Find athletes owned by this admin
   const myAthletes = await prisma.user.findMany({
-    where: { role: "athlete", ownerId: tokenPayload.id },
+    where: { role: "athlete", ownerId: tokenPayload.id, hidden: false },
     select: { id: true }
   });
   const athleteIds = myAthletes.map(a => a.id);

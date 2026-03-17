@@ -1048,8 +1048,12 @@ export default function TrainingPanel({
                                             borderTop: currentRow === 0 ? undefined : "none"
                                           }}
                                         >
-                                          <IconButton
-                                            size="large"
+                                        <span style={{ display: "inline-flex", alignItems: "center" }}>
+                                          <Typography variant="body1" sx={{ fontWeight: "bold", mr: 0.2, display: "inline" }}>
+                                            {def.isDropset ? "DS" : def.seriesNumber}
+                                          </Typography>
+                                          <span
+                                            title={translations[lang].noteButtonTitle(userInfo?.firstName ?? "", userInfo?.lastName ?? "")}
                                             onClick={e => {
                                               e.stopPropagation();
                                               setEditingSeries(def.id);
@@ -1057,22 +1061,17 @@ export default function TrainingPanel({
                                               setSelectedDay?.(dayIdx);
                                               setFocusedExerciseKey(exKey);
                                             }}
-                                            title={
-                                              translations[lang].noteButtonTitle(
-                                                userInfo?.firstName ?? "",
-                                                userInfo?.lastName ?? ""
-                                              )
-                                            }
-                                            sx={{
-                                              p: 0,
-                                              m: 0,
-                                              background: "none"
+                                            style={{
+                                              cursor: "pointer",
+                                              fontSize: "0.89em",
+                                              marginLeft: 6,
+                                              verticalAlign: "middle",
+                                              userSelect: "none"
                                             }}
                                           >
-                                            <svg width="28" height="28" viewBox="0 0 24 24" fill="#607d8b">
-                                              <text x="50%" y="56%" textAnchor="middle" alignmentBaseline="middle" style={{ fontSize: "0.5em", fill: "#607d8b", fontWeight: "bold" }}>{def.isDropset ? "DS" : def.seriesNumber}</text>
-                                            </svg>
-                                          </IconButton>
+                                            {"📝"}
+                                          </span>
+                                        </span>
                                         </TableCell>
                                         <TableCell colSpan={5} sx={{ bgcolor: "#565656ff", fontSize: "0.75em", color: "#a7a7a7ff", px: 2, py: 0.5 }}>
                                           <span style={{ fontStyle: "italic", fontWeight: 1000, color: "white" }}>Elena: </span>{def.trainerNotes}
@@ -1089,8 +1088,12 @@ export default function TrainingPanel({
                                             borderBottom: "none"
                                           }}
                                         >
-                                          <IconButton
-                                            size="large"
+                                        <span style={{ display: "inline-flex", alignItems: "center" }}>
+                                          <Typography variant="body1" sx={{ fontWeight: "bold", mr: 0.2, display: "inline" }}>
+                                            {def.isDropset ? "DS" : def.seriesNumber}
+                                          </Typography>
+                                          <span
+                                            title={userInfo?.firstName ? `${userInfo.firstName}'s notes` : "Notes"}
                                             onClick={e => {
                                               e.stopPropagation();
                                               setEditingSeries(def.id);
@@ -1098,19 +1101,17 @@ export default function TrainingPanel({
                                               setSelectedDay?.(dayIdx);
                                               setFocusedExerciseKey(exKey);
                                             }}
-                                            title={userInfo?.firstName ? `${userInfo.firstName}'s notes` : 'Notes'}
-                                            sx={{
-                                              p: 0,
-                                              m: 0,
-                                              background: "none"
+                                            style={{
+                                              cursor: "pointer",
+                                              fontSize: "0.89em",
+                                              marginLeft: 6,
+                                              verticalAlign: "middle",
+                                              userSelect: "none"
                                             }}
                                           >
-                                            <svg width="28" height="28" viewBox="0 0 24 24" fill="#607d8b">
-                                              <text x="50%" y="56%" textAnchor="middle" alignmentBaseline="middle" style={{ fontSize: "0.5em", fill: "#607d8b", fontWeight: "bold" }}>{def.isDropset ? "DS" : def.seriesNumber}</text>
-                                            </svg>
-                                          </IconButton>
-
-                                          
+                                            {"📝"}
+                                          </span>
+                                        </span>
                                         </TableCell>
                                       )}
                                       <TableCell align="center" sx={{ verticalAlign: "top" }}>
@@ -1301,7 +1302,7 @@ export default function TrainingPanel({
                                         )}
                                         {hasAthleteCurrentWeekNotes && (
                                           <>
-                                            <span style={{ fontStyle: "italic", fontWeight: 1000, color: "white" }}>Yo </span>
+                                            <span style={{ fontStyle: "italic", fontWeight: 1000, color: "white" }}>Yo: </span>
                                             {def.athleteNotes}
                                           </>
                                         )}

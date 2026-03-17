@@ -20,6 +20,7 @@ import EditableDropdownField from "./EditableDropdownField";
 import EditableNumberField from "./EditableNumberField";
 import EditableUserField from "./EditableUserField";
 import MeasurementsTab from "./MeasurementsTab";
+import MarkEmailUnreadOutlinedIcon from '@mui/icons-material/MarkEmailUnreadOutlined';
 
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -53,10 +54,6 @@ export default function UserTable({
   const [searchTerm, setSearchTerm] = useState("");
   const [quickFilter, setQuickFilter] = useState<"active" | "all" | "hidden" | "due" | "nofuture" | "noplan" | "nopassword">("active");
   const [internalRefreshKey, setInternalRefreshKey] = useState(0);
-
-  // Context menu state
-  const [contextMenuAnchor, setContextMenuAnchor] = useState<{mouseX: number, mouseY: number} | null>(null);
-  const [contextMenuRow, setContextMenuRow] = useState<any | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [pendingWelcomeUser, setPendingWelcomeUser] = useState<any | null>(null);
   const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
@@ -90,6 +87,73 @@ export default function UserTable({
   // Column definitions
   const columns: GridColDef[] = [
     {
+      field: "statusAndActions",
+      headerName: translations[lang].manageUsersTableStatus,
+      sortable: false,
+      width: 150,
+      align: "center",
+      headerAlign: "center",
+      renderCell: (params: any) => {
+        const row = params?.row;
+        if (!row) return null;
+        const now = new Date();
+        const hasOverdueUnpaid = Array.isArray(row.payments)
+          ? row.payments.some(
+              (p: any) => !p.isPayed && new Date(p.dueDate) <= now
+            )
+          : false;
+        return (
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 1.5, height: "100%" }}>
+            {/* Status icons (unpaid, hidden, paid) */}
+            {hasOverdueUnpaid ? (
+              <Tooltip title={translations[lang].paymentsTableUnpaid}>
+                <EuroIcon sx={{ color: "#E53935", verticalAlign: "middle" }} />
+              </Tooltip>
+            ) : row.hidden ? (
+              <Tooltip title={translations[lang].hiddenUserStatus}>
+                <VisibilityOffIcon sx={{ verticalAlign: "middle" }} />
+              </Tooltip>
+            ) : (
+              <Tooltip title={translations[lang].paymentsTablePaid}>
+                <EuroIcon sx={{ color: "#23b802", verticalAlign: "middle" }} />
+              </Tooltip>
+            )}
+
+            {/* Hide/Unhide */}
+            <Tooltip title={row.hidden ? translations[lang].unhideUser : translations[lang].hideUser}>
+              <VisibilityOffIcon
+                fontSize="small"
+                sx={{ color: "#FFFFFF", verticalAlign: "middle" }}
+                onClick={e => {
+                  e.stopPropagation();
+                  setConfirmationDialog({
+                    open: true,
+                    user: row,
+                    message: row.hidden
+                      ? translations[lang].hideUserDialogUnhideMsg
+                      : translations[lang].hideUserDialogHideMsg
+                  });
+                }}
+                aria-label={ row.hidden ? translations[lang].unhideUser : translations[lang].hideUser }
+              />
+            </Tooltip>
+            {/* Send welcome email */}
+            <Tooltip title={translations[lang].sendWelcomeEmail}>
+              <MarkEmailUnreadOutlinedIcon
+                fontSize="small"
+                sx={{ color: "#FFFFFF", verticalAlign: "middle" }}
+                onClick={e => {
+                  e.stopPropagation();
+                  setPendingWelcomeUser(row);
+                }}
+                aria-label={translations[lang].sendWelcomeEmail}
+              />
+            </Tooltip>
+          </Box>
+        );
+      }
+    },
+    {
       field: "name",
       headerName: translations[lang].manageUsersTableName,
       flex: 1,
@@ -114,53 +178,6 @@ export default function UserTable({
     },
     { field: "username", headerName: translations[lang].manageUsersModalUsername, flex: 1, minWidth: 130, sortable: false },
     { field: "email", headerName: translations[lang].manageUsersTableEmail, flex: 1.5, minWidth: 210, sortable: false },
-    {
-      field: "status",
-      headerName: translations[lang].manageUsersTableStatus,
-      type: "string",
-      minWidth: 150,
-      sortable: false,
-      valueGetter: (params: any) => {
-        const row = params?.row;
-        if (!row) return "";
-        const now = new Date();
-        const hasOverdueUnpaid = Array.isArray(row.payments)
-          ? row.payments.some(
-              (p: any) => !p.isPayed && new Date(p.dueDate) <= now
-            )
-          : false;
-        if (hasOverdueUnpaid) return translations[lang].paymentsTableUnpaid;
-        if (row.hidden) return translations[lang].hideUser;
-        return translations[lang].paymentsTablePaid;
-      },
-      renderCell: (params: any) => {
-        const row = params?.row;
-        if (!row) return "";
-        const now = new Date();
-        const hasOverdueUnpaid = Array.isArray(row.payments)
-          ? row.payments.some(
-              (p: any) => !p.isPayed && new Date(p.dueDate) <= now
-            )
-          : false;
-        if (hasOverdueUnpaid)
-          return (
-            <Tooltip title={translations[lang].paymentsTableUnpaid}>
-              <EuroIcon sx={{ color: "#E53935" }} />
-            </Tooltip>
-          );
-        if (row.hidden)
-          return (
-            <Tooltip title={translations[lang].hiddenUserStatus}>
-              <VisibilityOffIcon />
-            </Tooltip>
-          );
-        return (
-          <Tooltip title={translations[lang].paymentsTablePaid}>
-            <EuroIcon sx={{ color: "#23b802" }} />
-          </Tooltip>
-        );
-      }
-    }
   ];
 
   const athletes = useMemo(() => users.filter((u: any) => u.role === "athlete"), [users]);
@@ -349,21 +366,7 @@ export default function UserTable({
           </Box>
         </Box>
       </Box>
-      <Box
-        sx={{ height: 600, width: "100%" }}
-        onContextMenu={e => {
-          // Only trigger for rows, not headers etc.
-          const target = e.target as HTMLElement;
-          const rowNode = target.closest('[data-id]');
-          if (rowNode) {
-            e.preventDefault();
-            const rowId = rowNode.getAttribute('data-id');
-            const rowData = filteredUsers.find(u => u.id === rowId);
-            setContextMenuAnchor({ mouseX: e.clientX + 2, mouseY: e.clientY - 6 });
-            setContextMenuRow(rowData || null);
-          }
-        }}
-      >
+      <Box sx={{ height: 600, width: "100%" }}>
         <DataGrid
           rows={filteredUsers}
           columns={columns}
@@ -380,48 +383,7 @@ export default function UserTable({
             cursor: "pointer",
           }}
         />
-        {/* Context Menu for right-clicking a row */}
-        <Menu
-          open={!!contextMenuAnchor}
-          onClose={() => setContextMenuAnchor(null)}
-          anchorReference="anchorPosition"
-          anchorPosition={
-            contextMenuAnchor
-              ? { top: contextMenuAnchor.mouseY, left: contextMenuAnchor.mouseX }
-              : undefined
-          }
-          onClick={() => setContextMenuAnchor(null)}
-        >
-          <MenuItem
-            onClick={e => {
-              e.stopPropagation();
-              setContextMenuAnchor(null);
-              // Show confirmation dialog instead of immediate action
-              if (contextMenuRow) {
-                setConfirmationDialog({
-                  open: true,
-                  user: contextMenuRow,
-                  message: contextMenuRow.hidden
-                    ? translations[lang].hideUserDialogUnhideMsg
-                    : translations[lang].hideUserDialogHideMsg
-                });
-              }
-            }}
-          >
-            {contextMenuRow?.hidden
-              ? translations[lang].unhideUser
-              : translations[lang].hideUser}
-          </MenuItem>
-          <MenuItem
-            onClick={e => {
-              e.stopPropagation();
-              setContextMenuAnchor(null);
-              if (contextMenuRow) setPendingWelcomeUser(contextMenuRow);
-            }}
-          >
-            {translations[lang].sendWelcomeEmail}
-          </MenuItem>
-        </Menu>
+        
         <Dialog
           open={!!selected}
           maxWidth={false}
@@ -544,15 +506,6 @@ export default function UserTable({
             )}
             {modalTab === "payments" && selected && (
               <Box sx={{ mt: 2 }}>
-                {/* Payment edit dialog state */}
-                {/*
-                  Add state for editing a payment.
-                  When a payment row is clicked, set `editingPayment`.
-                  Show a dialog to edit fields and delete payment, refetching after changes.
-                */}
-                {/* --- Add this state at component top level --- */}
-                {/* const [editingPayment, setEditingPayment] = useState<any | null>(null); */}
-                {/* <PaymentEditDialog ... /> */}
                 <Box sx={{
                   display: "flex", alignItems: "center", gap: 1, mb: 1
                 }}>
@@ -947,6 +900,8 @@ export default function UserTable({
           notification={notification}
           onClose={() => setNotification(null)}
         />
+
+        {/* Context menu removed */}
 
         {/* Future Payment Dialog */}
         <Dialog open={futurePaymentDialog.open} onClose={() => setFuturePaymentDialog(d => ({ ...d, open: false }))}>
