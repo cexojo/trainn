@@ -19,6 +19,9 @@ export type Translations = {
     mealsPerDay: string;
     optionName: string;
     optionDescription: string;
+    mealLabel: string;
+    addMeal: string;
+    removeMeal: string;
     addOption: string;
     removeOption: string;
     foodsCaption: string;
