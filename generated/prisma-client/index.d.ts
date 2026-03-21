@@ -63,6 +63,41 @@ export type Payment = $Result.DefaultSelection<Prisma.$PaymentPayload>
  * 
  */
 export type Measurement = $Result.DefaultSelection<Prisma.$MeasurementPayload>
+/**
+ * Model FoodGroup
+ * 
+ */
+export type FoodGroup = $Result.DefaultSelection<Prisma.$FoodGroupPayload>
+/**
+ * Model Food
+ * 
+ */
+export type Food = $Result.DefaultSelection<Prisma.$FoodPayload>
+/**
+ * Model NutritionPlan
+ * 
+ */
+export type NutritionPlan = $Result.DefaultSelection<Prisma.$NutritionPlanPayload>
+/**
+ * Model NutritionPlanDay
+ * 
+ */
+export type NutritionPlanDay = $Result.DefaultSelection<Prisma.$NutritionPlanDayPayload>
+/**
+ * Model NutritionPlanMeal
+ * 
+ */
+export type NutritionPlanMeal = $Result.DefaultSelection<Prisma.$NutritionPlanMealPayload>
+/**
+ * Model NutritionPlanMealOption
+ * 
+ */
+export type NutritionPlanMealOption = $Result.DefaultSelection<Prisma.$NutritionPlanMealOptionPayload>
+/**
+ * Model NutritionPlanMealOptionFood
+ * 
+ */
+export type NutritionPlanMealOptionFood = $Result.DefaultSelection<Prisma.$NutritionPlanMealOptionFoodPayload>
 
 /**
  * Enums
@@ -111,7 +146,9 @@ export const Sex: typeof $Enums.Sex
  * Type-safe database client for TypeScript & Node.js
  * @example
  * ```
- * const prisma = new PrismaClient()
+ * const prisma = new PrismaClient({
+ *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+ * })
  * // Fetch zero or more TrainingBlocks
  * const trainingBlocks = await prisma.trainingBlock.findMany()
  * ```
@@ -132,7 +169,9 @@ export class PrismaClient<
    * Type-safe database client for TypeScript & Node.js
    * @example
    * ```
-   * const prisma = new PrismaClient()
+   * const prisma = new PrismaClient({
+   *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+   * })
    * // Fetch zero or more TrainingBlocks
    * const trainingBlocks = await prisma.trainingBlock.findMany()
    * ```
@@ -212,7 +251,7 @@ export class PrismaClient<
    * ])
    * ```
    * 
-   * Read more in our [docs](https://www.prisma.io/docs/concepts/components/prisma-client/transactions).
+   * Read more in our [docs](https://www.prisma.io/docs/orm/prisma-client/queries/transactions).
    */
   $transaction<P extends Prisma.PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): $Utils.JsPromise<runtime.Types.Utils.UnwrapTuple<P>>
 
@@ -321,6 +360,76 @@ export class PrismaClient<
     * ```
     */
   get measurement(): Prisma.MeasurementDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.foodGroup`: Exposes CRUD operations for the **FoodGroup** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FoodGroups
+    * const foodGroups = await prisma.foodGroup.findMany()
+    * ```
+    */
+  get foodGroup(): Prisma.FoodGroupDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.food`: Exposes CRUD operations for the **Food** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Foods
+    * const foods = await prisma.food.findMany()
+    * ```
+    */
+  get food(): Prisma.FoodDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.nutritionPlan`: Exposes CRUD operations for the **NutritionPlan** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more NutritionPlans
+    * const nutritionPlans = await prisma.nutritionPlan.findMany()
+    * ```
+    */
+  get nutritionPlan(): Prisma.NutritionPlanDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.nutritionPlanDay`: Exposes CRUD operations for the **NutritionPlanDay** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more NutritionPlanDays
+    * const nutritionPlanDays = await prisma.nutritionPlanDay.findMany()
+    * ```
+    */
+  get nutritionPlanDay(): Prisma.NutritionPlanDayDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.nutritionPlanMeal`: Exposes CRUD operations for the **NutritionPlanMeal** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more NutritionPlanMeals
+    * const nutritionPlanMeals = await prisma.nutritionPlanMeal.findMany()
+    * ```
+    */
+  get nutritionPlanMeal(): Prisma.NutritionPlanMealDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.nutritionPlanMealOption`: Exposes CRUD operations for the **NutritionPlanMealOption** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more NutritionPlanMealOptions
+    * const nutritionPlanMealOptions = await prisma.nutritionPlanMealOption.findMany()
+    * ```
+    */
+  get nutritionPlanMealOption(): Prisma.NutritionPlanMealOptionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.nutritionPlanMealOptionFood`: Exposes CRUD operations for the **NutritionPlanMealOptionFood** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more NutritionPlanMealOptionFoods
+    * const nutritionPlanMealOptionFoods = await prisma.nutritionPlanMealOptionFood.findMany()
+    * ```
+    */
+  get nutritionPlanMealOptionFood(): Prisma.NutritionPlanMealOptionFoodDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -371,8 +480,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 7.2.0
-   * Query Engine version: 0c8ef2ce45c83248ab3df073180d5eda9e8be7a3
+   * Prisma Client JS version: 7.5.0
+   * Query Engine version: 280c870be64f457428992c43c1f6d557fab6e29e
    */
   export type PrismaVersion = {
     client: string
@@ -764,7 +873,14 @@ export namespace Prisma {
     DayExercise: 'DayExercise',
     DayExerciseSeries: 'DayExerciseSeries',
     Payment: 'Payment',
-    Measurement: 'Measurement'
+    Measurement: 'Measurement',
+    FoodGroup: 'FoodGroup',
+    Food: 'Food',
+    NutritionPlan: 'NutritionPlan',
+    NutritionPlanDay: 'NutritionPlanDay',
+    NutritionPlanMeal: 'NutritionPlanMeal',
+    NutritionPlanMealOption: 'NutritionPlanMealOption',
+    NutritionPlanMealOptionFood: 'NutritionPlanMealOptionFood'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -780,7 +896,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "trainingBlock" | "trainingWeek" | "trainingDay" | "exerciseGroup" | "exercise" | "user" | "dayExercise" | "dayExerciseSeries" | "payment" | "measurement"
+      modelProps: "trainingBlock" | "trainingWeek" | "trainingDay" | "exerciseGroup" | "exercise" | "user" | "dayExercise" | "dayExerciseSeries" | "payment" | "measurement" | "foodGroup" | "food" | "nutritionPlan" | "nutritionPlanDay" | "nutritionPlanMeal" | "nutritionPlanMealOption" | "nutritionPlanMealOptionFood"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1524,6 +1640,524 @@ export namespace Prisma {
           }
         }
       }
+      FoodGroup: {
+        payload: Prisma.$FoodGroupPayload<ExtArgs>
+        fields: Prisma.FoodGroupFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FoodGroupFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodGroupPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FoodGroupFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodGroupPayload>
+          }
+          findFirst: {
+            args: Prisma.FoodGroupFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodGroupPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FoodGroupFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodGroupPayload>
+          }
+          findMany: {
+            args: Prisma.FoodGroupFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodGroupPayload>[]
+          }
+          create: {
+            args: Prisma.FoodGroupCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodGroupPayload>
+          }
+          createMany: {
+            args: Prisma.FoodGroupCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FoodGroupCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodGroupPayload>[]
+          }
+          delete: {
+            args: Prisma.FoodGroupDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodGroupPayload>
+          }
+          update: {
+            args: Prisma.FoodGroupUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodGroupPayload>
+          }
+          deleteMany: {
+            args: Prisma.FoodGroupDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FoodGroupUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FoodGroupUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodGroupPayload>[]
+          }
+          upsert: {
+            args: Prisma.FoodGroupUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodGroupPayload>
+          }
+          aggregate: {
+            args: Prisma.FoodGroupAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFoodGroup>
+          }
+          groupBy: {
+            args: Prisma.FoodGroupGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FoodGroupGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FoodGroupCountArgs<ExtArgs>
+            result: $Utils.Optional<FoodGroupCountAggregateOutputType> | number
+          }
+        }
+      }
+      Food: {
+        payload: Prisma.$FoodPayload<ExtArgs>
+        fields: Prisma.FoodFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FoodFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FoodFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodPayload>
+          }
+          findFirst: {
+            args: Prisma.FoodFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FoodFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodPayload>
+          }
+          findMany: {
+            args: Prisma.FoodFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodPayload>[]
+          }
+          create: {
+            args: Prisma.FoodCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodPayload>
+          }
+          createMany: {
+            args: Prisma.FoodCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FoodCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodPayload>[]
+          }
+          delete: {
+            args: Prisma.FoodDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodPayload>
+          }
+          update: {
+            args: Prisma.FoodUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodPayload>
+          }
+          deleteMany: {
+            args: Prisma.FoodDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FoodUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FoodUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodPayload>[]
+          }
+          upsert: {
+            args: Prisma.FoodUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodPayload>
+          }
+          aggregate: {
+            args: Prisma.FoodAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFood>
+          }
+          groupBy: {
+            args: Prisma.FoodGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FoodGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FoodCountArgs<ExtArgs>
+            result: $Utils.Optional<FoodCountAggregateOutputType> | number
+          }
+        }
+      }
+      NutritionPlan: {
+        payload: Prisma.$NutritionPlanPayload<ExtArgs>
+        fields: Prisma.NutritionPlanFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.NutritionPlanFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.NutritionPlanFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanPayload>
+          }
+          findFirst: {
+            args: Prisma.NutritionPlanFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.NutritionPlanFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanPayload>
+          }
+          findMany: {
+            args: Prisma.NutritionPlanFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanPayload>[]
+          }
+          create: {
+            args: Prisma.NutritionPlanCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanPayload>
+          }
+          createMany: {
+            args: Prisma.NutritionPlanCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.NutritionPlanCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanPayload>[]
+          }
+          delete: {
+            args: Prisma.NutritionPlanDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanPayload>
+          }
+          update: {
+            args: Prisma.NutritionPlanUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanPayload>
+          }
+          deleteMany: {
+            args: Prisma.NutritionPlanDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.NutritionPlanUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.NutritionPlanUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanPayload>[]
+          }
+          upsert: {
+            args: Prisma.NutritionPlanUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanPayload>
+          }
+          aggregate: {
+            args: Prisma.NutritionPlanAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateNutritionPlan>
+          }
+          groupBy: {
+            args: Prisma.NutritionPlanGroupByArgs<ExtArgs>
+            result: $Utils.Optional<NutritionPlanGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.NutritionPlanCountArgs<ExtArgs>
+            result: $Utils.Optional<NutritionPlanCountAggregateOutputType> | number
+          }
+        }
+      }
+      NutritionPlanDay: {
+        payload: Prisma.$NutritionPlanDayPayload<ExtArgs>
+        fields: Prisma.NutritionPlanDayFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.NutritionPlanDayFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanDayPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.NutritionPlanDayFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanDayPayload>
+          }
+          findFirst: {
+            args: Prisma.NutritionPlanDayFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanDayPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.NutritionPlanDayFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanDayPayload>
+          }
+          findMany: {
+            args: Prisma.NutritionPlanDayFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanDayPayload>[]
+          }
+          create: {
+            args: Prisma.NutritionPlanDayCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanDayPayload>
+          }
+          createMany: {
+            args: Prisma.NutritionPlanDayCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.NutritionPlanDayCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanDayPayload>[]
+          }
+          delete: {
+            args: Prisma.NutritionPlanDayDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanDayPayload>
+          }
+          update: {
+            args: Prisma.NutritionPlanDayUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanDayPayload>
+          }
+          deleteMany: {
+            args: Prisma.NutritionPlanDayDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.NutritionPlanDayUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.NutritionPlanDayUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanDayPayload>[]
+          }
+          upsert: {
+            args: Prisma.NutritionPlanDayUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanDayPayload>
+          }
+          aggregate: {
+            args: Prisma.NutritionPlanDayAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateNutritionPlanDay>
+          }
+          groupBy: {
+            args: Prisma.NutritionPlanDayGroupByArgs<ExtArgs>
+            result: $Utils.Optional<NutritionPlanDayGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.NutritionPlanDayCountArgs<ExtArgs>
+            result: $Utils.Optional<NutritionPlanDayCountAggregateOutputType> | number
+          }
+        }
+      }
+      NutritionPlanMeal: {
+        payload: Prisma.$NutritionPlanMealPayload<ExtArgs>
+        fields: Prisma.NutritionPlanMealFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.NutritionPlanMealFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.NutritionPlanMealFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealPayload>
+          }
+          findFirst: {
+            args: Prisma.NutritionPlanMealFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.NutritionPlanMealFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealPayload>
+          }
+          findMany: {
+            args: Prisma.NutritionPlanMealFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealPayload>[]
+          }
+          create: {
+            args: Prisma.NutritionPlanMealCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealPayload>
+          }
+          createMany: {
+            args: Prisma.NutritionPlanMealCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.NutritionPlanMealCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealPayload>[]
+          }
+          delete: {
+            args: Prisma.NutritionPlanMealDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealPayload>
+          }
+          update: {
+            args: Prisma.NutritionPlanMealUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealPayload>
+          }
+          deleteMany: {
+            args: Prisma.NutritionPlanMealDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.NutritionPlanMealUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.NutritionPlanMealUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealPayload>[]
+          }
+          upsert: {
+            args: Prisma.NutritionPlanMealUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealPayload>
+          }
+          aggregate: {
+            args: Prisma.NutritionPlanMealAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateNutritionPlanMeal>
+          }
+          groupBy: {
+            args: Prisma.NutritionPlanMealGroupByArgs<ExtArgs>
+            result: $Utils.Optional<NutritionPlanMealGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.NutritionPlanMealCountArgs<ExtArgs>
+            result: $Utils.Optional<NutritionPlanMealCountAggregateOutputType> | number
+          }
+        }
+      }
+      NutritionPlanMealOption: {
+        payload: Prisma.$NutritionPlanMealOptionPayload<ExtArgs>
+        fields: Prisma.NutritionPlanMealOptionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.NutritionPlanMealOptionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.NutritionPlanMealOptionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionPayload>
+          }
+          findFirst: {
+            args: Prisma.NutritionPlanMealOptionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.NutritionPlanMealOptionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionPayload>
+          }
+          findMany: {
+            args: Prisma.NutritionPlanMealOptionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionPayload>[]
+          }
+          create: {
+            args: Prisma.NutritionPlanMealOptionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionPayload>
+          }
+          createMany: {
+            args: Prisma.NutritionPlanMealOptionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.NutritionPlanMealOptionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionPayload>[]
+          }
+          delete: {
+            args: Prisma.NutritionPlanMealOptionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionPayload>
+          }
+          update: {
+            args: Prisma.NutritionPlanMealOptionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionPayload>
+          }
+          deleteMany: {
+            args: Prisma.NutritionPlanMealOptionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.NutritionPlanMealOptionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.NutritionPlanMealOptionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionPayload>[]
+          }
+          upsert: {
+            args: Prisma.NutritionPlanMealOptionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionPayload>
+          }
+          aggregate: {
+            args: Prisma.NutritionPlanMealOptionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateNutritionPlanMealOption>
+          }
+          groupBy: {
+            args: Prisma.NutritionPlanMealOptionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<NutritionPlanMealOptionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.NutritionPlanMealOptionCountArgs<ExtArgs>
+            result: $Utils.Optional<NutritionPlanMealOptionCountAggregateOutputType> | number
+          }
+        }
+      }
+      NutritionPlanMealOptionFood: {
+        payload: Prisma.$NutritionPlanMealOptionFoodPayload<ExtArgs>
+        fields: Prisma.NutritionPlanMealOptionFoodFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.NutritionPlanMealOptionFoodFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionFoodPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.NutritionPlanMealOptionFoodFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionFoodPayload>
+          }
+          findFirst: {
+            args: Prisma.NutritionPlanMealOptionFoodFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionFoodPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.NutritionPlanMealOptionFoodFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionFoodPayload>
+          }
+          findMany: {
+            args: Prisma.NutritionPlanMealOptionFoodFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionFoodPayload>[]
+          }
+          create: {
+            args: Prisma.NutritionPlanMealOptionFoodCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionFoodPayload>
+          }
+          createMany: {
+            args: Prisma.NutritionPlanMealOptionFoodCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.NutritionPlanMealOptionFoodCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionFoodPayload>[]
+          }
+          delete: {
+            args: Prisma.NutritionPlanMealOptionFoodDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionFoodPayload>
+          }
+          update: {
+            args: Prisma.NutritionPlanMealOptionFoodUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionFoodPayload>
+          }
+          deleteMany: {
+            args: Prisma.NutritionPlanMealOptionFoodDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.NutritionPlanMealOptionFoodUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.NutritionPlanMealOptionFoodUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionFoodPayload>[]
+          }
+          upsert: {
+            args: Prisma.NutritionPlanMealOptionFoodUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NutritionPlanMealOptionFoodPayload>
+          }
+          aggregate: {
+            args: Prisma.NutritionPlanMealOptionFoodAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateNutritionPlanMealOptionFood>
+          }
+          groupBy: {
+            args: Prisma.NutritionPlanMealOptionFoodGroupByArgs<ExtArgs>
+            result: $Utils.Optional<NutritionPlanMealOptionFoodGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.NutritionPlanMealOptionFoodCountArgs<ExtArgs>
+            result: $Utils.Optional<NutritionPlanMealOptionFoodCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1642,6 +2276,13 @@ export namespace Prisma {
     dayExerciseSeries?: DayExerciseSeriesOmit
     payment?: PaymentOmit
     measurement?: MeasurementOmit
+    foodGroup?: FoodGroupOmit
+    food?: FoodOmit
+    nutritionPlan?: NutritionPlanOmit
+    nutritionPlanDay?: NutritionPlanDayOmit
+    nutritionPlanMeal?: NutritionPlanMealOmit
+    nutritionPlanMealOption?: NutritionPlanMealOptionOmit
+    nutritionPlanMealOptionFood?: NutritionPlanMealOptionFoodOmit
   }
 
   /* Types for Logging */
@@ -1887,6 +2528,7 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     blocks: number
+    nutritionPlans: number
     payments: number
     measurements: number
     athletes: number
@@ -1894,6 +2536,7 @@ export namespace Prisma {
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     blocks?: boolean | UserCountOutputTypeCountBlocksArgs
+    nutritionPlans?: boolean | UserCountOutputTypeCountNutritionPlansArgs
     payments?: boolean | UserCountOutputTypeCountPaymentsArgs
     measurements?: boolean | UserCountOutputTypeCountMeasurementsArgs
     athletes?: boolean | UserCountOutputTypeCountAthletesArgs
@@ -1915,6 +2558,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountBlocksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TrainingBlockWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountNutritionPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NutritionPlanWhereInput
   }
 
   /**
@@ -1967,6 +2617,192 @@ export namespace Prisma {
    */
   export type DayExerciseCountOutputTypeCountSeriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DayExerciseSeriesWhereInput
+  }
+
+
+  /**
+   * Count Type FoodGroupCountOutputType
+   */
+
+  export type FoodGroupCountOutputType = {
+    foods: number
+  }
+
+  export type FoodGroupCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    foods?: boolean | FoodGroupCountOutputTypeCountFoodsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * FoodGroupCountOutputType without action
+   */
+  export type FoodGroupCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodGroupCountOutputType
+     */
+    select?: FoodGroupCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * FoodGroupCountOutputType without action
+   */
+  export type FoodGroupCountOutputTypeCountFoodsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FoodWhereInput
+  }
+
+
+  /**
+   * Count Type FoodCountOutputType
+   */
+
+  export type FoodCountOutputType = {
+    nutritionPlanMealOptionFoods: number
+  }
+
+  export type FoodCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    nutritionPlanMealOptionFoods?: boolean | FoodCountOutputTypeCountNutritionPlanMealOptionFoodsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * FoodCountOutputType without action
+   */
+  export type FoodCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodCountOutputType
+     */
+    select?: FoodCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * FoodCountOutputType without action
+   */
+  export type FoodCountOutputTypeCountNutritionPlanMealOptionFoodsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NutritionPlanMealOptionFoodWhereInput
+  }
+
+
+  /**
+   * Count Type NutritionPlanCountOutputType
+   */
+
+  export type NutritionPlanCountOutputType = {
+    days: number
+  }
+
+  export type NutritionPlanCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    days?: boolean | NutritionPlanCountOutputTypeCountDaysArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * NutritionPlanCountOutputType without action
+   */
+  export type NutritionPlanCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanCountOutputType
+     */
+    select?: NutritionPlanCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * NutritionPlanCountOutputType without action
+   */
+  export type NutritionPlanCountOutputTypeCountDaysArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NutritionPlanDayWhereInput
+  }
+
+
+  /**
+   * Count Type NutritionPlanDayCountOutputType
+   */
+
+  export type NutritionPlanDayCountOutputType = {
+    meals: number
+  }
+
+  export type NutritionPlanDayCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    meals?: boolean | NutritionPlanDayCountOutputTypeCountMealsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * NutritionPlanDayCountOutputType without action
+   */
+  export type NutritionPlanDayCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanDayCountOutputType
+     */
+    select?: NutritionPlanDayCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * NutritionPlanDayCountOutputType without action
+   */
+  export type NutritionPlanDayCountOutputTypeCountMealsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NutritionPlanMealWhereInput
+  }
+
+
+  /**
+   * Count Type NutritionPlanMealCountOutputType
+   */
+
+  export type NutritionPlanMealCountOutputType = {
+    mealOptions: number
+  }
+
+  export type NutritionPlanMealCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    mealOptions?: boolean | NutritionPlanMealCountOutputTypeCountMealOptionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * NutritionPlanMealCountOutputType without action
+   */
+  export type NutritionPlanMealCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealCountOutputType
+     */
+    select?: NutritionPlanMealCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * NutritionPlanMealCountOutputType without action
+   */
+  export type NutritionPlanMealCountOutputTypeCountMealOptionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NutritionPlanMealOptionWhereInput
+  }
+
+
+  /**
+   * Count Type NutritionPlanMealOptionCountOutputType
+   */
+
+  export type NutritionPlanMealOptionCountOutputType = {
+    foods: number
+  }
+
+  export type NutritionPlanMealOptionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    foods?: boolean | NutritionPlanMealOptionCountOutputTypeCountFoodsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * NutritionPlanMealOptionCountOutputType without action
+   */
+  export type NutritionPlanMealOptionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOptionCountOutputType
+     */
+    select?: NutritionPlanMealOptionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * NutritionPlanMealOptionCountOutputType without action
+   */
+  export type NutritionPlanMealOptionCountOutputTypeCountFoodsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NutritionPlanMealOptionFoodWhereInput
   }
 
 
@@ -2867,6 +3703,11 @@ export namespace Prisma {
      * Skip the first `n` TrainingBlocks.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TrainingBlocks.
+     */
     distinct?: TrainingBlockScalarFieldEnum | TrainingBlockScalarFieldEnum[]
   }
 
@@ -3991,6 +4832,11 @@ export namespace Prisma {
      * Skip the first `n` TrainingWeeks.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TrainingWeeks.
+     */
     distinct?: TrainingWeekScalarFieldEnum | TrainingWeekScalarFieldEnum[]
   }
 
@@ -5135,6 +5981,11 @@ export namespace Prisma {
      * Skip the first `n` TrainingDays.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TrainingDays.
+     */
     distinct?: TrainingDayScalarFieldEnum | TrainingDayScalarFieldEnum[]
   }
 
@@ -6172,6 +7023,11 @@ export namespace Prisma {
      * Skip the first `n` ExerciseGroups.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExerciseGroups.
+     */
     distinct?: ExerciseGroupScalarFieldEnum | ExerciseGroupScalarFieldEnum[]
   }
 
@@ -7590,6 +8446,11 @@ export namespace Prisma {
      * Skip the first `n` Exercises.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Exercises.
+     */
     distinct?: ExerciseScalarFieldEnum | ExerciseScalarFieldEnum[]
   }
 
@@ -8141,6 +9002,7 @@ export namespace Prisma {
     sex?: boolean
     ownerId?: boolean
     blocks?: boolean | User$blocksArgs<ExtArgs>
+    nutritionPlans?: boolean | User$nutritionPlansArgs<ExtArgs>
     payments?: boolean | User$paymentsArgs<ExtArgs>
     measurements?: boolean | User$measurementsArgs<ExtArgs>
     owner?: boolean | User$ownerArgs<ExtArgs>
@@ -8219,6 +9081,7 @@ export namespace Prisma {
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "firstName" | "lastName" | "username" | "email" | "password" | "passwordRefreshToken" | "isocode" | "lastVisitedWeek" | "registrationDate" | "hidingDate" | "subscriptionAmount" | "subscriptionFrequency" | "role" | "hidden" | "lastOKLogin" | "lastKOLogin" | "sex" | "ownerId", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     blocks?: boolean | User$blocksArgs<ExtArgs>
+    nutritionPlans?: boolean | User$nutritionPlansArgs<ExtArgs>
     payments?: boolean | User$paymentsArgs<ExtArgs>
     measurements?: boolean | User$measurementsArgs<ExtArgs>
     owner?: boolean | User$ownerArgs<ExtArgs>
@@ -8236,6 +9099,7 @@ export namespace Prisma {
     name: "User"
     objects: {
       blocks: Prisma.$TrainingBlockPayload<ExtArgs>[]
+      nutritionPlans: Prisma.$NutritionPlanPayload<ExtArgs>[]
       payments: Prisma.$PaymentPayload<ExtArgs>[]
       measurements: Prisma.$MeasurementPayload<ExtArgs>[]
       owner: Prisma.$UserPayload<ExtArgs> | null
@@ -8656,6 +9520,7 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     blocks<T extends User$blocksArgs<ExtArgs> = {}>(args?: Subset<T, User$blocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrainingBlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    nutritionPlans<T extends User$nutritionPlansArgs<ExtArgs> = {}>(args?: Subset<T, User$nutritionPlansArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NutritionPlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     payments<T extends User$paymentsArgs<ExtArgs> = {}>(args?: Subset<T, User$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     measurements<T extends User$measurementsArgs<ExtArgs> = {}>(args?: Subset<T, User$measurementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MeasurementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     owner<T extends User$ownerArgs<ExtArgs> = {}>(args?: Subset<T, User$ownerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -8904,6 +9769,11 @@ export namespace Prisma {
      * Skip the first `n` Users.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Users.
+     */
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
   }
 
@@ -9123,6 +9993,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TrainingBlockScalarFieldEnum | TrainingBlockScalarFieldEnum[]
+  }
+
+  /**
+   * User.nutritionPlans
+   */
+  export type User$nutritionPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlan
+     */
+    select?: NutritionPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlan
+     */
+    omit?: NutritionPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanInclude<ExtArgs> | null
+    where?: NutritionPlanWhereInput
+    orderBy?: NutritionPlanOrderByWithRelationInput | NutritionPlanOrderByWithRelationInput[]
+    cursor?: NutritionPlanWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NutritionPlanScalarFieldEnum | NutritionPlanScalarFieldEnum[]
   }
 
   /**
@@ -10149,6 +11043,11 @@ export namespace Prisma {
      * Skip the first `n` DayExercises.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DayExercises.
+     */
     distinct?: DayExerciseScalarFieldEnum | DayExerciseScalarFieldEnum[]
   }
 
@@ -11442,6 +12341,11 @@ export namespace Prisma {
      * Skip the first `n` DayExerciseSeries.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DayExerciseSeries.
+     */
     distinct?: DayExerciseSeriesScalarFieldEnum | DayExerciseSeriesScalarFieldEnum[]
   }
 
@@ -12532,6 +13436,11 @@ export namespace Prisma {
      * Skip the first `n` Payments.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Payments.
+     */
     distinct?: PaymentScalarFieldEnum | PaymentScalarFieldEnum[]
   }
 
@@ -13728,6 +14637,11 @@ export namespace Prisma {
      * Skip the first `n` Measurements.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Measurements.
+     */
     distinct?: MeasurementScalarFieldEnum | MeasurementScalarFieldEnum[]
   }
 
@@ -13945,6 +14859,8214 @@ export namespace Prisma {
 
 
   /**
+   * Model FoodGroup
+   */
+
+  export type AggregateFoodGroup = {
+    _count: FoodGroupCountAggregateOutputType | null
+    _min: FoodGroupMinAggregateOutputType | null
+    _max: FoodGroupMaxAggregateOutputType | null
+  }
+
+  export type FoodGroupMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+  }
+
+  export type FoodGroupMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+  }
+
+  export type FoodGroupCountAggregateOutputType = {
+    id: number
+    name: number
+    _all: number
+  }
+
+
+  export type FoodGroupMinAggregateInputType = {
+    id?: true
+    name?: true
+  }
+
+  export type FoodGroupMaxAggregateInputType = {
+    id?: true
+    name?: true
+  }
+
+  export type FoodGroupCountAggregateInputType = {
+    id?: true
+    name?: true
+    _all?: true
+  }
+
+  export type FoodGroupAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FoodGroup to aggregate.
+     */
+    where?: FoodGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FoodGroups to fetch.
+     */
+    orderBy?: FoodGroupOrderByWithRelationInput | FoodGroupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FoodGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FoodGroups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FoodGroups.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FoodGroups
+    **/
+    _count?: true | FoodGroupCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FoodGroupMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FoodGroupMaxAggregateInputType
+  }
+
+  export type GetFoodGroupAggregateType<T extends FoodGroupAggregateArgs> = {
+        [P in keyof T & keyof AggregateFoodGroup]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFoodGroup[P]>
+      : GetScalarType<T[P], AggregateFoodGroup[P]>
+  }
+
+
+
+
+  export type FoodGroupGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FoodGroupWhereInput
+    orderBy?: FoodGroupOrderByWithAggregationInput | FoodGroupOrderByWithAggregationInput[]
+    by: FoodGroupScalarFieldEnum[] | FoodGroupScalarFieldEnum
+    having?: FoodGroupScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FoodGroupCountAggregateInputType | true
+    _min?: FoodGroupMinAggregateInputType
+    _max?: FoodGroupMaxAggregateInputType
+  }
+
+  export type FoodGroupGroupByOutputType = {
+    id: string
+    name: string
+    _count: FoodGroupCountAggregateOutputType | null
+    _min: FoodGroupMinAggregateOutputType | null
+    _max: FoodGroupMaxAggregateOutputType | null
+  }
+
+  type GetFoodGroupGroupByPayload<T extends FoodGroupGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FoodGroupGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FoodGroupGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FoodGroupGroupByOutputType[P]>
+            : GetScalarType<T[P], FoodGroupGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FoodGroupSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    foods?: boolean | FoodGroup$foodsArgs<ExtArgs>
+    _count?: boolean | FoodGroupCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["foodGroup"]>
+
+  export type FoodGroupSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+  }, ExtArgs["result"]["foodGroup"]>
+
+  export type FoodGroupSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+  }, ExtArgs["result"]["foodGroup"]>
+
+  export type FoodGroupSelectScalar = {
+    id?: boolean
+    name?: boolean
+  }
+
+  export type FoodGroupOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name", ExtArgs["result"]["foodGroup"]>
+  export type FoodGroupInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    foods?: boolean | FoodGroup$foodsArgs<ExtArgs>
+    _count?: boolean | FoodGroupCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type FoodGroupIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type FoodGroupIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $FoodGroupPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FoodGroup"
+    objects: {
+      foods: Prisma.$FoodPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+    }, ExtArgs["result"]["foodGroup"]>
+    composites: {}
+  }
+
+  type FoodGroupGetPayload<S extends boolean | null | undefined | FoodGroupDefaultArgs> = $Result.GetResult<Prisma.$FoodGroupPayload, S>
+
+  type FoodGroupCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FoodGroupFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FoodGroupCountAggregateInputType | true
+    }
+
+  export interface FoodGroupDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FoodGroup'], meta: { name: 'FoodGroup' } }
+    /**
+     * Find zero or one FoodGroup that matches the filter.
+     * @param {FoodGroupFindUniqueArgs} args - Arguments to find a FoodGroup
+     * @example
+     * // Get one FoodGroup
+     * const foodGroup = await prisma.foodGroup.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FoodGroupFindUniqueArgs>(args: SelectSubset<T, FoodGroupFindUniqueArgs<ExtArgs>>): Prisma__FoodGroupClient<$Result.GetResult<Prisma.$FoodGroupPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FoodGroup that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FoodGroupFindUniqueOrThrowArgs} args - Arguments to find a FoodGroup
+     * @example
+     * // Get one FoodGroup
+     * const foodGroup = await prisma.foodGroup.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FoodGroupFindUniqueOrThrowArgs>(args: SelectSubset<T, FoodGroupFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FoodGroupClient<$Result.GetResult<Prisma.$FoodGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FoodGroup that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FoodGroupFindFirstArgs} args - Arguments to find a FoodGroup
+     * @example
+     * // Get one FoodGroup
+     * const foodGroup = await prisma.foodGroup.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FoodGroupFindFirstArgs>(args?: SelectSubset<T, FoodGroupFindFirstArgs<ExtArgs>>): Prisma__FoodGroupClient<$Result.GetResult<Prisma.$FoodGroupPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FoodGroup that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FoodGroupFindFirstOrThrowArgs} args - Arguments to find a FoodGroup
+     * @example
+     * // Get one FoodGroup
+     * const foodGroup = await prisma.foodGroup.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FoodGroupFindFirstOrThrowArgs>(args?: SelectSubset<T, FoodGroupFindFirstOrThrowArgs<ExtArgs>>): Prisma__FoodGroupClient<$Result.GetResult<Prisma.$FoodGroupPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FoodGroups that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FoodGroupFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FoodGroups
+     * const foodGroups = await prisma.foodGroup.findMany()
+     * 
+     * // Get first 10 FoodGroups
+     * const foodGroups = await prisma.foodGroup.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const foodGroupWithIdOnly = await prisma.foodGroup.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FoodGroupFindManyArgs>(args?: SelectSubset<T, FoodGroupFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FoodGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FoodGroup.
+     * @param {FoodGroupCreateArgs} args - Arguments to create a FoodGroup.
+     * @example
+     * // Create one FoodGroup
+     * const FoodGroup = await prisma.foodGroup.create({
+     *   data: {
+     *     // ... data to create a FoodGroup
+     *   }
+     * })
+     * 
+     */
+    create<T extends FoodGroupCreateArgs>(args: SelectSubset<T, FoodGroupCreateArgs<ExtArgs>>): Prisma__FoodGroupClient<$Result.GetResult<Prisma.$FoodGroupPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FoodGroups.
+     * @param {FoodGroupCreateManyArgs} args - Arguments to create many FoodGroups.
+     * @example
+     * // Create many FoodGroups
+     * const foodGroup = await prisma.foodGroup.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FoodGroupCreateManyArgs>(args?: SelectSubset<T, FoodGroupCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FoodGroups and returns the data saved in the database.
+     * @param {FoodGroupCreateManyAndReturnArgs} args - Arguments to create many FoodGroups.
+     * @example
+     * // Create many FoodGroups
+     * const foodGroup = await prisma.foodGroup.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FoodGroups and only return the `id`
+     * const foodGroupWithIdOnly = await prisma.foodGroup.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FoodGroupCreateManyAndReturnArgs>(args?: SelectSubset<T, FoodGroupCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FoodGroupPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FoodGroup.
+     * @param {FoodGroupDeleteArgs} args - Arguments to delete one FoodGroup.
+     * @example
+     * // Delete one FoodGroup
+     * const FoodGroup = await prisma.foodGroup.delete({
+     *   where: {
+     *     // ... filter to delete one FoodGroup
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FoodGroupDeleteArgs>(args: SelectSubset<T, FoodGroupDeleteArgs<ExtArgs>>): Prisma__FoodGroupClient<$Result.GetResult<Prisma.$FoodGroupPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FoodGroup.
+     * @param {FoodGroupUpdateArgs} args - Arguments to update one FoodGroup.
+     * @example
+     * // Update one FoodGroup
+     * const foodGroup = await prisma.foodGroup.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FoodGroupUpdateArgs>(args: SelectSubset<T, FoodGroupUpdateArgs<ExtArgs>>): Prisma__FoodGroupClient<$Result.GetResult<Prisma.$FoodGroupPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FoodGroups.
+     * @param {FoodGroupDeleteManyArgs} args - Arguments to filter FoodGroups to delete.
+     * @example
+     * // Delete a few FoodGroups
+     * const { count } = await prisma.foodGroup.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FoodGroupDeleteManyArgs>(args?: SelectSubset<T, FoodGroupDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FoodGroups.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FoodGroupUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FoodGroups
+     * const foodGroup = await prisma.foodGroup.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FoodGroupUpdateManyArgs>(args: SelectSubset<T, FoodGroupUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FoodGroups and returns the data updated in the database.
+     * @param {FoodGroupUpdateManyAndReturnArgs} args - Arguments to update many FoodGroups.
+     * @example
+     * // Update many FoodGroups
+     * const foodGroup = await prisma.foodGroup.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FoodGroups and only return the `id`
+     * const foodGroupWithIdOnly = await prisma.foodGroup.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FoodGroupUpdateManyAndReturnArgs>(args: SelectSubset<T, FoodGroupUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FoodGroupPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FoodGroup.
+     * @param {FoodGroupUpsertArgs} args - Arguments to update or create a FoodGroup.
+     * @example
+     * // Update or create a FoodGroup
+     * const foodGroup = await prisma.foodGroup.upsert({
+     *   create: {
+     *     // ... data to create a FoodGroup
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FoodGroup we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FoodGroupUpsertArgs>(args: SelectSubset<T, FoodGroupUpsertArgs<ExtArgs>>): Prisma__FoodGroupClient<$Result.GetResult<Prisma.$FoodGroupPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FoodGroups.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FoodGroupCountArgs} args - Arguments to filter FoodGroups to count.
+     * @example
+     * // Count the number of FoodGroups
+     * const count = await prisma.foodGroup.count({
+     *   where: {
+     *     // ... the filter for the FoodGroups we want to count
+     *   }
+     * })
+    **/
+    count<T extends FoodGroupCountArgs>(
+      args?: Subset<T, FoodGroupCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FoodGroupCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FoodGroup.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FoodGroupAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FoodGroupAggregateArgs>(args: Subset<T, FoodGroupAggregateArgs>): Prisma.PrismaPromise<GetFoodGroupAggregateType<T>>
+
+    /**
+     * Group by FoodGroup.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FoodGroupGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FoodGroupGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FoodGroupGroupByArgs['orderBy'] }
+        : { orderBy?: FoodGroupGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FoodGroupGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFoodGroupGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FoodGroup model
+   */
+  readonly fields: FoodGroupFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FoodGroup.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FoodGroupClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    foods<T extends FoodGroup$foodsArgs<ExtArgs> = {}>(args?: Subset<T, FoodGroup$foodsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FoodPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FoodGroup model
+   */
+  interface FoodGroupFieldRefs {
+    readonly id: FieldRef<"FoodGroup", 'String'>
+    readonly name: FieldRef<"FoodGroup", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FoodGroup findUnique
+   */
+  export type FoodGroupFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodGroup
+     */
+    select?: FoodGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodGroup
+     */
+    omit?: FoodGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which FoodGroup to fetch.
+     */
+    where: FoodGroupWhereUniqueInput
+  }
+
+  /**
+   * FoodGroup findUniqueOrThrow
+   */
+  export type FoodGroupFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodGroup
+     */
+    select?: FoodGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodGroup
+     */
+    omit?: FoodGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which FoodGroup to fetch.
+     */
+    where: FoodGroupWhereUniqueInput
+  }
+
+  /**
+   * FoodGroup findFirst
+   */
+  export type FoodGroupFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodGroup
+     */
+    select?: FoodGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodGroup
+     */
+    omit?: FoodGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which FoodGroup to fetch.
+     */
+    where?: FoodGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FoodGroups to fetch.
+     */
+    orderBy?: FoodGroupOrderByWithRelationInput | FoodGroupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FoodGroups.
+     */
+    cursor?: FoodGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FoodGroups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FoodGroups.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FoodGroups.
+     */
+    distinct?: FoodGroupScalarFieldEnum | FoodGroupScalarFieldEnum[]
+  }
+
+  /**
+   * FoodGroup findFirstOrThrow
+   */
+  export type FoodGroupFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodGroup
+     */
+    select?: FoodGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodGroup
+     */
+    omit?: FoodGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which FoodGroup to fetch.
+     */
+    where?: FoodGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FoodGroups to fetch.
+     */
+    orderBy?: FoodGroupOrderByWithRelationInput | FoodGroupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FoodGroups.
+     */
+    cursor?: FoodGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FoodGroups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FoodGroups.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FoodGroups.
+     */
+    distinct?: FoodGroupScalarFieldEnum | FoodGroupScalarFieldEnum[]
+  }
+
+  /**
+   * FoodGroup findMany
+   */
+  export type FoodGroupFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodGroup
+     */
+    select?: FoodGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodGroup
+     */
+    omit?: FoodGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodGroupInclude<ExtArgs> | null
+    /**
+     * Filter, which FoodGroups to fetch.
+     */
+    where?: FoodGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FoodGroups to fetch.
+     */
+    orderBy?: FoodGroupOrderByWithRelationInput | FoodGroupOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FoodGroups.
+     */
+    cursor?: FoodGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FoodGroups from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FoodGroups.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FoodGroups.
+     */
+    distinct?: FoodGroupScalarFieldEnum | FoodGroupScalarFieldEnum[]
+  }
+
+  /**
+   * FoodGroup create
+   */
+  export type FoodGroupCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodGroup
+     */
+    select?: FoodGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodGroup
+     */
+    omit?: FoodGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodGroupInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FoodGroup.
+     */
+    data: XOR<FoodGroupCreateInput, FoodGroupUncheckedCreateInput>
+  }
+
+  /**
+   * FoodGroup createMany
+   */
+  export type FoodGroupCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FoodGroups.
+     */
+    data: FoodGroupCreateManyInput | FoodGroupCreateManyInput[]
+  }
+
+  /**
+   * FoodGroup createManyAndReturn
+   */
+  export type FoodGroupCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodGroup
+     */
+    select?: FoodGroupSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodGroup
+     */
+    omit?: FoodGroupOmit<ExtArgs> | null
+    /**
+     * The data used to create many FoodGroups.
+     */
+    data: FoodGroupCreateManyInput | FoodGroupCreateManyInput[]
+  }
+
+  /**
+   * FoodGroup update
+   */
+  export type FoodGroupUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodGroup
+     */
+    select?: FoodGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodGroup
+     */
+    omit?: FoodGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodGroupInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FoodGroup.
+     */
+    data: XOR<FoodGroupUpdateInput, FoodGroupUncheckedUpdateInput>
+    /**
+     * Choose, which FoodGroup to update.
+     */
+    where: FoodGroupWhereUniqueInput
+  }
+
+  /**
+   * FoodGroup updateMany
+   */
+  export type FoodGroupUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FoodGroups.
+     */
+    data: XOR<FoodGroupUpdateManyMutationInput, FoodGroupUncheckedUpdateManyInput>
+    /**
+     * Filter which FoodGroups to update
+     */
+    where?: FoodGroupWhereInput
+    /**
+     * Limit how many FoodGroups to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FoodGroup updateManyAndReturn
+   */
+  export type FoodGroupUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodGroup
+     */
+    select?: FoodGroupSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodGroup
+     */
+    omit?: FoodGroupOmit<ExtArgs> | null
+    /**
+     * The data used to update FoodGroups.
+     */
+    data: XOR<FoodGroupUpdateManyMutationInput, FoodGroupUncheckedUpdateManyInput>
+    /**
+     * Filter which FoodGroups to update
+     */
+    where?: FoodGroupWhereInput
+    /**
+     * Limit how many FoodGroups to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FoodGroup upsert
+   */
+  export type FoodGroupUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodGroup
+     */
+    select?: FoodGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodGroup
+     */
+    omit?: FoodGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodGroupInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FoodGroup to update in case it exists.
+     */
+    where: FoodGroupWhereUniqueInput
+    /**
+     * In case the FoodGroup found by the `where` argument doesn't exist, create a new FoodGroup with this data.
+     */
+    create: XOR<FoodGroupCreateInput, FoodGroupUncheckedCreateInput>
+    /**
+     * In case the FoodGroup was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FoodGroupUpdateInput, FoodGroupUncheckedUpdateInput>
+  }
+
+  /**
+   * FoodGroup delete
+   */
+  export type FoodGroupDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodGroup
+     */
+    select?: FoodGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodGroup
+     */
+    omit?: FoodGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodGroupInclude<ExtArgs> | null
+    /**
+     * Filter which FoodGroup to delete.
+     */
+    where: FoodGroupWhereUniqueInput
+  }
+
+  /**
+   * FoodGroup deleteMany
+   */
+  export type FoodGroupDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FoodGroups to delete
+     */
+    where?: FoodGroupWhereInput
+    /**
+     * Limit how many FoodGroups to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FoodGroup.foods
+   */
+  export type FoodGroup$foodsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Food
+     */
+    select?: FoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Food
+     */
+    omit?: FoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodInclude<ExtArgs> | null
+    where?: FoodWhereInput
+    orderBy?: FoodOrderByWithRelationInput | FoodOrderByWithRelationInput[]
+    cursor?: FoodWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FoodScalarFieldEnum | FoodScalarFieldEnum[]
+  }
+
+  /**
+   * FoodGroup without action
+   */
+  export type FoodGroupDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodGroup
+     */
+    select?: FoodGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodGroup
+     */
+    omit?: FoodGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodGroupInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Food
+   */
+
+  export type AggregateFood = {
+    _count: FoodCountAggregateOutputType | null
+    _avg: FoodAvgAggregateOutputType | null
+    _sum: FoodSumAggregateOutputType | null
+    _min: FoodMinAggregateOutputType | null
+    _max: FoodMaxAggregateOutputType | null
+  }
+
+  export type FoodAvgAggregateOutputType = {
+    calories: number | null
+    protein: number | null
+    fat: number | null
+    carbohydrates: number | null
+    water: number | null
+    nitrogen: number | null
+    vitaminA_ui: number | null
+    vitaminB1_mcg: number | null
+    vitaminB2_mcg: number | null
+    vitaminC_mcg: number | null
+    niacin_mcg: number | null
+    sodium_mg: number | null
+    potassium_mg: number | null
+    calcium_mg: number | null
+    magnesium_mg: number | null
+    iron_mg: number | null
+    copper_mg: number | null
+    phosphorus_mg: number | null
+    sulfur_mg: number | null
+    chloride_mg: number | null
+    phenylalanine_mg: number | null
+    isoleucine_mg: number | null
+    leucine_mg: number | null
+    lysine_mg: number | null
+    methionine_mg: number | null
+    threonine_mg: number | null
+    tryptophan_mg: number | null
+    valine_mg: number | null
+    acid: number | null
+    alcal: number | null
+  }
+
+  export type FoodSumAggregateOutputType = {
+    calories: number | null
+    protein: number | null
+    fat: number | null
+    carbohydrates: number | null
+    water: number | null
+    nitrogen: number | null
+    vitaminA_ui: number | null
+    vitaminB1_mcg: number | null
+    vitaminB2_mcg: number | null
+    vitaminC_mcg: number | null
+    niacin_mcg: number | null
+    sodium_mg: number | null
+    potassium_mg: number | null
+    calcium_mg: number | null
+    magnesium_mg: number | null
+    iron_mg: number | null
+    copper_mg: number | null
+    phosphorus_mg: number | null
+    sulfur_mg: number | null
+    chloride_mg: number | null
+    phenylalanine_mg: number | null
+    isoleucine_mg: number | null
+    leucine_mg: number | null
+    lysine_mg: number | null
+    methionine_mg: number | null
+    threonine_mg: number | null
+    tryptophan_mg: number | null
+    valine_mg: number | null
+    acid: number | null
+    alcal: number | null
+  }
+
+  export type FoodMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    state: string | null
+    foodGroupId: string | null
+    calories: number | null
+    protein: number | null
+    fat: number | null
+    carbohydrates: number | null
+    water: number | null
+    nitrogen: number | null
+    vitaminA_ui: number | null
+    vitaminB1_mcg: number | null
+    vitaminB2_mcg: number | null
+    vitaminC_mcg: number | null
+    niacin_mcg: number | null
+    sodium_mg: number | null
+    potassium_mg: number | null
+    calcium_mg: number | null
+    magnesium_mg: number | null
+    iron_mg: number | null
+    copper_mg: number | null
+    phosphorus_mg: number | null
+    sulfur_mg: number | null
+    chloride_mg: number | null
+    phenylalanine_mg: number | null
+    isoleucine_mg: number | null
+    leucine_mg: number | null
+    lysine_mg: number | null
+    methionine_mg: number | null
+    threonine_mg: number | null
+    tryptophan_mg: number | null
+    valine_mg: number | null
+    acid: number | null
+    alcal: number | null
+  }
+
+  export type FoodMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    state: string | null
+    foodGroupId: string | null
+    calories: number | null
+    protein: number | null
+    fat: number | null
+    carbohydrates: number | null
+    water: number | null
+    nitrogen: number | null
+    vitaminA_ui: number | null
+    vitaminB1_mcg: number | null
+    vitaminB2_mcg: number | null
+    vitaminC_mcg: number | null
+    niacin_mcg: number | null
+    sodium_mg: number | null
+    potassium_mg: number | null
+    calcium_mg: number | null
+    magnesium_mg: number | null
+    iron_mg: number | null
+    copper_mg: number | null
+    phosphorus_mg: number | null
+    sulfur_mg: number | null
+    chloride_mg: number | null
+    phenylalanine_mg: number | null
+    isoleucine_mg: number | null
+    leucine_mg: number | null
+    lysine_mg: number | null
+    methionine_mg: number | null
+    threonine_mg: number | null
+    tryptophan_mg: number | null
+    valine_mg: number | null
+    acid: number | null
+    alcal: number | null
+  }
+
+  export type FoodCountAggregateOutputType = {
+    id: number
+    name: number
+    state: number
+    foodGroupId: number
+    calories: number
+    protein: number
+    fat: number
+    carbohydrates: number
+    water: number
+    nitrogen: number
+    vitaminA_ui: number
+    vitaminB1_mcg: number
+    vitaminB2_mcg: number
+    vitaminC_mcg: number
+    niacin_mcg: number
+    sodium_mg: number
+    potassium_mg: number
+    calcium_mg: number
+    magnesium_mg: number
+    iron_mg: number
+    copper_mg: number
+    phosphorus_mg: number
+    sulfur_mg: number
+    chloride_mg: number
+    phenylalanine_mg: number
+    isoleucine_mg: number
+    leucine_mg: number
+    lysine_mg: number
+    methionine_mg: number
+    threonine_mg: number
+    tryptophan_mg: number
+    valine_mg: number
+    acid: number
+    alcal: number
+    _all: number
+  }
+
+
+  export type FoodAvgAggregateInputType = {
+    calories?: true
+    protein?: true
+    fat?: true
+    carbohydrates?: true
+    water?: true
+    nitrogen?: true
+    vitaminA_ui?: true
+    vitaminB1_mcg?: true
+    vitaminB2_mcg?: true
+    vitaminC_mcg?: true
+    niacin_mcg?: true
+    sodium_mg?: true
+    potassium_mg?: true
+    calcium_mg?: true
+    magnesium_mg?: true
+    iron_mg?: true
+    copper_mg?: true
+    phosphorus_mg?: true
+    sulfur_mg?: true
+    chloride_mg?: true
+    phenylalanine_mg?: true
+    isoleucine_mg?: true
+    leucine_mg?: true
+    lysine_mg?: true
+    methionine_mg?: true
+    threonine_mg?: true
+    tryptophan_mg?: true
+    valine_mg?: true
+    acid?: true
+    alcal?: true
+  }
+
+  export type FoodSumAggregateInputType = {
+    calories?: true
+    protein?: true
+    fat?: true
+    carbohydrates?: true
+    water?: true
+    nitrogen?: true
+    vitaminA_ui?: true
+    vitaminB1_mcg?: true
+    vitaminB2_mcg?: true
+    vitaminC_mcg?: true
+    niacin_mcg?: true
+    sodium_mg?: true
+    potassium_mg?: true
+    calcium_mg?: true
+    magnesium_mg?: true
+    iron_mg?: true
+    copper_mg?: true
+    phosphorus_mg?: true
+    sulfur_mg?: true
+    chloride_mg?: true
+    phenylalanine_mg?: true
+    isoleucine_mg?: true
+    leucine_mg?: true
+    lysine_mg?: true
+    methionine_mg?: true
+    threonine_mg?: true
+    tryptophan_mg?: true
+    valine_mg?: true
+    acid?: true
+    alcal?: true
+  }
+
+  export type FoodMinAggregateInputType = {
+    id?: true
+    name?: true
+    state?: true
+    foodGroupId?: true
+    calories?: true
+    protein?: true
+    fat?: true
+    carbohydrates?: true
+    water?: true
+    nitrogen?: true
+    vitaminA_ui?: true
+    vitaminB1_mcg?: true
+    vitaminB2_mcg?: true
+    vitaminC_mcg?: true
+    niacin_mcg?: true
+    sodium_mg?: true
+    potassium_mg?: true
+    calcium_mg?: true
+    magnesium_mg?: true
+    iron_mg?: true
+    copper_mg?: true
+    phosphorus_mg?: true
+    sulfur_mg?: true
+    chloride_mg?: true
+    phenylalanine_mg?: true
+    isoleucine_mg?: true
+    leucine_mg?: true
+    lysine_mg?: true
+    methionine_mg?: true
+    threonine_mg?: true
+    tryptophan_mg?: true
+    valine_mg?: true
+    acid?: true
+    alcal?: true
+  }
+
+  export type FoodMaxAggregateInputType = {
+    id?: true
+    name?: true
+    state?: true
+    foodGroupId?: true
+    calories?: true
+    protein?: true
+    fat?: true
+    carbohydrates?: true
+    water?: true
+    nitrogen?: true
+    vitaminA_ui?: true
+    vitaminB1_mcg?: true
+    vitaminB2_mcg?: true
+    vitaminC_mcg?: true
+    niacin_mcg?: true
+    sodium_mg?: true
+    potassium_mg?: true
+    calcium_mg?: true
+    magnesium_mg?: true
+    iron_mg?: true
+    copper_mg?: true
+    phosphorus_mg?: true
+    sulfur_mg?: true
+    chloride_mg?: true
+    phenylalanine_mg?: true
+    isoleucine_mg?: true
+    leucine_mg?: true
+    lysine_mg?: true
+    methionine_mg?: true
+    threonine_mg?: true
+    tryptophan_mg?: true
+    valine_mg?: true
+    acid?: true
+    alcal?: true
+  }
+
+  export type FoodCountAggregateInputType = {
+    id?: true
+    name?: true
+    state?: true
+    foodGroupId?: true
+    calories?: true
+    protein?: true
+    fat?: true
+    carbohydrates?: true
+    water?: true
+    nitrogen?: true
+    vitaminA_ui?: true
+    vitaminB1_mcg?: true
+    vitaminB2_mcg?: true
+    vitaminC_mcg?: true
+    niacin_mcg?: true
+    sodium_mg?: true
+    potassium_mg?: true
+    calcium_mg?: true
+    magnesium_mg?: true
+    iron_mg?: true
+    copper_mg?: true
+    phosphorus_mg?: true
+    sulfur_mg?: true
+    chloride_mg?: true
+    phenylalanine_mg?: true
+    isoleucine_mg?: true
+    leucine_mg?: true
+    lysine_mg?: true
+    methionine_mg?: true
+    threonine_mg?: true
+    tryptophan_mg?: true
+    valine_mg?: true
+    acid?: true
+    alcal?: true
+    _all?: true
+  }
+
+  export type FoodAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Food to aggregate.
+     */
+    where?: FoodWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Foods to fetch.
+     */
+    orderBy?: FoodOrderByWithRelationInput | FoodOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FoodWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Foods from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Foods.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Foods
+    **/
+    _count?: true | FoodCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FoodAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FoodSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FoodMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FoodMaxAggregateInputType
+  }
+
+  export type GetFoodAggregateType<T extends FoodAggregateArgs> = {
+        [P in keyof T & keyof AggregateFood]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFood[P]>
+      : GetScalarType<T[P], AggregateFood[P]>
+  }
+
+
+
+
+  export type FoodGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FoodWhereInput
+    orderBy?: FoodOrderByWithAggregationInput | FoodOrderByWithAggregationInput[]
+    by: FoodScalarFieldEnum[] | FoodScalarFieldEnum
+    having?: FoodScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FoodCountAggregateInputType | true
+    _avg?: FoodAvgAggregateInputType
+    _sum?: FoodSumAggregateInputType
+    _min?: FoodMinAggregateInputType
+    _max?: FoodMaxAggregateInputType
+  }
+
+  export type FoodGroupByOutputType = {
+    id: string
+    name: string
+    state: string
+    foodGroupId: string
+    calories: number | null
+    protein: number | null
+    fat: number | null
+    carbohydrates: number | null
+    water: number | null
+    nitrogen: number | null
+    vitaminA_ui: number | null
+    vitaminB1_mcg: number | null
+    vitaminB2_mcg: number | null
+    vitaminC_mcg: number | null
+    niacin_mcg: number | null
+    sodium_mg: number | null
+    potassium_mg: number | null
+    calcium_mg: number | null
+    magnesium_mg: number | null
+    iron_mg: number | null
+    copper_mg: number | null
+    phosphorus_mg: number | null
+    sulfur_mg: number | null
+    chloride_mg: number | null
+    phenylalanine_mg: number | null
+    isoleucine_mg: number | null
+    leucine_mg: number | null
+    lysine_mg: number | null
+    methionine_mg: number | null
+    threonine_mg: number | null
+    tryptophan_mg: number | null
+    valine_mg: number | null
+    acid: number | null
+    alcal: number | null
+    _count: FoodCountAggregateOutputType | null
+    _avg: FoodAvgAggregateOutputType | null
+    _sum: FoodSumAggregateOutputType | null
+    _min: FoodMinAggregateOutputType | null
+    _max: FoodMaxAggregateOutputType | null
+  }
+
+  type GetFoodGroupByPayload<T extends FoodGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FoodGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FoodGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FoodGroupByOutputType[P]>
+            : GetScalarType<T[P], FoodGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FoodSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    state?: boolean
+    foodGroupId?: boolean
+    calories?: boolean
+    protein?: boolean
+    fat?: boolean
+    carbohydrates?: boolean
+    water?: boolean
+    nitrogen?: boolean
+    vitaminA_ui?: boolean
+    vitaminB1_mcg?: boolean
+    vitaminB2_mcg?: boolean
+    vitaminC_mcg?: boolean
+    niacin_mcg?: boolean
+    sodium_mg?: boolean
+    potassium_mg?: boolean
+    calcium_mg?: boolean
+    magnesium_mg?: boolean
+    iron_mg?: boolean
+    copper_mg?: boolean
+    phosphorus_mg?: boolean
+    sulfur_mg?: boolean
+    chloride_mg?: boolean
+    phenylalanine_mg?: boolean
+    isoleucine_mg?: boolean
+    leucine_mg?: boolean
+    lysine_mg?: boolean
+    methionine_mg?: boolean
+    threonine_mg?: boolean
+    tryptophan_mg?: boolean
+    valine_mg?: boolean
+    acid?: boolean
+    alcal?: boolean
+    foodGroup?: boolean | FoodGroupDefaultArgs<ExtArgs>
+    nutritionPlanMealOptionFoods?: boolean | Food$nutritionPlanMealOptionFoodsArgs<ExtArgs>
+    _count?: boolean | FoodCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["food"]>
+
+  export type FoodSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    state?: boolean
+    foodGroupId?: boolean
+    calories?: boolean
+    protein?: boolean
+    fat?: boolean
+    carbohydrates?: boolean
+    water?: boolean
+    nitrogen?: boolean
+    vitaminA_ui?: boolean
+    vitaminB1_mcg?: boolean
+    vitaminB2_mcg?: boolean
+    vitaminC_mcg?: boolean
+    niacin_mcg?: boolean
+    sodium_mg?: boolean
+    potassium_mg?: boolean
+    calcium_mg?: boolean
+    magnesium_mg?: boolean
+    iron_mg?: boolean
+    copper_mg?: boolean
+    phosphorus_mg?: boolean
+    sulfur_mg?: boolean
+    chloride_mg?: boolean
+    phenylalanine_mg?: boolean
+    isoleucine_mg?: boolean
+    leucine_mg?: boolean
+    lysine_mg?: boolean
+    methionine_mg?: boolean
+    threonine_mg?: boolean
+    tryptophan_mg?: boolean
+    valine_mg?: boolean
+    acid?: boolean
+    alcal?: boolean
+    foodGroup?: boolean | FoodGroupDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["food"]>
+
+  export type FoodSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    state?: boolean
+    foodGroupId?: boolean
+    calories?: boolean
+    protein?: boolean
+    fat?: boolean
+    carbohydrates?: boolean
+    water?: boolean
+    nitrogen?: boolean
+    vitaminA_ui?: boolean
+    vitaminB1_mcg?: boolean
+    vitaminB2_mcg?: boolean
+    vitaminC_mcg?: boolean
+    niacin_mcg?: boolean
+    sodium_mg?: boolean
+    potassium_mg?: boolean
+    calcium_mg?: boolean
+    magnesium_mg?: boolean
+    iron_mg?: boolean
+    copper_mg?: boolean
+    phosphorus_mg?: boolean
+    sulfur_mg?: boolean
+    chloride_mg?: boolean
+    phenylalanine_mg?: boolean
+    isoleucine_mg?: boolean
+    leucine_mg?: boolean
+    lysine_mg?: boolean
+    methionine_mg?: boolean
+    threonine_mg?: boolean
+    tryptophan_mg?: boolean
+    valine_mg?: boolean
+    acid?: boolean
+    alcal?: boolean
+    foodGroup?: boolean | FoodGroupDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["food"]>
+
+  export type FoodSelectScalar = {
+    id?: boolean
+    name?: boolean
+    state?: boolean
+    foodGroupId?: boolean
+    calories?: boolean
+    protein?: boolean
+    fat?: boolean
+    carbohydrates?: boolean
+    water?: boolean
+    nitrogen?: boolean
+    vitaminA_ui?: boolean
+    vitaminB1_mcg?: boolean
+    vitaminB2_mcg?: boolean
+    vitaminC_mcg?: boolean
+    niacin_mcg?: boolean
+    sodium_mg?: boolean
+    potassium_mg?: boolean
+    calcium_mg?: boolean
+    magnesium_mg?: boolean
+    iron_mg?: boolean
+    copper_mg?: boolean
+    phosphorus_mg?: boolean
+    sulfur_mg?: boolean
+    chloride_mg?: boolean
+    phenylalanine_mg?: boolean
+    isoleucine_mg?: boolean
+    leucine_mg?: boolean
+    lysine_mg?: boolean
+    methionine_mg?: boolean
+    threonine_mg?: boolean
+    tryptophan_mg?: boolean
+    valine_mg?: boolean
+    acid?: boolean
+    alcal?: boolean
+  }
+
+  export type FoodOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "state" | "foodGroupId" | "calories" | "protein" | "fat" | "carbohydrates" | "water" | "nitrogen" | "vitaminA_ui" | "vitaminB1_mcg" | "vitaminB2_mcg" | "vitaminC_mcg" | "niacin_mcg" | "sodium_mg" | "potassium_mg" | "calcium_mg" | "magnesium_mg" | "iron_mg" | "copper_mg" | "phosphorus_mg" | "sulfur_mg" | "chloride_mg" | "phenylalanine_mg" | "isoleucine_mg" | "leucine_mg" | "lysine_mg" | "methionine_mg" | "threonine_mg" | "tryptophan_mg" | "valine_mg" | "acid" | "alcal", ExtArgs["result"]["food"]>
+  export type FoodInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    foodGroup?: boolean | FoodGroupDefaultArgs<ExtArgs>
+    nutritionPlanMealOptionFoods?: boolean | Food$nutritionPlanMealOptionFoodsArgs<ExtArgs>
+    _count?: boolean | FoodCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type FoodIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    foodGroup?: boolean | FoodGroupDefaultArgs<ExtArgs>
+  }
+  export type FoodIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    foodGroup?: boolean | FoodGroupDefaultArgs<ExtArgs>
+  }
+
+  export type $FoodPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Food"
+    objects: {
+      foodGroup: Prisma.$FoodGroupPayload<ExtArgs>
+      nutritionPlanMealOptionFoods: Prisma.$NutritionPlanMealOptionFoodPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      state: string
+      foodGroupId: string
+      calories: number | null
+      protein: number | null
+      fat: number | null
+      carbohydrates: number | null
+      water: number | null
+      nitrogen: number | null
+      vitaminA_ui: number | null
+      vitaminB1_mcg: number | null
+      vitaminB2_mcg: number | null
+      vitaminC_mcg: number | null
+      niacin_mcg: number | null
+      sodium_mg: number | null
+      potassium_mg: number | null
+      calcium_mg: number | null
+      magnesium_mg: number | null
+      iron_mg: number | null
+      copper_mg: number | null
+      phosphorus_mg: number | null
+      sulfur_mg: number | null
+      chloride_mg: number | null
+      phenylalanine_mg: number | null
+      isoleucine_mg: number | null
+      leucine_mg: number | null
+      lysine_mg: number | null
+      methionine_mg: number | null
+      threonine_mg: number | null
+      tryptophan_mg: number | null
+      valine_mg: number | null
+      acid: number | null
+      alcal: number | null
+    }, ExtArgs["result"]["food"]>
+    composites: {}
+  }
+
+  type FoodGetPayload<S extends boolean | null | undefined | FoodDefaultArgs> = $Result.GetResult<Prisma.$FoodPayload, S>
+
+  type FoodCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FoodFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FoodCountAggregateInputType | true
+    }
+
+  export interface FoodDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Food'], meta: { name: 'Food' } }
+    /**
+     * Find zero or one Food that matches the filter.
+     * @param {FoodFindUniqueArgs} args - Arguments to find a Food
+     * @example
+     * // Get one Food
+     * const food = await prisma.food.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FoodFindUniqueArgs>(args: SelectSubset<T, FoodFindUniqueArgs<ExtArgs>>): Prisma__FoodClient<$Result.GetResult<Prisma.$FoodPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Food that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FoodFindUniqueOrThrowArgs} args - Arguments to find a Food
+     * @example
+     * // Get one Food
+     * const food = await prisma.food.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FoodFindUniqueOrThrowArgs>(args: SelectSubset<T, FoodFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FoodClient<$Result.GetResult<Prisma.$FoodPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Food that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FoodFindFirstArgs} args - Arguments to find a Food
+     * @example
+     * // Get one Food
+     * const food = await prisma.food.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FoodFindFirstArgs>(args?: SelectSubset<T, FoodFindFirstArgs<ExtArgs>>): Prisma__FoodClient<$Result.GetResult<Prisma.$FoodPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Food that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FoodFindFirstOrThrowArgs} args - Arguments to find a Food
+     * @example
+     * // Get one Food
+     * const food = await prisma.food.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FoodFindFirstOrThrowArgs>(args?: SelectSubset<T, FoodFindFirstOrThrowArgs<ExtArgs>>): Prisma__FoodClient<$Result.GetResult<Prisma.$FoodPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Foods that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FoodFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Foods
+     * const foods = await prisma.food.findMany()
+     * 
+     * // Get first 10 Foods
+     * const foods = await prisma.food.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const foodWithIdOnly = await prisma.food.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FoodFindManyArgs>(args?: SelectSubset<T, FoodFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FoodPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Food.
+     * @param {FoodCreateArgs} args - Arguments to create a Food.
+     * @example
+     * // Create one Food
+     * const Food = await prisma.food.create({
+     *   data: {
+     *     // ... data to create a Food
+     *   }
+     * })
+     * 
+     */
+    create<T extends FoodCreateArgs>(args: SelectSubset<T, FoodCreateArgs<ExtArgs>>): Prisma__FoodClient<$Result.GetResult<Prisma.$FoodPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Foods.
+     * @param {FoodCreateManyArgs} args - Arguments to create many Foods.
+     * @example
+     * // Create many Foods
+     * const food = await prisma.food.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FoodCreateManyArgs>(args?: SelectSubset<T, FoodCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Foods and returns the data saved in the database.
+     * @param {FoodCreateManyAndReturnArgs} args - Arguments to create many Foods.
+     * @example
+     * // Create many Foods
+     * const food = await prisma.food.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Foods and only return the `id`
+     * const foodWithIdOnly = await prisma.food.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FoodCreateManyAndReturnArgs>(args?: SelectSubset<T, FoodCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FoodPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Food.
+     * @param {FoodDeleteArgs} args - Arguments to delete one Food.
+     * @example
+     * // Delete one Food
+     * const Food = await prisma.food.delete({
+     *   where: {
+     *     // ... filter to delete one Food
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FoodDeleteArgs>(args: SelectSubset<T, FoodDeleteArgs<ExtArgs>>): Prisma__FoodClient<$Result.GetResult<Prisma.$FoodPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Food.
+     * @param {FoodUpdateArgs} args - Arguments to update one Food.
+     * @example
+     * // Update one Food
+     * const food = await prisma.food.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FoodUpdateArgs>(args: SelectSubset<T, FoodUpdateArgs<ExtArgs>>): Prisma__FoodClient<$Result.GetResult<Prisma.$FoodPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Foods.
+     * @param {FoodDeleteManyArgs} args - Arguments to filter Foods to delete.
+     * @example
+     * // Delete a few Foods
+     * const { count } = await prisma.food.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FoodDeleteManyArgs>(args?: SelectSubset<T, FoodDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Foods.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FoodUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Foods
+     * const food = await prisma.food.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FoodUpdateManyArgs>(args: SelectSubset<T, FoodUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Foods and returns the data updated in the database.
+     * @param {FoodUpdateManyAndReturnArgs} args - Arguments to update many Foods.
+     * @example
+     * // Update many Foods
+     * const food = await prisma.food.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Foods and only return the `id`
+     * const foodWithIdOnly = await prisma.food.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FoodUpdateManyAndReturnArgs>(args: SelectSubset<T, FoodUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FoodPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Food.
+     * @param {FoodUpsertArgs} args - Arguments to update or create a Food.
+     * @example
+     * // Update or create a Food
+     * const food = await prisma.food.upsert({
+     *   create: {
+     *     // ... data to create a Food
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Food we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FoodUpsertArgs>(args: SelectSubset<T, FoodUpsertArgs<ExtArgs>>): Prisma__FoodClient<$Result.GetResult<Prisma.$FoodPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Foods.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FoodCountArgs} args - Arguments to filter Foods to count.
+     * @example
+     * // Count the number of Foods
+     * const count = await prisma.food.count({
+     *   where: {
+     *     // ... the filter for the Foods we want to count
+     *   }
+     * })
+    **/
+    count<T extends FoodCountArgs>(
+      args?: Subset<T, FoodCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FoodCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Food.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FoodAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FoodAggregateArgs>(args: Subset<T, FoodAggregateArgs>): Prisma.PrismaPromise<GetFoodAggregateType<T>>
+
+    /**
+     * Group by Food.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FoodGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FoodGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FoodGroupByArgs['orderBy'] }
+        : { orderBy?: FoodGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FoodGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFoodGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Food model
+   */
+  readonly fields: FoodFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Food.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FoodClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    foodGroup<T extends FoodGroupDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FoodGroupDefaultArgs<ExtArgs>>): Prisma__FoodGroupClient<$Result.GetResult<Prisma.$FoodGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    nutritionPlanMealOptionFoods<T extends Food$nutritionPlanMealOptionFoodsArgs<ExtArgs> = {}>(args?: Subset<T, Food$nutritionPlanMealOptionFoodsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NutritionPlanMealOptionFoodPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Food model
+   */
+  interface FoodFieldRefs {
+    readonly id: FieldRef<"Food", 'String'>
+    readonly name: FieldRef<"Food", 'String'>
+    readonly state: FieldRef<"Food", 'String'>
+    readonly foodGroupId: FieldRef<"Food", 'String'>
+    readonly calories: FieldRef<"Food", 'Float'>
+    readonly protein: FieldRef<"Food", 'Float'>
+    readonly fat: FieldRef<"Food", 'Float'>
+    readonly carbohydrates: FieldRef<"Food", 'Float'>
+    readonly water: FieldRef<"Food", 'Float'>
+    readonly nitrogen: FieldRef<"Food", 'Float'>
+    readonly vitaminA_ui: FieldRef<"Food", 'Float'>
+    readonly vitaminB1_mcg: FieldRef<"Food", 'Float'>
+    readonly vitaminB2_mcg: FieldRef<"Food", 'Float'>
+    readonly vitaminC_mcg: FieldRef<"Food", 'Float'>
+    readonly niacin_mcg: FieldRef<"Food", 'Float'>
+    readonly sodium_mg: FieldRef<"Food", 'Float'>
+    readonly potassium_mg: FieldRef<"Food", 'Float'>
+    readonly calcium_mg: FieldRef<"Food", 'Float'>
+    readonly magnesium_mg: FieldRef<"Food", 'Float'>
+    readonly iron_mg: FieldRef<"Food", 'Float'>
+    readonly copper_mg: FieldRef<"Food", 'Float'>
+    readonly phosphorus_mg: FieldRef<"Food", 'Float'>
+    readonly sulfur_mg: FieldRef<"Food", 'Float'>
+    readonly chloride_mg: FieldRef<"Food", 'Float'>
+    readonly phenylalanine_mg: FieldRef<"Food", 'Float'>
+    readonly isoleucine_mg: FieldRef<"Food", 'Float'>
+    readonly leucine_mg: FieldRef<"Food", 'Float'>
+    readonly lysine_mg: FieldRef<"Food", 'Float'>
+    readonly methionine_mg: FieldRef<"Food", 'Float'>
+    readonly threonine_mg: FieldRef<"Food", 'Float'>
+    readonly tryptophan_mg: FieldRef<"Food", 'Float'>
+    readonly valine_mg: FieldRef<"Food", 'Float'>
+    readonly acid: FieldRef<"Food", 'Float'>
+    readonly alcal: FieldRef<"Food", 'Float'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Food findUnique
+   */
+  export type FoodFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Food
+     */
+    select?: FoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Food
+     */
+    omit?: FoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodInclude<ExtArgs> | null
+    /**
+     * Filter, which Food to fetch.
+     */
+    where: FoodWhereUniqueInput
+  }
+
+  /**
+   * Food findUniqueOrThrow
+   */
+  export type FoodFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Food
+     */
+    select?: FoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Food
+     */
+    omit?: FoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodInclude<ExtArgs> | null
+    /**
+     * Filter, which Food to fetch.
+     */
+    where: FoodWhereUniqueInput
+  }
+
+  /**
+   * Food findFirst
+   */
+  export type FoodFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Food
+     */
+    select?: FoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Food
+     */
+    omit?: FoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodInclude<ExtArgs> | null
+    /**
+     * Filter, which Food to fetch.
+     */
+    where?: FoodWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Foods to fetch.
+     */
+    orderBy?: FoodOrderByWithRelationInput | FoodOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Foods.
+     */
+    cursor?: FoodWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Foods from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Foods.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Foods.
+     */
+    distinct?: FoodScalarFieldEnum | FoodScalarFieldEnum[]
+  }
+
+  /**
+   * Food findFirstOrThrow
+   */
+  export type FoodFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Food
+     */
+    select?: FoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Food
+     */
+    omit?: FoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodInclude<ExtArgs> | null
+    /**
+     * Filter, which Food to fetch.
+     */
+    where?: FoodWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Foods to fetch.
+     */
+    orderBy?: FoodOrderByWithRelationInput | FoodOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Foods.
+     */
+    cursor?: FoodWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Foods from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Foods.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Foods.
+     */
+    distinct?: FoodScalarFieldEnum | FoodScalarFieldEnum[]
+  }
+
+  /**
+   * Food findMany
+   */
+  export type FoodFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Food
+     */
+    select?: FoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Food
+     */
+    omit?: FoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodInclude<ExtArgs> | null
+    /**
+     * Filter, which Foods to fetch.
+     */
+    where?: FoodWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Foods to fetch.
+     */
+    orderBy?: FoodOrderByWithRelationInput | FoodOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Foods.
+     */
+    cursor?: FoodWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Foods from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Foods.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Foods.
+     */
+    distinct?: FoodScalarFieldEnum | FoodScalarFieldEnum[]
+  }
+
+  /**
+   * Food create
+   */
+  export type FoodCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Food
+     */
+    select?: FoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Food
+     */
+    omit?: FoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Food.
+     */
+    data: XOR<FoodCreateInput, FoodUncheckedCreateInput>
+  }
+
+  /**
+   * Food createMany
+   */
+  export type FoodCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Foods.
+     */
+    data: FoodCreateManyInput | FoodCreateManyInput[]
+  }
+
+  /**
+   * Food createManyAndReturn
+   */
+  export type FoodCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Food
+     */
+    select?: FoodSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Food
+     */
+    omit?: FoodOmit<ExtArgs> | null
+    /**
+     * The data used to create many Foods.
+     */
+    data: FoodCreateManyInput | FoodCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Food update
+   */
+  export type FoodUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Food
+     */
+    select?: FoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Food
+     */
+    omit?: FoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Food.
+     */
+    data: XOR<FoodUpdateInput, FoodUncheckedUpdateInput>
+    /**
+     * Choose, which Food to update.
+     */
+    where: FoodWhereUniqueInput
+  }
+
+  /**
+   * Food updateMany
+   */
+  export type FoodUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Foods.
+     */
+    data: XOR<FoodUpdateManyMutationInput, FoodUncheckedUpdateManyInput>
+    /**
+     * Filter which Foods to update
+     */
+    where?: FoodWhereInput
+    /**
+     * Limit how many Foods to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Food updateManyAndReturn
+   */
+  export type FoodUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Food
+     */
+    select?: FoodSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Food
+     */
+    omit?: FoodOmit<ExtArgs> | null
+    /**
+     * The data used to update Foods.
+     */
+    data: XOR<FoodUpdateManyMutationInput, FoodUncheckedUpdateManyInput>
+    /**
+     * Filter which Foods to update
+     */
+    where?: FoodWhereInput
+    /**
+     * Limit how many Foods to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Food upsert
+   */
+  export type FoodUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Food
+     */
+    select?: FoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Food
+     */
+    omit?: FoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Food to update in case it exists.
+     */
+    where: FoodWhereUniqueInput
+    /**
+     * In case the Food found by the `where` argument doesn't exist, create a new Food with this data.
+     */
+    create: XOR<FoodCreateInput, FoodUncheckedCreateInput>
+    /**
+     * In case the Food was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FoodUpdateInput, FoodUncheckedUpdateInput>
+  }
+
+  /**
+   * Food delete
+   */
+  export type FoodDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Food
+     */
+    select?: FoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Food
+     */
+    omit?: FoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodInclude<ExtArgs> | null
+    /**
+     * Filter which Food to delete.
+     */
+    where: FoodWhereUniqueInput
+  }
+
+  /**
+   * Food deleteMany
+   */
+  export type FoodDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Foods to delete
+     */
+    where?: FoodWhereInput
+    /**
+     * Limit how many Foods to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Food.nutritionPlanMealOptionFoods
+   */
+  export type Food$nutritionPlanMealOptionFoodsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOptionFood
+     */
+    select?: NutritionPlanMealOptionFoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOptionFood
+     */
+    omit?: NutritionPlanMealOptionFoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionFoodInclude<ExtArgs> | null
+    where?: NutritionPlanMealOptionFoodWhereInput
+    orderBy?: NutritionPlanMealOptionFoodOrderByWithRelationInput | NutritionPlanMealOptionFoodOrderByWithRelationInput[]
+    cursor?: NutritionPlanMealOptionFoodWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NutritionPlanMealOptionFoodScalarFieldEnum | NutritionPlanMealOptionFoodScalarFieldEnum[]
+  }
+
+  /**
+   * Food without action
+   */
+  export type FoodDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Food
+     */
+    select?: FoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Food
+     */
+    omit?: FoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model NutritionPlan
+   */
+
+  export type AggregateNutritionPlan = {
+    _count: NutritionPlanCountAggregateOutputType | null
+    _min: NutritionPlanMinAggregateOutputType | null
+    _max: NutritionPlanMaxAggregateOutputType | null
+  }
+
+  export type NutritionPlanMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    name: string | null
+    description: string | null
+    active: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type NutritionPlanMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    name: string | null
+    description: string | null
+    active: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type NutritionPlanCountAggregateOutputType = {
+    id: number
+    userId: number
+    name: number
+    description: number
+    active: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type NutritionPlanMinAggregateInputType = {
+    id?: true
+    userId?: true
+    name?: true
+    description?: true
+    active?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type NutritionPlanMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    name?: true
+    description?: true
+    active?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type NutritionPlanCountAggregateInputType = {
+    id?: true
+    userId?: true
+    name?: true
+    description?: true
+    active?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type NutritionPlanAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which NutritionPlan to aggregate.
+     */
+    where?: NutritionPlanWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NutritionPlans to fetch.
+     */
+    orderBy?: NutritionPlanOrderByWithRelationInput | NutritionPlanOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: NutritionPlanWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NutritionPlans from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NutritionPlans.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned NutritionPlans
+    **/
+    _count?: true | NutritionPlanCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: NutritionPlanMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: NutritionPlanMaxAggregateInputType
+  }
+
+  export type GetNutritionPlanAggregateType<T extends NutritionPlanAggregateArgs> = {
+        [P in keyof T & keyof AggregateNutritionPlan]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateNutritionPlan[P]>
+      : GetScalarType<T[P], AggregateNutritionPlan[P]>
+  }
+
+
+
+
+  export type NutritionPlanGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NutritionPlanWhereInput
+    orderBy?: NutritionPlanOrderByWithAggregationInput | NutritionPlanOrderByWithAggregationInput[]
+    by: NutritionPlanScalarFieldEnum[] | NutritionPlanScalarFieldEnum
+    having?: NutritionPlanScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: NutritionPlanCountAggregateInputType | true
+    _min?: NutritionPlanMinAggregateInputType
+    _max?: NutritionPlanMaxAggregateInputType
+  }
+
+  export type NutritionPlanGroupByOutputType = {
+    id: string
+    userId: string
+    name: string
+    description: string | null
+    active: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: NutritionPlanCountAggregateOutputType | null
+    _min: NutritionPlanMinAggregateOutputType | null
+    _max: NutritionPlanMaxAggregateOutputType | null
+  }
+
+  type GetNutritionPlanGroupByPayload<T extends NutritionPlanGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<NutritionPlanGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof NutritionPlanGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], NutritionPlanGroupByOutputType[P]>
+            : GetScalarType<T[P], NutritionPlanGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type NutritionPlanSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    name?: boolean
+    description?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    days?: boolean | NutritionPlan$daysArgs<ExtArgs>
+    _count?: boolean | NutritionPlanCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["nutritionPlan"]>
+
+  export type NutritionPlanSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    name?: boolean
+    description?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["nutritionPlan"]>
+
+  export type NutritionPlanSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    name?: boolean
+    description?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["nutritionPlan"]>
+
+  export type NutritionPlanSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    name?: boolean
+    description?: boolean
+    active?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type NutritionPlanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "name" | "description" | "active" | "createdAt" | "updatedAt", ExtArgs["result"]["nutritionPlan"]>
+  export type NutritionPlanInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    days?: boolean | NutritionPlan$daysArgs<ExtArgs>
+    _count?: boolean | NutritionPlanCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type NutritionPlanIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type NutritionPlanIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $NutritionPlanPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "NutritionPlan"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      days: Prisma.$NutritionPlanDayPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      name: string
+      description: string | null
+      active: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["nutritionPlan"]>
+    composites: {}
+  }
+
+  type NutritionPlanGetPayload<S extends boolean | null | undefined | NutritionPlanDefaultArgs> = $Result.GetResult<Prisma.$NutritionPlanPayload, S>
+
+  type NutritionPlanCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<NutritionPlanFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: NutritionPlanCountAggregateInputType | true
+    }
+
+  export interface NutritionPlanDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['NutritionPlan'], meta: { name: 'NutritionPlan' } }
+    /**
+     * Find zero or one NutritionPlan that matches the filter.
+     * @param {NutritionPlanFindUniqueArgs} args - Arguments to find a NutritionPlan
+     * @example
+     * // Get one NutritionPlan
+     * const nutritionPlan = await prisma.nutritionPlan.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends NutritionPlanFindUniqueArgs>(args: SelectSubset<T, NutritionPlanFindUniqueArgs<ExtArgs>>): Prisma__NutritionPlanClient<$Result.GetResult<Prisma.$NutritionPlanPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one NutritionPlan that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {NutritionPlanFindUniqueOrThrowArgs} args - Arguments to find a NutritionPlan
+     * @example
+     * // Get one NutritionPlan
+     * const nutritionPlan = await prisma.nutritionPlan.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends NutritionPlanFindUniqueOrThrowArgs>(args: SelectSubset<T, NutritionPlanFindUniqueOrThrowArgs<ExtArgs>>): Prisma__NutritionPlanClient<$Result.GetResult<Prisma.$NutritionPlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first NutritionPlan that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanFindFirstArgs} args - Arguments to find a NutritionPlan
+     * @example
+     * // Get one NutritionPlan
+     * const nutritionPlan = await prisma.nutritionPlan.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends NutritionPlanFindFirstArgs>(args?: SelectSubset<T, NutritionPlanFindFirstArgs<ExtArgs>>): Prisma__NutritionPlanClient<$Result.GetResult<Prisma.$NutritionPlanPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first NutritionPlan that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanFindFirstOrThrowArgs} args - Arguments to find a NutritionPlan
+     * @example
+     * // Get one NutritionPlan
+     * const nutritionPlan = await prisma.nutritionPlan.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends NutritionPlanFindFirstOrThrowArgs>(args?: SelectSubset<T, NutritionPlanFindFirstOrThrowArgs<ExtArgs>>): Prisma__NutritionPlanClient<$Result.GetResult<Prisma.$NutritionPlanPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more NutritionPlans that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all NutritionPlans
+     * const nutritionPlans = await prisma.nutritionPlan.findMany()
+     * 
+     * // Get first 10 NutritionPlans
+     * const nutritionPlans = await prisma.nutritionPlan.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const nutritionPlanWithIdOnly = await prisma.nutritionPlan.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends NutritionPlanFindManyArgs>(args?: SelectSubset<T, NutritionPlanFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NutritionPlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a NutritionPlan.
+     * @param {NutritionPlanCreateArgs} args - Arguments to create a NutritionPlan.
+     * @example
+     * // Create one NutritionPlan
+     * const NutritionPlan = await prisma.nutritionPlan.create({
+     *   data: {
+     *     // ... data to create a NutritionPlan
+     *   }
+     * })
+     * 
+     */
+    create<T extends NutritionPlanCreateArgs>(args: SelectSubset<T, NutritionPlanCreateArgs<ExtArgs>>): Prisma__NutritionPlanClient<$Result.GetResult<Prisma.$NutritionPlanPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many NutritionPlans.
+     * @param {NutritionPlanCreateManyArgs} args - Arguments to create many NutritionPlans.
+     * @example
+     * // Create many NutritionPlans
+     * const nutritionPlan = await prisma.nutritionPlan.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends NutritionPlanCreateManyArgs>(args?: SelectSubset<T, NutritionPlanCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many NutritionPlans and returns the data saved in the database.
+     * @param {NutritionPlanCreateManyAndReturnArgs} args - Arguments to create many NutritionPlans.
+     * @example
+     * // Create many NutritionPlans
+     * const nutritionPlan = await prisma.nutritionPlan.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many NutritionPlans and only return the `id`
+     * const nutritionPlanWithIdOnly = await prisma.nutritionPlan.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends NutritionPlanCreateManyAndReturnArgs>(args?: SelectSubset<T, NutritionPlanCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NutritionPlanPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a NutritionPlan.
+     * @param {NutritionPlanDeleteArgs} args - Arguments to delete one NutritionPlan.
+     * @example
+     * // Delete one NutritionPlan
+     * const NutritionPlan = await prisma.nutritionPlan.delete({
+     *   where: {
+     *     // ... filter to delete one NutritionPlan
+     *   }
+     * })
+     * 
+     */
+    delete<T extends NutritionPlanDeleteArgs>(args: SelectSubset<T, NutritionPlanDeleteArgs<ExtArgs>>): Prisma__NutritionPlanClient<$Result.GetResult<Prisma.$NutritionPlanPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one NutritionPlan.
+     * @param {NutritionPlanUpdateArgs} args - Arguments to update one NutritionPlan.
+     * @example
+     * // Update one NutritionPlan
+     * const nutritionPlan = await prisma.nutritionPlan.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends NutritionPlanUpdateArgs>(args: SelectSubset<T, NutritionPlanUpdateArgs<ExtArgs>>): Prisma__NutritionPlanClient<$Result.GetResult<Prisma.$NutritionPlanPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more NutritionPlans.
+     * @param {NutritionPlanDeleteManyArgs} args - Arguments to filter NutritionPlans to delete.
+     * @example
+     * // Delete a few NutritionPlans
+     * const { count } = await prisma.nutritionPlan.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends NutritionPlanDeleteManyArgs>(args?: SelectSubset<T, NutritionPlanDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more NutritionPlans.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many NutritionPlans
+     * const nutritionPlan = await prisma.nutritionPlan.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends NutritionPlanUpdateManyArgs>(args: SelectSubset<T, NutritionPlanUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more NutritionPlans and returns the data updated in the database.
+     * @param {NutritionPlanUpdateManyAndReturnArgs} args - Arguments to update many NutritionPlans.
+     * @example
+     * // Update many NutritionPlans
+     * const nutritionPlan = await prisma.nutritionPlan.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more NutritionPlans and only return the `id`
+     * const nutritionPlanWithIdOnly = await prisma.nutritionPlan.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends NutritionPlanUpdateManyAndReturnArgs>(args: SelectSubset<T, NutritionPlanUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NutritionPlanPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one NutritionPlan.
+     * @param {NutritionPlanUpsertArgs} args - Arguments to update or create a NutritionPlan.
+     * @example
+     * // Update or create a NutritionPlan
+     * const nutritionPlan = await prisma.nutritionPlan.upsert({
+     *   create: {
+     *     // ... data to create a NutritionPlan
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the NutritionPlan we want to update
+     *   }
+     * })
+     */
+    upsert<T extends NutritionPlanUpsertArgs>(args: SelectSubset<T, NutritionPlanUpsertArgs<ExtArgs>>): Prisma__NutritionPlanClient<$Result.GetResult<Prisma.$NutritionPlanPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of NutritionPlans.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanCountArgs} args - Arguments to filter NutritionPlans to count.
+     * @example
+     * // Count the number of NutritionPlans
+     * const count = await prisma.nutritionPlan.count({
+     *   where: {
+     *     // ... the filter for the NutritionPlans we want to count
+     *   }
+     * })
+    **/
+    count<T extends NutritionPlanCountArgs>(
+      args?: Subset<T, NutritionPlanCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], NutritionPlanCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a NutritionPlan.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends NutritionPlanAggregateArgs>(args: Subset<T, NutritionPlanAggregateArgs>): Prisma.PrismaPromise<GetNutritionPlanAggregateType<T>>
+
+    /**
+     * Group by NutritionPlan.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends NutritionPlanGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: NutritionPlanGroupByArgs['orderBy'] }
+        : { orderBy?: NutritionPlanGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, NutritionPlanGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetNutritionPlanGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the NutritionPlan model
+   */
+  readonly fields: NutritionPlanFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for NutritionPlan.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__NutritionPlanClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    days<T extends NutritionPlan$daysArgs<ExtArgs> = {}>(args?: Subset<T, NutritionPlan$daysArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NutritionPlanDayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the NutritionPlan model
+   */
+  interface NutritionPlanFieldRefs {
+    readonly id: FieldRef<"NutritionPlan", 'String'>
+    readonly userId: FieldRef<"NutritionPlan", 'String'>
+    readonly name: FieldRef<"NutritionPlan", 'String'>
+    readonly description: FieldRef<"NutritionPlan", 'String'>
+    readonly active: FieldRef<"NutritionPlan", 'Boolean'>
+    readonly createdAt: FieldRef<"NutritionPlan", 'DateTime'>
+    readonly updatedAt: FieldRef<"NutritionPlan", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * NutritionPlan findUnique
+   */
+  export type NutritionPlanFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlan
+     */
+    select?: NutritionPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlan
+     */
+    omit?: NutritionPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlan to fetch.
+     */
+    where: NutritionPlanWhereUniqueInput
+  }
+
+  /**
+   * NutritionPlan findUniqueOrThrow
+   */
+  export type NutritionPlanFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlan
+     */
+    select?: NutritionPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlan
+     */
+    omit?: NutritionPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlan to fetch.
+     */
+    where: NutritionPlanWhereUniqueInput
+  }
+
+  /**
+   * NutritionPlan findFirst
+   */
+  export type NutritionPlanFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlan
+     */
+    select?: NutritionPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlan
+     */
+    omit?: NutritionPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlan to fetch.
+     */
+    where?: NutritionPlanWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NutritionPlans to fetch.
+     */
+    orderBy?: NutritionPlanOrderByWithRelationInput | NutritionPlanOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for NutritionPlans.
+     */
+    cursor?: NutritionPlanWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NutritionPlans from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NutritionPlans.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NutritionPlans.
+     */
+    distinct?: NutritionPlanScalarFieldEnum | NutritionPlanScalarFieldEnum[]
+  }
+
+  /**
+   * NutritionPlan findFirstOrThrow
+   */
+  export type NutritionPlanFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlan
+     */
+    select?: NutritionPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlan
+     */
+    omit?: NutritionPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlan to fetch.
+     */
+    where?: NutritionPlanWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NutritionPlans to fetch.
+     */
+    orderBy?: NutritionPlanOrderByWithRelationInput | NutritionPlanOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for NutritionPlans.
+     */
+    cursor?: NutritionPlanWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NutritionPlans from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NutritionPlans.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NutritionPlans.
+     */
+    distinct?: NutritionPlanScalarFieldEnum | NutritionPlanScalarFieldEnum[]
+  }
+
+  /**
+   * NutritionPlan findMany
+   */
+  export type NutritionPlanFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlan
+     */
+    select?: NutritionPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlan
+     */
+    omit?: NutritionPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlans to fetch.
+     */
+    where?: NutritionPlanWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NutritionPlans to fetch.
+     */
+    orderBy?: NutritionPlanOrderByWithRelationInput | NutritionPlanOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing NutritionPlans.
+     */
+    cursor?: NutritionPlanWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NutritionPlans from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NutritionPlans.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NutritionPlans.
+     */
+    distinct?: NutritionPlanScalarFieldEnum | NutritionPlanScalarFieldEnum[]
+  }
+
+  /**
+   * NutritionPlan create
+   */
+  export type NutritionPlanCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlan
+     */
+    select?: NutritionPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlan
+     */
+    omit?: NutritionPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanInclude<ExtArgs> | null
+    /**
+     * The data needed to create a NutritionPlan.
+     */
+    data: XOR<NutritionPlanCreateInput, NutritionPlanUncheckedCreateInput>
+  }
+
+  /**
+   * NutritionPlan createMany
+   */
+  export type NutritionPlanCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many NutritionPlans.
+     */
+    data: NutritionPlanCreateManyInput | NutritionPlanCreateManyInput[]
+  }
+
+  /**
+   * NutritionPlan createManyAndReturn
+   */
+  export type NutritionPlanCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlan
+     */
+    select?: NutritionPlanSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlan
+     */
+    omit?: NutritionPlanOmit<ExtArgs> | null
+    /**
+     * The data used to create many NutritionPlans.
+     */
+    data: NutritionPlanCreateManyInput | NutritionPlanCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * NutritionPlan update
+   */
+  export type NutritionPlanUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlan
+     */
+    select?: NutritionPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlan
+     */
+    omit?: NutritionPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanInclude<ExtArgs> | null
+    /**
+     * The data needed to update a NutritionPlan.
+     */
+    data: XOR<NutritionPlanUpdateInput, NutritionPlanUncheckedUpdateInput>
+    /**
+     * Choose, which NutritionPlan to update.
+     */
+    where: NutritionPlanWhereUniqueInput
+  }
+
+  /**
+   * NutritionPlan updateMany
+   */
+  export type NutritionPlanUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update NutritionPlans.
+     */
+    data: XOR<NutritionPlanUpdateManyMutationInput, NutritionPlanUncheckedUpdateManyInput>
+    /**
+     * Filter which NutritionPlans to update
+     */
+    where?: NutritionPlanWhereInput
+    /**
+     * Limit how many NutritionPlans to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * NutritionPlan updateManyAndReturn
+   */
+  export type NutritionPlanUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlan
+     */
+    select?: NutritionPlanSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlan
+     */
+    omit?: NutritionPlanOmit<ExtArgs> | null
+    /**
+     * The data used to update NutritionPlans.
+     */
+    data: XOR<NutritionPlanUpdateManyMutationInput, NutritionPlanUncheckedUpdateManyInput>
+    /**
+     * Filter which NutritionPlans to update
+     */
+    where?: NutritionPlanWhereInput
+    /**
+     * Limit how many NutritionPlans to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * NutritionPlan upsert
+   */
+  export type NutritionPlanUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlan
+     */
+    select?: NutritionPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlan
+     */
+    omit?: NutritionPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanInclude<ExtArgs> | null
+    /**
+     * The filter to search for the NutritionPlan to update in case it exists.
+     */
+    where: NutritionPlanWhereUniqueInput
+    /**
+     * In case the NutritionPlan found by the `where` argument doesn't exist, create a new NutritionPlan with this data.
+     */
+    create: XOR<NutritionPlanCreateInput, NutritionPlanUncheckedCreateInput>
+    /**
+     * In case the NutritionPlan was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<NutritionPlanUpdateInput, NutritionPlanUncheckedUpdateInput>
+  }
+
+  /**
+   * NutritionPlan delete
+   */
+  export type NutritionPlanDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlan
+     */
+    select?: NutritionPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlan
+     */
+    omit?: NutritionPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanInclude<ExtArgs> | null
+    /**
+     * Filter which NutritionPlan to delete.
+     */
+    where: NutritionPlanWhereUniqueInput
+  }
+
+  /**
+   * NutritionPlan deleteMany
+   */
+  export type NutritionPlanDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which NutritionPlans to delete
+     */
+    where?: NutritionPlanWhereInput
+    /**
+     * Limit how many NutritionPlans to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * NutritionPlan.days
+   */
+  export type NutritionPlan$daysArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanDay
+     */
+    select?: NutritionPlanDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanDay
+     */
+    omit?: NutritionPlanDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanDayInclude<ExtArgs> | null
+    where?: NutritionPlanDayWhereInput
+    orderBy?: NutritionPlanDayOrderByWithRelationInput | NutritionPlanDayOrderByWithRelationInput[]
+    cursor?: NutritionPlanDayWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NutritionPlanDayScalarFieldEnum | NutritionPlanDayScalarFieldEnum[]
+  }
+
+  /**
+   * NutritionPlan without action
+   */
+  export type NutritionPlanDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlan
+     */
+    select?: NutritionPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlan
+     */
+    omit?: NutritionPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model NutritionPlanDay
+   */
+
+  export type AggregateNutritionPlanDay = {
+    _count: NutritionPlanDayCountAggregateOutputType | null
+    _avg: NutritionPlanDayAvgAggregateOutputType | null
+    _sum: NutritionPlanDaySumAggregateOutputType | null
+    _min: NutritionPlanDayMinAggregateOutputType | null
+    _max: NutritionPlanDayMaxAggregateOutputType | null
+  }
+
+  export type NutritionPlanDayAvgAggregateOutputType = {
+    dayNumber: number | null
+  }
+
+  export type NutritionPlanDaySumAggregateOutputType = {
+    dayNumber: number | null
+  }
+
+  export type NutritionPlanDayMinAggregateOutputType = {
+    id: string | null
+    nutritionPlanId: string | null
+    dayNumber: number | null
+  }
+
+  export type NutritionPlanDayMaxAggregateOutputType = {
+    id: string | null
+    nutritionPlanId: string | null
+    dayNumber: number | null
+  }
+
+  export type NutritionPlanDayCountAggregateOutputType = {
+    id: number
+    nutritionPlanId: number
+    dayNumber: number
+    _all: number
+  }
+
+
+  export type NutritionPlanDayAvgAggregateInputType = {
+    dayNumber?: true
+  }
+
+  export type NutritionPlanDaySumAggregateInputType = {
+    dayNumber?: true
+  }
+
+  export type NutritionPlanDayMinAggregateInputType = {
+    id?: true
+    nutritionPlanId?: true
+    dayNumber?: true
+  }
+
+  export type NutritionPlanDayMaxAggregateInputType = {
+    id?: true
+    nutritionPlanId?: true
+    dayNumber?: true
+  }
+
+  export type NutritionPlanDayCountAggregateInputType = {
+    id?: true
+    nutritionPlanId?: true
+    dayNumber?: true
+    _all?: true
+  }
+
+  export type NutritionPlanDayAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which NutritionPlanDay to aggregate.
+     */
+    where?: NutritionPlanDayWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NutritionPlanDays to fetch.
+     */
+    orderBy?: NutritionPlanDayOrderByWithRelationInput | NutritionPlanDayOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: NutritionPlanDayWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NutritionPlanDays from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NutritionPlanDays.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned NutritionPlanDays
+    **/
+    _count?: true | NutritionPlanDayCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: NutritionPlanDayAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: NutritionPlanDaySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: NutritionPlanDayMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: NutritionPlanDayMaxAggregateInputType
+  }
+
+  export type GetNutritionPlanDayAggregateType<T extends NutritionPlanDayAggregateArgs> = {
+        [P in keyof T & keyof AggregateNutritionPlanDay]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateNutritionPlanDay[P]>
+      : GetScalarType<T[P], AggregateNutritionPlanDay[P]>
+  }
+
+
+
+
+  export type NutritionPlanDayGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NutritionPlanDayWhereInput
+    orderBy?: NutritionPlanDayOrderByWithAggregationInput | NutritionPlanDayOrderByWithAggregationInput[]
+    by: NutritionPlanDayScalarFieldEnum[] | NutritionPlanDayScalarFieldEnum
+    having?: NutritionPlanDayScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: NutritionPlanDayCountAggregateInputType | true
+    _avg?: NutritionPlanDayAvgAggregateInputType
+    _sum?: NutritionPlanDaySumAggregateInputType
+    _min?: NutritionPlanDayMinAggregateInputType
+    _max?: NutritionPlanDayMaxAggregateInputType
+  }
+
+  export type NutritionPlanDayGroupByOutputType = {
+    id: string
+    nutritionPlanId: string
+    dayNumber: number
+    _count: NutritionPlanDayCountAggregateOutputType | null
+    _avg: NutritionPlanDayAvgAggregateOutputType | null
+    _sum: NutritionPlanDaySumAggregateOutputType | null
+    _min: NutritionPlanDayMinAggregateOutputType | null
+    _max: NutritionPlanDayMaxAggregateOutputType | null
+  }
+
+  type GetNutritionPlanDayGroupByPayload<T extends NutritionPlanDayGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<NutritionPlanDayGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof NutritionPlanDayGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], NutritionPlanDayGroupByOutputType[P]>
+            : GetScalarType<T[P], NutritionPlanDayGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type NutritionPlanDaySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nutritionPlanId?: boolean
+    dayNumber?: boolean
+    nutritionPlan?: boolean | NutritionPlanDefaultArgs<ExtArgs>
+    meals?: boolean | NutritionPlanDay$mealsArgs<ExtArgs>
+    _count?: boolean | NutritionPlanDayCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["nutritionPlanDay"]>
+
+  export type NutritionPlanDaySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nutritionPlanId?: boolean
+    dayNumber?: boolean
+    nutritionPlan?: boolean | NutritionPlanDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["nutritionPlanDay"]>
+
+  export type NutritionPlanDaySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nutritionPlanId?: boolean
+    dayNumber?: boolean
+    nutritionPlan?: boolean | NutritionPlanDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["nutritionPlanDay"]>
+
+  export type NutritionPlanDaySelectScalar = {
+    id?: boolean
+    nutritionPlanId?: boolean
+    dayNumber?: boolean
+  }
+
+  export type NutritionPlanDayOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nutritionPlanId" | "dayNumber", ExtArgs["result"]["nutritionPlanDay"]>
+  export type NutritionPlanDayInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    nutritionPlan?: boolean | NutritionPlanDefaultArgs<ExtArgs>
+    meals?: boolean | NutritionPlanDay$mealsArgs<ExtArgs>
+    _count?: boolean | NutritionPlanDayCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type NutritionPlanDayIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    nutritionPlan?: boolean | NutritionPlanDefaultArgs<ExtArgs>
+  }
+  export type NutritionPlanDayIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    nutritionPlan?: boolean | NutritionPlanDefaultArgs<ExtArgs>
+  }
+
+  export type $NutritionPlanDayPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "NutritionPlanDay"
+    objects: {
+      nutritionPlan: Prisma.$NutritionPlanPayload<ExtArgs>
+      meals: Prisma.$NutritionPlanMealPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      nutritionPlanId: string
+      dayNumber: number
+    }, ExtArgs["result"]["nutritionPlanDay"]>
+    composites: {}
+  }
+
+  type NutritionPlanDayGetPayload<S extends boolean | null | undefined | NutritionPlanDayDefaultArgs> = $Result.GetResult<Prisma.$NutritionPlanDayPayload, S>
+
+  type NutritionPlanDayCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<NutritionPlanDayFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: NutritionPlanDayCountAggregateInputType | true
+    }
+
+  export interface NutritionPlanDayDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['NutritionPlanDay'], meta: { name: 'NutritionPlanDay' } }
+    /**
+     * Find zero or one NutritionPlanDay that matches the filter.
+     * @param {NutritionPlanDayFindUniqueArgs} args - Arguments to find a NutritionPlanDay
+     * @example
+     * // Get one NutritionPlanDay
+     * const nutritionPlanDay = await prisma.nutritionPlanDay.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends NutritionPlanDayFindUniqueArgs>(args: SelectSubset<T, NutritionPlanDayFindUniqueArgs<ExtArgs>>): Prisma__NutritionPlanDayClient<$Result.GetResult<Prisma.$NutritionPlanDayPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one NutritionPlanDay that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {NutritionPlanDayFindUniqueOrThrowArgs} args - Arguments to find a NutritionPlanDay
+     * @example
+     * // Get one NutritionPlanDay
+     * const nutritionPlanDay = await prisma.nutritionPlanDay.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends NutritionPlanDayFindUniqueOrThrowArgs>(args: SelectSubset<T, NutritionPlanDayFindUniqueOrThrowArgs<ExtArgs>>): Prisma__NutritionPlanDayClient<$Result.GetResult<Prisma.$NutritionPlanDayPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first NutritionPlanDay that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanDayFindFirstArgs} args - Arguments to find a NutritionPlanDay
+     * @example
+     * // Get one NutritionPlanDay
+     * const nutritionPlanDay = await prisma.nutritionPlanDay.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends NutritionPlanDayFindFirstArgs>(args?: SelectSubset<T, NutritionPlanDayFindFirstArgs<ExtArgs>>): Prisma__NutritionPlanDayClient<$Result.GetResult<Prisma.$NutritionPlanDayPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first NutritionPlanDay that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanDayFindFirstOrThrowArgs} args - Arguments to find a NutritionPlanDay
+     * @example
+     * // Get one NutritionPlanDay
+     * const nutritionPlanDay = await prisma.nutritionPlanDay.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends NutritionPlanDayFindFirstOrThrowArgs>(args?: SelectSubset<T, NutritionPlanDayFindFirstOrThrowArgs<ExtArgs>>): Prisma__NutritionPlanDayClient<$Result.GetResult<Prisma.$NutritionPlanDayPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more NutritionPlanDays that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanDayFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all NutritionPlanDays
+     * const nutritionPlanDays = await prisma.nutritionPlanDay.findMany()
+     * 
+     * // Get first 10 NutritionPlanDays
+     * const nutritionPlanDays = await prisma.nutritionPlanDay.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const nutritionPlanDayWithIdOnly = await prisma.nutritionPlanDay.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends NutritionPlanDayFindManyArgs>(args?: SelectSubset<T, NutritionPlanDayFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NutritionPlanDayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a NutritionPlanDay.
+     * @param {NutritionPlanDayCreateArgs} args - Arguments to create a NutritionPlanDay.
+     * @example
+     * // Create one NutritionPlanDay
+     * const NutritionPlanDay = await prisma.nutritionPlanDay.create({
+     *   data: {
+     *     // ... data to create a NutritionPlanDay
+     *   }
+     * })
+     * 
+     */
+    create<T extends NutritionPlanDayCreateArgs>(args: SelectSubset<T, NutritionPlanDayCreateArgs<ExtArgs>>): Prisma__NutritionPlanDayClient<$Result.GetResult<Prisma.$NutritionPlanDayPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many NutritionPlanDays.
+     * @param {NutritionPlanDayCreateManyArgs} args - Arguments to create many NutritionPlanDays.
+     * @example
+     * // Create many NutritionPlanDays
+     * const nutritionPlanDay = await prisma.nutritionPlanDay.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends NutritionPlanDayCreateManyArgs>(args?: SelectSubset<T, NutritionPlanDayCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many NutritionPlanDays and returns the data saved in the database.
+     * @param {NutritionPlanDayCreateManyAndReturnArgs} args - Arguments to create many NutritionPlanDays.
+     * @example
+     * // Create many NutritionPlanDays
+     * const nutritionPlanDay = await prisma.nutritionPlanDay.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many NutritionPlanDays and only return the `id`
+     * const nutritionPlanDayWithIdOnly = await prisma.nutritionPlanDay.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends NutritionPlanDayCreateManyAndReturnArgs>(args?: SelectSubset<T, NutritionPlanDayCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NutritionPlanDayPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a NutritionPlanDay.
+     * @param {NutritionPlanDayDeleteArgs} args - Arguments to delete one NutritionPlanDay.
+     * @example
+     * // Delete one NutritionPlanDay
+     * const NutritionPlanDay = await prisma.nutritionPlanDay.delete({
+     *   where: {
+     *     // ... filter to delete one NutritionPlanDay
+     *   }
+     * })
+     * 
+     */
+    delete<T extends NutritionPlanDayDeleteArgs>(args: SelectSubset<T, NutritionPlanDayDeleteArgs<ExtArgs>>): Prisma__NutritionPlanDayClient<$Result.GetResult<Prisma.$NutritionPlanDayPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one NutritionPlanDay.
+     * @param {NutritionPlanDayUpdateArgs} args - Arguments to update one NutritionPlanDay.
+     * @example
+     * // Update one NutritionPlanDay
+     * const nutritionPlanDay = await prisma.nutritionPlanDay.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends NutritionPlanDayUpdateArgs>(args: SelectSubset<T, NutritionPlanDayUpdateArgs<ExtArgs>>): Prisma__NutritionPlanDayClient<$Result.GetResult<Prisma.$NutritionPlanDayPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more NutritionPlanDays.
+     * @param {NutritionPlanDayDeleteManyArgs} args - Arguments to filter NutritionPlanDays to delete.
+     * @example
+     * // Delete a few NutritionPlanDays
+     * const { count } = await prisma.nutritionPlanDay.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends NutritionPlanDayDeleteManyArgs>(args?: SelectSubset<T, NutritionPlanDayDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more NutritionPlanDays.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanDayUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many NutritionPlanDays
+     * const nutritionPlanDay = await prisma.nutritionPlanDay.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends NutritionPlanDayUpdateManyArgs>(args: SelectSubset<T, NutritionPlanDayUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more NutritionPlanDays and returns the data updated in the database.
+     * @param {NutritionPlanDayUpdateManyAndReturnArgs} args - Arguments to update many NutritionPlanDays.
+     * @example
+     * // Update many NutritionPlanDays
+     * const nutritionPlanDay = await prisma.nutritionPlanDay.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more NutritionPlanDays and only return the `id`
+     * const nutritionPlanDayWithIdOnly = await prisma.nutritionPlanDay.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends NutritionPlanDayUpdateManyAndReturnArgs>(args: SelectSubset<T, NutritionPlanDayUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NutritionPlanDayPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one NutritionPlanDay.
+     * @param {NutritionPlanDayUpsertArgs} args - Arguments to update or create a NutritionPlanDay.
+     * @example
+     * // Update or create a NutritionPlanDay
+     * const nutritionPlanDay = await prisma.nutritionPlanDay.upsert({
+     *   create: {
+     *     // ... data to create a NutritionPlanDay
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the NutritionPlanDay we want to update
+     *   }
+     * })
+     */
+    upsert<T extends NutritionPlanDayUpsertArgs>(args: SelectSubset<T, NutritionPlanDayUpsertArgs<ExtArgs>>): Prisma__NutritionPlanDayClient<$Result.GetResult<Prisma.$NutritionPlanDayPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of NutritionPlanDays.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanDayCountArgs} args - Arguments to filter NutritionPlanDays to count.
+     * @example
+     * // Count the number of NutritionPlanDays
+     * const count = await prisma.nutritionPlanDay.count({
+     *   where: {
+     *     // ... the filter for the NutritionPlanDays we want to count
+     *   }
+     * })
+    **/
+    count<T extends NutritionPlanDayCountArgs>(
+      args?: Subset<T, NutritionPlanDayCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], NutritionPlanDayCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a NutritionPlanDay.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanDayAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends NutritionPlanDayAggregateArgs>(args: Subset<T, NutritionPlanDayAggregateArgs>): Prisma.PrismaPromise<GetNutritionPlanDayAggregateType<T>>
+
+    /**
+     * Group by NutritionPlanDay.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanDayGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends NutritionPlanDayGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: NutritionPlanDayGroupByArgs['orderBy'] }
+        : { orderBy?: NutritionPlanDayGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, NutritionPlanDayGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetNutritionPlanDayGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the NutritionPlanDay model
+   */
+  readonly fields: NutritionPlanDayFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for NutritionPlanDay.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__NutritionPlanDayClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    nutritionPlan<T extends NutritionPlanDefaultArgs<ExtArgs> = {}>(args?: Subset<T, NutritionPlanDefaultArgs<ExtArgs>>): Prisma__NutritionPlanClient<$Result.GetResult<Prisma.$NutritionPlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    meals<T extends NutritionPlanDay$mealsArgs<ExtArgs> = {}>(args?: Subset<T, NutritionPlanDay$mealsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NutritionPlanMealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the NutritionPlanDay model
+   */
+  interface NutritionPlanDayFieldRefs {
+    readonly id: FieldRef<"NutritionPlanDay", 'String'>
+    readonly nutritionPlanId: FieldRef<"NutritionPlanDay", 'String'>
+    readonly dayNumber: FieldRef<"NutritionPlanDay", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * NutritionPlanDay findUnique
+   */
+  export type NutritionPlanDayFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanDay
+     */
+    select?: NutritionPlanDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanDay
+     */
+    omit?: NutritionPlanDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanDayInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlanDay to fetch.
+     */
+    where: NutritionPlanDayWhereUniqueInput
+  }
+
+  /**
+   * NutritionPlanDay findUniqueOrThrow
+   */
+  export type NutritionPlanDayFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanDay
+     */
+    select?: NutritionPlanDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanDay
+     */
+    omit?: NutritionPlanDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanDayInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlanDay to fetch.
+     */
+    where: NutritionPlanDayWhereUniqueInput
+  }
+
+  /**
+   * NutritionPlanDay findFirst
+   */
+  export type NutritionPlanDayFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanDay
+     */
+    select?: NutritionPlanDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanDay
+     */
+    omit?: NutritionPlanDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanDayInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlanDay to fetch.
+     */
+    where?: NutritionPlanDayWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NutritionPlanDays to fetch.
+     */
+    orderBy?: NutritionPlanDayOrderByWithRelationInput | NutritionPlanDayOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for NutritionPlanDays.
+     */
+    cursor?: NutritionPlanDayWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NutritionPlanDays from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NutritionPlanDays.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NutritionPlanDays.
+     */
+    distinct?: NutritionPlanDayScalarFieldEnum | NutritionPlanDayScalarFieldEnum[]
+  }
+
+  /**
+   * NutritionPlanDay findFirstOrThrow
+   */
+  export type NutritionPlanDayFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanDay
+     */
+    select?: NutritionPlanDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanDay
+     */
+    omit?: NutritionPlanDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanDayInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlanDay to fetch.
+     */
+    where?: NutritionPlanDayWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NutritionPlanDays to fetch.
+     */
+    orderBy?: NutritionPlanDayOrderByWithRelationInput | NutritionPlanDayOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for NutritionPlanDays.
+     */
+    cursor?: NutritionPlanDayWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NutritionPlanDays from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NutritionPlanDays.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NutritionPlanDays.
+     */
+    distinct?: NutritionPlanDayScalarFieldEnum | NutritionPlanDayScalarFieldEnum[]
+  }
+
+  /**
+   * NutritionPlanDay findMany
+   */
+  export type NutritionPlanDayFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanDay
+     */
+    select?: NutritionPlanDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanDay
+     */
+    omit?: NutritionPlanDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanDayInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlanDays to fetch.
+     */
+    where?: NutritionPlanDayWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NutritionPlanDays to fetch.
+     */
+    orderBy?: NutritionPlanDayOrderByWithRelationInput | NutritionPlanDayOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing NutritionPlanDays.
+     */
+    cursor?: NutritionPlanDayWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NutritionPlanDays from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NutritionPlanDays.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NutritionPlanDays.
+     */
+    distinct?: NutritionPlanDayScalarFieldEnum | NutritionPlanDayScalarFieldEnum[]
+  }
+
+  /**
+   * NutritionPlanDay create
+   */
+  export type NutritionPlanDayCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanDay
+     */
+    select?: NutritionPlanDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanDay
+     */
+    omit?: NutritionPlanDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanDayInclude<ExtArgs> | null
+    /**
+     * The data needed to create a NutritionPlanDay.
+     */
+    data: XOR<NutritionPlanDayCreateInput, NutritionPlanDayUncheckedCreateInput>
+  }
+
+  /**
+   * NutritionPlanDay createMany
+   */
+  export type NutritionPlanDayCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many NutritionPlanDays.
+     */
+    data: NutritionPlanDayCreateManyInput | NutritionPlanDayCreateManyInput[]
+  }
+
+  /**
+   * NutritionPlanDay createManyAndReturn
+   */
+  export type NutritionPlanDayCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanDay
+     */
+    select?: NutritionPlanDaySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanDay
+     */
+    omit?: NutritionPlanDayOmit<ExtArgs> | null
+    /**
+     * The data used to create many NutritionPlanDays.
+     */
+    data: NutritionPlanDayCreateManyInput | NutritionPlanDayCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanDayIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * NutritionPlanDay update
+   */
+  export type NutritionPlanDayUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanDay
+     */
+    select?: NutritionPlanDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanDay
+     */
+    omit?: NutritionPlanDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanDayInclude<ExtArgs> | null
+    /**
+     * The data needed to update a NutritionPlanDay.
+     */
+    data: XOR<NutritionPlanDayUpdateInput, NutritionPlanDayUncheckedUpdateInput>
+    /**
+     * Choose, which NutritionPlanDay to update.
+     */
+    where: NutritionPlanDayWhereUniqueInput
+  }
+
+  /**
+   * NutritionPlanDay updateMany
+   */
+  export type NutritionPlanDayUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update NutritionPlanDays.
+     */
+    data: XOR<NutritionPlanDayUpdateManyMutationInput, NutritionPlanDayUncheckedUpdateManyInput>
+    /**
+     * Filter which NutritionPlanDays to update
+     */
+    where?: NutritionPlanDayWhereInput
+    /**
+     * Limit how many NutritionPlanDays to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * NutritionPlanDay updateManyAndReturn
+   */
+  export type NutritionPlanDayUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanDay
+     */
+    select?: NutritionPlanDaySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanDay
+     */
+    omit?: NutritionPlanDayOmit<ExtArgs> | null
+    /**
+     * The data used to update NutritionPlanDays.
+     */
+    data: XOR<NutritionPlanDayUpdateManyMutationInput, NutritionPlanDayUncheckedUpdateManyInput>
+    /**
+     * Filter which NutritionPlanDays to update
+     */
+    where?: NutritionPlanDayWhereInput
+    /**
+     * Limit how many NutritionPlanDays to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanDayIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * NutritionPlanDay upsert
+   */
+  export type NutritionPlanDayUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanDay
+     */
+    select?: NutritionPlanDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanDay
+     */
+    omit?: NutritionPlanDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanDayInclude<ExtArgs> | null
+    /**
+     * The filter to search for the NutritionPlanDay to update in case it exists.
+     */
+    where: NutritionPlanDayWhereUniqueInput
+    /**
+     * In case the NutritionPlanDay found by the `where` argument doesn't exist, create a new NutritionPlanDay with this data.
+     */
+    create: XOR<NutritionPlanDayCreateInput, NutritionPlanDayUncheckedCreateInput>
+    /**
+     * In case the NutritionPlanDay was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<NutritionPlanDayUpdateInput, NutritionPlanDayUncheckedUpdateInput>
+  }
+
+  /**
+   * NutritionPlanDay delete
+   */
+  export type NutritionPlanDayDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanDay
+     */
+    select?: NutritionPlanDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanDay
+     */
+    omit?: NutritionPlanDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanDayInclude<ExtArgs> | null
+    /**
+     * Filter which NutritionPlanDay to delete.
+     */
+    where: NutritionPlanDayWhereUniqueInput
+  }
+
+  /**
+   * NutritionPlanDay deleteMany
+   */
+  export type NutritionPlanDayDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which NutritionPlanDays to delete
+     */
+    where?: NutritionPlanDayWhereInput
+    /**
+     * Limit how many NutritionPlanDays to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * NutritionPlanDay.meals
+   */
+  export type NutritionPlanDay$mealsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMeal
+     */
+    select?: NutritionPlanMealSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMeal
+     */
+    omit?: NutritionPlanMealOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealInclude<ExtArgs> | null
+    where?: NutritionPlanMealWhereInput
+    orderBy?: NutritionPlanMealOrderByWithRelationInput | NutritionPlanMealOrderByWithRelationInput[]
+    cursor?: NutritionPlanMealWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NutritionPlanMealScalarFieldEnum | NutritionPlanMealScalarFieldEnum[]
+  }
+
+  /**
+   * NutritionPlanDay without action
+   */
+  export type NutritionPlanDayDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanDay
+     */
+    select?: NutritionPlanDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanDay
+     */
+    omit?: NutritionPlanDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanDayInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model NutritionPlanMeal
+   */
+
+  export type AggregateNutritionPlanMeal = {
+    _count: NutritionPlanMealCountAggregateOutputType | null
+    _avg: NutritionPlanMealAvgAggregateOutputType | null
+    _sum: NutritionPlanMealSumAggregateOutputType | null
+    _min: NutritionPlanMealMinAggregateOutputType | null
+    _max: NutritionPlanMealMaxAggregateOutputType | null
+  }
+
+  export type NutritionPlanMealAvgAggregateOutputType = {
+    mealIndex: number | null
+  }
+
+  export type NutritionPlanMealSumAggregateOutputType = {
+    mealIndex: number | null
+  }
+
+  export type NutritionPlanMealMinAggregateOutputType = {
+    id: string | null
+    nutritionPlanDayId: string | null
+    mealIndex: number | null
+    name: string | null
+    description: string | null
+  }
+
+  export type NutritionPlanMealMaxAggregateOutputType = {
+    id: string | null
+    nutritionPlanDayId: string | null
+    mealIndex: number | null
+    name: string | null
+    description: string | null
+  }
+
+  export type NutritionPlanMealCountAggregateOutputType = {
+    id: number
+    nutritionPlanDayId: number
+    mealIndex: number
+    name: number
+    description: number
+    _all: number
+  }
+
+
+  export type NutritionPlanMealAvgAggregateInputType = {
+    mealIndex?: true
+  }
+
+  export type NutritionPlanMealSumAggregateInputType = {
+    mealIndex?: true
+  }
+
+  export type NutritionPlanMealMinAggregateInputType = {
+    id?: true
+    nutritionPlanDayId?: true
+    mealIndex?: true
+    name?: true
+    description?: true
+  }
+
+  export type NutritionPlanMealMaxAggregateInputType = {
+    id?: true
+    nutritionPlanDayId?: true
+    mealIndex?: true
+    name?: true
+    description?: true
+  }
+
+  export type NutritionPlanMealCountAggregateInputType = {
+    id?: true
+    nutritionPlanDayId?: true
+    mealIndex?: true
+    name?: true
+    description?: true
+    _all?: true
+  }
+
+  export type NutritionPlanMealAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which NutritionPlanMeal to aggregate.
+     */
+    where?: NutritionPlanMealWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NutritionPlanMeals to fetch.
+     */
+    orderBy?: NutritionPlanMealOrderByWithRelationInput | NutritionPlanMealOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: NutritionPlanMealWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NutritionPlanMeals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NutritionPlanMeals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned NutritionPlanMeals
+    **/
+    _count?: true | NutritionPlanMealCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: NutritionPlanMealAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: NutritionPlanMealSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: NutritionPlanMealMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: NutritionPlanMealMaxAggregateInputType
+  }
+
+  export type GetNutritionPlanMealAggregateType<T extends NutritionPlanMealAggregateArgs> = {
+        [P in keyof T & keyof AggregateNutritionPlanMeal]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateNutritionPlanMeal[P]>
+      : GetScalarType<T[P], AggregateNutritionPlanMeal[P]>
+  }
+
+
+
+
+  export type NutritionPlanMealGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NutritionPlanMealWhereInput
+    orderBy?: NutritionPlanMealOrderByWithAggregationInput | NutritionPlanMealOrderByWithAggregationInput[]
+    by: NutritionPlanMealScalarFieldEnum[] | NutritionPlanMealScalarFieldEnum
+    having?: NutritionPlanMealScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: NutritionPlanMealCountAggregateInputType | true
+    _avg?: NutritionPlanMealAvgAggregateInputType
+    _sum?: NutritionPlanMealSumAggregateInputType
+    _min?: NutritionPlanMealMinAggregateInputType
+    _max?: NutritionPlanMealMaxAggregateInputType
+  }
+
+  export type NutritionPlanMealGroupByOutputType = {
+    id: string
+    nutritionPlanDayId: string
+    mealIndex: number
+    name: string
+    description: string | null
+    _count: NutritionPlanMealCountAggregateOutputType | null
+    _avg: NutritionPlanMealAvgAggregateOutputType | null
+    _sum: NutritionPlanMealSumAggregateOutputType | null
+    _min: NutritionPlanMealMinAggregateOutputType | null
+    _max: NutritionPlanMealMaxAggregateOutputType | null
+  }
+
+  type GetNutritionPlanMealGroupByPayload<T extends NutritionPlanMealGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<NutritionPlanMealGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof NutritionPlanMealGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], NutritionPlanMealGroupByOutputType[P]>
+            : GetScalarType<T[P], NutritionPlanMealGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type NutritionPlanMealSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nutritionPlanDayId?: boolean
+    mealIndex?: boolean
+    name?: boolean
+    description?: boolean
+    nutritionPlanDay?: boolean | NutritionPlanDayDefaultArgs<ExtArgs>
+    mealOptions?: boolean | NutritionPlanMeal$mealOptionsArgs<ExtArgs>
+    _count?: boolean | NutritionPlanMealCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["nutritionPlanMeal"]>
+
+  export type NutritionPlanMealSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nutritionPlanDayId?: boolean
+    mealIndex?: boolean
+    name?: boolean
+    description?: boolean
+    nutritionPlanDay?: boolean | NutritionPlanDayDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["nutritionPlanMeal"]>
+
+  export type NutritionPlanMealSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nutritionPlanDayId?: boolean
+    mealIndex?: boolean
+    name?: boolean
+    description?: boolean
+    nutritionPlanDay?: boolean | NutritionPlanDayDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["nutritionPlanMeal"]>
+
+  export type NutritionPlanMealSelectScalar = {
+    id?: boolean
+    nutritionPlanDayId?: boolean
+    mealIndex?: boolean
+    name?: boolean
+    description?: boolean
+  }
+
+  export type NutritionPlanMealOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nutritionPlanDayId" | "mealIndex" | "name" | "description", ExtArgs["result"]["nutritionPlanMeal"]>
+  export type NutritionPlanMealInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    nutritionPlanDay?: boolean | NutritionPlanDayDefaultArgs<ExtArgs>
+    mealOptions?: boolean | NutritionPlanMeal$mealOptionsArgs<ExtArgs>
+    _count?: boolean | NutritionPlanMealCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type NutritionPlanMealIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    nutritionPlanDay?: boolean | NutritionPlanDayDefaultArgs<ExtArgs>
+  }
+  export type NutritionPlanMealIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    nutritionPlanDay?: boolean | NutritionPlanDayDefaultArgs<ExtArgs>
+  }
+
+  export type $NutritionPlanMealPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "NutritionPlanMeal"
+    objects: {
+      nutritionPlanDay: Prisma.$NutritionPlanDayPayload<ExtArgs>
+      mealOptions: Prisma.$NutritionPlanMealOptionPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      nutritionPlanDayId: string
+      mealIndex: number
+      name: string
+      description: string | null
+    }, ExtArgs["result"]["nutritionPlanMeal"]>
+    composites: {}
+  }
+
+  type NutritionPlanMealGetPayload<S extends boolean | null | undefined | NutritionPlanMealDefaultArgs> = $Result.GetResult<Prisma.$NutritionPlanMealPayload, S>
+
+  type NutritionPlanMealCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<NutritionPlanMealFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: NutritionPlanMealCountAggregateInputType | true
+    }
+
+  export interface NutritionPlanMealDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['NutritionPlanMeal'], meta: { name: 'NutritionPlanMeal' } }
+    /**
+     * Find zero or one NutritionPlanMeal that matches the filter.
+     * @param {NutritionPlanMealFindUniqueArgs} args - Arguments to find a NutritionPlanMeal
+     * @example
+     * // Get one NutritionPlanMeal
+     * const nutritionPlanMeal = await prisma.nutritionPlanMeal.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends NutritionPlanMealFindUniqueArgs>(args: SelectSubset<T, NutritionPlanMealFindUniqueArgs<ExtArgs>>): Prisma__NutritionPlanMealClient<$Result.GetResult<Prisma.$NutritionPlanMealPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one NutritionPlanMeal that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {NutritionPlanMealFindUniqueOrThrowArgs} args - Arguments to find a NutritionPlanMeal
+     * @example
+     * // Get one NutritionPlanMeal
+     * const nutritionPlanMeal = await prisma.nutritionPlanMeal.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends NutritionPlanMealFindUniqueOrThrowArgs>(args: SelectSubset<T, NutritionPlanMealFindUniqueOrThrowArgs<ExtArgs>>): Prisma__NutritionPlanMealClient<$Result.GetResult<Prisma.$NutritionPlanMealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first NutritionPlanMeal that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanMealFindFirstArgs} args - Arguments to find a NutritionPlanMeal
+     * @example
+     * // Get one NutritionPlanMeal
+     * const nutritionPlanMeal = await prisma.nutritionPlanMeal.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends NutritionPlanMealFindFirstArgs>(args?: SelectSubset<T, NutritionPlanMealFindFirstArgs<ExtArgs>>): Prisma__NutritionPlanMealClient<$Result.GetResult<Prisma.$NutritionPlanMealPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first NutritionPlanMeal that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanMealFindFirstOrThrowArgs} args - Arguments to find a NutritionPlanMeal
+     * @example
+     * // Get one NutritionPlanMeal
+     * const nutritionPlanMeal = await prisma.nutritionPlanMeal.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends NutritionPlanMealFindFirstOrThrowArgs>(args?: SelectSubset<T, NutritionPlanMealFindFirstOrThrowArgs<ExtArgs>>): Prisma__NutritionPlanMealClient<$Result.GetResult<Prisma.$NutritionPlanMealPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more NutritionPlanMeals that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanMealFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all NutritionPlanMeals
+     * const nutritionPlanMeals = await prisma.nutritionPlanMeal.findMany()
+     * 
+     * // Get first 10 NutritionPlanMeals
+     * const nutritionPlanMeals = await prisma.nutritionPlanMeal.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const nutritionPlanMealWithIdOnly = await prisma.nutritionPlanMeal.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends NutritionPlanMealFindManyArgs>(args?: SelectSubset<T, NutritionPlanMealFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NutritionPlanMealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a NutritionPlanMeal.
+     * @param {NutritionPlanMealCreateArgs} args - Arguments to create a NutritionPlanMeal.
+     * @example
+     * // Create one NutritionPlanMeal
+     * const NutritionPlanMeal = await prisma.nutritionPlanMeal.create({
+     *   data: {
+     *     // ... data to create a NutritionPlanMeal
+     *   }
+     * })
+     * 
+     */
+    create<T extends NutritionPlanMealCreateArgs>(args: SelectSubset<T, NutritionPlanMealCreateArgs<ExtArgs>>): Prisma__NutritionPlanMealClient<$Result.GetResult<Prisma.$NutritionPlanMealPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many NutritionPlanMeals.
+     * @param {NutritionPlanMealCreateManyArgs} args - Arguments to create many NutritionPlanMeals.
+     * @example
+     * // Create many NutritionPlanMeals
+     * const nutritionPlanMeal = await prisma.nutritionPlanMeal.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends NutritionPlanMealCreateManyArgs>(args?: SelectSubset<T, NutritionPlanMealCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many NutritionPlanMeals and returns the data saved in the database.
+     * @param {NutritionPlanMealCreateManyAndReturnArgs} args - Arguments to create many NutritionPlanMeals.
+     * @example
+     * // Create many NutritionPlanMeals
+     * const nutritionPlanMeal = await prisma.nutritionPlanMeal.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many NutritionPlanMeals and only return the `id`
+     * const nutritionPlanMealWithIdOnly = await prisma.nutritionPlanMeal.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends NutritionPlanMealCreateManyAndReturnArgs>(args?: SelectSubset<T, NutritionPlanMealCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NutritionPlanMealPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a NutritionPlanMeal.
+     * @param {NutritionPlanMealDeleteArgs} args - Arguments to delete one NutritionPlanMeal.
+     * @example
+     * // Delete one NutritionPlanMeal
+     * const NutritionPlanMeal = await prisma.nutritionPlanMeal.delete({
+     *   where: {
+     *     // ... filter to delete one NutritionPlanMeal
+     *   }
+     * })
+     * 
+     */
+    delete<T extends NutritionPlanMealDeleteArgs>(args: SelectSubset<T, NutritionPlanMealDeleteArgs<ExtArgs>>): Prisma__NutritionPlanMealClient<$Result.GetResult<Prisma.$NutritionPlanMealPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one NutritionPlanMeal.
+     * @param {NutritionPlanMealUpdateArgs} args - Arguments to update one NutritionPlanMeal.
+     * @example
+     * // Update one NutritionPlanMeal
+     * const nutritionPlanMeal = await prisma.nutritionPlanMeal.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends NutritionPlanMealUpdateArgs>(args: SelectSubset<T, NutritionPlanMealUpdateArgs<ExtArgs>>): Prisma__NutritionPlanMealClient<$Result.GetResult<Prisma.$NutritionPlanMealPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more NutritionPlanMeals.
+     * @param {NutritionPlanMealDeleteManyArgs} args - Arguments to filter NutritionPlanMeals to delete.
+     * @example
+     * // Delete a few NutritionPlanMeals
+     * const { count } = await prisma.nutritionPlanMeal.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends NutritionPlanMealDeleteManyArgs>(args?: SelectSubset<T, NutritionPlanMealDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more NutritionPlanMeals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanMealUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many NutritionPlanMeals
+     * const nutritionPlanMeal = await prisma.nutritionPlanMeal.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends NutritionPlanMealUpdateManyArgs>(args: SelectSubset<T, NutritionPlanMealUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more NutritionPlanMeals and returns the data updated in the database.
+     * @param {NutritionPlanMealUpdateManyAndReturnArgs} args - Arguments to update many NutritionPlanMeals.
+     * @example
+     * // Update many NutritionPlanMeals
+     * const nutritionPlanMeal = await prisma.nutritionPlanMeal.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more NutritionPlanMeals and only return the `id`
+     * const nutritionPlanMealWithIdOnly = await prisma.nutritionPlanMeal.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends NutritionPlanMealUpdateManyAndReturnArgs>(args: SelectSubset<T, NutritionPlanMealUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NutritionPlanMealPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one NutritionPlanMeal.
+     * @param {NutritionPlanMealUpsertArgs} args - Arguments to update or create a NutritionPlanMeal.
+     * @example
+     * // Update or create a NutritionPlanMeal
+     * const nutritionPlanMeal = await prisma.nutritionPlanMeal.upsert({
+     *   create: {
+     *     // ... data to create a NutritionPlanMeal
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the NutritionPlanMeal we want to update
+     *   }
+     * })
+     */
+    upsert<T extends NutritionPlanMealUpsertArgs>(args: SelectSubset<T, NutritionPlanMealUpsertArgs<ExtArgs>>): Prisma__NutritionPlanMealClient<$Result.GetResult<Prisma.$NutritionPlanMealPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of NutritionPlanMeals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanMealCountArgs} args - Arguments to filter NutritionPlanMeals to count.
+     * @example
+     * // Count the number of NutritionPlanMeals
+     * const count = await prisma.nutritionPlanMeal.count({
+     *   where: {
+     *     // ... the filter for the NutritionPlanMeals we want to count
+     *   }
+     * })
+    **/
+    count<T extends NutritionPlanMealCountArgs>(
+      args?: Subset<T, NutritionPlanMealCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], NutritionPlanMealCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a NutritionPlanMeal.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanMealAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends NutritionPlanMealAggregateArgs>(args: Subset<T, NutritionPlanMealAggregateArgs>): Prisma.PrismaPromise<GetNutritionPlanMealAggregateType<T>>
+
+    /**
+     * Group by NutritionPlanMeal.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanMealGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends NutritionPlanMealGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: NutritionPlanMealGroupByArgs['orderBy'] }
+        : { orderBy?: NutritionPlanMealGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, NutritionPlanMealGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetNutritionPlanMealGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the NutritionPlanMeal model
+   */
+  readonly fields: NutritionPlanMealFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for NutritionPlanMeal.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__NutritionPlanMealClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    nutritionPlanDay<T extends NutritionPlanDayDefaultArgs<ExtArgs> = {}>(args?: Subset<T, NutritionPlanDayDefaultArgs<ExtArgs>>): Prisma__NutritionPlanDayClient<$Result.GetResult<Prisma.$NutritionPlanDayPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    mealOptions<T extends NutritionPlanMeal$mealOptionsArgs<ExtArgs> = {}>(args?: Subset<T, NutritionPlanMeal$mealOptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NutritionPlanMealOptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the NutritionPlanMeal model
+   */
+  interface NutritionPlanMealFieldRefs {
+    readonly id: FieldRef<"NutritionPlanMeal", 'String'>
+    readonly nutritionPlanDayId: FieldRef<"NutritionPlanMeal", 'String'>
+    readonly mealIndex: FieldRef<"NutritionPlanMeal", 'Int'>
+    readonly name: FieldRef<"NutritionPlanMeal", 'String'>
+    readonly description: FieldRef<"NutritionPlanMeal", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * NutritionPlanMeal findUnique
+   */
+  export type NutritionPlanMealFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMeal
+     */
+    select?: NutritionPlanMealSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMeal
+     */
+    omit?: NutritionPlanMealOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlanMeal to fetch.
+     */
+    where: NutritionPlanMealWhereUniqueInput
+  }
+
+  /**
+   * NutritionPlanMeal findUniqueOrThrow
+   */
+  export type NutritionPlanMealFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMeal
+     */
+    select?: NutritionPlanMealSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMeal
+     */
+    omit?: NutritionPlanMealOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlanMeal to fetch.
+     */
+    where: NutritionPlanMealWhereUniqueInput
+  }
+
+  /**
+   * NutritionPlanMeal findFirst
+   */
+  export type NutritionPlanMealFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMeal
+     */
+    select?: NutritionPlanMealSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMeal
+     */
+    omit?: NutritionPlanMealOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlanMeal to fetch.
+     */
+    where?: NutritionPlanMealWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NutritionPlanMeals to fetch.
+     */
+    orderBy?: NutritionPlanMealOrderByWithRelationInput | NutritionPlanMealOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for NutritionPlanMeals.
+     */
+    cursor?: NutritionPlanMealWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NutritionPlanMeals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NutritionPlanMeals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NutritionPlanMeals.
+     */
+    distinct?: NutritionPlanMealScalarFieldEnum | NutritionPlanMealScalarFieldEnum[]
+  }
+
+  /**
+   * NutritionPlanMeal findFirstOrThrow
+   */
+  export type NutritionPlanMealFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMeal
+     */
+    select?: NutritionPlanMealSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMeal
+     */
+    omit?: NutritionPlanMealOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlanMeal to fetch.
+     */
+    where?: NutritionPlanMealWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NutritionPlanMeals to fetch.
+     */
+    orderBy?: NutritionPlanMealOrderByWithRelationInput | NutritionPlanMealOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for NutritionPlanMeals.
+     */
+    cursor?: NutritionPlanMealWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NutritionPlanMeals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NutritionPlanMeals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NutritionPlanMeals.
+     */
+    distinct?: NutritionPlanMealScalarFieldEnum | NutritionPlanMealScalarFieldEnum[]
+  }
+
+  /**
+   * NutritionPlanMeal findMany
+   */
+  export type NutritionPlanMealFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMeal
+     */
+    select?: NutritionPlanMealSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMeal
+     */
+    omit?: NutritionPlanMealOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlanMeals to fetch.
+     */
+    where?: NutritionPlanMealWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NutritionPlanMeals to fetch.
+     */
+    orderBy?: NutritionPlanMealOrderByWithRelationInput | NutritionPlanMealOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing NutritionPlanMeals.
+     */
+    cursor?: NutritionPlanMealWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NutritionPlanMeals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NutritionPlanMeals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NutritionPlanMeals.
+     */
+    distinct?: NutritionPlanMealScalarFieldEnum | NutritionPlanMealScalarFieldEnum[]
+  }
+
+  /**
+   * NutritionPlanMeal create
+   */
+  export type NutritionPlanMealCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMeal
+     */
+    select?: NutritionPlanMealSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMeal
+     */
+    omit?: NutritionPlanMealOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealInclude<ExtArgs> | null
+    /**
+     * The data needed to create a NutritionPlanMeal.
+     */
+    data: XOR<NutritionPlanMealCreateInput, NutritionPlanMealUncheckedCreateInput>
+  }
+
+  /**
+   * NutritionPlanMeal createMany
+   */
+  export type NutritionPlanMealCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many NutritionPlanMeals.
+     */
+    data: NutritionPlanMealCreateManyInput | NutritionPlanMealCreateManyInput[]
+  }
+
+  /**
+   * NutritionPlanMeal createManyAndReturn
+   */
+  export type NutritionPlanMealCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMeal
+     */
+    select?: NutritionPlanMealSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMeal
+     */
+    omit?: NutritionPlanMealOmit<ExtArgs> | null
+    /**
+     * The data used to create many NutritionPlanMeals.
+     */
+    data: NutritionPlanMealCreateManyInput | NutritionPlanMealCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * NutritionPlanMeal update
+   */
+  export type NutritionPlanMealUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMeal
+     */
+    select?: NutritionPlanMealSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMeal
+     */
+    omit?: NutritionPlanMealOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealInclude<ExtArgs> | null
+    /**
+     * The data needed to update a NutritionPlanMeal.
+     */
+    data: XOR<NutritionPlanMealUpdateInput, NutritionPlanMealUncheckedUpdateInput>
+    /**
+     * Choose, which NutritionPlanMeal to update.
+     */
+    where: NutritionPlanMealWhereUniqueInput
+  }
+
+  /**
+   * NutritionPlanMeal updateMany
+   */
+  export type NutritionPlanMealUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update NutritionPlanMeals.
+     */
+    data: XOR<NutritionPlanMealUpdateManyMutationInput, NutritionPlanMealUncheckedUpdateManyInput>
+    /**
+     * Filter which NutritionPlanMeals to update
+     */
+    where?: NutritionPlanMealWhereInput
+    /**
+     * Limit how many NutritionPlanMeals to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * NutritionPlanMeal updateManyAndReturn
+   */
+  export type NutritionPlanMealUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMeal
+     */
+    select?: NutritionPlanMealSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMeal
+     */
+    omit?: NutritionPlanMealOmit<ExtArgs> | null
+    /**
+     * The data used to update NutritionPlanMeals.
+     */
+    data: XOR<NutritionPlanMealUpdateManyMutationInput, NutritionPlanMealUncheckedUpdateManyInput>
+    /**
+     * Filter which NutritionPlanMeals to update
+     */
+    where?: NutritionPlanMealWhereInput
+    /**
+     * Limit how many NutritionPlanMeals to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * NutritionPlanMeal upsert
+   */
+  export type NutritionPlanMealUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMeal
+     */
+    select?: NutritionPlanMealSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMeal
+     */
+    omit?: NutritionPlanMealOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealInclude<ExtArgs> | null
+    /**
+     * The filter to search for the NutritionPlanMeal to update in case it exists.
+     */
+    where: NutritionPlanMealWhereUniqueInput
+    /**
+     * In case the NutritionPlanMeal found by the `where` argument doesn't exist, create a new NutritionPlanMeal with this data.
+     */
+    create: XOR<NutritionPlanMealCreateInput, NutritionPlanMealUncheckedCreateInput>
+    /**
+     * In case the NutritionPlanMeal was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<NutritionPlanMealUpdateInput, NutritionPlanMealUncheckedUpdateInput>
+  }
+
+  /**
+   * NutritionPlanMeal delete
+   */
+  export type NutritionPlanMealDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMeal
+     */
+    select?: NutritionPlanMealSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMeal
+     */
+    omit?: NutritionPlanMealOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealInclude<ExtArgs> | null
+    /**
+     * Filter which NutritionPlanMeal to delete.
+     */
+    where: NutritionPlanMealWhereUniqueInput
+  }
+
+  /**
+   * NutritionPlanMeal deleteMany
+   */
+  export type NutritionPlanMealDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which NutritionPlanMeals to delete
+     */
+    where?: NutritionPlanMealWhereInput
+    /**
+     * Limit how many NutritionPlanMeals to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * NutritionPlanMeal.mealOptions
+   */
+  export type NutritionPlanMeal$mealOptionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOption
+     */
+    select?: NutritionPlanMealOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOption
+     */
+    omit?: NutritionPlanMealOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionInclude<ExtArgs> | null
+    where?: NutritionPlanMealOptionWhereInput
+    orderBy?: NutritionPlanMealOptionOrderByWithRelationInput | NutritionPlanMealOptionOrderByWithRelationInput[]
+    cursor?: NutritionPlanMealOptionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NutritionPlanMealOptionScalarFieldEnum | NutritionPlanMealOptionScalarFieldEnum[]
+  }
+
+  /**
+   * NutritionPlanMeal without action
+   */
+  export type NutritionPlanMealDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMeal
+     */
+    select?: NutritionPlanMealSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMeal
+     */
+    omit?: NutritionPlanMealOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model NutritionPlanMealOption
+   */
+
+  export type AggregateNutritionPlanMealOption = {
+    _count: NutritionPlanMealOptionCountAggregateOutputType | null
+    _avg: NutritionPlanMealOptionAvgAggregateOutputType | null
+    _sum: NutritionPlanMealOptionSumAggregateOutputType | null
+    _min: NutritionPlanMealOptionMinAggregateOutputType | null
+    _max: NutritionPlanMealOptionMaxAggregateOutputType | null
+  }
+
+  export type NutritionPlanMealOptionAvgAggregateOutputType = {
+    optionIndex: number | null
+  }
+
+  export type NutritionPlanMealOptionSumAggregateOutputType = {
+    optionIndex: number | null
+  }
+
+  export type NutritionPlanMealOptionMinAggregateOutputType = {
+    id: string | null
+    nutritionPlanMealId: string | null
+    optionIndex: number | null
+    name: string | null
+    description: string | null
+  }
+
+  export type NutritionPlanMealOptionMaxAggregateOutputType = {
+    id: string | null
+    nutritionPlanMealId: string | null
+    optionIndex: number | null
+    name: string | null
+    description: string | null
+  }
+
+  export type NutritionPlanMealOptionCountAggregateOutputType = {
+    id: number
+    nutritionPlanMealId: number
+    optionIndex: number
+    name: number
+    description: number
+    _all: number
+  }
+
+
+  export type NutritionPlanMealOptionAvgAggregateInputType = {
+    optionIndex?: true
+  }
+
+  export type NutritionPlanMealOptionSumAggregateInputType = {
+    optionIndex?: true
+  }
+
+  export type NutritionPlanMealOptionMinAggregateInputType = {
+    id?: true
+    nutritionPlanMealId?: true
+    optionIndex?: true
+    name?: true
+    description?: true
+  }
+
+  export type NutritionPlanMealOptionMaxAggregateInputType = {
+    id?: true
+    nutritionPlanMealId?: true
+    optionIndex?: true
+    name?: true
+    description?: true
+  }
+
+  export type NutritionPlanMealOptionCountAggregateInputType = {
+    id?: true
+    nutritionPlanMealId?: true
+    optionIndex?: true
+    name?: true
+    description?: true
+    _all?: true
+  }
+
+  export type NutritionPlanMealOptionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which NutritionPlanMealOption to aggregate.
+     */
+    where?: NutritionPlanMealOptionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NutritionPlanMealOptions to fetch.
+     */
+    orderBy?: NutritionPlanMealOptionOrderByWithRelationInput | NutritionPlanMealOptionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: NutritionPlanMealOptionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NutritionPlanMealOptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NutritionPlanMealOptions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned NutritionPlanMealOptions
+    **/
+    _count?: true | NutritionPlanMealOptionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: NutritionPlanMealOptionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: NutritionPlanMealOptionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: NutritionPlanMealOptionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: NutritionPlanMealOptionMaxAggregateInputType
+  }
+
+  export type GetNutritionPlanMealOptionAggregateType<T extends NutritionPlanMealOptionAggregateArgs> = {
+        [P in keyof T & keyof AggregateNutritionPlanMealOption]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateNutritionPlanMealOption[P]>
+      : GetScalarType<T[P], AggregateNutritionPlanMealOption[P]>
+  }
+
+
+
+
+  export type NutritionPlanMealOptionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NutritionPlanMealOptionWhereInput
+    orderBy?: NutritionPlanMealOptionOrderByWithAggregationInput | NutritionPlanMealOptionOrderByWithAggregationInput[]
+    by: NutritionPlanMealOptionScalarFieldEnum[] | NutritionPlanMealOptionScalarFieldEnum
+    having?: NutritionPlanMealOptionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: NutritionPlanMealOptionCountAggregateInputType | true
+    _avg?: NutritionPlanMealOptionAvgAggregateInputType
+    _sum?: NutritionPlanMealOptionSumAggregateInputType
+    _min?: NutritionPlanMealOptionMinAggregateInputType
+    _max?: NutritionPlanMealOptionMaxAggregateInputType
+  }
+
+  export type NutritionPlanMealOptionGroupByOutputType = {
+    id: string
+    nutritionPlanMealId: string
+    optionIndex: number
+    name: string
+    description: string | null
+    _count: NutritionPlanMealOptionCountAggregateOutputType | null
+    _avg: NutritionPlanMealOptionAvgAggregateOutputType | null
+    _sum: NutritionPlanMealOptionSumAggregateOutputType | null
+    _min: NutritionPlanMealOptionMinAggregateOutputType | null
+    _max: NutritionPlanMealOptionMaxAggregateOutputType | null
+  }
+
+  type GetNutritionPlanMealOptionGroupByPayload<T extends NutritionPlanMealOptionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<NutritionPlanMealOptionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof NutritionPlanMealOptionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], NutritionPlanMealOptionGroupByOutputType[P]>
+            : GetScalarType<T[P], NutritionPlanMealOptionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type NutritionPlanMealOptionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nutritionPlanMealId?: boolean
+    optionIndex?: boolean
+    name?: boolean
+    description?: boolean
+    nutritionPlanMeal?: boolean | NutritionPlanMealDefaultArgs<ExtArgs>
+    foods?: boolean | NutritionPlanMealOption$foodsArgs<ExtArgs>
+    _count?: boolean | NutritionPlanMealOptionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["nutritionPlanMealOption"]>
+
+  export type NutritionPlanMealOptionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nutritionPlanMealId?: boolean
+    optionIndex?: boolean
+    name?: boolean
+    description?: boolean
+    nutritionPlanMeal?: boolean | NutritionPlanMealDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["nutritionPlanMealOption"]>
+
+  export type NutritionPlanMealOptionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nutritionPlanMealId?: boolean
+    optionIndex?: boolean
+    name?: boolean
+    description?: boolean
+    nutritionPlanMeal?: boolean | NutritionPlanMealDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["nutritionPlanMealOption"]>
+
+  export type NutritionPlanMealOptionSelectScalar = {
+    id?: boolean
+    nutritionPlanMealId?: boolean
+    optionIndex?: boolean
+    name?: boolean
+    description?: boolean
+  }
+
+  export type NutritionPlanMealOptionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nutritionPlanMealId" | "optionIndex" | "name" | "description", ExtArgs["result"]["nutritionPlanMealOption"]>
+  export type NutritionPlanMealOptionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    nutritionPlanMeal?: boolean | NutritionPlanMealDefaultArgs<ExtArgs>
+    foods?: boolean | NutritionPlanMealOption$foodsArgs<ExtArgs>
+    _count?: boolean | NutritionPlanMealOptionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type NutritionPlanMealOptionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    nutritionPlanMeal?: boolean | NutritionPlanMealDefaultArgs<ExtArgs>
+  }
+  export type NutritionPlanMealOptionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    nutritionPlanMeal?: boolean | NutritionPlanMealDefaultArgs<ExtArgs>
+  }
+
+  export type $NutritionPlanMealOptionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "NutritionPlanMealOption"
+    objects: {
+      nutritionPlanMeal: Prisma.$NutritionPlanMealPayload<ExtArgs>
+      foods: Prisma.$NutritionPlanMealOptionFoodPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      nutritionPlanMealId: string
+      optionIndex: number
+      name: string
+      description: string | null
+    }, ExtArgs["result"]["nutritionPlanMealOption"]>
+    composites: {}
+  }
+
+  type NutritionPlanMealOptionGetPayload<S extends boolean | null | undefined | NutritionPlanMealOptionDefaultArgs> = $Result.GetResult<Prisma.$NutritionPlanMealOptionPayload, S>
+
+  type NutritionPlanMealOptionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<NutritionPlanMealOptionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: NutritionPlanMealOptionCountAggregateInputType | true
+    }
+
+  export interface NutritionPlanMealOptionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['NutritionPlanMealOption'], meta: { name: 'NutritionPlanMealOption' } }
+    /**
+     * Find zero or one NutritionPlanMealOption that matches the filter.
+     * @param {NutritionPlanMealOptionFindUniqueArgs} args - Arguments to find a NutritionPlanMealOption
+     * @example
+     * // Get one NutritionPlanMealOption
+     * const nutritionPlanMealOption = await prisma.nutritionPlanMealOption.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends NutritionPlanMealOptionFindUniqueArgs>(args: SelectSubset<T, NutritionPlanMealOptionFindUniqueArgs<ExtArgs>>): Prisma__NutritionPlanMealOptionClient<$Result.GetResult<Prisma.$NutritionPlanMealOptionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one NutritionPlanMealOption that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {NutritionPlanMealOptionFindUniqueOrThrowArgs} args - Arguments to find a NutritionPlanMealOption
+     * @example
+     * // Get one NutritionPlanMealOption
+     * const nutritionPlanMealOption = await prisma.nutritionPlanMealOption.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends NutritionPlanMealOptionFindUniqueOrThrowArgs>(args: SelectSubset<T, NutritionPlanMealOptionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__NutritionPlanMealOptionClient<$Result.GetResult<Prisma.$NutritionPlanMealOptionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first NutritionPlanMealOption that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanMealOptionFindFirstArgs} args - Arguments to find a NutritionPlanMealOption
+     * @example
+     * // Get one NutritionPlanMealOption
+     * const nutritionPlanMealOption = await prisma.nutritionPlanMealOption.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends NutritionPlanMealOptionFindFirstArgs>(args?: SelectSubset<T, NutritionPlanMealOptionFindFirstArgs<ExtArgs>>): Prisma__NutritionPlanMealOptionClient<$Result.GetResult<Prisma.$NutritionPlanMealOptionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first NutritionPlanMealOption that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanMealOptionFindFirstOrThrowArgs} args - Arguments to find a NutritionPlanMealOption
+     * @example
+     * // Get one NutritionPlanMealOption
+     * const nutritionPlanMealOption = await prisma.nutritionPlanMealOption.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends NutritionPlanMealOptionFindFirstOrThrowArgs>(args?: SelectSubset<T, NutritionPlanMealOptionFindFirstOrThrowArgs<ExtArgs>>): Prisma__NutritionPlanMealOptionClient<$Result.GetResult<Prisma.$NutritionPlanMealOptionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more NutritionPlanMealOptions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanMealOptionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all NutritionPlanMealOptions
+     * const nutritionPlanMealOptions = await prisma.nutritionPlanMealOption.findMany()
+     * 
+     * // Get first 10 NutritionPlanMealOptions
+     * const nutritionPlanMealOptions = await prisma.nutritionPlanMealOption.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const nutritionPlanMealOptionWithIdOnly = await prisma.nutritionPlanMealOption.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends NutritionPlanMealOptionFindManyArgs>(args?: SelectSubset<T, NutritionPlanMealOptionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NutritionPlanMealOptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a NutritionPlanMealOption.
+     * @param {NutritionPlanMealOptionCreateArgs} args - Arguments to create a NutritionPlanMealOption.
+     * @example
+     * // Create one NutritionPlanMealOption
+     * const NutritionPlanMealOption = await prisma.nutritionPlanMealOption.create({
+     *   data: {
+     *     // ... data to create a NutritionPlanMealOption
+     *   }
+     * })
+     * 
+     */
+    create<T extends NutritionPlanMealOptionCreateArgs>(args: SelectSubset<T, NutritionPlanMealOptionCreateArgs<ExtArgs>>): Prisma__NutritionPlanMealOptionClient<$Result.GetResult<Prisma.$NutritionPlanMealOptionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many NutritionPlanMealOptions.
+     * @param {NutritionPlanMealOptionCreateManyArgs} args - Arguments to create many NutritionPlanMealOptions.
+     * @example
+     * // Create many NutritionPlanMealOptions
+     * const nutritionPlanMealOption = await prisma.nutritionPlanMealOption.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends NutritionPlanMealOptionCreateManyArgs>(args?: SelectSubset<T, NutritionPlanMealOptionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many NutritionPlanMealOptions and returns the data saved in the database.
+     * @param {NutritionPlanMealOptionCreateManyAndReturnArgs} args - Arguments to create many NutritionPlanMealOptions.
+     * @example
+     * // Create many NutritionPlanMealOptions
+     * const nutritionPlanMealOption = await prisma.nutritionPlanMealOption.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many NutritionPlanMealOptions and only return the `id`
+     * const nutritionPlanMealOptionWithIdOnly = await prisma.nutritionPlanMealOption.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends NutritionPlanMealOptionCreateManyAndReturnArgs>(args?: SelectSubset<T, NutritionPlanMealOptionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NutritionPlanMealOptionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a NutritionPlanMealOption.
+     * @param {NutritionPlanMealOptionDeleteArgs} args - Arguments to delete one NutritionPlanMealOption.
+     * @example
+     * // Delete one NutritionPlanMealOption
+     * const NutritionPlanMealOption = await prisma.nutritionPlanMealOption.delete({
+     *   where: {
+     *     // ... filter to delete one NutritionPlanMealOption
+     *   }
+     * })
+     * 
+     */
+    delete<T extends NutritionPlanMealOptionDeleteArgs>(args: SelectSubset<T, NutritionPlanMealOptionDeleteArgs<ExtArgs>>): Prisma__NutritionPlanMealOptionClient<$Result.GetResult<Prisma.$NutritionPlanMealOptionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one NutritionPlanMealOption.
+     * @param {NutritionPlanMealOptionUpdateArgs} args - Arguments to update one NutritionPlanMealOption.
+     * @example
+     * // Update one NutritionPlanMealOption
+     * const nutritionPlanMealOption = await prisma.nutritionPlanMealOption.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends NutritionPlanMealOptionUpdateArgs>(args: SelectSubset<T, NutritionPlanMealOptionUpdateArgs<ExtArgs>>): Prisma__NutritionPlanMealOptionClient<$Result.GetResult<Prisma.$NutritionPlanMealOptionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more NutritionPlanMealOptions.
+     * @param {NutritionPlanMealOptionDeleteManyArgs} args - Arguments to filter NutritionPlanMealOptions to delete.
+     * @example
+     * // Delete a few NutritionPlanMealOptions
+     * const { count } = await prisma.nutritionPlanMealOption.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends NutritionPlanMealOptionDeleteManyArgs>(args?: SelectSubset<T, NutritionPlanMealOptionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more NutritionPlanMealOptions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanMealOptionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many NutritionPlanMealOptions
+     * const nutritionPlanMealOption = await prisma.nutritionPlanMealOption.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends NutritionPlanMealOptionUpdateManyArgs>(args: SelectSubset<T, NutritionPlanMealOptionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more NutritionPlanMealOptions and returns the data updated in the database.
+     * @param {NutritionPlanMealOptionUpdateManyAndReturnArgs} args - Arguments to update many NutritionPlanMealOptions.
+     * @example
+     * // Update many NutritionPlanMealOptions
+     * const nutritionPlanMealOption = await prisma.nutritionPlanMealOption.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more NutritionPlanMealOptions and only return the `id`
+     * const nutritionPlanMealOptionWithIdOnly = await prisma.nutritionPlanMealOption.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends NutritionPlanMealOptionUpdateManyAndReturnArgs>(args: SelectSubset<T, NutritionPlanMealOptionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NutritionPlanMealOptionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one NutritionPlanMealOption.
+     * @param {NutritionPlanMealOptionUpsertArgs} args - Arguments to update or create a NutritionPlanMealOption.
+     * @example
+     * // Update or create a NutritionPlanMealOption
+     * const nutritionPlanMealOption = await prisma.nutritionPlanMealOption.upsert({
+     *   create: {
+     *     // ... data to create a NutritionPlanMealOption
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the NutritionPlanMealOption we want to update
+     *   }
+     * })
+     */
+    upsert<T extends NutritionPlanMealOptionUpsertArgs>(args: SelectSubset<T, NutritionPlanMealOptionUpsertArgs<ExtArgs>>): Prisma__NutritionPlanMealOptionClient<$Result.GetResult<Prisma.$NutritionPlanMealOptionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of NutritionPlanMealOptions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanMealOptionCountArgs} args - Arguments to filter NutritionPlanMealOptions to count.
+     * @example
+     * // Count the number of NutritionPlanMealOptions
+     * const count = await prisma.nutritionPlanMealOption.count({
+     *   where: {
+     *     // ... the filter for the NutritionPlanMealOptions we want to count
+     *   }
+     * })
+    **/
+    count<T extends NutritionPlanMealOptionCountArgs>(
+      args?: Subset<T, NutritionPlanMealOptionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], NutritionPlanMealOptionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a NutritionPlanMealOption.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanMealOptionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends NutritionPlanMealOptionAggregateArgs>(args: Subset<T, NutritionPlanMealOptionAggregateArgs>): Prisma.PrismaPromise<GetNutritionPlanMealOptionAggregateType<T>>
+
+    /**
+     * Group by NutritionPlanMealOption.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanMealOptionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends NutritionPlanMealOptionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: NutritionPlanMealOptionGroupByArgs['orderBy'] }
+        : { orderBy?: NutritionPlanMealOptionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, NutritionPlanMealOptionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetNutritionPlanMealOptionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the NutritionPlanMealOption model
+   */
+  readonly fields: NutritionPlanMealOptionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for NutritionPlanMealOption.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__NutritionPlanMealOptionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    nutritionPlanMeal<T extends NutritionPlanMealDefaultArgs<ExtArgs> = {}>(args?: Subset<T, NutritionPlanMealDefaultArgs<ExtArgs>>): Prisma__NutritionPlanMealClient<$Result.GetResult<Prisma.$NutritionPlanMealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    foods<T extends NutritionPlanMealOption$foodsArgs<ExtArgs> = {}>(args?: Subset<T, NutritionPlanMealOption$foodsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NutritionPlanMealOptionFoodPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the NutritionPlanMealOption model
+   */
+  interface NutritionPlanMealOptionFieldRefs {
+    readonly id: FieldRef<"NutritionPlanMealOption", 'String'>
+    readonly nutritionPlanMealId: FieldRef<"NutritionPlanMealOption", 'String'>
+    readonly optionIndex: FieldRef<"NutritionPlanMealOption", 'Int'>
+    readonly name: FieldRef<"NutritionPlanMealOption", 'String'>
+    readonly description: FieldRef<"NutritionPlanMealOption", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * NutritionPlanMealOption findUnique
+   */
+  export type NutritionPlanMealOptionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOption
+     */
+    select?: NutritionPlanMealOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOption
+     */
+    omit?: NutritionPlanMealOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlanMealOption to fetch.
+     */
+    where: NutritionPlanMealOptionWhereUniqueInput
+  }
+
+  /**
+   * NutritionPlanMealOption findUniqueOrThrow
+   */
+  export type NutritionPlanMealOptionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOption
+     */
+    select?: NutritionPlanMealOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOption
+     */
+    omit?: NutritionPlanMealOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlanMealOption to fetch.
+     */
+    where: NutritionPlanMealOptionWhereUniqueInput
+  }
+
+  /**
+   * NutritionPlanMealOption findFirst
+   */
+  export type NutritionPlanMealOptionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOption
+     */
+    select?: NutritionPlanMealOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOption
+     */
+    omit?: NutritionPlanMealOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlanMealOption to fetch.
+     */
+    where?: NutritionPlanMealOptionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NutritionPlanMealOptions to fetch.
+     */
+    orderBy?: NutritionPlanMealOptionOrderByWithRelationInput | NutritionPlanMealOptionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for NutritionPlanMealOptions.
+     */
+    cursor?: NutritionPlanMealOptionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NutritionPlanMealOptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NutritionPlanMealOptions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NutritionPlanMealOptions.
+     */
+    distinct?: NutritionPlanMealOptionScalarFieldEnum | NutritionPlanMealOptionScalarFieldEnum[]
+  }
+
+  /**
+   * NutritionPlanMealOption findFirstOrThrow
+   */
+  export type NutritionPlanMealOptionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOption
+     */
+    select?: NutritionPlanMealOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOption
+     */
+    omit?: NutritionPlanMealOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlanMealOption to fetch.
+     */
+    where?: NutritionPlanMealOptionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NutritionPlanMealOptions to fetch.
+     */
+    orderBy?: NutritionPlanMealOptionOrderByWithRelationInput | NutritionPlanMealOptionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for NutritionPlanMealOptions.
+     */
+    cursor?: NutritionPlanMealOptionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NutritionPlanMealOptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NutritionPlanMealOptions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NutritionPlanMealOptions.
+     */
+    distinct?: NutritionPlanMealOptionScalarFieldEnum | NutritionPlanMealOptionScalarFieldEnum[]
+  }
+
+  /**
+   * NutritionPlanMealOption findMany
+   */
+  export type NutritionPlanMealOptionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOption
+     */
+    select?: NutritionPlanMealOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOption
+     */
+    omit?: NutritionPlanMealOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlanMealOptions to fetch.
+     */
+    where?: NutritionPlanMealOptionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NutritionPlanMealOptions to fetch.
+     */
+    orderBy?: NutritionPlanMealOptionOrderByWithRelationInput | NutritionPlanMealOptionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing NutritionPlanMealOptions.
+     */
+    cursor?: NutritionPlanMealOptionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NutritionPlanMealOptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NutritionPlanMealOptions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NutritionPlanMealOptions.
+     */
+    distinct?: NutritionPlanMealOptionScalarFieldEnum | NutritionPlanMealOptionScalarFieldEnum[]
+  }
+
+  /**
+   * NutritionPlanMealOption create
+   */
+  export type NutritionPlanMealOptionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOption
+     */
+    select?: NutritionPlanMealOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOption
+     */
+    omit?: NutritionPlanMealOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a NutritionPlanMealOption.
+     */
+    data: XOR<NutritionPlanMealOptionCreateInput, NutritionPlanMealOptionUncheckedCreateInput>
+  }
+
+  /**
+   * NutritionPlanMealOption createMany
+   */
+  export type NutritionPlanMealOptionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many NutritionPlanMealOptions.
+     */
+    data: NutritionPlanMealOptionCreateManyInput | NutritionPlanMealOptionCreateManyInput[]
+  }
+
+  /**
+   * NutritionPlanMealOption createManyAndReturn
+   */
+  export type NutritionPlanMealOptionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOption
+     */
+    select?: NutritionPlanMealOptionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOption
+     */
+    omit?: NutritionPlanMealOptionOmit<ExtArgs> | null
+    /**
+     * The data used to create many NutritionPlanMealOptions.
+     */
+    data: NutritionPlanMealOptionCreateManyInput | NutritionPlanMealOptionCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * NutritionPlanMealOption update
+   */
+  export type NutritionPlanMealOptionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOption
+     */
+    select?: NutritionPlanMealOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOption
+     */
+    omit?: NutritionPlanMealOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a NutritionPlanMealOption.
+     */
+    data: XOR<NutritionPlanMealOptionUpdateInput, NutritionPlanMealOptionUncheckedUpdateInput>
+    /**
+     * Choose, which NutritionPlanMealOption to update.
+     */
+    where: NutritionPlanMealOptionWhereUniqueInput
+  }
+
+  /**
+   * NutritionPlanMealOption updateMany
+   */
+  export type NutritionPlanMealOptionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update NutritionPlanMealOptions.
+     */
+    data: XOR<NutritionPlanMealOptionUpdateManyMutationInput, NutritionPlanMealOptionUncheckedUpdateManyInput>
+    /**
+     * Filter which NutritionPlanMealOptions to update
+     */
+    where?: NutritionPlanMealOptionWhereInput
+    /**
+     * Limit how many NutritionPlanMealOptions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * NutritionPlanMealOption updateManyAndReturn
+   */
+  export type NutritionPlanMealOptionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOption
+     */
+    select?: NutritionPlanMealOptionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOption
+     */
+    omit?: NutritionPlanMealOptionOmit<ExtArgs> | null
+    /**
+     * The data used to update NutritionPlanMealOptions.
+     */
+    data: XOR<NutritionPlanMealOptionUpdateManyMutationInput, NutritionPlanMealOptionUncheckedUpdateManyInput>
+    /**
+     * Filter which NutritionPlanMealOptions to update
+     */
+    where?: NutritionPlanMealOptionWhereInput
+    /**
+     * Limit how many NutritionPlanMealOptions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * NutritionPlanMealOption upsert
+   */
+  export type NutritionPlanMealOptionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOption
+     */
+    select?: NutritionPlanMealOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOption
+     */
+    omit?: NutritionPlanMealOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the NutritionPlanMealOption to update in case it exists.
+     */
+    where: NutritionPlanMealOptionWhereUniqueInput
+    /**
+     * In case the NutritionPlanMealOption found by the `where` argument doesn't exist, create a new NutritionPlanMealOption with this data.
+     */
+    create: XOR<NutritionPlanMealOptionCreateInput, NutritionPlanMealOptionUncheckedCreateInput>
+    /**
+     * In case the NutritionPlanMealOption was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<NutritionPlanMealOptionUpdateInput, NutritionPlanMealOptionUncheckedUpdateInput>
+  }
+
+  /**
+   * NutritionPlanMealOption delete
+   */
+  export type NutritionPlanMealOptionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOption
+     */
+    select?: NutritionPlanMealOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOption
+     */
+    omit?: NutritionPlanMealOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionInclude<ExtArgs> | null
+    /**
+     * Filter which NutritionPlanMealOption to delete.
+     */
+    where: NutritionPlanMealOptionWhereUniqueInput
+  }
+
+  /**
+   * NutritionPlanMealOption deleteMany
+   */
+  export type NutritionPlanMealOptionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which NutritionPlanMealOptions to delete
+     */
+    where?: NutritionPlanMealOptionWhereInput
+    /**
+     * Limit how many NutritionPlanMealOptions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * NutritionPlanMealOption.foods
+   */
+  export type NutritionPlanMealOption$foodsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOptionFood
+     */
+    select?: NutritionPlanMealOptionFoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOptionFood
+     */
+    omit?: NutritionPlanMealOptionFoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionFoodInclude<ExtArgs> | null
+    where?: NutritionPlanMealOptionFoodWhereInput
+    orderBy?: NutritionPlanMealOptionFoodOrderByWithRelationInput | NutritionPlanMealOptionFoodOrderByWithRelationInput[]
+    cursor?: NutritionPlanMealOptionFoodWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NutritionPlanMealOptionFoodScalarFieldEnum | NutritionPlanMealOptionFoodScalarFieldEnum[]
+  }
+
+  /**
+   * NutritionPlanMealOption without action
+   */
+  export type NutritionPlanMealOptionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOption
+     */
+    select?: NutritionPlanMealOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOption
+     */
+    omit?: NutritionPlanMealOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model NutritionPlanMealOptionFood
+   */
+
+  export type AggregateNutritionPlanMealOptionFood = {
+    _count: NutritionPlanMealOptionFoodCountAggregateOutputType | null
+    _avg: NutritionPlanMealOptionFoodAvgAggregateOutputType | null
+    _sum: NutritionPlanMealOptionFoodSumAggregateOutputType | null
+    _min: NutritionPlanMealOptionFoodMinAggregateOutputType | null
+    _max: NutritionPlanMealOptionFoodMaxAggregateOutputType | null
+  }
+
+  export type NutritionPlanMealOptionFoodAvgAggregateOutputType = {
+    quantity: number | null
+  }
+
+  export type NutritionPlanMealOptionFoodSumAggregateOutputType = {
+    quantity: number | null
+  }
+
+  export type NutritionPlanMealOptionFoodMinAggregateOutputType = {
+    id: string | null
+    nutritionPlanMealOptionId: string | null
+    foodId: string | null
+    quantity: number | null
+  }
+
+  export type NutritionPlanMealOptionFoodMaxAggregateOutputType = {
+    id: string | null
+    nutritionPlanMealOptionId: string | null
+    foodId: string | null
+    quantity: number | null
+  }
+
+  export type NutritionPlanMealOptionFoodCountAggregateOutputType = {
+    id: number
+    nutritionPlanMealOptionId: number
+    foodId: number
+    quantity: number
+    _all: number
+  }
+
+
+  export type NutritionPlanMealOptionFoodAvgAggregateInputType = {
+    quantity?: true
+  }
+
+  export type NutritionPlanMealOptionFoodSumAggregateInputType = {
+    quantity?: true
+  }
+
+  export type NutritionPlanMealOptionFoodMinAggregateInputType = {
+    id?: true
+    nutritionPlanMealOptionId?: true
+    foodId?: true
+    quantity?: true
+  }
+
+  export type NutritionPlanMealOptionFoodMaxAggregateInputType = {
+    id?: true
+    nutritionPlanMealOptionId?: true
+    foodId?: true
+    quantity?: true
+  }
+
+  export type NutritionPlanMealOptionFoodCountAggregateInputType = {
+    id?: true
+    nutritionPlanMealOptionId?: true
+    foodId?: true
+    quantity?: true
+    _all?: true
+  }
+
+  export type NutritionPlanMealOptionFoodAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which NutritionPlanMealOptionFood to aggregate.
+     */
+    where?: NutritionPlanMealOptionFoodWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NutritionPlanMealOptionFoods to fetch.
+     */
+    orderBy?: NutritionPlanMealOptionFoodOrderByWithRelationInput | NutritionPlanMealOptionFoodOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: NutritionPlanMealOptionFoodWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NutritionPlanMealOptionFoods from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NutritionPlanMealOptionFoods.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned NutritionPlanMealOptionFoods
+    **/
+    _count?: true | NutritionPlanMealOptionFoodCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: NutritionPlanMealOptionFoodAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: NutritionPlanMealOptionFoodSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: NutritionPlanMealOptionFoodMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: NutritionPlanMealOptionFoodMaxAggregateInputType
+  }
+
+  export type GetNutritionPlanMealOptionFoodAggregateType<T extends NutritionPlanMealOptionFoodAggregateArgs> = {
+        [P in keyof T & keyof AggregateNutritionPlanMealOptionFood]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateNutritionPlanMealOptionFood[P]>
+      : GetScalarType<T[P], AggregateNutritionPlanMealOptionFood[P]>
+  }
+
+
+
+
+  export type NutritionPlanMealOptionFoodGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NutritionPlanMealOptionFoodWhereInput
+    orderBy?: NutritionPlanMealOptionFoodOrderByWithAggregationInput | NutritionPlanMealOptionFoodOrderByWithAggregationInput[]
+    by: NutritionPlanMealOptionFoodScalarFieldEnum[] | NutritionPlanMealOptionFoodScalarFieldEnum
+    having?: NutritionPlanMealOptionFoodScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: NutritionPlanMealOptionFoodCountAggregateInputType | true
+    _avg?: NutritionPlanMealOptionFoodAvgAggregateInputType
+    _sum?: NutritionPlanMealOptionFoodSumAggregateInputType
+    _min?: NutritionPlanMealOptionFoodMinAggregateInputType
+    _max?: NutritionPlanMealOptionFoodMaxAggregateInputType
+  }
+
+  export type NutritionPlanMealOptionFoodGroupByOutputType = {
+    id: string
+    nutritionPlanMealOptionId: string
+    foodId: string
+    quantity: number | null
+    _count: NutritionPlanMealOptionFoodCountAggregateOutputType | null
+    _avg: NutritionPlanMealOptionFoodAvgAggregateOutputType | null
+    _sum: NutritionPlanMealOptionFoodSumAggregateOutputType | null
+    _min: NutritionPlanMealOptionFoodMinAggregateOutputType | null
+    _max: NutritionPlanMealOptionFoodMaxAggregateOutputType | null
+  }
+
+  type GetNutritionPlanMealOptionFoodGroupByPayload<T extends NutritionPlanMealOptionFoodGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<NutritionPlanMealOptionFoodGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof NutritionPlanMealOptionFoodGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], NutritionPlanMealOptionFoodGroupByOutputType[P]>
+            : GetScalarType<T[P], NutritionPlanMealOptionFoodGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type NutritionPlanMealOptionFoodSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nutritionPlanMealOptionId?: boolean
+    foodId?: boolean
+    quantity?: boolean
+    nutritionPlanMealOption?: boolean | NutritionPlanMealOptionDefaultArgs<ExtArgs>
+    food?: boolean | FoodDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["nutritionPlanMealOptionFood"]>
+
+  export type NutritionPlanMealOptionFoodSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nutritionPlanMealOptionId?: boolean
+    foodId?: boolean
+    quantity?: boolean
+    nutritionPlanMealOption?: boolean | NutritionPlanMealOptionDefaultArgs<ExtArgs>
+    food?: boolean | FoodDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["nutritionPlanMealOptionFood"]>
+
+  export type NutritionPlanMealOptionFoodSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nutritionPlanMealOptionId?: boolean
+    foodId?: boolean
+    quantity?: boolean
+    nutritionPlanMealOption?: boolean | NutritionPlanMealOptionDefaultArgs<ExtArgs>
+    food?: boolean | FoodDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["nutritionPlanMealOptionFood"]>
+
+  export type NutritionPlanMealOptionFoodSelectScalar = {
+    id?: boolean
+    nutritionPlanMealOptionId?: boolean
+    foodId?: boolean
+    quantity?: boolean
+  }
+
+  export type NutritionPlanMealOptionFoodOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nutritionPlanMealOptionId" | "foodId" | "quantity", ExtArgs["result"]["nutritionPlanMealOptionFood"]>
+  export type NutritionPlanMealOptionFoodInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    nutritionPlanMealOption?: boolean | NutritionPlanMealOptionDefaultArgs<ExtArgs>
+    food?: boolean | FoodDefaultArgs<ExtArgs>
+  }
+  export type NutritionPlanMealOptionFoodIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    nutritionPlanMealOption?: boolean | NutritionPlanMealOptionDefaultArgs<ExtArgs>
+    food?: boolean | FoodDefaultArgs<ExtArgs>
+  }
+  export type NutritionPlanMealOptionFoodIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    nutritionPlanMealOption?: boolean | NutritionPlanMealOptionDefaultArgs<ExtArgs>
+    food?: boolean | FoodDefaultArgs<ExtArgs>
+  }
+
+  export type $NutritionPlanMealOptionFoodPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "NutritionPlanMealOptionFood"
+    objects: {
+      nutritionPlanMealOption: Prisma.$NutritionPlanMealOptionPayload<ExtArgs>
+      food: Prisma.$FoodPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      nutritionPlanMealOptionId: string
+      foodId: string
+      quantity: number | null
+    }, ExtArgs["result"]["nutritionPlanMealOptionFood"]>
+    composites: {}
+  }
+
+  type NutritionPlanMealOptionFoodGetPayload<S extends boolean | null | undefined | NutritionPlanMealOptionFoodDefaultArgs> = $Result.GetResult<Prisma.$NutritionPlanMealOptionFoodPayload, S>
+
+  type NutritionPlanMealOptionFoodCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<NutritionPlanMealOptionFoodFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: NutritionPlanMealOptionFoodCountAggregateInputType | true
+    }
+
+  export interface NutritionPlanMealOptionFoodDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['NutritionPlanMealOptionFood'], meta: { name: 'NutritionPlanMealOptionFood' } }
+    /**
+     * Find zero or one NutritionPlanMealOptionFood that matches the filter.
+     * @param {NutritionPlanMealOptionFoodFindUniqueArgs} args - Arguments to find a NutritionPlanMealOptionFood
+     * @example
+     * // Get one NutritionPlanMealOptionFood
+     * const nutritionPlanMealOptionFood = await prisma.nutritionPlanMealOptionFood.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends NutritionPlanMealOptionFoodFindUniqueArgs>(args: SelectSubset<T, NutritionPlanMealOptionFoodFindUniqueArgs<ExtArgs>>): Prisma__NutritionPlanMealOptionFoodClient<$Result.GetResult<Prisma.$NutritionPlanMealOptionFoodPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one NutritionPlanMealOptionFood that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {NutritionPlanMealOptionFoodFindUniqueOrThrowArgs} args - Arguments to find a NutritionPlanMealOptionFood
+     * @example
+     * // Get one NutritionPlanMealOptionFood
+     * const nutritionPlanMealOptionFood = await prisma.nutritionPlanMealOptionFood.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends NutritionPlanMealOptionFoodFindUniqueOrThrowArgs>(args: SelectSubset<T, NutritionPlanMealOptionFoodFindUniqueOrThrowArgs<ExtArgs>>): Prisma__NutritionPlanMealOptionFoodClient<$Result.GetResult<Prisma.$NutritionPlanMealOptionFoodPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first NutritionPlanMealOptionFood that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanMealOptionFoodFindFirstArgs} args - Arguments to find a NutritionPlanMealOptionFood
+     * @example
+     * // Get one NutritionPlanMealOptionFood
+     * const nutritionPlanMealOptionFood = await prisma.nutritionPlanMealOptionFood.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends NutritionPlanMealOptionFoodFindFirstArgs>(args?: SelectSubset<T, NutritionPlanMealOptionFoodFindFirstArgs<ExtArgs>>): Prisma__NutritionPlanMealOptionFoodClient<$Result.GetResult<Prisma.$NutritionPlanMealOptionFoodPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first NutritionPlanMealOptionFood that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanMealOptionFoodFindFirstOrThrowArgs} args - Arguments to find a NutritionPlanMealOptionFood
+     * @example
+     * // Get one NutritionPlanMealOptionFood
+     * const nutritionPlanMealOptionFood = await prisma.nutritionPlanMealOptionFood.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends NutritionPlanMealOptionFoodFindFirstOrThrowArgs>(args?: SelectSubset<T, NutritionPlanMealOptionFoodFindFirstOrThrowArgs<ExtArgs>>): Prisma__NutritionPlanMealOptionFoodClient<$Result.GetResult<Prisma.$NutritionPlanMealOptionFoodPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more NutritionPlanMealOptionFoods that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanMealOptionFoodFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all NutritionPlanMealOptionFoods
+     * const nutritionPlanMealOptionFoods = await prisma.nutritionPlanMealOptionFood.findMany()
+     * 
+     * // Get first 10 NutritionPlanMealOptionFoods
+     * const nutritionPlanMealOptionFoods = await prisma.nutritionPlanMealOptionFood.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const nutritionPlanMealOptionFoodWithIdOnly = await prisma.nutritionPlanMealOptionFood.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends NutritionPlanMealOptionFoodFindManyArgs>(args?: SelectSubset<T, NutritionPlanMealOptionFoodFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NutritionPlanMealOptionFoodPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a NutritionPlanMealOptionFood.
+     * @param {NutritionPlanMealOptionFoodCreateArgs} args - Arguments to create a NutritionPlanMealOptionFood.
+     * @example
+     * // Create one NutritionPlanMealOptionFood
+     * const NutritionPlanMealOptionFood = await prisma.nutritionPlanMealOptionFood.create({
+     *   data: {
+     *     // ... data to create a NutritionPlanMealOptionFood
+     *   }
+     * })
+     * 
+     */
+    create<T extends NutritionPlanMealOptionFoodCreateArgs>(args: SelectSubset<T, NutritionPlanMealOptionFoodCreateArgs<ExtArgs>>): Prisma__NutritionPlanMealOptionFoodClient<$Result.GetResult<Prisma.$NutritionPlanMealOptionFoodPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many NutritionPlanMealOptionFoods.
+     * @param {NutritionPlanMealOptionFoodCreateManyArgs} args - Arguments to create many NutritionPlanMealOptionFoods.
+     * @example
+     * // Create many NutritionPlanMealOptionFoods
+     * const nutritionPlanMealOptionFood = await prisma.nutritionPlanMealOptionFood.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends NutritionPlanMealOptionFoodCreateManyArgs>(args?: SelectSubset<T, NutritionPlanMealOptionFoodCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many NutritionPlanMealOptionFoods and returns the data saved in the database.
+     * @param {NutritionPlanMealOptionFoodCreateManyAndReturnArgs} args - Arguments to create many NutritionPlanMealOptionFoods.
+     * @example
+     * // Create many NutritionPlanMealOptionFoods
+     * const nutritionPlanMealOptionFood = await prisma.nutritionPlanMealOptionFood.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many NutritionPlanMealOptionFoods and only return the `id`
+     * const nutritionPlanMealOptionFoodWithIdOnly = await prisma.nutritionPlanMealOptionFood.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends NutritionPlanMealOptionFoodCreateManyAndReturnArgs>(args?: SelectSubset<T, NutritionPlanMealOptionFoodCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NutritionPlanMealOptionFoodPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a NutritionPlanMealOptionFood.
+     * @param {NutritionPlanMealOptionFoodDeleteArgs} args - Arguments to delete one NutritionPlanMealOptionFood.
+     * @example
+     * // Delete one NutritionPlanMealOptionFood
+     * const NutritionPlanMealOptionFood = await prisma.nutritionPlanMealOptionFood.delete({
+     *   where: {
+     *     // ... filter to delete one NutritionPlanMealOptionFood
+     *   }
+     * })
+     * 
+     */
+    delete<T extends NutritionPlanMealOptionFoodDeleteArgs>(args: SelectSubset<T, NutritionPlanMealOptionFoodDeleteArgs<ExtArgs>>): Prisma__NutritionPlanMealOptionFoodClient<$Result.GetResult<Prisma.$NutritionPlanMealOptionFoodPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one NutritionPlanMealOptionFood.
+     * @param {NutritionPlanMealOptionFoodUpdateArgs} args - Arguments to update one NutritionPlanMealOptionFood.
+     * @example
+     * // Update one NutritionPlanMealOptionFood
+     * const nutritionPlanMealOptionFood = await prisma.nutritionPlanMealOptionFood.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends NutritionPlanMealOptionFoodUpdateArgs>(args: SelectSubset<T, NutritionPlanMealOptionFoodUpdateArgs<ExtArgs>>): Prisma__NutritionPlanMealOptionFoodClient<$Result.GetResult<Prisma.$NutritionPlanMealOptionFoodPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more NutritionPlanMealOptionFoods.
+     * @param {NutritionPlanMealOptionFoodDeleteManyArgs} args - Arguments to filter NutritionPlanMealOptionFoods to delete.
+     * @example
+     * // Delete a few NutritionPlanMealOptionFoods
+     * const { count } = await prisma.nutritionPlanMealOptionFood.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends NutritionPlanMealOptionFoodDeleteManyArgs>(args?: SelectSubset<T, NutritionPlanMealOptionFoodDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more NutritionPlanMealOptionFoods.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanMealOptionFoodUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many NutritionPlanMealOptionFoods
+     * const nutritionPlanMealOptionFood = await prisma.nutritionPlanMealOptionFood.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends NutritionPlanMealOptionFoodUpdateManyArgs>(args: SelectSubset<T, NutritionPlanMealOptionFoodUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more NutritionPlanMealOptionFoods and returns the data updated in the database.
+     * @param {NutritionPlanMealOptionFoodUpdateManyAndReturnArgs} args - Arguments to update many NutritionPlanMealOptionFoods.
+     * @example
+     * // Update many NutritionPlanMealOptionFoods
+     * const nutritionPlanMealOptionFood = await prisma.nutritionPlanMealOptionFood.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more NutritionPlanMealOptionFoods and only return the `id`
+     * const nutritionPlanMealOptionFoodWithIdOnly = await prisma.nutritionPlanMealOptionFood.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends NutritionPlanMealOptionFoodUpdateManyAndReturnArgs>(args: SelectSubset<T, NutritionPlanMealOptionFoodUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NutritionPlanMealOptionFoodPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one NutritionPlanMealOptionFood.
+     * @param {NutritionPlanMealOptionFoodUpsertArgs} args - Arguments to update or create a NutritionPlanMealOptionFood.
+     * @example
+     * // Update or create a NutritionPlanMealOptionFood
+     * const nutritionPlanMealOptionFood = await prisma.nutritionPlanMealOptionFood.upsert({
+     *   create: {
+     *     // ... data to create a NutritionPlanMealOptionFood
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the NutritionPlanMealOptionFood we want to update
+     *   }
+     * })
+     */
+    upsert<T extends NutritionPlanMealOptionFoodUpsertArgs>(args: SelectSubset<T, NutritionPlanMealOptionFoodUpsertArgs<ExtArgs>>): Prisma__NutritionPlanMealOptionFoodClient<$Result.GetResult<Prisma.$NutritionPlanMealOptionFoodPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of NutritionPlanMealOptionFoods.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanMealOptionFoodCountArgs} args - Arguments to filter NutritionPlanMealOptionFoods to count.
+     * @example
+     * // Count the number of NutritionPlanMealOptionFoods
+     * const count = await prisma.nutritionPlanMealOptionFood.count({
+     *   where: {
+     *     // ... the filter for the NutritionPlanMealOptionFoods we want to count
+     *   }
+     * })
+    **/
+    count<T extends NutritionPlanMealOptionFoodCountArgs>(
+      args?: Subset<T, NutritionPlanMealOptionFoodCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], NutritionPlanMealOptionFoodCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a NutritionPlanMealOptionFood.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanMealOptionFoodAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends NutritionPlanMealOptionFoodAggregateArgs>(args: Subset<T, NutritionPlanMealOptionFoodAggregateArgs>): Prisma.PrismaPromise<GetNutritionPlanMealOptionFoodAggregateType<T>>
+
+    /**
+     * Group by NutritionPlanMealOptionFood.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NutritionPlanMealOptionFoodGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends NutritionPlanMealOptionFoodGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: NutritionPlanMealOptionFoodGroupByArgs['orderBy'] }
+        : { orderBy?: NutritionPlanMealOptionFoodGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, NutritionPlanMealOptionFoodGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetNutritionPlanMealOptionFoodGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the NutritionPlanMealOptionFood model
+   */
+  readonly fields: NutritionPlanMealOptionFoodFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for NutritionPlanMealOptionFood.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__NutritionPlanMealOptionFoodClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    nutritionPlanMealOption<T extends NutritionPlanMealOptionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, NutritionPlanMealOptionDefaultArgs<ExtArgs>>): Prisma__NutritionPlanMealOptionClient<$Result.GetResult<Prisma.$NutritionPlanMealOptionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    food<T extends FoodDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FoodDefaultArgs<ExtArgs>>): Prisma__FoodClient<$Result.GetResult<Prisma.$FoodPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the NutritionPlanMealOptionFood model
+   */
+  interface NutritionPlanMealOptionFoodFieldRefs {
+    readonly id: FieldRef<"NutritionPlanMealOptionFood", 'String'>
+    readonly nutritionPlanMealOptionId: FieldRef<"NutritionPlanMealOptionFood", 'String'>
+    readonly foodId: FieldRef<"NutritionPlanMealOptionFood", 'String'>
+    readonly quantity: FieldRef<"NutritionPlanMealOptionFood", 'Float'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * NutritionPlanMealOptionFood findUnique
+   */
+  export type NutritionPlanMealOptionFoodFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOptionFood
+     */
+    select?: NutritionPlanMealOptionFoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOptionFood
+     */
+    omit?: NutritionPlanMealOptionFoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionFoodInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlanMealOptionFood to fetch.
+     */
+    where: NutritionPlanMealOptionFoodWhereUniqueInput
+  }
+
+  /**
+   * NutritionPlanMealOptionFood findUniqueOrThrow
+   */
+  export type NutritionPlanMealOptionFoodFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOptionFood
+     */
+    select?: NutritionPlanMealOptionFoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOptionFood
+     */
+    omit?: NutritionPlanMealOptionFoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionFoodInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlanMealOptionFood to fetch.
+     */
+    where: NutritionPlanMealOptionFoodWhereUniqueInput
+  }
+
+  /**
+   * NutritionPlanMealOptionFood findFirst
+   */
+  export type NutritionPlanMealOptionFoodFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOptionFood
+     */
+    select?: NutritionPlanMealOptionFoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOptionFood
+     */
+    omit?: NutritionPlanMealOptionFoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionFoodInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlanMealOptionFood to fetch.
+     */
+    where?: NutritionPlanMealOptionFoodWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NutritionPlanMealOptionFoods to fetch.
+     */
+    orderBy?: NutritionPlanMealOptionFoodOrderByWithRelationInput | NutritionPlanMealOptionFoodOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for NutritionPlanMealOptionFoods.
+     */
+    cursor?: NutritionPlanMealOptionFoodWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NutritionPlanMealOptionFoods from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NutritionPlanMealOptionFoods.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NutritionPlanMealOptionFoods.
+     */
+    distinct?: NutritionPlanMealOptionFoodScalarFieldEnum | NutritionPlanMealOptionFoodScalarFieldEnum[]
+  }
+
+  /**
+   * NutritionPlanMealOptionFood findFirstOrThrow
+   */
+  export type NutritionPlanMealOptionFoodFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOptionFood
+     */
+    select?: NutritionPlanMealOptionFoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOptionFood
+     */
+    omit?: NutritionPlanMealOptionFoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionFoodInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlanMealOptionFood to fetch.
+     */
+    where?: NutritionPlanMealOptionFoodWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NutritionPlanMealOptionFoods to fetch.
+     */
+    orderBy?: NutritionPlanMealOptionFoodOrderByWithRelationInput | NutritionPlanMealOptionFoodOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for NutritionPlanMealOptionFoods.
+     */
+    cursor?: NutritionPlanMealOptionFoodWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NutritionPlanMealOptionFoods from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NutritionPlanMealOptionFoods.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NutritionPlanMealOptionFoods.
+     */
+    distinct?: NutritionPlanMealOptionFoodScalarFieldEnum | NutritionPlanMealOptionFoodScalarFieldEnum[]
+  }
+
+  /**
+   * NutritionPlanMealOptionFood findMany
+   */
+  export type NutritionPlanMealOptionFoodFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOptionFood
+     */
+    select?: NutritionPlanMealOptionFoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOptionFood
+     */
+    omit?: NutritionPlanMealOptionFoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionFoodInclude<ExtArgs> | null
+    /**
+     * Filter, which NutritionPlanMealOptionFoods to fetch.
+     */
+    where?: NutritionPlanMealOptionFoodWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NutritionPlanMealOptionFoods to fetch.
+     */
+    orderBy?: NutritionPlanMealOptionFoodOrderByWithRelationInput | NutritionPlanMealOptionFoodOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing NutritionPlanMealOptionFoods.
+     */
+    cursor?: NutritionPlanMealOptionFoodWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NutritionPlanMealOptionFoods from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NutritionPlanMealOptionFoods.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NutritionPlanMealOptionFoods.
+     */
+    distinct?: NutritionPlanMealOptionFoodScalarFieldEnum | NutritionPlanMealOptionFoodScalarFieldEnum[]
+  }
+
+  /**
+   * NutritionPlanMealOptionFood create
+   */
+  export type NutritionPlanMealOptionFoodCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOptionFood
+     */
+    select?: NutritionPlanMealOptionFoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOptionFood
+     */
+    omit?: NutritionPlanMealOptionFoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionFoodInclude<ExtArgs> | null
+    /**
+     * The data needed to create a NutritionPlanMealOptionFood.
+     */
+    data: XOR<NutritionPlanMealOptionFoodCreateInput, NutritionPlanMealOptionFoodUncheckedCreateInput>
+  }
+
+  /**
+   * NutritionPlanMealOptionFood createMany
+   */
+  export type NutritionPlanMealOptionFoodCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many NutritionPlanMealOptionFoods.
+     */
+    data: NutritionPlanMealOptionFoodCreateManyInput | NutritionPlanMealOptionFoodCreateManyInput[]
+  }
+
+  /**
+   * NutritionPlanMealOptionFood createManyAndReturn
+   */
+  export type NutritionPlanMealOptionFoodCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOptionFood
+     */
+    select?: NutritionPlanMealOptionFoodSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOptionFood
+     */
+    omit?: NutritionPlanMealOptionFoodOmit<ExtArgs> | null
+    /**
+     * The data used to create many NutritionPlanMealOptionFoods.
+     */
+    data: NutritionPlanMealOptionFoodCreateManyInput | NutritionPlanMealOptionFoodCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionFoodIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * NutritionPlanMealOptionFood update
+   */
+  export type NutritionPlanMealOptionFoodUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOptionFood
+     */
+    select?: NutritionPlanMealOptionFoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOptionFood
+     */
+    omit?: NutritionPlanMealOptionFoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionFoodInclude<ExtArgs> | null
+    /**
+     * The data needed to update a NutritionPlanMealOptionFood.
+     */
+    data: XOR<NutritionPlanMealOptionFoodUpdateInput, NutritionPlanMealOptionFoodUncheckedUpdateInput>
+    /**
+     * Choose, which NutritionPlanMealOptionFood to update.
+     */
+    where: NutritionPlanMealOptionFoodWhereUniqueInput
+  }
+
+  /**
+   * NutritionPlanMealOptionFood updateMany
+   */
+  export type NutritionPlanMealOptionFoodUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update NutritionPlanMealOptionFoods.
+     */
+    data: XOR<NutritionPlanMealOptionFoodUpdateManyMutationInput, NutritionPlanMealOptionFoodUncheckedUpdateManyInput>
+    /**
+     * Filter which NutritionPlanMealOptionFoods to update
+     */
+    where?: NutritionPlanMealOptionFoodWhereInput
+    /**
+     * Limit how many NutritionPlanMealOptionFoods to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * NutritionPlanMealOptionFood updateManyAndReturn
+   */
+  export type NutritionPlanMealOptionFoodUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOptionFood
+     */
+    select?: NutritionPlanMealOptionFoodSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOptionFood
+     */
+    omit?: NutritionPlanMealOptionFoodOmit<ExtArgs> | null
+    /**
+     * The data used to update NutritionPlanMealOptionFoods.
+     */
+    data: XOR<NutritionPlanMealOptionFoodUpdateManyMutationInput, NutritionPlanMealOptionFoodUncheckedUpdateManyInput>
+    /**
+     * Filter which NutritionPlanMealOptionFoods to update
+     */
+    where?: NutritionPlanMealOptionFoodWhereInput
+    /**
+     * Limit how many NutritionPlanMealOptionFoods to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionFoodIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * NutritionPlanMealOptionFood upsert
+   */
+  export type NutritionPlanMealOptionFoodUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOptionFood
+     */
+    select?: NutritionPlanMealOptionFoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOptionFood
+     */
+    omit?: NutritionPlanMealOptionFoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionFoodInclude<ExtArgs> | null
+    /**
+     * The filter to search for the NutritionPlanMealOptionFood to update in case it exists.
+     */
+    where: NutritionPlanMealOptionFoodWhereUniqueInput
+    /**
+     * In case the NutritionPlanMealOptionFood found by the `where` argument doesn't exist, create a new NutritionPlanMealOptionFood with this data.
+     */
+    create: XOR<NutritionPlanMealOptionFoodCreateInput, NutritionPlanMealOptionFoodUncheckedCreateInput>
+    /**
+     * In case the NutritionPlanMealOptionFood was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<NutritionPlanMealOptionFoodUpdateInput, NutritionPlanMealOptionFoodUncheckedUpdateInput>
+  }
+
+  /**
+   * NutritionPlanMealOptionFood delete
+   */
+  export type NutritionPlanMealOptionFoodDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOptionFood
+     */
+    select?: NutritionPlanMealOptionFoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOptionFood
+     */
+    omit?: NutritionPlanMealOptionFoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionFoodInclude<ExtArgs> | null
+    /**
+     * Filter which NutritionPlanMealOptionFood to delete.
+     */
+    where: NutritionPlanMealOptionFoodWhereUniqueInput
+  }
+
+  /**
+   * NutritionPlanMealOptionFood deleteMany
+   */
+  export type NutritionPlanMealOptionFoodDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which NutritionPlanMealOptionFoods to delete
+     */
+    where?: NutritionPlanMealOptionFoodWhereInput
+    /**
+     * Limit how many NutritionPlanMealOptionFoods to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * NutritionPlanMealOptionFood without action
+   */
+  export type NutritionPlanMealOptionFoodDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NutritionPlanMealOptionFood
+     */
+    select?: NutritionPlanMealOptionFoodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NutritionPlanMealOptionFood
+     */
+    omit?: NutritionPlanMealOptionFoodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NutritionPlanMealOptionFoodInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -14112,6 +23234,108 @@ export namespace Prisma {
   };
 
   export type MeasurementScalarFieldEnum = (typeof MeasurementScalarFieldEnum)[keyof typeof MeasurementScalarFieldEnum]
+
+
+  export const FoodGroupScalarFieldEnum: {
+    id: 'id',
+    name: 'name'
+  };
+
+  export type FoodGroupScalarFieldEnum = (typeof FoodGroupScalarFieldEnum)[keyof typeof FoodGroupScalarFieldEnum]
+
+
+  export const FoodScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    state: 'state',
+    foodGroupId: 'foodGroupId',
+    calories: 'calories',
+    protein: 'protein',
+    fat: 'fat',
+    carbohydrates: 'carbohydrates',
+    water: 'water',
+    nitrogen: 'nitrogen',
+    vitaminA_ui: 'vitaminA_ui',
+    vitaminB1_mcg: 'vitaminB1_mcg',
+    vitaminB2_mcg: 'vitaminB2_mcg',
+    vitaminC_mcg: 'vitaminC_mcg',
+    niacin_mcg: 'niacin_mcg',
+    sodium_mg: 'sodium_mg',
+    potassium_mg: 'potassium_mg',
+    calcium_mg: 'calcium_mg',
+    magnesium_mg: 'magnesium_mg',
+    iron_mg: 'iron_mg',
+    copper_mg: 'copper_mg',
+    phosphorus_mg: 'phosphorus_mg',
+    sulfur_mg: 'sulfur_mg',
+    chloride_mg: 'chloride_mg',
+    phenylalanine_mg: 'phenylalanine_mg',
+    isoleucine_mg: 'isoleucine_mg',
+    leucine_mg: 'leucine_mg',
+    lysine_mg: 'lysine_mg',
+    methionine_mg: 'methionine_mg',
+    threonine_mg: 'threonine_mg',
+    tryptophan_mg: 'tryptophan_mg',
+    valine_mg: 'valine_mg',
+    acid: 'acid',
+    alcal: 'alcal'
+  };
+
+  export type FoodScalarFieldEnum = (typeof FoodScalarFieldEnum)[keyof typeof FoodScalarFieldEnum]
+
+
+  export const NutritionPlanScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    name: 'name',
+    description: 'description',
+    active: 'active',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type NutritionPlanScalarFieldEnum = (typeof NutritionPlanScalarFieldEnum)[keyof typeof NutritionPlanScalarFieldEnum]
+
+
+  export const NutritionPlanDayScalarFieldEnum: {
+    id: 'id',
+    nutritionPlanId: 'nutritionPlanId',
+    dayNumber: 'dayNumber'
+  };
+
+  export type NutritionPlanDayScalarFieldEnum = (typeof NutritionPlanDayScalarFieldEnum)[keyof typeof NutritionPlanDayScalarFieldEnum]
+
+
+  export const NutritionPlanMealScalarFieldEnum: {
+    id: 'id',
+    nutritionPlanDayId: 'nutritionPlanDayId',
+    mealIndex: 'mealIndex',
+    name: 'name',
+    description: 'description'
+  };
+
+  export type NutritionPlanMealScalarFieldEnum = (typeof NutritionPlanMealScalarFieldEnum)[keyof typeof NutritionPlanMealScalarFieldEnum]
+
+
+  export const NutritionPlanMealOptionScalarFieldEnum: {
+    id: 'id',
+    nutritionPlanMealId: 'nutritionPlanMealId',
+    optionIndex: 'optionIndex',
+    name: 'name',
+    description: 'description'
+  };
+
+  export type NutritionPlanMealOptionScalarFieldEnum = (typeof NutritionPlanMealOptionScalarFieldEnum)[keyof typeof NutritionPlanMealOptionScalarFieldEnum]
+
+
+  export const NutritionPlanMealOptionFoodScalarFieldEnum: {
+    id: 'id',
+    nutritionPlanMealOptionId: 'nutritionPlanMealOptionId',
+    foodId: 'foodId',
+    quantity: 'quantity'
+  };
+
+  export type NutritionPlanMealOptionFoodScalarFieldEnum = (typeof NutritionPlanMealOptionFoodScalarFieldEnum)[keyof typeof NutritionPlanMealOptionFoodScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -14596,6 +23820,7 @@ export namespace Prisma {
     sex?: EnumSexNullableFilter<"User"> | $Enums.Sex | null
     ownerId?: StringNullableFilter<"User"> | string | null
     blocks?: TrainingBlockListRelationFilter
+    nutritionPlans?: NutritionPlanListRelationFilter
     payments?: PaymentListRelationFilter
     measurements?: MeasurementListRelationFilter
     owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
@@ -14623,6 +23848,7 @@ export namespace Prisma {
     sex?: SortOrderInput | SortOrder
     ownerId?: SortOrderInput | SortOrder
     blocks?: TrainingBlockOrderByRelationAggregateInput
+    nutritionPlans?: NutritionPlanOrderByRelationAggregateInput
     payments?: PaymentOrderByRelationAggregateInput
     measurements?: MeasurementOrderByRelationAggregateInput
     owner?: UserOrderByWithRelationInput
@@ -14653,6 +23879,7 @@ export namespace Prisma {
     sex?: EnumSexNullableFilter<"User"> | $Enums.Sex | null
     ownerId?: StringNullableFilter<"User"> | string | null
     blocks?: TrainingBlockListRelationFilter
+    nutritionPlans?: NutritionPlanListRelationFilter
     payments?: PaymentListRelationFilter
     measurements?: MeasurementListRelationFilter
     owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
@@ -15041,6 +24268,544 @@ export namespace Prisma {
     hip?: FloatNullableWithAggregatesFilter<"Measurement"> | number | null
     thigh?: FloatNullableWithAggregatesFilter<"Measurement"> | number | null
     calfMuscle?: FloatNullableWithAggregatesFilter<"Measurement"> | number | null
+  }
+
+  export type FoodGroupWhereInput = {
+    AND?: FoodGroupWhereInput | FoodGroupWhereInput[]
+    OR?: FoodGroupWhereInput[]
+    NOT?: FoodGroupWhereInput | FoodGroupWhereInput[]
+    id?: StringFilter<"FoodGroup"> | string
+    name?: StringFilter<"FoodGroup"> | string
+    foods?: FoodListRelationFilter
+  }
+
+  export type FoodGroupOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    foods?: FoodOrderByRelationAggregateInput
+  }
+
+  export type FoodGroupWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    name?: string
+    AND?: FoodGroupWhereInput | FoodGroupWhereInput[]
+    OR?: FoodGroupWhereInput[]
+    NOT?: FoodGroupWhereInput | FoodGroupWhereInput[]
+    foods?: FoodListRelationFilter
+  }, "id" | "name">
+
+  export type FoodGroupOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    _count?: FoodGroupCountOrderByAggregateInput
+    _max?: FoodGroupMaxOrderByAggregateInput
+    _min?: FoodGroupMinOrderByAggregateInput
+  }
+
+  export type FoodGroupScalarWhereWithAggregatesInput = {
+    AND?: FoodGroupScalarWhereWithAggregatesInput | FoodGroupScalarWhereWithAggregatesInput[]
+    OR?: FoodGroupScalarWhereWithAggregatesInput[]
+    NOT?: FoodGroupScalarWhereWithAggregatesInput | FoodGroupScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FoodGroup"> | string
+    name?: StringWithAggregatesFilter<"FoodGroup"> | string
+  }
+
+  export type FoodWhereInput = {
+    AND?: FoodWhereInput | FoodWhereInput[]
+    OR?: FoodWhereInput[]
+    NOT?: FoodWhereInput | FoodWhereInput[]
+    id?: StringFilter<"Food"> | string
+    name?: StringFilter<"Food"> | string
+    state?: StringFilter<"Food"> | string
+    foodGroupId?: StringFilter<"Food"> | string
+    calories?: FloatNullableFilter<"Food"> | number | null
+    protein?: FloatNullableFilter<"Food"> | number | null
+    fat?: FloatNullableFilter<"Food"> | number | null
+    carbohydrates?: FloatNullableFilter<"Food"> | number | null
+    water?: FloatNullableFilter<"Food"> | number | null
+    nitrogen?: FloatNullableFilter<"Food"> | number | null
+    vitaminA_ui?: FloatNullableFilter<"Food"> | number | null
+    vitaminB1_mcg?: FloatNullableFilter<"Food"> | number | null
+    vitaminB2_mcg?: FloatNullableFilter<"Food"> | number | null
+    vitaminC_mcg?: FloatNullableFilter<"Food"> | number | null
+    niacin_mcg?: FloatNullableFilter<"Food"> | number | null
+    sodium_mg?: FloatNullableFilter<"Food"> | number | null
+    potassium_mg?: FloatNullableFilter<"Food"> | number | null
+    calcium_mg?: FloatNullableFilter<"Food"> | number | null
+    magnesium_mg?: FloatNullableFilter<"Food"> | number | null
+    iron_mg?: FloatNullableFilter<"Food"> | number | null
+    copper_mg?: FloatNullableFilter<"Food"> | number | null
+    phosphorus_mg?: FloatNullableFilter<"Food"> | number | null
+    sulfur_mg?: FloatNullableFilter<"Food"> | number | null
+    chloride_mg?: FloatNullableFilter<"Food"> | number | null
+    phenylalanine_mg?: FloatNullableFilter<"Food"> | number | null
+    isoleucine_mg?: FloatNullableFilter<"Food"> | number | null
+    leucine_mg?: FloatNullableFilter<"Food"> | number | null
+    lysine_mg?: FloatNullableFilter<"Food"> | number | null
+    methionine_mg?: FloatNullableFilter<"Food"> | number | null
+    threonine_mg?: FloatNullableFilter<"Food"> | number | null
+    tryptophan_mg?: FloatNullableFilter<"Food"> | number | null
+    valine_mg?: FloatNullableFilter<"Food"> | number | null
+    acid?: FloatNullableFilter<"Food"> | number | null
+    alcal?: FloatNullableFilter<"Food"> | number | null
+    foodGroup?: XOR<FoodGroupScalarRelationFilter, FoodGroupWhereInput>
+    nutritionPlanMealOptionFoods?: NutritionPlanMealOptionFoodListRelationFilter
+  }
+
+  export type FoodOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    state?: SortOrder
+    foodGroupId?: SortOrder
+    calories?: SortOrderInput | SortOrder
+    protein?: SortOrderInput | SortOrder
+    fat?: SortOrderInput | SortOrder
+    carbohydrates?: SortOrderInput | SortOrder
+    water?: SortOrderInput | SortOrder
+    nitrogen?: SortOrderInput | SortOrder
+    vitaminA_ui?: SortOrderInput | SortOrder
+    vitaminB1_mcg?: SortOrderInput | SortOrder
+    vitaminB2_mcg?: SortOrderInput | SortOrder
+    vitaminC_mcg?: SortOrderInput | SortOrder
+    niacin_mcg?: SortOrderInput | SortOrder
+    sodium_mg?: SortOrderInput | SortOrder
+    potassium_mg?: SortOrderInput | SortOrder
+    calcium_mg?: SortOrderInput | SortOrder
+    magnesium_mg?: SortOrderInput | SortOrder
+    iron_mg?: SortOrderInput | SortOrder
+    copper_mg?: SortOrderInput | SortOrder
+    phosphorus_mg?: SortOrderInput | SortOrder
+    sulfur_mg?: SortOrderInput | SortOrder
+    chloride_mg?: SortOrderInput | SortOrder
+    phenylalanine_mg?: SortOrderInput | SortOrder
+    isoleucine_mg?: SortOrderInput | SortOrder
+    leucine_mg?: SortOrderInput | SortOrder
+    lysine_mg?: SortOrderInput | SortOrder
+    methionine_mg?: SortOrderInput | SortOrder
+    threonine_mg?: SortOrderInput | SortOrder
+    tryptophan_mg?: SortOrderInput | SortOrder
+    valine_mg?: SortOrderInput | SortOrder
+    acid?: SortOrderInput | SortOrder
+    alcal?: SortOrderInput | SortOrder
+    foodGroup?: FoodGroupOrderByWithRelationInput
+    nutritionPlanMealOptionFoods?: NutritionPlanMealOptionFoodOrderByRelationAggregateInput
+  }
+
+  export type FoodWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: FoodWhereInput | FoodWhereInput[]
+    OR?: FoodWhereInput[]
+    NOT?: FoodWhereInput | FoodWhereInput[]
+    name?: StringFilter<"Food"> | string
+    state?: StringFilter<"Food"> | string
+    foodGroupId?: StringFilter<"Food"> | string
+    calories?: FloatNullableFilter<"Food"> | number | null
+    protein?: FloatNullableFilter<"Food"> | number | null
+    fat?: FloatNullableFilter<"Food"> | number | null
+    carbohydrates?: FloatNullableFilter<"Food"> | number | null
+    water?: FloatNullableFilter<"Food"> | number | null
+    nitrogen?: FloatNullableFilter<"Food"> | number | null
+    vitaminA_ui?: FloatNullableFilter<"Food"> | number | null
+    vitaminB1_mcg?: FloatNullableFilter<"Food"> | number | null
+    vitaminB2_mcg?: FloatNullableFilter<"Food"> | number | null
+    vitaminC_mcg?: FloatNullableFilter<"Food"> | number | null
+    niacin_mcg?: FloatNullableFilter<"Food"> | number | null
+    sodium_mg?: FloatNullableFilter<"Food"> | number | null
+    potassium_mg?: FloatNullableFilter<"Food"> | number | null
+    calcium_mg?: FloatNullableFilter<"Food"> | number | null
+    magnesium_mg?: FloatNullableFilter<"Food"> | number | null
+    iron_mg?: FloatNullableFilter<"Food"> | number | null
+    copper_mg?: FloatNullableFilter<"Food"> | number | null
+    phosphorus_mg?: FloatNullableFilter<"Food"> | number | null
+    sulfur_mg?: FloatNullableFilter<"Food"> | number | null
+    chloride_mg?: FloatNullableFilter<"Food"> | number | null
+    phenylalanine_mg?: FloatNullableFilter<"Food"> | number | null
+    isoleucine_mg?: FloatNullableFilter<"Food"> | number | null
+    leucine_mg?: FloatNullableFilter<"Food"> | number | null
+    lysine_mg?: FloatNullableFilter<"Food"> | number | null
+    methionine_mg?: FloatNullableFilter<"Food"> | number | null
+    threonine_mg?: FloatNullableFilter<"Food"> | number | null
+    tryptophan_mg?: FloatNullableFilter<"Food"> | number | null
+    valine_mg?: FloatNullableFilter<"Food"> | number | null
+    acid?: FloatNullableFilter<"Food"> | number | null
+    alcal?: FloatNullableFilter<"Food"> | number | null
+    foodGroup?: XOR<FoodGroupScalarRelationFilter, FoodGroupWhereInput>
+    nutritionPlanMealOptionFoods?: NutritionPlanMealOptionFoodListRelationFilter
+  }, "id">
+
+  export type FoodOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    state?: SortOrder
+    foodGroupId?: SortOrder
+    calories?: SortOrderInput | SortOrder
+    protein?: SortOrderInput | SortOrder
+    fat?: SortOrderInput | SortOrder
+    carbohydrates?: SortOrderInput | SortOrder
+    water?: SortOrderInput | SortOrder
+    nitrogen?: SortOrderInput | SortOrder
+    vitaminA_ui?: SortOrderInput | SortOrder
+    vitaminB1_mcg?: SortOrderInput | SortOrder
+    vitaminB2_mcg?: SortOrderInput | SortOrder
+    vitaminC_mcg?: SortOrderInput | SortOrder
+    niacin_mcg?: SortOrderInput | SortOrder
+    sodium_mg?: SortOrderInput | SortOrder
+    potassium_mg?: SortOrderInput | SortOrder
+    calcium_mg?: SortOrderInput | SortOrder
+    magnesium_mg?: SortOrderInput | SortOrder
+    iron_mg?: SortOrderInput | SortOrder
+    copper_mg?: SortOrderInput | SortOrder
+    phosphorus_mg?: SortOrderInput | SortOrder
+    sulfur_mg?: SortOrderInput | SortOrder
+    chloride_mg?: SortOrderInput | SortOrder
+    phenylalanine_mg?: SortOrderInput | SortOrder
+    isoleucine_mg?: SortOrderInput | SortOrder
+    leucine_mg?: SortOrderInput | SortOrder
+    lysine_mg?: SortOrderInput | SortOrder
+    methionine_mg?: SortOrderInput | SortOrder
+    threonine_mg?: SortOrderInput | SortOrder
+    tryptophan_mg?: SortOrderInput | SortOrder
+    valine_mg?: SortOrderInput | SortOrder
+    acid?: SortOrderInput | SortOrder
+    alcal?: SortOrderInput | SortOrder
+    _count?: FoodCountOrderByAggregateInput
+    _avg?: FoodAvgOrderByAggregateInput
+    _max?: FoodMaxOrderByAggregateInput
+    _min?: FoodMinOrderByAggregateInput
+    _sum?: FoodSumOrderByAggregateInput
+  }
+
+  export type FoodScalarWhereWithAggregatesInput = {
+    AND?: FoodScalarWhereWithAggregatesInput | FoodScalarWhereWithAggregatesInput[]
+    OR?: FoodScalarWhereWithAggregatesInput[]
+    NOT?: FoodScalarWhereWithAggregatesInput | FoodScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Food"> | string
+    name?: StringWithAggregatesFilter<"Food"> | string
+    state?: StringWithAggregatesFilter<"Food"> | string
+    foodGroupId?: StringWithAggregatesFilter<"Food"> | string
+    calories?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    protein?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    fat?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    carbohydrates?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    water?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    nitrogen?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    vitaminA_ui?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    vitaminB1_mcg?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    vitaminB2_mcg?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    vitaminC_mcg?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    niacin_mcg?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    sodium_mg?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    potassium_mg?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    calcium_mg?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    magnesium_mg?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    iron_mg?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    copper_mg?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    phosphorus_mg?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    sulfur_mg?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    chloride_mg?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    phenylalanine_mg?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    isoleucine_mg?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    leucine_mg?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    lysine_mg?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    methionine_mg?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    threonine_mg?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    tryptophan_mg?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    valine_mg?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    acid?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+    alcal?: FloatNullableWithAggregatesFilter<"Food"> | number | null
+  }
+
+  export type NutritionPlanWhereInput = {
+    AND?: NutritionPlanWhereInput | NutritionPlanWhereInput[]
+    OR?: NutritionPlanWhereInput[]
+    NOT?: NutritionPlanWhereInput | NutritionPlanWhereInput[]
+    id?: StringFilter<"NutritionPlan"> | string
+    userId?: StringFilter<"NutritionPlan"> | string
+    name?: StringFilter<"NutritionPlan"> | string
+    description?: StringNullableFilter<"NutritionPlan"> | string | null
+    active?: BoolFilter<"NutritionPlan"> | boolean
+    createdAt?: DateTimeFilter<"NutritionPlan"> | Date | string
+    updatedAt?: DateTimeFilter<"NutritionPlan"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    days?: NutritionPlanDayListRelationFilter
+  }
+
+  export type NutritionPlanOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    days?: NutritionPlanDayOrderByRelationAggregateInput
+  }
+
+  export type NutritionPlanWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: NutritionPlanWhereInput | NutritionPlanWhereInput[]
+    OR?: NutritionPlanWhereInput[]
+    NOT?: NutritionPlanWhereInput | NutritionPlanWhereInput[]
+    userId?: StringFilter<"NutritionPlan"> | string
+    name?: StringFilter<"NutritionPlan"> | string
+    description?: StringNullableFilter<"NutritionPlan"> | string | null
+    active?: BoolFilter<"NutritionPlan"> | boolean
+    createdAt?: DateTimeFilter<"NutritionPlan"> | Date | string
+    updatedAt?: DateTimeFilter<"NutritionPlan"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    days?: NutritionPlanDayListRelationFilter
+  }, "id">
+
+  export type NutritionPlanOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: NutritionPlanCountOrderByAggregateInput
+    _max?: NutritionPlanMaxOrderByAggregateInput
+    _min?: NutritionPlanMinOrderByAggregateInput
+  }
+
+  export type NutritionPlanScalarWhereWithAggregatesInput = {
+    AND?: NutritionPlanScalarWhereWithAggregatesInput | NutritionPlanScalarWhereWithAggregatesInput[]
+    OR?: NutritionPlanScalarWhereWithAggregatesInput[]
+    NOT?: NutritionPlanScalarWhereWithAggregatesInput | NutritionPlanScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"NutritionPlan"> | string
+    userId?: StringWithAggregatesFilter<"NutritionPlan"> | string
+    name?: StringWithAggregatesFilter<"NutritionPlan"> | string
+    description?: StringNullableWithAggregatesFilter<"NutritionPlan"> | string | null
+    active?: BoolWithAggregatesFilter<"NutritionPlan"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"NutritionPlan"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"NutritionPlan"> | Date | string
+  }
+
+  export type NutritionPlanDayWhereInput = {
+    AND?: NutritionPlanDayWhereInput | NutritionPlanDayWhereInput[]
+    OR?: NutritionPlanDayWhereInput[]
+    NOT?: NutritionPlanDayWhereInput | NutritionPlanDayWhereInput[]
+    id?: StringFilter<"NutritionPlanDay"> | string
+    nutritionPlanId?: StringFilter<"NutritionPlanDay"> | string
+    dayNumber?: IntFilter<"NutritionPlanDay"> | number
+    nutritionPlan?: XOR<NutritionPlanScalarRelationFilter, NutritionPlanWhereInput>
+    meals?: NutritionPlanMealListRelationFilter
+  }
+
+  export type NutritionPlanDayOrderByWithRelationInput = {
+    id?: SortOrder
+    nutritionPlanId?: SortOrder
+    dayNumber?: SortOrder
+    nutritionPlan?: NutritionPlanOrderByWithRelationInput
+    meals?: NutritionPlanMealOrderByRelationAggregateInput
+  }
+
+  export type NutritionPlanDayWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: NutritionPlanDayWhereInput | NutritionPlanDayWhereInput[]
+    OR?: NutritionPlanDayWhereInput[]
+    NOT?: NutritionPlanDayWhereInput | NutritionPlanDayWhereInput[]
+    nutritionPlanId?: StringFilter<"NutritionPlanDay"> | string
+    dayNumber?: IntFilter<"NutritionPlanDay"> | number
+    nutritionPlan?: XOR<NutritionPlanScalarRelationFilter, NutritionPlanWhereInput>
+    meals?: NutritionPlanMealListRelationFilter
+  }, "id">
+
+  export type NutritionPlanDayOrderByWithAggregationInput = {
+    id?: SortOrder
+    nutritionPlanId?: SortOrder
+    dayNumber?: SortOrder
+    _count?: NutritionPlanDayCountOrderByAggregateInput
+    _avg?: NutritionPlanDayAvgOrderByAggregateInput
+    _max?: NutritionPlanDayMaxOrderByAggregateInput
+    _min?: NutritionPlanDayMinOrderByAggregateInput
+    _sum?: NutritionPlanDaySumOrderByAggregateInput
+  }
+
+  export type NutritionPlanDayScalarWhereWithAggregatesInput = {
+    AND?: NutritionPlanDayScalarWhereWithAggregatesInput | NutritionPlanDayScalarWhereWithAggregatesInput[]
+    OR?: NutritionPlanDayScalarWhereWithAggregatesInput[]
+    NOT?: NutritionPlanDayScalarWhereWithAggregatesInput | NutritionPlanDayScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"NutritionPlanDay"> | string
+    nutritionPlanId?: StringWithAggregatesFilter<"NutritionPlanDay"> | string
+    dayNumber?: IntWithAggregatesFilter<"NutritionPlanDay"> | number
+  }
+
+  export type NutritionPlanMealWhereInput = {
+    AND?: NutritionPlanMealWhereInput | NutritionPlanMealWhereInput[]
+    OR?: NutritionPlanMealWhereInput[]
+    NOT?: NutritionPlanMealWhereInput | NutritionPlanMealWhereInput[]
+    id?: StringFilter<"NutritionPlanMeal"> | string
+    nutritionPlanDayId?: StringFilter<"NutritionPlanMeal"> | string
+    mealIndex?: IntFilter<"NutritionPlanMeal"> | number
+    name?: StringFilter<"NutritionPlanMeal"> | string
+    description?: StringNullableFilter<"NutritionPlanMeal"> | string | null
+    nutritionPlanDay?: XOR<NutritionPlanDayScalarRelationFilter, NutritionPlanDayWhereInput>
+    mealOptions?: NutritionPlanMealOptionListRelationFilter
+  }
+
+  export type NutritionPlanMealOrderByWithRelationInput = {
+    id?: SortOrder
+    nutritionPlanDayId?: SortOrder
+    mealIndex?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    nutritionPlanDay?: NutritionPlanDayOrderByWithRelationInput
+    mealOptions?: NutritionPlanMealOptionOrderByRelationAggregateInput
+  }
+
+  export type NutritionPlanMealWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: NutritionPlanMealWhereInput | NutritionPlanMealWhereInput[]
+    OR?: NutritionPlanMealWhereInput[]
+    NOT?: NutritionPlanMealWhereInput | NutritionPlanMealWhereInput[]
+    nutritionPlanDayId?: StringFilter<"NutritionPlanMeal"> | string
+    mealIndex?: IntFilter<"NutritionPlanMeal"> | number
+    name?: StringFilter<"NutritionPlanMeal"> | string
+    description?: StringNullableFilter<"NutritionPlanMeal"> | string | null
+    nutritionPlanDay?: XOR<NutritionPlanDayScalarRelationFilter, NutritionPlanDayWhereInput>
+    mealOptions?: NutritionPlanMealOptionListRelationFilter
+  }, "id">
+
+  export type NutritionPlanMealOrderByWithAggregationInput = {
+    id?: SortOrder
+    nutritionPlanDayId?: SortOrder
+    mealIndex?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    _count?: NutritionPlanMealCountOrderByAggregateInput
+    _avg?: NutritionPlanMealAvgOrderByAggregateInput
+    _max?: NutritionPlanMealMaxOrderByAggregateInput
+    _min?: NutritionPlanMealMinOrderByAggregateInput
+    _sum?: NutritionPlanMealSumOrderByAggregateInput
+  }
+
+  export type NutritionPlanMealScalarWhereWithAggregatesInput = {
+    AND?: NutritionPlanMealScalarWhereWithAggregatesInput | NutritionPlanMealScalarWhereWithAggregatesInput[]
+    OR?: NutritionPlanMealScalarWhereWithAggregatesInput[]
+    NOT?: NutritionPlanMealScalarWhereWithAggregatesInput | NutritionPlanMealScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"NutritionPlanMeal"> | string
+    nutritionPlanDayId?: StringWithAggregatesFilter<"NutritionPlanMeal"> | string
+    mealIndex?: IntWithAggregatesFilter<"NutritionPlanMeal"> | number
+    name?: StringWithAggregatesFilter<"NutritionPlanMeal"> | string
+    description?: StringNullableWithAggregatesFilter<"NutritionPlanMeal"> | string | null
+  }
+
+  export type NutritionPlanMealOptionWhereInput = {
+    AND?: NutritionPlanMealOptionWhereInput | NutritionPlanMealOptionWhereInput[]
+    OR?: NutritionPlanMealOptionWhereInput[]
+    NOT?: NutritionPlanMealOptionWhereInput | NutritionPlanMealOptionWhereInput[]
+    id?: StringFilter<"NutritionPlanMealOption"> | string
+    nutritionPlanMealId?: StringFilter<"NutritionPlanMealOption"> | string
+    optionIndex?: IntFilter<"NutritionPlanMealOption"> | number
+    name?: StringFilter<"NutritionPlanMealOption"> | string
+    description?: StringNullableFilter<"NutritionPlanMealOption"> | string | null
+    nutritionPlanMeal?: XOR<NutritionPlanMealScalarRelationFilter, NutritionPlanMealWhereInput>
+    foods?: NutritionPlanMealOptionFoodListRelationFilter
+  }
+
+  export type NutritionPlanMealOptionOrderByWithRelationInput = {
+    id?: SortOrder
+    nutritionPlanMealId?: SortOrder
+    optionIndex?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    nutritionPlanMeal?: NutritionPlanMealOrderByWithRelationInput
+    foods?: NutritionPlanMealOptionFoodOrderByRelationAggregateInput
+  }
+
+  export type NutritionPlanMealOptionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: NutritionPlanMealOptionWhereInput | NutritionPlanMealOptionWhereInput[]
+    OR?: NutritionPlanMealOptionWhereInput[]
+    NOT?: NutritionPlanMealOptionWhereInput | NutritionPlanMealOptionWhereInput[]
+    nutritionPlanMealId?: StringFilter<"NutritionPlanMealOption"> | string
+    optionIndex?: IntFilter<"NutritionPlanMealOption"> | number
+    name?: StringFilter<"NutritionPlanMealOption"> | string
+    description?: StringNullableFilter<"NutritionPlanMealOption"> | string | null
+    nutritionPlanMeal?: XOR<NutritionPlanMealScalarRelationFilter, NutritionPlanMealWhereInput>
+    foods?: NutritionPlanMealOptionFoodListRelationFilter
+  }, "id">
+
+  export type NutritionPlanMealOptionOrderByWithAggregationInput = {
+    id?: SortOrder
+    nutritionPlanMealId?: SortOrder
+    optionIndex?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    _count?: NutritionPlanMealOptionCountOrderByAggregateInput
+    _avg?: NutritionPlanMealOptionAvgOrderByAggregateInput
+    _max?: NutritionPlanMealOptionMaxOrderByAggregateInput
+    _min?: NutritionPlanMealOptionMinOrderByAggregateInput
+    _sum?: NutritionPlanMealOptionSumOrderByAggregateInput
+  }
+
+  export type NutritionPlanMealOptionScalarWhereWithAggregatesInput = {
+    AND?: NutritionPlanMealOptionScalarWhereWithAggregatesInput | NutritionPlanMealOptionScalarWhereWithAggregatesInput[]
+    OR?: NutritionPlanMealOptionScalarWhereWithAggregatesInput[]
+    NOT?: NutritionPlanMealOptionScalarWhereWithAggregatesInput | NutritionPlanMealOptionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"NutritionPlanMealOption"> | string
+    nutritionPlanMealId?: StringWithAggregatesFilter<"NutritionPlanMealOption"> | string
+    optionIndex?: IntWithAggregatesFilter<"NutritionPlanMealOption"> | number
+    name?: StringWithAggregatesFilter<"NutritionPlanMealOption"> | string
+    description?: StringNullableWithAggregatesFilter<"NutritionPlanMealOption"> | string | null
+  }
+
+  export type NutritionPlanMealOptionFoodWhereInput = {
+    AND?: NutritionPlanMealOptionFoodWhereInput | NutritionPlanMealOptionFoodWhereInput[]
+    OR?: NutritionPlanMealOptionFoodWhereInput[]
+    NOT?: NutritionPlanMealOptionFoodWhereInput | NutritionPlanMealOptionFoodWhereInput[]
+    id?: StringFilter<"NutritionPlanMealOptionFood"> | string
+    nutritionPlanMealOptionId?: StringFilter<"NutritionPlanMealOptionFood"> | string
+    foodId?: StringFilter<"NutritionPlanMealOptionFood"> | string
+    quantity?: FloatNullableFilter<"NutritionPlanMealOptionFood"> | number | null
+    nutritionPlanMealOption?: XOR<NutritionPlanMealOptionScalarRelationFilter, NutritionPlanMealOptionWhereInput>
+    food?: XOR<FoodScalarRelationFilter, FoodWhereInput>
+  }
+
+  export type NutritionPlanMealOptionFoodOrderByWithRelationInput = {
+    id?: SortOrder
+    nutritionPlanMealOptionId?: SortOrder
+    foodId?: SortOrder
+    quantity?: SortOrderInput | SortOrder
+    nutritionPlanMealOption?: NutritionPlanMealOptionOrderByWithRelationInput
+    food?: FoodOrderByWithRelationInput
+  }
+
+  export type NutritionPlanMealOptionFoodWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: NutritionPlanMealOptionFoodWhereInput | NutritionPlanMealOptionFoodWhereInput[]
+    OR?: NutritionPlanMealOptionFoodWhereInput[]
+    NOT?: NutritionPlanMealOptionFoodWhereInput | NutritionPlanMealOptionFoodWhereInput[]
+    nutritionPlanMealOptionId?: StringFilter<"NutritionPlanMealOptionFood"> | string
+    foodId?: StringFilter<"NutritionPlanMealOptionFood"> | string
+    quantity?: FloatNullableFilter<"NutritionPlanMealOptionFood"> | number | null
+    nutritionPlanMealOption?: XOR<NutritionPlanMealOptionScalarRelationFilter, NutritionPlanMealOptionWhereInput>
+    food?: XOR<FoodScalarRelationFilter, FoodWhereInput>
+  }, "id">
+
+  export type NutritionPlanMealOptionFoodOrderByWithAggregationInput = {
+    id?: SortOrder
+    nutritionPlanMealOptionId?: SortOrder
+    foodId?: SortOrder
+    quantity?: SortOrderInput | SortOrder
+    _count?: NutritionPlanMealOptionFoodCountOrderByAggregateInput
+    _avg?: NutritionPlanMealOptionFoodAvgOrderByAggregateInput
+    _max?: NutritionPlanMealOptionFoodMaxOrderByAggregateInput
+    _min?: NutritionPlanMealOptionFoodMinOrderByAggregateInput
+    _sum?: NutritionPlanMealOptionFoodSumOrderByAggregateInput
+  }
+
+  export type NutritionPlanMealOptionFoodScalarWhereWithAggregatesInput = {
+    AND?: NutritionPlanMealOptionFoodScalarWhereWithAggregatesInput | NutritionPlanMealOptionFoodScalarWhereWithAggregatesInput[]
+    OR?: NutritionPlanMealOptionFoodScalarWhereWithAggregatesInput[]
+    NOT?: NutritionPlanMealOptionFoodScalarWhereWithAggregatesInput | NutritionPlanMealOptionFoodScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"NutritionPlanMealOptionFood"> | string
+    nutritionPlanMealOptionId?: StringWithAggregatesFilter<"NutritionPlanMealOptionFood"> | string
+    foodId?: StringWithAggregatesFilter<"NutritionPlanMealOptionFood"> | string
+    quantity?: FloatNullableWithAggregatesFilter<"NutritionPlanMealOptionFood"> | number | null
   }
 
   export type TrainingBlockCreateInput = {
@@ -15475,6 +25240,7 @@ export namespace Prisma {
     lastKOLogin?: Date | string | null
     sex?: $Enums.Sex | null
     blocks?: TrainingBlockCreateNestedManyWithoutUserInput
+    nutritionPlans?: NutritionPlanCreateNestedManyWithoutUserInput
     payments?: PaymentCreateNestedManyWithoutUserInput
     measurements?: MeasurementCreateNestedManyWithoutUserInput
     owner?: UserCreateNestedOneWithoutAthletesInput
@@ -15502,6 +25268,7 @@ export namespace Prisma {
     sex?: $Enums.Sex | null
     ownerId?: string | null
     blocks?: TrainingBlockUncheckedCreateNestedManyWithoutUserInput
+    nutritionPlans?: NutritionPlanUncheckedCreateNestedManyWithoutUserInput
     payments?: PaymentUncheckedCreateNestedManyWithoutUserInput
     measurements?: MeasurementUncheckedCreateNestedManyWithoutUserInput
     athletes?: UserUncheckedCreateNestedManyWithoutOwnerInput
@@ -15527,6 +25294,7 @@ export namespace Prisma {
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     blocks?: TrainingBlockUpdateManyWithoutUserNestedInput
+    nutritionPlans?: NutritionPlanUpdateManyWithoutUserNestedInput
     payments?: PaymentUpdateManyWithoutUserNestedInput
     measurements?: MeasurementUpdateManyWithoutUserNestedInput
     owner?: UserUpdateOneWithoutAthletesNestedInput
@@ -15554,6 +25322,7 @@ export namespace Prisma {
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     blocks?: TrainingBlockUncheckedUpdateManyWithoutUserNestedInput
+    nutritionPlans?: NutritionPlanUncheckedUpdateManyWithoutUserNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutUserNestedInput
     measurements?: MeasurementUncheckedUpdateManyWithoutUserNestedInput
     athletes?: UserUncheckedUpdateManyWithoutOwnerNestedInput
@@ -15977,6 +25746,590 @@ export namespace Prisma {
     hip?: NullableFloatFieldUpdateOperationsInput | number | null
     thigh?: NullableFloatFieldUpdateOperationsInput | number | null
     calfMuscle?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type FoodGroupCreateInput = {
+    id?: string
+    name: string
+    foods?: FoodCreateNestedManyWithoutFoodGroupInput
+  }
+
+  export type FoodGroupUncheckedCreateInput = {
+    id?: string
+    name: string
+    foods?: FoodUncheckedCreateNestedManyWithoutFoodGroupInput
+  }
+
+  export type FoodGroupUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    foods?: FoodUpdateManyWithoutFoodGroupNestedInput
+  }
+
+  export type FoodGroupUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    foods?: FoodUncheckedUpdateManyWithoutFoodGroupNestedInput
+  }
+
+  export type FoodGroupCreateManyInput = {
+    id?: string
+    name: string
+  }
+
+  export type FoodGroupUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type FoodGroupUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type FoodCreateInput = {
+    id?: string
+    name: string
+    state: string
+    calories?: number | null
+    protein?: number | null
+    fat?: number | null
+    carbohydrates?: number | null
+    water?: number | null
+    nitrogen?: number | null
+    vitaminA_ui?: number | null
+    vitaminB1_mcg?: number | null
+    vitaminB2_mcg?: number | null
+    vitaminC_mcg?: number | null
+    niacin_mcg?: number | null
+    sodium_mg?: number | null
+    potassium_mg?: number | null
+    calcium_mg?: number | null
+    magnesium_mg?: number | null
+    iron_mg?: number | null
+    copper_mg?: number | null
+    phosphorus_mg?: number | null
+    sulfur_mg?: number | null
+    chloride_mg?: number | null
+    phenylalanine_mg?: number | null
+    isoleucine_mg?: number | null
+    leucine_mg?: number | null
+    lysine_mg?: number | null
+    methionine_mg?: number | null
+    threonine_mg?: number | null
+    tryptophan_mg?: number | null
+    valine_mg?: number | null
+    acid?: number | null
+    alcal?: number | null
+    foodGroup: FoodGroupCreateNestedOneWithoutFoodsInput
+    nutritionPlanMealOptionFoods?: NutritionPlanMealOptionFoodCreateNestedManyWithoutFoodInput
+  }
+
+  export type FoodUncheckedCreateInput = {
+    id?: string
+    name: string
+    state: string
+    foodGroupId: string
+    calories?: number | null
+    protein?: number | null
+    fat?: number | null
+    carbohydrates?: number | null
+    water?: number | null
+    nitrogen?: number | null
+    vitaminA_ui?: number | null
+    vitaminB1_mcg?: number | null
+    vitaminB2_mcg?: number | null
+    vitaminC_mcg?: number | null
+    niacin_mcg?: number | null
+    sodium_mg?: number | null
+    potassium_mg?: number | null
+    calcium_mg?: number | null
+    magnesium_mg?: number | null
+    iron_mg?: number | null
+    copper_mg?: number | null
+    phosphorus_mg?: number | null
+    sulfur_mg?: number | null
+    chloride_mg?: number | null
+    phenylalanine_mg?: number | null
+    isoleucine_mg?: number | null
+    leucine_mg?: number | null
+    lysine_mg?: number | null
+    methionine_mg?: number | null
+    threonine_mg?: number | null
+    tryptophan_mg?: number | null
+    valine_mg?: number | null
+    acid?: number | null
+    alcal?: number | null
+    nutritionPlanMealOptionFoods?: NutritionPlanMealOptionFoodUncheckedCreateNestedManyWithoutFoodInput
+  }
+
+  export type FoodUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    state?: StringFieldUpdateOperationsInput | string
+    calories?: NullableFloatFieldUpdateOperationsInput | number | null
+    protein?: NullableFloatFieldUpdateOperationsInput | number | null
+    fat?: NullableFloatFieldUpdateOperationsInput | number | null
+    carbohydrates?: NullableFloatFieldUpdateOperationsInput | number | null
+    water?: NullableFloatFieldUpdateOperationsInput | number | null
+    nitrogen?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminA_ui?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminB1_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminB2_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminC_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    niacin_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    sodium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    potassium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    calcium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    magnesium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    iron_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    copper_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    phosphorus_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    sulfur_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    chloride_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    phenylalanine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    isoleucine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    leucine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    lysine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    methionine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    threonine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    tryptophan_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    valine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    acid?: NullableFloatFieldUpdateOperationsInput | number | null
+    alcal?: NullableFloatFieldUpdateOperationsInput | number | null
+    foodGroup?: FoodGroupUpdateOneRequiredWithoutFoodsNestedInput
+    nutritionPlanMealOptionFoods?: NutritionPlanMealOptionFoodUpdateManyWithoutFoodNestedInput
+  }
+
+  export type FoodUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    state?: StringFieldUpdateOperationsInput | string
+    foodGroupId?: StringFieldUpdateOperationsInput | string
+    calories?: NullableFloatFieldUpdateOperationsInput | number | null
+    protein?: NullableFloatFieldUpdateOperationsInput | number | null
+    fat?: NullableFloatFieldUpdateOperationsInput | number | null
+    carbohydrates?: NullableFloatFieldUpdateOperationsInput | number | null
+    water?: NullableFloatFieldUpdateOperationsInput | number | null
+    nitrogen?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminA_ui?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminB1_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminB2_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminC_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    niacin_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    sodium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    potassium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    calcium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    magnesium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    iron_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    copper_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    phosphorus_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    sulfur_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    chloride_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    phenylalanine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    isoleucine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    leucine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    lysine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    methionine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    threonine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    tryptophan_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    valine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    acid?: NullableFloatFieldUpdateOperationsInput | number | null
+    alcal?: NullableFloatFieldUpdateOperationsInput | number | null
+    nutritionPlanMealOptionFoods?: NutritionPlanMealOptionFoodUncheckedUpdateManyWithoutFoodNestedInput
+  }
+
+  export type FoodCreateManyInput = {
+    id?: string
+    name: string
+    state: string
+    foodGroupId: string
+    calories?: number | null
+    protein?: number | null
+    fat?: number | null
+    carbohydrates?: number | null
+    water?: number | null
+    nitrogen?: number | null
+    vitaminA_ui?: number | null
+    vitaminB1_mcg?: number | null
+    vitaminB2_mcg?: number | null
+    vitaminC_mcg?: number | null
+    niacin_mcg?: number | null
+    sodium_mg?: number | null
+    potassium_mg?: number | null
+    calcium_mg?: number | null
+    magnesium_mg?: number | null
+    iron_mg?: number | null
+    copper_mg?: number | null
+    phosphorus_mg?: number | null
+    sulfur_mg?: number | null
+    chloride_mg?: number | null
+    phenylalanine_mg?: number | null
+    isoleucine_mg?: number | null
+    leucine_mg?: number | null
+    lysine_mg?: number | null
+    methionine_mg?: number | null
+    threonine_mg?: number | null
+    tryptophan_mg?: number | null
+    valine_mg?: number | null
+    acid?: number | null
+    alcal?: number | null
+  }
+
+  export type FoodUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    state?: StringFieldUpdateOperationsInput | string
+    calories?: NullableFloatFieldUpdateOperationsInput | number | null
+    protein?: NullableFloatFieldUpdateOperationsInput | number | null
+    fat?: NullableFloatFieldUpdateOperationsInput | number | null
+    carbohydrates?: NullableFloatFieldUpdateOperationsInput | number | null
+    water?: NullableFloatFieldUpdateOperationsInput | number | null
+    nitrogen?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminA_ui?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminB1_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminB2_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminC_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    niacin_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    sodium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    potassium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    calcium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    magnesium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    iron_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    copper_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    phosphorus_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    sulfur_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    chloride_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    phenylalanine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    isoleucine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    leucine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    lysine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    methionine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    threonine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    tryptophan_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    valine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    acid?: NullableFloatFieldUpdateOperationsInput | number | null
+    alcal?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type FoodUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    state?: StringFieldUpdateOperationsInput | string
+    foodGroupId?: StringFieldUpdateOperationsInput | string
+    calories?: NullableFloatFieldUpdateOperationsInput | number | null
+    protein?: NullableFloatFieldUpdateOperationsInput | number | null
+    fat?: NullableFloatFieldUpdateOperationsInput | number | null
+    carbohydrates?: NullableFloatFieldUpdateOperationsInput | number | null
+    water?: NullableFloatFieldUpdateOperationsInput | number | null
+    nitrogen?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminA_ui?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminB1_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminB2_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminC_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    niacin_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    sodium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    potassium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    calcium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    magnesium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    iron_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    copper_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    phosphorus_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    sulfur_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    chloride_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    phenylalanine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    isoleucine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    leucine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    lysine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    methionine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    threonine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    tryptophan_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    valine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    acid?: NullableFloatFieldUpdateOperationsInput | number | null
+    alcal?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type NutritionPlanCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutNutritionPlansInput
+    days?: NutritionPlanDayCreateNestedManyWithoutNutritionPlanInput
+  }
+
+  export type NutritionPlanUncheckedCreateInput = {
+    id?: string
+    userId: string
+    name: string
+    description?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    days?: NutritionPlanDayUncheckedCreateNestedManyWithoutNutritionPlanInput
+  }
+
+  export type NutritionPlanUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutNutritionPlansNestedInput
+    days?: NutritionPlanDayUpdateManyWithoutNutritionPlanNestedInput
+  }
+
+  export type NutritionPlanUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    days?: NutritionPlanDayUncheckedUpdateManyWithoutNutritionPlanNestedInput
+  }
+
+  export type NutritionPlanCreateManyInput = {
+    id?: string
+    userId: string
+    name: string
+    description?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type NutritionPlanUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NutritionPlanUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NutritionPlanDayCreateInput = {
+    id?: string
+    dayNumber: number
+    nutritionPlan: NutritionPlanCreateNestedOneWithoutDaysInput
+    meals?: NutritionPlanMealCreateNestedManyWithoutNutritionPlanDayInput
+  }
+
+  export type NutritionPlanDayUncheckedCreateInput = {
+    id?: string
+    nutritionPlanId: string
+    dayNumber: number
+    meals?: NutritionPlanMealUncheckedCreateNestedManyWithoutNutritionPlanDayInput
+  }
+
+  export type NutritionPlanDayUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dayNumber?: IntFieldUpdateOperationsInput | number
+    nutritionPlan?: NutritionPlanUpdateOneRequiredWithoutDaysNestedInput
+    meals?: NutritionPlanMealUpdateManyWithoutNutritionPlanDayNestedInput
+  }
+
+  export type NutritionPlanDayUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nutritionPlanId?: StringFieldUpdateOperationsInput | string
+    dayNumber?: IntFieldUpdateOperationsInput | number
+    meals?: NutritionPlanMealUncheckedUpdateManyWithoutNutritionPlanDayNestedInput
+  }
+
+  export type NutritionPlanDayCreateManyInput = {
+    id?: string
+    nutritionPlanId: string
+    dayNumber: number
+  }
+
+  export type NutritionPlanDayUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dayNumber?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type NutritionPlanDayUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nutritionPlanId?: StringFieldUpdateOperationsInput | string
+    dayNumber?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type NutritionPlanMealCreateInput = {
+    id?: string
+    mealIndex: number
+    name: string
+    description?: string | null
+    nutritionPlanDay: NutritionPlanDayCreateNestedOneWithoutMealsInput
+    mealOptions?: NutritionPlanMealOptionCreateNestedManyWithoutNutritionPlanMealInput
+  }
+
+  export type NutritionPlanMealUncheckedCreateInput = {
+    id?: string
+    nutritionPlanDayId: string
+    mealIndex: number
+    name: string
+    description?: string | null
+    mealOptions?: NutritionPlanMealOptionUncheckedCreateNestedManyWithoutNutritionPlanMealInput
+  }
+
+  export type NutritionPlanMealUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    mealIndex?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    nutritionPlanDay?: NutritionPlanDayUpdateOneRequiredWithoutMealsNestedInput
+    mealOptions?: NutritionPlanMealOptionUpdateManyWithoutNutritionPlanMealNestedInput
+  }
+
+  export type NutritionPlanMealUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nutritionPlanDayId?: StringFieldUpdateOperationsInput | string
+    mealIndex?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    mealOptions?: NutritionPlanMealOptionUncheckedUpdateManyWithoutNutritionPlanMealNestedInput
+  }
+
+  export type NutritionPlanMealCreateManyInput = {
+    id?: string
+    nutritionPlanDayId: string
+    mealIndex: number
+    name: string
+    description?: string | null
+  }
+
+  export type NutritionPlanMealUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    mealIndex?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type NutritionPlanMealUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nutritionPlanDayId?: StringFieldUpdateOperationsInput | string
+    mealIndex?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type NutritionPlanMealOptionCreateInput = {
+    id?: string
+    optionIndex: number
+    name: string
+    description?: string | null
+    nutritionPlanMeal: NutritionPlanMealCreateNestedOneWithoutMealOptionsInput
+    foods?: NutritionPlanMealOptionFoodCreateNestedManyWithoutNutritionPlanMealOptionInput
+  }
+
+  export type NutritionPlanMealOptionUncheckedCreateInput = {
+    id?: string
+    nutritionPlanMealId: string
+    optionIndex: number
+    name: string
+    description?: string | null
+    foods?: NutritionPlanMealOptionFoodUncheckedCreateNestedManyWithoutNutritionPlanMealOptionInput
+  }
+
+  export type NutritionPlanMealOptionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    optionIndex?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    nutritionPlanMeal?: NutritionPlanMealUpdateOneRequiredWithoutMealOptionsNestedInput
+    foods?: NutritionPlanMealOptionFoodUpdateManyWithoutNutritionPlanMealOptionNestedInput
+  }
+
+  export type NutritionPlanMealOptionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nutritionPlanMealId?: StringFieldUpdateOperationsInput | string
+    optionIndex?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    foods?: NutritionPlanMealOptionFoodUncheckedUpdateManyWithoutNutritionPlanMealOptionNestedInput
+  }
+
+  export type NutritionPlanMealOptionCreateManyInput = {
+    id?: string
+    nutritionPlanMealId: string
+    optionIndex: number
+    name: string
+    description?: string | null
+  }
+
+  export type NutritionPlanMealOptionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    optionIndex?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type NutritionPlanMealOptionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nutritionPlanMealId?: StringFieldUpdateOperationsInput | string
+    optionIndex?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type NutritionPlanMealOptionFoodCreateInput = {
+    id?: string
+    quantity?: number | null
+    nutritionPlanMealOption: NutritionPlanMealOptionCreateNestedOneWithoutFoodsInput
+    food: FoodCreateNestedOneWithoutNutritionPlanMealOptionFoodsInput
+  }
+
+  export type NutritionPlanMealOptionFoodUncheckedCreateInput = {
+    id?: string
+    nutritionPlanMealOptionId: string
+    foodId: string
+    quantity?: number | null
+  }
+
+  export type NutritionPlanMealOptionFoodUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    nutritionPlanMealOption?: NutritionPlanMealOptionUpdateOneRequiredWithoutFoodsNestedInput
+    food?: FoodUpdateOneRequiredWithoutNutritionPlanMealOptionFoodsNestedInput
+  }
+
+  export type NutritionPlanMealOptionFoodUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nutritionPlanMealOptionId?: StringFieldUpdateOperationsInput | string
+    foodId?: StringFieldUpdateOperationsInput | string
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type NutritionPlanMealOptionFoodCreateManyInput = {
+    id?: string
+    nutritionPlanMealOptionId: string
+    foodId: string
+    quantity?: number | null
+  }
+
+  export type NutritionPlanMealOptionFoodUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type NutritionPlanMealOptionFoodUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nutritionPlanMealOptionId?: StringFieldUpdateOperationsInput | string
+    foodId?: StringFieldUpdateOperationsInput | string
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type BoolFilter<$PrismaModel = never> = {
@@ -16502,6 +26855,12 @@ export namespace Prisma {
     none?: TrainingBlockWhereInput
   }
 
+  export type NutritionPlanListRelationFilter = {
+    every?: NutritionPlanWhereInput
+    some?: NutritionPlanWhereInput
+    none?: NutritionPlanWhereInput
+  }
+
   export type PaymentListRelationFilter = {
     every?: PaymentWhereInput
     some?: PaymentWhereInput
@@ -16526,6 +26885,10 @@ export namespace Prisma {
   }
 
   export type TrainingBlockOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type NutritionPlanOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -16921,6 +27284,427 @@ export namespace Prisma {
     calfMuscle?: SortOrder
   }
 
+  export type FoodListRelationFilter = {
+    every?: FoodWhereInput
+    some?: FoodWhereInput
+    none?: FoodWhereInput
+  }
+
+  export type FoodOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FoodGroupCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type FoodGroupMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type FoodGroupMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type FoodGroupScalarRelationFilter = {
+    is?: FoodGroupWhereInput
+    isNot?: FoodGroupWhereInput
+  }
+
+  export type NutritionPlanMealOptionFoodListRelationFilter = {
+    every?: NutritionPlanMealOptionFoodWhereInput
+    some?: NutritionPlanMealOptionFoodWhereInput
+    none?: NutritionPlanMealOptionFoodWhereInput
+  }
+
+  export type NutritionPlanMealOptionFoodOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FoodCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    state?: SortOrder
+    foodGroupId?: SortOrder
+    calories?: SortOrder
+    protein?: SortOrder
+    fat?: SortOrder
+    carbohydrates?: SortOrder
+    water?: SortOrder
+    nitrogen?: SortOrder
+    vitaminA_ui?: SortOrder
+    vitaminB1_mcg?: SortOrder
+    vitaminB2_mcg?: SortOrder
+    vitaminC_mcg?: SortOrder
+    niacin_mcg?: SortOrder
+    sodium_mg?: SortOrder
+    potassium_mg?: SortOrder
+    calcium_mg?: SortOrder
+    magnesium_mg?: SortOrder
+    iron_mg?: SortOrder
+    copper_mg?: SortOrder
+    phosphorus_mg?: SortOrder
+    sulfur_mg?: SortOrder
+    chloride_mg?: SortOrder
+    phenylalanine_mg?: SortOrder
+    isoleucine_mg?: SortOrder
+    leucine_mg?: SortOrder
+    lysine_mg?: SortOrder
+    methionine_mg?: SortOrder
+    threonine_mg?: SortOrder
+    tryptophan_mg?: SortOrder
+    valine_mg?: SortOrder
+    acid?: SortOrder
+    alcal?: SortOrder
+  }
+
+  export type FoodAvgOrderByAggregateInput = {
+    calories?: SortOrder
+    protein?: SortOrder
+    fat?: SortOrder
+    carbohydrates?: SortOrder
+    water?: SortOrder
+    nitrogen?: SortOrder
+    vitaminA_ui?: SortOrder
+    vitaminB1_mcg?: SortOrder
+    vitaminB2_mcg?: SortOrder
+    vitaminC_mcg?: SortOrder
+    niacin_mcg?: SortOrder
+    sodium_mg?: SortOrder
+    potassium_mg?: SortOrder
+    calcium_mg?: SortOrder
+    magnesium_mg?: SortOrder
+    iron_mg?: SortOrder
+    copper_mg?: SortOrder
+    phosphorus_mg?: SortOrder
+    sulfur_mg?: SortOrder
+    chloride_mg?: SortOrder
+    phenylalanine_mg?: SortOrder
+    isoleucine_mg?: SortOrder
+    leucine_mg?: SortOrder
+    lysine_mg?: SortOrder
+    methionine_mg?: SortOrder
+    threonine_mg?: SortOrder
+    tryptophan_mg?: SortOrder
+    valine_mg?: SortOrder
+    acid?: SortOrder
+    alcal?: SortOrder
+  }
+
+  export type FoodMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    state?: SortOrder
+    foodGroupId?: SortOrder
+    calories?: SortOrder
+    protein?: SortOrder
+    fat?: SortOrder
+    carbohydrates?: SortOrder
+    water?: SortOrder
+    nitrogen?: SortOrder
+    vitaminA_ui?: SortOrder
+    vitaminB1_mcg?: SortOrder
+    vitaminB2_mcg?: SortOrder
+    vitaminC_mcg?: SortOrder
+    niacin_mcg?: SortOrder
+    sodium_mg?: SortOrder
+    potassium_mg?: SortOrder
+    calcium_mg?: SortOrder
+    magnesium_mg?: SortOrder
+    iron_mg?: SortOrder
+    copper_mg?: SortOrder
+    phosphorus_mg?: SortOrder
+    sulfur_mg?: SortOrder
+    chloride_mg?: SortOrder
+    phenylalanine_mg?: SortOrder
+    isoleucine_mg?: SortOrder
+    leucine_mg?: SortOrder
+    lysine_mg?: SortOrder
+    methionine_mg?: SortOrder
+    threonine_mg?: SortOrder
+    tryptophan_mg?: SortOrder
+    valine_mg?: SortOrder
+    acid?: SortOrder
+    alcal?: SortOrder
+  }
+
+  export type FoodMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    state?: SortOrder
+    foodGroupId?: SortOrder
+    calories?: SortOrder
+    protein?: SortOrder
+    fat?: SortOrder
+    carbohydrates?: SortOrder
+    water?: SortOrder
+    nitrogen?: SortOrder
+    vitaminA_ui?: SortOrder
+    vitaminB1_mcg?: SortOrder
+    vitaminB2_mcg?: SortOrder
+    vitaminC_mcg?: SortOrder
+    niacin_mcg?: SortOrder
+    sodium_mg?: SortOrder
+    potassium_mg?: SortOrder
+    calcium_mg?: SortOrder
+    magnesium_mg?: SortOrder
+    iron_mg?: SortOrder
+    copper_mg?: SortOrder
+    phosphorus_mg?: SortOrder
+    sulfur_mg?: SortOrder
+    chloride_mg?: SortOrder
+    phenylalanine_mg?: SortOrder
+    isoleucine_mg?: SortOrder
+    leucine_mg?: SortOrder
+    lysine_mg?: SortOrder
+    methionine_mg?: SortOrder
+    threonine_mg?: SortOrder
+    tryptophan_mg?: SortOrder
+    valine_mg?: SortOrder
+    acid?: SortOrder
+    alcal?: SortOrder
+  }
+
+  export type FoodSumOrderByAggregateInput = {
+    calories?: SortOrder
+    protein?: SortOrder
+    fat?: SortOrder
+    carbohydrates?: SortOrder
+    water?: SortOrder
+    nitrogen?: SortOrder
+    vitaminA_ui?: SortOrder
+    vitaminB1_mcg?: SortOrder
+    vitaminB2_mcg?: SortOrder
+    vitaminC_mcg?: SortOrder
+    niacin_mcg?: SortOrder
+    sodium_mg?: SortOrder
+    potassium_mg?: SortOrder
+    calcium_mg?: SortOrder
+    magnesium_mg?: SortOrder
+    iron_mg?: SortOrder
+    copper_mg?: SortOrder
+    phosphorus_mg?: SortOrder
+    sulfur_mg?: SortOrder
+    chloride_mg?: SortOrder
+    phenylalanine_mg?: SortOrder
+    isoleucine_mg?: SortOrder
+    leucine_mg?: SortOrder
+    lysine_mg?: SortOrder
+    methionine_mg?: SortOrder
+    threonine_mg?: SortOrder
+    tryptophan_mg?: SortOrder
+    valine_mg?: SortOrder
+    acid?: SortOrder
+    alcal?: SortOrder
+  }
+
+  export type NutritionPlanDayListRelationFilter = {
+    every?: NutritionPlanDayWhereInput
+    some?: NutritionPlanDayWhereInput
+    none?: NutritionPlanDayWhereInput
+  }
+
+  export type NutritionPlanDayOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type NutritionPlanCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type NutritionPlanMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type NutritionPlanMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    active?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type NutritionPlanScalarRelationFilter = {
+    is?: NutritionPlanWhereInput
+    isNot?: NutritionPlanWhereInput
+  }
+
+  export type NutritionPlanMealListRelationFilter = {
+    every?: NutritionPlanMealWhereInput
+    some?: NutritionPlanMealWhereInput
+    none?: NutritionPlanMealWhereInput
+  }
+
+  export type NutritionPlanMealOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type NutritionPlanDayCountOrderByAggregateInput = {
+    id?: SortOrder
+    nutritionPlanId?: SortOrder
+    dayNumber?: SortOrder
+  }
+
+  export type NutritionPlanDayAvgOrderByAggregateInput = {
+    dayNumber?: SortOrder
+  }
+
+  export type NutritionPlanDayMaxOrderByAggregateInput = {
+    id?: SortOrder
+    nutritionPlanId?: SortOrder
+    dayNumber?: SortOrder
+  }
+
+  export type NutritionPlanDayMinOrderByAggregateInput = {
+    id?: SortOrder
+    nutritionPlanId?: SortOrder
+    dayNumber?: SortOrder
+  }
+
+  export type NutritionPlanDaySumOrderByAggregateInput = {
+    dayNumber?: SortOrder
+  }
+
+  export type NutritionPlanDayScalarRelationFilter = {
+    is?: NutritionPlanDayWhereInput
+    isNot?: NutritionPlanDayWhereInput
+  }
+
+  export type NutritionPlanMealOptionListRelationFilter = {
+    every?: NutritionPlanMealOptionWhereInput
+    some?: NutritionPlanMealOptionWhereInput
+    none?: NutritionPlanMealOptionWhereInput
+  }
+
+  export type NutritionPlanMealOptionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type NutritionPlanMealCountOrderByAggregateInput = {
+    id?: SortOrder
+    nutritionPlanDayId?: SortOrder
+    mealIndex?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+  }
+
+  export type NutritionPlanMealAvgOrderByAggregateInput = {
+    mealIndex?: SortOrder
+  }
+
+  export type NutritionPlanMealMaxOrderByAggregateInput = {
+    id?: SortOrder
+    nutritionPlanDayId?: SortOrder
+    mealIndex?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+  }
+
+  export type NutritionPlanMealMinOrderByAggregateInput = {
+    id?: SortOrder
+    nutritionPlanDayId?: SortOrder
+    mealIndex?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+  }
+
+  export type NutritionPlanMealSumOrderByAggregateInput = {
+    mealIndex?: SortOrder
+  }
+
+  export type NutritionPlanMealScalarRelationFilter = {
+    is?: NutritionPlanMealWhereInput
+    isNot?: NutritionPlanMealWhereInput
+  }
+
+  export type NutritionPlanMealOptionCountOrderByAggregateInput = {
+    id?: SortOrder
+    nutritionPlanMealId?: SortOrder
+    optionIndex?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+  }
+
+  export type NutritionPlanMealOptionAvgOrderByAggregateInput = {
+    optionIndex?: SortOrder
+  }
+
+  export type NutritionPlanMealOptionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    nutritionPlanMealId?: SortOrder
+    optionIndex?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+  }
+
+  export type NutritionPlanMealOptionMinOrderByAggregateInput = {
+    id?: SortOrder
+    nutritionPlanMealId?: SortOrder
+    optionIndex?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+  }
+
+  export type NutritionPlanMealOptionSumOrderByAggregateInput = {
+    optionIndex?: SortOrder
+  }
+
+  export type NutritionPlanMealOptionScalarRelationFilter = {
+    is?: NutritionPlanMealOptionWhereInput
+    isNot?: NutritionPlanMealOptionWhereInput
+  }
+
+  export type FoodScalarRelationFilter = {
+    is?: FoodWhereInput
+    isNot?: FoodWhereInput
+  }
+
+  export type NutritionPlanMealOptionFoodCountOrderByAggregateInput = {
+    id?: SortOrder
+    nutritionPlanMealOptionId?: SortOrder
+    foodId?: SortOrder
+    quantity?: SortOrder
+  }
+
+  export type NutritionPlanMealOptionFoodAvgOrderByAggregateInput = {
+    quantity?: SortOrder
+  }
+
+  export type NutritionPlanMealOptionFoodMaxOrderByAggregateInput = {
+    id?: SortOrder
+    nutritionPlanMealOptionId?: SortOrder
+    foodId?: SortOrder
+    quantity?: SortOrder
+  }
+
+  export type NutritionPlanMealOptionFoodMinOrderByAggregateInput = {
+    id?: SortOrder
+    nutritionPlanMealOptionId?: SortOrder
+    foodId?: SortOrder
+    quantity?: SortOrder
+  }
+
+  export type NutritionPlanMealOptionFoodSumOrderByAggregateInput = {
+    quantity?: SortOrder
+  }
+
   export type TrainingWeekCreateNestedManyWithoutBlockInput = {
     create?: XOR<TrainingWeekCreateWithoutBlockInput, TrainingWeekUncheckedCreateWithoutBlockInput> | TrainingWeekCreateWithoutBlockInput[] | TrainingWeekUncheckedCreateWithoutBlockInput[]
     connectOrCreate?: TrainingWeekCreateOrConnectWithoutBlockInput | TrainingWeekCreateOrConnectWithoutBlockInput[]
@@ -17276,6 +28060,13 @@ export namespace Prisma {
     connect?: TrainingBlockWhereUniqueInput | TrainingBlockWhereUniqueInput[]
   }
 
+  export type NutritionPlanCreateNestedManyWithoutUserInput = {
+    create?: XOR<NutritionPlanCreateWithoutUserInput, NutritionPlanUncheckedCreateWithoutUserInput> | NutritionPlanCreateWithoutUserInput[] | NutritionPlanUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NutritionPlanCreateOrConnectWithoutUserInput | NutritionPlanCreateOrConnectWithoutUserInput[]
+    createMany?: NutritionPlanCreateManyUserInputEnvelope
+    connect?: NutritionPlanWhereUniqueInput | NutritionPlanWhereUniqueInput[]
+  }
+
   export type PaymentCreateNestedManyWithoutUserInput = {
     create?: XOR<PaymentCreateWithoutUserInput, PaymentUncheckedCreateWithoutUserInput> | PaymentCreateWithoutUserInput[] | PaymentUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PaymentCreateOrConnectWithoutUserInput | PaymentCreateOrConnectWithoutUserInput[]
@@ -17308,6 +28099,13 @@ export namespace Prisma {
     connectOrCreate?: TrainingBlockCreateOrConnectWithoutUserInput | TrainingBlockCreateOrConnectWithoutUserInput[]
     createMany?: TrainingBlockCreateManyUserInputEnvelope
     connect?: TrainingBlockWhereUniqueInput | TrainingBlockWhereUniqueInput[]
+  }
+
+  export type NutritionPlanUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<NutritionPlanCreateWithoutUserInput, NutritionPlanUncheckedCreateWithoutUserInput> | NutritionPlanCreateWithoutUserInput[] | NutritionPlanUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NutritionPlanCreateOrConnectWithoutUserInput | NutritionPlanCreateOrConnectWithoutUserInput[]
+    createMany?: NutritionPlanCreateManyUserInputEnvelope
+    connect?: NutritionPlanWhereUniqueInput | NutritionPlanWhereUniqueInput[]
   }
 
   export type PaymentUncheckedCreateNestedManyWithoutUserInput = {
@@ -17359,6 +28157,20 @@ export namespace Prisma {
     update?: TrainingBlockUpdateWithWhereUniqueWithoutUserInput | TrainingBlockUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: TrainingBlockUpdateManyWithWhereWithoutUserInput | TrainingBlockUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: TrainingBlockScalarWhereInput | TrainingBlockScalarWhereInput[]
+  }
+
+  export type NutritionPlanUpdateManyWithoutUserNestedInput = {
+    create?: XOR<NutritionPlanCreateWithoutUserInput, NutritionPlanUncheckedCreateWithoutUserInput> | NutritionPlanCreateWithoutUserInput[] | NutritionPlanUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NutritionPlanCreateOrConnectWithoutUserInput | NutritionPlanCreateOrConnectWithoutUserInput[]
+    upsert?: NutritionPlanUpsertWithWhereUniqueWithoutUserInput | NutritionPlanUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: NutritionPlanCreateManyUserInputEnvelope
+    set?: NutritionPlanWhereUniqueInput | NutritionPlanWhereUniqueInput[]
+    disconnect?: NutritionPlanWhereUniqueInput | NutritionPlanWhereUniqueInput[]
+    delete?: NutritionPlanWhereUniqueInput | NutritionPlanWhereUniqueInput[]
+    connect?: NutritionPlanWhereUniqueInput | NutritionPlanWhereUniqueInput[]
+    update?: NutritionPlanUpdateWithWhereUniqueWithoutUserInput | NutritionPlanUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: NutritionPlanUpdateManyWithWhereWithoutUserInput | NutritionPlanUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: NutritionPlanScalarWhereInput | NutritionPlanScalarWhereInput[]
   }
 
   export type PaymentUpdateManyWithoutUserNestedInput = {
@@ -17425,6 +28237,20 @@ export namespace Prisma {
     update?: TrainingBlockUpdateWithWhereUniqueWithoutUserInput | TrainingBlockUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: TrainingBlockUpdateManyWithWhereWithoutUserInput | TrainingBlockUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: TrainingBlockScalarWhereInput | TrainingBlockScalarWhereInput[]
+  }
+
+  export type NutritionPlanUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<NutritionPlanCreateWithoutUserInput, NutritionPlanUncheckedCreateWithoutUserInput> | NutritionPlanCreateWithoutUserInput[] | NutritionPlanUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NutritionPlanCreateOrConnectWithoutUserInput | NutritionPlanCreateOrConnectWithoutUserInput[]
+    upsert?: NutritionPlanUpsertWithWhereUniqueWithoutUserInput | NutritionPlanUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: NutritionPlanCreateManyUserInputEnvelope
+    set?: NutritionPlanWhereUniqueInput | NutritionPlanWhereUniqueInput[]
+    disconnect?: NutritionPlanWhereUniqueInput | NutritionPlanWhereUniqueInput[]
+    delete?: NutritionPlanWhereUniqueInput | NutritionPlanWhereUniqueInput[]
+    connect?: NutritionPlanWhereUniqueInput | NutritionPlanWhereUniqueInput[]
+    update?: NutritionPlanUpdateWithWhereUniqueWithoutUserInput | NutritionPlanUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: NutritionPlanUpdateManyWithWhereWithoutUserInput | NutritionPlanUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: NutritionPlanScalarWhereInput | NutritionPlanScalarWhereInput[]
   }
 
   export type PaymentUncheckedUpdateManyWithoutUserNestedInput = {
@@ -17601,6 +28427,356 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutMeasurementsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMeasurementsInput, UserUpdateWithoutMeasurementsInput>, UserUncheckedUpdateWithoutMeasurementsInput>
+  }
+
+  export type FoodCreateNestedManyWithoutFoodGroupInput = {
+    create?: XOR<FoodCreateWithoutFoodGroupInput, FoodUncheckedCreateWithoutFoodGroupInput> | FoodCreateWithoutFoodGroupInput[] | FoodUncheckedCreateWithoutFoodGroupInput[]
+    connectOrCreate?: FoodCreateOrConnectWithoutFoodGroupInput | FoodCreateOrConnectWithoutFoodGroupInput[]
+    createMany?: FoodCreateManyFoodGroupInputEnvelope
+    connect?: FoodWhereUniqueInput | FoodWhereUniqueInput[]
+  }
+
+  export type FoodUncheckedCreateNestedManyWithoutFoodGroupInput = {
+    create?: XOR<FoodCreateWithoutFoodGroupInput, FoodUncheckedCreateWithoutFoodGroupInput> | FoodCreateWithoutFoodGroupInput[] | FoodUncheckedCreateWithoutFoodGroupInput[]
+    connectOrCreate?: FoodCreateOrConnectWithoutFoodGroupInput | FoodCreateOrConnectWithoutFoodGroupInput[]
+    createMany?: FoodCreateManyFoodGroupInputEnvelope
+    connect?: FoodWhereUniqueInput | FoodWhereUniqueInput[]
+  }
+
+  export type FoodUpdateManyWithoutFoodGroupNestedInput = {
+    create?: XOR<FoodCreateWithoutFoodGroupInput, FoodUncheckedCreateWithoutFoodGroupInput> | FoodCreateWithoutFoodGroupInput[] | FoodUncheckedCreateWithoutFoodGroupInput[]
+    connectOrCreate?: FoodCreateOrConnectWithoutFoodGroupInput | FoodCreateOrConnectWithoutFoodGroupInput[]
+    upsert?: FoodUpsertWithWhereUniqueWithoutFoodGroupInput | FoodUpsertWithWhereUniqueWithoutFoodGroupInput[]
+    createMany?: FoodCreateManyFoodGroupInputEnvelope
+    set?: FoodWhereUniqueInput | FoodWhereUniqueInput[]
+    disconnect?: FoodWhereUniqueInput | FoodWhereUniqueInput[]
+    delete?: FoodWhereUniqueInput | FoodWhereUniqueInput[]
+    connect?: FoodWhereUniqueInput | FoodWhereUniqueInput[]
+    update?: FoodUpdateWithWhereUniqueWithoutFoodGroupInput | FoodUpdateWithWhereUniqueWithoutFoodGroupInput[]
+    updateMany?: FoodUpdateManyWithWhereWithoutFoodGroupInput | FoodUpdateManyWithWhereWithoutFoodGroupInput[]
+    deleteMany?: FoodScalarWhereInput | FoodScalarWhereInput[]
+  }
+
+  export type FoodUncheckedUpdateManyWithoutFoodGroupNestedInput = {
+    create?: XOR<FoodCreateWithoutFoodGroupInput, FoodUncheckedCreateWithoutFoodGroupInput> | FoodCreateWithoutFoodGroupInput[] | FoodUncheckedCreateWithoutFoodGroupInput[]
+    connectOrCreate?: FoodCreateOrConnectWithoutFoodGroupInput | FoodCreateOrConnectWithoutFoodGroupInput[]
+    upsert?: FoodUpsertWithWhereUniqueWithoutFoodGroupInput | FoodUpsertWithWhereUniqueWithoutFoodGroupInput[]
+    createMany?: FoodCreateManyFoodGroupInputEnvelope
+    set?: FoodWhereUniqueInput | FoodWhereUniqueInput[]
+    disconnect?: FoodWhereUniqueInput | FoodWhereUniqueInput[]
+    delete?: FoodWhereUniqueInput | FoodWhereUniqueInput[]
+    connect?: FoodWhereUniqueInput | FoodWhereUniqueInput[]
+    update?: FoodUpdateWithWhereUniqueWithoutFoodGroupInput | FoodUpdateWithWhereUniqueWithoutFoodGroupInput[]
+    updateMany?: FoodUpdateManyWithWhereWithoutFoodGroupInput | FoodUpdateManyWithWhereWithoutFoodGroupInput[]
+    deleteMany?: FoodScalarWhereInput | FoodScalarWhereInput[]
+  }
+
+  export type FoodGroupCreateNestedOneWithoutFoodsInput = {
+    create?: XOR<FoodGroupCreateWithoutFoodsInput, FoodGroupUncheckedCreateWithoutFoodsInput>
+    connectOrCreate?: FoodGroupCreateOrConnectWithoutFoodsInput
+    connect?: FoodGroupWhereUniqueInput
+  }
+
+  export type NutritionPlanMealOptionFoodCreateNestedManyWithoutFoodInput = {
+    create?: XOR<NutritionPlanMealOptionFoodCreateWithoutFoodInput, NutritionPlanMealOptionFoodUncheckedCreateWithoutFoodInput> | NutritionPlanMealOptionFoodCreateWithoutFoodInput[] | NutritionPlanMealOptionFoodUncheckedCreateWithoutFoodInput[]
+    connectOrCreate?: NutritionPlanMealOptionFoodCreateOrConnectWithoutFoodInput | NutritionPlanMealOptionFoodCreateOrConnectWithoutFoodInput[]
+    createMany?: NutritionPlanMealOptionFoodCreateManyFoodInputEnvelope
+    connect?: NutritionPlanMealOptionFoodWhereUniqueInput | NutritionPlanMealOptionFoodWhereUniqueInput[]
+  }
+
+  export type NutritionPlanMealOptionFoodUncheckedCreateNestedManyWithoutFoodInput = {
+    create?: XOR<NutritionPlanMealOptionFoodCreateWithoutFoodInput, NutritionPlanMealOptionFoodUncheckedCreateWithoutFoodInput> | NutritionPlanMealOptionFoodCreateWithoutFoodInput[] | NutritionPlanMealOptionFoodUncheckedCreateWithoutFoodInput[]
+    connectOrCreate?: NutritionPlanMealOptionFoodCreateOrConnectWithoutFoodInput | NutritionPlanMealOptionFoodCreateOrConnectWithoutFoodInput[]
+    createMany?: NutritionPlanMealOptionFoodCreateManyFoodInputEnvelope
+    connect?: NutritionPlanMealOptionFoodWhereUniqueInput | NutritionPlanMealOptionFoodWhereUniqueInput[]
+  }
+
+  export type FoodGroupUpdateOneRequiredWithoutFoodsNestedInput = {
+    create?: XOR<FoodGroupCreateWithoutFoodsInput, FoodGroupUncheckedCreateWithoutFoodsInput>
+    connectOrCreate?: FoodGroupCreateOrConnectWithoutFoodsInput
+    upsert?: FoodGroupUpsertWithoutFoodsInput
+    connect?: FoodGroupWhereUniqueInput
+    update?: XOR<XOR<FoodGroupUpdateToOneWithWhereWithoutFoodsInput, FoodGroupUpdateWithoutFoodsInput>, FoodGroupUncheckedUpdateWithoutFoodsInput>
+  }
+
+  export type NutritionPlanMealOptionFoodUpdateManyWithoutFoodNestedInput = {
+    create?: XOR<NutritionPlanMealOptionFoodCreateWithoutFoodInput, NutritionPlanMealOptionFoodUncheckedCreateWithoutFoodInput> | NutritionPlanMealOptionFoodCreateWithoutFoodInput[] | NutritionPlanMealOptionFoodUncheckedCreateWithoutFoodInput[]
+    connectOrCreate?: NutritionPlanMealOptionFoodCreateOrConnectWithoutFoodInput | NutritionPlanMealOptionFoodCreateOrConnectWithoutFoodInput[]
+    upsert?: NutritionPlanMealOptionFoodUpsertWithWhereUniqueWithoutFoodInput | NutritionPlanMealOptionFoodUpsertWithWhereUniqueWithoutFoodInput[]
+    createMany?: NutritionPlanMealOptionFoodCreateManyFoodInputEnvelope
+    set?: NutritionPlanMealOptionFoodWhereUniqueInput | NutritionPlanMealOptionFoodWhereUniqueInput[]
+    disconnect?: NutritionPlanMealOptionFoodWhereUniqueInput | NutritionPlanMealOptionFoodWhereUniqueInput[]
+    delete?: NutritionPlanMealOptionFoodWhereUniqueInput | NutritionPlanMealOptionFoodWhereUniqueInput[]
+    connect?: NutritionPlanMealOptionFoodWhereUniqueInput | NutritionPlanMealOptionFoodWhereUniqueInput[]
+    update?: NutritionPlanMealOptionFoodUpdateWithWhereUniqueWithoutFoodInput | NutritionPlanMealOptionFoodUpdateWithWhereUniqueWithoutFoodInput[]
+    updateMany?: NutritionPlanMealOptionFoodUpdateManyWithWhereWithoutFoodInput | NutritionPlanMealOptionFoodUpdateManyWithWhereWithoutFoodInput[]
+    deleteMany?: NutritionPlanMealOptionFoodScalarWhereInput | NutritionPlanMealOptionFoodScalarWhereInput[]
+  }
+
+  export type NutritionPlanMealOptionFoodUncheckedUpdateManyWithoutFoodNestedInput = {
+    create?: XOR<NutritionPlanMealOptionFoodCreateWithoutFoodInput, NutritionPlanMealOptionFoodUncheckedCreateWithoutFoodInput> | NutritionPlanMealOptionFoodCreateWithoutFoodInput[] | NutritionPlanMealOptionFoodUncheckedCreateWithoutFoodInput[]
+    connectOrCreate?: NutritionPlanMealOptionFoodCreateOrConnectWithoutFoodInput | NutritionPlanMealOptionFoodCreateOrConnectWithoutFoodInput[]
+    upsert?: NutritionPlanMealOptionFoodUpsertWithWhereUniqueWithoutFoodInput | NutritionPlanMealOptionFoodUpsertWithWhereUniqueWithoutFoodInput[]
+    createMany?: NutritionPlanMealOptionFoodCreateManyFoodInputEnvelope
+    set?: NutritionPlanMealOptionFoodWhereUniqueInput | NutritionPlanMealOptionFoodWhereUniqueInput[]
+    disconnect?: NutritionPlanMealOptionFoodWhereUniqueInput | NutritionPlanMealOptionFoodWhereUniqueInput[]
+    delete?: NutritionPlanMealOptionFoodWhereUniqueInput | NutritionPlanMealOptionFoodWhereUniqueInput[]
+    connect?: NutritionPlanMealOptionFoodWhereUniqueInput | NutritionPlanMealOptionFoodWhereUniqueInput[]
+    update?: NutritionPlanMealOptionFoodUpdateWithWhereUniqueWithoutFoodInput | NutritionPlanMealOptionFoodUpdateWithWhereUniqueWithoutFoodInput[]
+    updateMany?: NutritionPlanMealOptionFoodUpdateManyWithWhereWithoutFoodInput | NutritionPlanMealOptionFoodUpdateManyWithWhereWithoutFoodInput[]
+    deleteMany?: NutritionPlanMealOptionFoodScalarWhereInput | NutritionPlanMealOptionFoodScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutNutritionPlansInput = {
+    create?: XOR<UserCreateWithoutNutritionPlansInput, UserUncheckedCreateWithoutNutritionPlansInput>
+    connectOrCreate?: UserCreateOrConnectWithoutNutritionPlansInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type NutritionPlanDayCreateNestedManyWithoutNutritionPlanInput = {
+    create?: XOR<NutritionPlanDayCreateWithoutNutritionPlanInput, NutritionPlanDayUncheckedCreateWithoutNutritionPlanInput> | NutritionPlanDayCreateWithoutNutritionPlanInput[] | NutritionPlanDayUncheckedCreateWithoutNutritionPlanInput[]
+    connectOrCreate?: NutritionPlanDayCreateOrConnectWithoutNutritionPlanInput | NutritionPlanDayCreateOrConnectWithoutNutritionPlanInput[]
+    createMany?: NutritionPlanDayCreateManyNutritionPlanInputEnvelope
+    connect?: NutritionPlanDayWhereUniqueInput | NutritionPlanDayWhereUniqueInput[]
+  }
+
+  export type NutritionPlanDayUncheckedCreateNestedManyWithoutNutritionPlanInput = {
+    create?: XOR<NutritionPlanDayCreateWithoutNutritionPlanInput, NutritionPlanDayUncheckedCreateWithoutNutritionPlanInput> | NutritionPlanDayCreateWithoutNutritionPlanInput[] | NutritionPlanDayUncheckedCreateWithoutNutritionPlanInput[]
+    connectOrCreate?: NutritionPlanDayCreateOrConnectWithoutNutritionPlanInput | NutritionPlanDayCreateOrConnectWithoutNutritionPlanInput[]
+    createMany?: NutritionPlanDayCreateManyNutritionPlanInputEnvelope
+    connect?: NutritionPlanDayWhereUniqueInput | NutritionPlanDayWhereUniqueInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutNutritionPlansNestedInput = {
+    create?: XOR<UserCreateWithoutNutritionPlansInput, UserUncheckedCreateWithoutNutritionPlansInput>
+    connectOrCreate?: UserCreateOrConnectWithoutNutritionPlansInput
+    upsert?: UserUpsertWithoutNutritionPlansInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutNutritionPlansInput, UserUpdateWithoutNutritionPlansInput>, UserUncheckedUpdateWithoutNutritionPlansInput>
+  }
+
+  export type NutritionPlanDayUpdateManyWithoutNutritionPlanNestedInput = {
+    create?: XOR<NutritionPlanDayCreateWithoutNutritionPlanInput, NutritionPlanDayUncheckedCreateWithoutNutritionPlanInput> | NutritionPlanDayCreateWithoutNutritionPlanInput[] | NutritionPlanDayUncheckedCreateWithoutNutritionPlanInput[]
+    connectOrCreate?: NutritionPlanDayCreateOrConnectWithoutNutritionPlanInput | NutritionPlanDayCreateOrConnectWithoutNutritionPlanInput[]
+    upsert?: NutritionPlanDayUpsertWithWhereUniqueWithoutNutritionPlanInput | NutritionPlanDayUpsertWithWhereUniqueWithoutNutritionPlanInput[]
+    createMany?: NutritionPlanDayCreateManyNutritionPlanInputEnvelope
+    set?: NutritionPlanDayWhereUniqueInput | NutritionPlanDayWhereUniqueInput[]
+    disconnect?: NutritionPlanDayWhereUniqueInput | NutritionPlanDayWhereUniqueInput[]
+    delete?: NutritionPlanDayWhereUniqueInput | NutritionPlanDayWhereUniqueInput[]
+    connect?: NutritionPlanDayWhereUniqueInput | NutritionPlanDayWhereUniqueInput[]
+    update?: NutritionPlanDayUpdateWithWhereUniqueWithoutNutritionPlanInput | NutritionPlanDayUpdateWithWhereUniqueWithoutNutritionPlanInput[]
+    updateMany?: NutritionPlanDayUpdateManyWithWhereWithoutNutritionPlanInput | NutritionPlanDayUpdateManyWithWhereWithoutNutritionPlanInput[]
+    deleteMany?: NutritionPlanDayScalarWhereInput | NutritionPlanDayScalarWhereInput[]
+  }
+
+  export type NutritionPlanDayUncheckedUpdateManyWithoutNutritionPlanNestedInput = {
+    create?: XOR<NutritionPlanDayCreateWithoutNutritionPlanInput, NutritionPlanDayUncheckedCreateWithoutNutritionPlanInput> | NutritionPlanDayCreateWithoutNutritionPlanInput[] | NutritionPlanDayUncheckedCreateWithoutNutritionPlanInput[]
+    connectOrCreate?: NutritionPlanDayCreateOrConnectWithoutNutritionPlanInput | NutritionPlanDayCreateOrConnectWithoutNutritionPlanInput[]
+    upsert?: NutritionPlanDayUpsertWithWhereUniqueWithoutNutritionPlanInput | NutritionPlanDayUpsertWithWhereUniqueWithoutNutritionPlanInput[]
+    createMany?: NutritionPlanDayCreateManyNutritionPlanInputEnvelope
+    set?: NutritionPlanDayWhereUniqueInput | NutritionPlanDayWhereUniqueInput[]
+    disconnect?: NutritionPlanDayWhereUniqueInput | NutritionPlanDayWhereUniqueInput[]
+    delete?: NutritionPlanDayWhereUniqueInput | NutritionPlanDayWhereUniqueInput[]
+    connect?: NutritionPlanDayWhereUniqueInput | NutritionPlanDayWhereUniqueInput[]
+    update?: NutritionPlanDayUpdateWithWhereUniqueWithoutNutritionPlanInput | NutritionPlanDayUpdateWithWhereUniqueWithoutNutritionPlanInput[]
+    updateMany?: NutritionPlanDayUpdateManyWithWhereWithoutNutritionPlanInput | NutritionPlanDayUpdateManyWithWhereWithoutNutritionPlanInput[]
+    deleteMany?: NutritionPlanDayScalarWhereInput | NutritionPlanDayScalarWhereInput[]
+  }
+
+  export type NutritionPlanCreateNestedOneWithoutDaysInput = {
+    create?: XOR<NutritionPlanCreateWithoutDaysInput, NutritionPlanUncheckedCreateWithoutDaysInput>
+    connectOrCreate?: NutritionPlanCreateOrConnectWithoutDaysInput
+    connect?: NutritionPlanWhereUniqueInput
+  }
+
+  export type NutritionPlanMealCreateNestedManyWithoutNutritionPlanDayInput = {
+    create?: XOR<NutritionPlanMealCreateWithoutNutritionPlanDayInput, NutritionPlanMealUncheckedCreateWithoutNutritionPlanDayInput> | NutritionPlanMealCreateWithoutNutritionPlanDayInput[] | NutritionPlanMealUncheckedCreateWithoutNutritionPlanDayInput[]
+    connectOrCreate?: NutritionPlanMealCreateOrConnectWithoutNutritionPlanDayInput | NutritionPlanMealCreateOrConnectWithoutNutritionPlanDayInput[]
+    createMany?: NutritionPlanMealCreateManyNutritionPlanDayInputEnvelope
+    connect?: NutritionPlanMealWhereUniqueInput | NutritionPlanMealWhereUniqueInput[]
+  }
+
+  export type NutritionPlanMealUncheckedCreateNestedManyWithoutNutritionPlanDayInput = {
+    create?: XOR<NutritionPlanMealCreateWithoutNutritionPlanDayInput, NutritionPlanMealUncheckedCreateWithoutNutritionPlanDayInput> | NutritionPlanMealCreateWithoutNutritionPlanDayInput[] | NutritionPlanMealUncheckedCreateWithoutNutritionPlanDayInput[]
+    connectOrCreate?: NutritionPlanMealCreateOrConnectWithoutNutritionPlanDayInput | NutritionPlanMealCreateOrConnectWithoutNutritionPlanDayInput[]
+    createMany?: NutritionPlanMealCreateManyNutritionPlanDayInputEnvelope
+    connect?: NutritionPlanMealWhereUniqueInput | NutritionPlanMealWhereUniqueInput[]
+  }
+
+  export type NutritionPlanUpdateOneRequiredWithoutDaysNestedInput = {
+    create?: XOR<NutritionPlanCreateWithoutDaysInput, NutritionPlanUncheckedCreateWithoutDaysInput>
+    connectOrCreate?: NutritionPlanCreateOrConnectWithoutDaysInput
+    upsert?: NutritionPlanUpsertWithoutDaysInput
+    connect?: NutritionPlanWhereUniqueInput
+    update?: XOR<XOR<NutritionPlanUpdateToOneWithWhereWithoutDaysInput, NutritionPlanUpdateWithoutDaysInput>, NutritionPlanUncheckedUpdateWithoutDaysInput>
+  }
+
+  export type NutritionPlanMealUpdateManyWithoutNutritionPlanDayNestedInput = {
+    create?: XOR<NutritionPlanMealCreateWithoutNutritionPlanDayInput, NutritionPlanMealUncheckedCreateWithoutNutritionPlanDayInput> | NutritionPlanMealCreateWithoutNutritionPlanDayInput[] | NutritionPlanMealUncheckedCreateWithoutNutritionPlanDayInput[]
+    connectOrCreate?: NutritionPlanMealCreateOrConnectWithoutNutritionPlanDayInput | NutritionPlanMealCreateOrConnectWithoutNutritionPlanDayInput[]
+    upsert?: NutritionPlanMealUpsertWithWhereUniqueWithoutNutritionPlanDayInput | NutritionPlanMealUpsertWithWhereUniqueWithoutNutritionPlanDayInput[]
+    createMany?: NutritionPlanMealCreateManyNutritionPlanDayInputEnvelope
+    set?: NutritionPlanMealWhereUniqueInput | NutritionPlanMealWhereUniqueInput[]
+    disconnect?: NutritionPlanMealWhereUniqueInput | NutritionPlanMealWhereUniqueInput[]
+    delete?: NutritionPlanMealWhereUniqueInput | NutritionPlanMealWhereUniqueInput[]
+    connect?: NutritionPlanMealWhereUniqueInput | NutritionPlanMealWhereUniqueInput[]
+    update?: NutritionPlanMealUpdateWithWhereUniqueWithoutNutritionPlanDayInput | NutritionPlanMealUpdateWithWhereUniqueWithoutNutritionPlanDayInput[]
+    updateMany?: NutritionPlanMealUpdateManyWithWhereWithoutNutritionPlanDayInput | NutritionPlanMealUpdateManyWithWhereWithoutNutritionPlanDayInput[]
+    deleteMany?: NutritionPlanMealScalarWhereInput | NutritionPlanMealScalarWhereInput[]
+  }
+
+  export type NutritionPlanMealUncheckedUpdateManyWithoutNutritionPlanDayNestedInput = {
+    create?: XOR<NutritionPlanMealCreateWithoutNutritionPlanDayInput, NutritionPlanMealUncheckedCreateWithoutNutritionPlanDayInput> | NutritionPlanMealCreateWithoutNutritionPlanDayInput[] | NutritionPlanMealUncheckedCreateWithoutNutritionPlanDayInput[]
+    connectOrCreate?: NutritionPlanMealCreateOrConnectWithoutNutritionPlanDayInput | NutritionPlanMealCreateOrConnectWithoutNutritionPlanDayInput[]
+    upsert?: NutritionPlanMealUpsertWithWhereUniqueWithoutNutritionPlanDayInput | NutritionPlanMealUpsertWithWhereUniqueWithoutNutritionPlanDayInput[]
+    createMany?: NutritionPlanMealCreateManyNutritionPlanDayInputEnvelope
+    set?: NutritionPlanMealWhereUniqueInput | NutritionPlanMealWhereUniqueInput[]
+    disconnect?: NutritionPlanMealWhereUniqueInput | NutritionPlanMealWhereUniqueInput[]
+    delete?: NutritionPlanMealWhereUniqueInput | NutritionPlanMealWhereUniqueInput[]
+    connect?: NutritionPlanMealWhereUniqueInput | NutritionPlanMealWhereUniqueInput[]
+    update?: NutritionPlanMealUpdateWithWhereUniqueWithoutNutritionPlanDayInput | NutritionPlanMealUpdateWithWhereUniqueWithoutNutritionPlanDayInput[]
+    updateMany?: NutritionPlanMealUpdateManyWithWhereWithoutNutritionPlanDayInput | NutritionPlanMealUpdateManyWithWhereWithoutNutritionPlanDayInput[]
+    deleteMany?: NutritionPlanMealScalarWhereInput | NutritionPlanMealScalarWhereInput[]
+  }
+
+  export type NutritionPlanDayCreateNestedOneWithoutMealsInput = {
+    create?: XOR<NutritionPlanDayCreateWithoutMealsInput, NutritionPlanDayUncheckedCreateWithoutMealsInput>
+    connectOrCreate?: NutritionPlanDayCreateOrConnectWithoutMealsInput
+    connect?: NutritionPlanDayWhereUniqueInput
+  }
+
+  export type NutritionPlanMealOptionCreateNestedManyWithoutNutritionPlanMealInput = {
+    create?: XOR<NutritionPlanMealOptionCreateWithoutNutritionPlanMealInput, NutritionPlanMealOptionUncheckedCreateWithoutNutritionPlanMealInput> | NutritionPlanMealOptionCreateWithoutNutritionPlanMealInput[] | NutritionPlanMealOptionUncheckedCreateWithoutNutritionPlanMealInput[]
+    connectOrCreate?: NutritionPlanMealOptionCreateOrConnectWithoutNutritionPlanMealInput | NutritionPlanMealOptionCreateOrConnectWithoutNutritionPlanMealInput[]
+    createMany?: NutritionPlanMealOptionCreateManyNutritionPlanMealInputEnvelope
+    connect?: NutritionPlanMealOptionWhereUniqueInput | NutritionPlanMealOptionWhereUniqueInput[]
+  }
+
+  export type NutritionPlanMealOptionUncheckedCreateNestedManyWithoutNutritionPlanMealInput = {
+    create?: XOR<NutritionPlanMealOptionCreateWithoutNutritionPlanMealInput, NutritionPlanMealOptionUncheckedCreateWithoutNutritionPlanMealInput> | NutritionPlanMealOptionCreateWithoutNutritionPlanMealInput[] | NutritionPlanMealOptionUncheckedCreateWithoutNutritionPlanMealInput[]
+    connectOrCreate?: NutritionPlanMealOptionCreateOrConnectWithoutNutritionPlanMealInput | NutritionPlanMealOptionCreateOrConnectWithoutNutritionPlanMealInput[]
+    createMany?: NutritionPlanMealOptionCreateManyNutritionPlanMealInputEnvelope
+    connect?: NutritionPlanMealOptionWhereUniqueInput | NutritionPlanMealOptionWhereUniqueInput[]
+  }
+
+  export type NutritionPlanDayUpdateOneRequiredWithoutMealsNestedInput = {
+    create?: XOR<NutritionPlanDayCreateWithoutMealsInput, NutritionPlanDayUncheckedCreateWithoutMealsInput>
+    connectOrCreate?: NutritionPlanDayCreateOrConnectWithoutMealsInput
+    upsert?: NutritionPlanDayUpsertWithoutMealsInput
+    connect?: NutritionPlanDayWhereUniqueInput
+    update?: XOR<XOR<NutritionPlanDayUpdateToOneWithWhereWithoutMealsInput, NutritionPlanDayUpdateWithoutMealsInput>, NutritionPlanDayUncheckedUpdateWithoutMealsInput>
+  }
+
+  export type NutritionPlanMealOptionUpdateManyWithoutNutritionPlanMealNestedInput = {
+    create?: XOR<NutritionPlanMealOptionCreateWithoutNutritionPlanMealInput, NutritionPlanMealOptionUncheckedCreateWithoutNutritionPlanMealInput> | NutritionPlanMealOptionCreateWithoutNutritionPlanMealInput[] | NutritionPlanMealOptionUncheckedCreateWithoutNutritionPlanMealInput[]
+    connectOrCreate?: NutritionPlanMealOptionCreateOrConnectWithoutNutritionPlanMealInput | NutritionPlanMealOptionCreateOrConnectWithoutNutritionPlanMealInput[]
+    upsert?: NutritionPlanMealOptionUpsertWithWhereUniqueWithoutNutritionPlanMealInput | NutritionPlanMealOptionUpsertWithWhereUniqueWithoutNutritionPlanMealInput[]
+    createMany?: NutritionPlanMealOptionCreateManyNutritionPlanMealInputEnvelope
+    set?: NutritionPlanMealOptionWhereUniqueInput | NutritionPlanMealOptionWhereUniqueInput[]
+    disconnect?: NutritionPlanMealOptionWhereUniqueInput | NutritionPlanMealOptionWhereUniqueInput[]
+    delete?: NutritionPlanMealOptionWhereUniqueInput | NutritionPlanMealOptionWhereUniqueInput[]
+    connect?: NutritionPlanMealOptionWhereUniqueInput | NutritionPlanMealOptionWhereUniqueInput[]
+    update?: NutritionPlanMealOptionUpdateWithWhereUniqueWithoutNutritionPlanMealInput | NutritionPlanMealOptionUpdateWithWhereUniqueWithoutNutritionPlanMealInput[]
+    updateMany?: NutritionPlanMealOptionUpdateManyWithWhereWithoutNutritionPlanMealInput | NutritionPlanMealOptionUpdateManyWithWhereWithoutNutritionPlanMealInput[]
+    deleteMany?: NutritionPlanMealOptionScalarWhereInput | NutritionPlanMealOptionScalarWhereInput[]
+  }
+
+  export type NutritionPlanMealOptionUncheckedUpdateManyWithoutNutritionPlanMealNestedInput = {
+    create?: XOR<NutritionPlanMealOptionCreateWithoutNutritionPlanMealInput, NutritionPlanMealOptionUncheckedCreateWithoutNutritionPlanMealInput> | NutritionPlanMealOptionCreateWithoutNutritionPlanMealInput[] | NutritionPlanMealOptionUncheckedCreateWithoutNutritionPlanMealInput[]
+    connectOrCreate?: NutritionPlanMealOptionCreateOrConnectWithoutNutritionPlanMealInput | NutritionPlanMealOptionCreateOrConnectWithoutNutritionPlanMealInput[]
+    upsert?: NutritionPlanMealOptionUpsertWithWhereUniqueWithoutNutritionPlanMealInput | NutritionPlanMealOptionUpsertWithWhereUniqueWithoutNutritionPlanMealInput[]
+    createMany?: NutritionPlanMealOptionCreateManyNutritionPlanMealInputEnvelope
+    set?: NutritionPlanMealOptionWhereUniqueInput | NutritionPlanMealOptionWhereUniqueInput[]
+    disconnect?: NutritionPlanMealOptionWhereUniqueInput | NutritionPlanMealOptionWhereUniqueInput[]
+    delete?: NutritionPlanMealOptionWhereUniqueInput | NutritionPlanMealOptionWhereUniqueInput[]
+    connect?: NutritionPlanMealOptionWhereUniqueInput | NutritionPlanMealOptionWhereUniqueInput[]
+    update?: NutritionPlanMealOptionUpdateWithWhereUniqueWithoutNutritionPlanMealInput | NutritionPlanMealOptionUpdateWithWhereUniqueWithoutNutritionPlanMealInput[]
+    updateMany?: NutritionPlanMealOptionUpdateManyWithWhereWithoutNutritionPlanMealInput | NutritionPlanMealOptionUpdateManyWithWhereWithoutNutritionPlanMealInput[]
+    deleteMany?: NutritionPlanMealOptionScalarWhereInput | NutritionPlanMealOptionScalarWhereInput[]
+  }
+
+  export type NutritionPlanMealCreateNestedOneWithoutMealOptionsInput = {
+    create?: XOR<NutritionPlanMealCreateWithoutMealOptionsInput, NutritionPlanMealUncheckedCreateWithoutMealOptionsInput>
+    connectOrCreate?: NutritionPlanMealCreateOrConnectWithoutMealOptionsInput
+    connect?: NutritionPlanMealWhereUniqueInput
+  }
+
+  export type NutritionPlanMealOptionFoodCreateNestedManyWithoutNutritionPlanMealOptionInput = {
+    create?: XOR<NutritionPlanMealOptionFoodCreateWithoutNutritionPlanMealOptionInput, NutritionPlanMealOptionFoodUncheckedCreateWithoutNutritionPlanMealOptionInput> | NutritionPlanMealOptionFoodCreateWithoutNutritionPlanMealOptionInput[] | NutritionPlanMealOptionFoodUncheckedCreateWithoutNutritionPlanMealOptionInput[]
+    connectOrCreate?: NutritionPlanMealOptionFoodCreateOrConnectWithoutNutritionPlanMealOptionInput | NutritionPlanMealOptionFoodCreateOrConnectWithoutNutritionPlanMealOptionInput[]
+    createMany?: NutritionPlanMealOptionFoodCreateManyNutritionPlanMealOptionInputEnvelope
+    connect?: NutritionPlanMealOptionFoodWhereUniqueInput | NutritionPlanMealOptionFoodWhereUniqueInput[]
+  }
+
+  export type NutritionPlanMealOptionFoodUncheckedCreateNestedManyWithoutNutritionPlanMealOptionInput = {
+    create?: XOR<NutritionPlanMealOptionFoodCreateWithoutNutritionPlanMealOptionInput, NutritionPlanMealOptionFoodUncheckedCreateWithoutNutritionPlanMealOptionInput> | NutritionPlanMealOptionFoodCreateWithoutNutritionPlanMealOptionInput[] | NutritionPlanMealOptionFoodUncheckedCreateWithoutNutritionPlanMealOptionInput[]
+    connectOrCreate?: NutritionPlanMealOptionFoodCreateOrConnectWithoutNutritionPlanMealOptionInput | NutritionPlanMealOptionFoodCreateOrConnectWithoutNutritionPlanMealOptionInput[]
+    createMany?: NutritionPlanMealOptionFoodCreateManyNutritionPlanMealOptionInputEnvelope
+    connect?: NutritionPlanMealOptionFoodWhereUniqueInput | NutritionPlanMealOptionFoodWhereUniqueInput[]
+  }
+
+  export type NutritionPlanMealUpdateOneRequiredWithoutMealOptionsNestedInput = {
+    create?: XOR<NutritionPlanMealCreateWithoutMealOptionsInput, NutritionPlanMealUncheckedCreateWithoutMealOptionsInput>
+    connectOrCreate?: NutritionPlanMealCreateOrConnectWithoutMealOptionsInput
+    upsert?: NutritionPlanMealUpsertWithoutMealOptionsInput
+    connect?: NutritionPlanMealWhereUniqueInput
+    update?: XOR<XOR<NutritionPlanMealUpdateToOneWithWhereWithoutMealOptionsInput, NutritionPlanMealUpdateWithoutMealOptionsInput>, NutritionPlanMealUncheckedUpdateWithoutMealOptionsInput>
+  }
+
+  export type NutritionPlanMealOptionFoodUpdateManyWithoutNutritionPlanMealOptionNestedInput = {
+    create?: XOR<NutritionPlanMealOptionFoodCreateWithoutNutritionPlanMealOptionInput, NutritionPlanMealOptionFoodUncheckedCreateWithoutNutritionPlanMealOptionInput> | NutritionPlanMealOptionFoodCreateWithoutNutritionPlanMealOptionInput[] | NutritionPlanMealOptionFoodUncheckedCreateWithoutNutritionPlanMealOptionInput[]
+    connectOrCreate?: NutritionPlanMealOptionFoodCreateOrConnectWithoutNutritionPlanMealOptionInput | NutritionPlanMealOptionFoodCreateOrConnectWithoutNutritionPlanMealOptionInput[]
+    upsert?: NutritionPlanMealOptionFoodUpsertWithWhereUniqueWithoutNutritionPlanMealOptionInput | NutritionPlanMealOptionFoodUpsertWithWhereUniqueWithoutNutritionPlanMealOptionInput[]
+    createMany?: NutritionPlanMealOptionFoodCreateManyNutritionPlanMealOptionInputEnvelope
+    set?: NutritionPlanMealOptionFoodWhereUniqueInput | NutritionPlanMealOptionFoodWhereUniqueInput[]
+    disconnect?: NutritionPlanMealOptionFoodWhereUniqueInput | NutritionPlanMealOptionFoodWhereUniqueInput[]
+    delete?: NutritionPlanMealOptionFoodWhereUniqueInput | NutritionPlanMealOptionFoodWhereUniqueInput[]
+    connect?: NutritionPlanMealOptionFoodWhereUniqueInput | NutritionPlanMealOptionFoodWhereUniqueInput[]
+    update?: NutritionPlanMealOptionFoodUpdateWithWhereUniqueWithoutNutritionPlanMealOptionInput | NutritionPlanMealOptionFoodUpdateWithWhereUniqueWithoutNutritionPlanMealOptionInput[]
+    updateMany?: NutritionPlanMealOptionFoodUpdateManyWithWhereWithoutNutritionPlanMealOptionInput | NutritionPlanMealOptionFoodUpdateManyWithWhereWithoutNutritionPlanMealOptionInput[]
+    deleteMany?: NutritionPlanMealOptionFoodScalarWhereInput | NutritionPlanMealOptionFoodScalarWhereInput[]
+  }
+
+  export type NutritionPlanMealOptionFoodUncheckedUpdateManyWithoutNutritionPlanMealOptionNestedInput = {
+    create?: XOR<NutritionPlanMealOptionFoodCreateWithoutNutritionPlanMealOptionInput, NutritionPlanMealOptionFoodUncheckedCreateWithoutNutritionPlanMealOptionInput> | NutritionPlanMealOptionFoodCreateWithoutNutritionPlanMealOptionInput[] | NutritionPlanMealOptionFoodUncheckedCreateWithoutNutritionPlanMealOptionInput[]
+    connectOrCreate?: NutritionPlanMealOptionFoodCreateOrConnectWithoutNutritionPlanMealOptionInput | NutritionPlanMealOptionFoodCreateOrConnectWithoutNutritionPlanMealOptionInput[]
+    upsert?: NutritionPlanMealOptionFoodUpsertWithWhereUniqueWithoutNutritionPlanMealOptionInput | NutritionPlanMealOptionFoodUpsertWithWhereUniqueWithoutNutritionPlanMealOptionInput[]
+    createMany?: NutritionPlanMealOptionFoodCreateManyNutritionPlanMealOptionInputEnvelope
+    set?: NutritionPlanMealOptionFoodWhereUniqueInput | NutritionPlanMealOptionFoodWhereUniqueInput[]
+    disconnect?: NutritionPlanMealOptionFoodWhereUniqueInput | NutritionPlanMealOptionFoodWhereUniqueInput[]
+    delete?: NutritionPlanMealOptionFoodWhereUniqueInput | NutritionPlanMealOptionFoodWhereUniqueInput[]
+    connect?: NutritionPlanMealOptionFoodWhereUniqueInput | NutritionPlanMealOptionFoodWhereUniqueInput[]
+    update?: NutritionPlanMealOptionFoodUpdateWithWhereUniqueWithoutNutritionPlanMealOptionInput | NutritionPlanMealOptionFoodUpdateWithWhereUniqueWithoutNutritionPlanMealOptionInput[]
+    updateMany?: NutritionPlanMealOptionFoodUpdateManyWithWhereWithoutNutritionPlanMealOptionInput | NutritionPlanMealOptionFoodUpdateManyWithWhereWithoutNutritionPlanMealOptionInput[]
+    deleteMany?: NutritionPlanMealOptionFoodScalarWhereInput | NutritionPlanMealOptionFoodScalarWhereInput[]
+  }
+
+  export type NutritionPlanMealOptionCreateNestedOneWithoutFoodsInput = {
+    create?: XOR<NutritionPlanMealOptionCreateWithoutFoodsInput, NutritionPlanMealOptionUncheckedCreateWithoutFoodsInput>
+    connectOrCreate?: NutritionPlanMealOptionCreateOrConnectWithoutFoodsInput
+    connect?: NutritionPlanMealOptionWhereUniqueInput
+  }
+
+  export type FoodCreateNestedOneWithoutNutritionPlanMealOptionFoodsInput = {
+    create?: XOR<FoodCreateWithoutNutritionPlanMealOptionFoodsInput, FoodUncheckedCreateWithoutNutritionPlanMealOptionFoodsInput>
+    connectOrCreate?: FoodCreateOrConnectWithoutNutritionPlanMealOptionFoodsInput
+    connect?: FoodWhereUniqueInput
+  }
+
+  export type NutritionPlanMealOptionUpdateOneRequiredWithoutFoodsNestedInput = {
+    create?: XOR<NutritionPlanMealOptionCreateWithoutFoodsInput, NutritionPlanMealOptionUncheckedCreateWithoutFoodsInput>
+    connectOrCreate?: NutritionPlanMealOptionCreateOrConnectWithoutFoodsInput
+    upsert?: NutritionPlanMealOptionUpsertWithoutFoodsInput
+    connect?: NutritionPlanMealOptionWhereUniqueInput
+    update?: XOR<XOR<NutritionPlanMealOptionUpdateToOneWithWhereWithoutFoodsInput, NutritionPlanMealOptionUpdateWithoutFoodsInput>, NutritionPlanMealOptionUncheckedUpdateWithoutFoodsInput>
+  }
+
+  export type FoodUpdateOneRequiredWithoutNutritionPlanMealOptionFoodsNestedInput = {
+    create?: XOR<FoodCreateWithoutNutritionPlanMealOptionFoodsInput, FoodUncheckedCreateWithoutNutritionPlanMealOptionFoodsInput>
+    connectOrCreate?: FoodCreateOrConnectWithoutNutritionPlanMealOptionFoodsInput
+    upsert?: FoodUpsertWithoutNutritionPlanMealOptionFoodsInput
+    connect?: FoodWhereUniqueInput
+    update?: XOR<XOR<FoodUpdateToOneWithWhereWithoutNutritionPlanMealOptionFoodsInput, FoodUpdateWithoutNutritionPlanMealOptionFoodsInput>, FoodUncheckedUpdateWithoutNutritionPlanMealOptionFoodsInput>
   }
 
   export type NestedBoolFilter<$PrismaModel = never> = {
@@ -17933,6 +29109,7 @@ export namespace Prisma {
     lastOKLogin?: Date | string | null
     lastKOLogin?: Date | string | null
     sex?: $Enums.Sex | null
+    nutritionPlans?: NutritionPlanCreateNestedManyWithoutUserInput
     payments?: PaymentCreateNestedManyWithoutUserInput
     measurements?: MeasurementCreateNestedManyWithoutUserInput
     owner?: UserCreateNestedOneWithoutAthletesInput
@@ -17959,6 +29136,7 @@ export namespace Prisma {
     lastKOLogin?: Date | string | null
     sex?: $Enums.Sex | null
     ownerId?: string | null
+    nutritionPlans?: NutritionPlanUncheckedCreateNestedManyWithoutUserInput
     payments?: PaymentUncheckedCreateNestedManyWithoutUserInput
     measurements?: MeasurementUncheckedCreateNestedManyWithoutUserInput
     athletes?: UserUncheckedCreateNestedManyWithoutOwnerInput
@@ -18026,6 +29204,7 @@ export namespace Prisma {
     lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
+    nutritionPlans?: NutritionPlanUpdateManyWithoutUserNestedInput
     payments?: PaymentUpdateManyWithoutUserNestedInput
     measurements?: MeasurementUpdateManyWithoutUserNestedInput
     owner?: UserUpdateOneWithoutAthletesNestedInput
@@ -18052,6 +29231,7 @@ export namespace Prisma {
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    nutritionPlans?: NutritionPlanUncheckedUpdateManyWithoutUserNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutUserNestedInput
     measurements?: MeasurementUncheckedUpdateManyWithoutUserNestedInput
     athletes?: UserUncheckedUpdateManyWithoutOwnerNestedInput
@@ -18568,6 +29748,35 @@ export namespace Prisma {
     data: TrainingBlockCreateManyUserInput | TrainingBlockCreateManyUserInput[]
   }
 
+  export type NutritionPlanCreateWithoutUserInput = {
+    id?: string
+    name: string
+    description?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    days?: NutritionPlanDayCreateNestedManyWithoutNutritionPlanInput
+  }
+
+  export type NutritionPlanUncheckedCreateWithoutUserInput = {
+    id?: string
+    name: string
+    description?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    days?: NutritionPlanDayUncheckedCreateNestedManyWithoutNutritionPlanInput
+  }
+
+  export type NutritionPlanCreateOrConnectWithoutUserInput = {
+    where: NutritionPlanWhereUniqueInput
+    create: XOR<NutritionPlanCreateWithoutUserInput, NutritionPlanUncheckedCreateWithoutUserInput>
+  }
+
+  export type NutritionPlanCreateManyUserInputEnvelope = {
+    data: NutritionPlanCreateManyUserInput | NutritionPlanCreateManyUserInput[]
+  }
+
   export type PaymentCreateWithoutUserInput = {
     id?: string
     dueDate: Date | string
@@ -18646,6 +29855,7 @@ export namespace Prisma {
     lastKOLogin?: Date | string | null
     sex?: $Enums.Sex | null
     blocks?: TrainingBlockCreateNestedManyWithoutUserInput
+    nutritionPlans?: NutritionPlanCreateNestedManyWithoutUserInput
     payments?: PaymentCreateNestedManyWithoutUserInput
     measurements?: MeasurementCreateNestedManyWithoutUserInput
     owner?: UserCreateNestedOneWithoutAthletesInput
@@ -18672,6 +29882,7 @@ export namespace Prisma {
     sex?: $Enums.Sex | null
     ownerId?: string | null
     blocks?: TrainingBlockUncheckedCreateNestedManyWithoutUserInput
+    nutritionPlans?: NutritionPlanUncheckedCreateNestedManyWithoutUserInput
     payments?: PaymentUncheckedCreateNestedManyWithoutUserInput
     measurements?: MeasurementUncheckedCreateNestedManyWithoutUserInput
   }
@@ -18701,6 +29912,7 @@ export namespace Prisma {
     lastKOLogin?: Date | string | null
     sex?: $Enums.Sex | null
     blocks?: TrainingBlockCreateNestedManyWithoutUserInput
+    nutritionPlans?: NutritionPlanCreateNestedManyWithoutUserInput
     payments?: PaymentCreateNestedManyWithoutUserInput
     measurements?: MeasurementCreateNestedManyWithoutUserInput
     athletes?: UserCreateNestedManyWithoutOwnerInput
@@ -18726,6 +29938,7 @@ export namespace Prisma {
     lastKOLogin?: Date | string | null
     sex?: $Enums.Sex | null
     blocks?: TrainingBlockUncheckedCreateNestedManyWithoutUserInput
+    nutritionPlans?: NutritionPlanUncheckedCreateNestedManyWithoutUserInput
     payments?: PaymentUncheckedCreateNestedManyWithoutUserInput
     measurements?: MeasurementUncheckedCreateNestedManyWithoutUserInput
     athletes?: UserUncheckedCreateNestedManyWithoutOwnerInput
@@ -18766,6 +29979,35 @@ export namespace Prisma {
     description?: StringFilter<"TrainingBlock"> | string
     userId?: StringFilter<"TrainingBlock"> | string
     createdAt?: DateTimeFilter<"TrainingBlock"> | Date | string
+  }
+
+  export type NutritionPlanUpsertWithWhereUniqueWithoutUserInput = {
+    where: NutritionPlanWhereUniqueInput
+    update: XOR<NutritionPlanUpdateWithoutUserInput, NutritionPlanUncheckedUpdateWithoutUserInput>
+    create: XOR<NutritionPlanCreateWithoutUserInput, NutritionPlanUncheckedCreateWithoutUserInput>
+  }
+
+  export type NutritionPlanUpdateWithWhereUniqueWithoutUserInput = {
+    where: NutritionPlanWhereUniqueInput
+    data: XOR<NutritionPlanUpdateWithoutUserInput, NutritionPlanUncheckedUpdateWithoutUserInput>
+  }
+
+  export type NutritionPlanUpdateManyWithWhereWithoutUserInput = {
+    where: NutritionPlanScalarWhereInput
+    data: XOR<NutritionPlanUpdateManyMutationInput, NutritionPlanUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type NutritionPlanScalarWhereInput = {
+    AND?: NutritionPlanScalarWhereInput | NutritionPlanScalarWhereInput[]
+    OR?: NutritionPlanScalarWhereInput[]
+    NOT?: NutritionPlanScalarWhereInput | NutritionPlanScalarWhereInput[]
+    id?: StringFilter<"NutritionPlan"> | string
+    userId?: StringFilter<"NutritionPlan"> | string
+    name?: StringFilter<"NutritionPlan"> | string
+    description?: StringNullableFilter<"NutritionPlan"> | string | null
+    active?: BoolFilter<"NutritionPlan"> | boolean
+    createdAt?: DateTimeFilter<"NutritionPlan"> | Date | string
+    updatedAt?: DateTimeFilter<"NutritionPlan"> | Date | string
   }
 
   export type PaymentUpsertWithWhereUniqueWithoutUserInput = {
@@ -18859,6 +30101,7 @@ export namespace Prisma {
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     blocks?: TrainingBlockUpdateManyWithoutUserNestedInput
+    nutritionPlans?: NutritionPlanUpdateManyWithoutUserNestedInput
     payments?: PaymentUpdateManyWithoutUserNestedInput
     measurements?: MeasurementUpdateManyWithoutUserNestedInput
     owner?: UserUpdateOneWithoutAthletesNestedInput
@@ -18885,6 +30128,7 @@ export namespace Prisma {
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     blocks?: TrainingBlockUncheckedUpdateManyWithoutUserNestedInput
+    nutritionPlans?: NutritionPlanUncheckedUpdateManyWithoutUserNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutUserNestedInput
     measurements?: MeasurementUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -19287,6 +30531,7 @@ export namespace Prisma {
     lastKOLogin?: Date | string | null
     sex?: $Enums.Sex | null
     blocks?: TrainingBlockCreateNestedManyWithoutUserInput
+    nutritionPlans?: NutritionPlanCreateNestedManyWithoutUserInput
     measurements?: MeasurementCreateNestedManyWithoutUserInput
     owner?: UserCreateNestedOneWithoutAthletesInput
     athletes?: UserCreateNestedManyWithoutOwnerInput
@@ -19313,6 +30558,7 @@ export namespace Prisma {
     sex?: $Enums.Sex | null
     ownerId?: string | null
     blocks?: TrainingBlockUncheckedCreateNestedManyWithoutUserInput
+    nutritionPlans?: NutritionPlanUncheckedCreateNestedManyWithoutUserInput
     measurements?: MeasurementUncheckedCreateNestedManyWithoutUserInput
     athletes?: UserUncheckedCreateNestedManyWithoutOwnerInput
   }
@@ -19353,6 +30599,7 @@ export namespace Prisma {
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     blocks?: TrainingBlockUpdateManyWithoutUserNestedInput
+    nutritionPlans?: NutritionPlanUpdateManyWithoutUserNestedInput
     measurements?: MeasurementUpdateManyWithoutUserNestedInput
     owner?: UserUpdateOneWithoutAthletesNestedInput
     athletes?: UserUpdateManyWithoutOwnerNestedInput
@@ -19379,6 +30626,7 @@ export namespace Prisma {
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     blocks?: TrainingBlockUncheckedUpdateManyWithoutUserNestedInput
+    nutritionPlans?: NutritionPlanUncheckedUpdateManyWithoutUserNestedInput
     measurements?: MeasurementUncheckedUpdateManyWithoutUserNestedInput
     athletes?: UserUncheckedUpdateManyWithoutOwnerNestedInput
   }
@@ -19403,6 +30651,7 @@ export namespace Prisma {
     lastKOLogin?: Date | string | null
     sex?: $Enums.Sex | null
     blocks?: TrainingBlockCreateNestedManyWithoutUserInput
+    nutritionPlans?: NutritionPlanCreateNestedManyWithoutUserInput
     payments?: PaymentCreateNestedManyWithoutUserInput
     owner?: UserCreateNestedOneWithoutAthletesInput
     athletes?: UserCreateNestedManyWithoutOwnerInput
@@ -19429,6 +30678,7 @@ export namespace Prisma {
     sex?: $Enums.Sex | null
     ownerId?: string | null
     blocks?: TrainingBlockUncheckedCreateNestedManyWithoutUserInput
+    nutritionPlans?: NutritionPlanUncheckedCreateNestedManyWithoutUserInput
     payments?: PaymentUncheckedCreateNestedManyWithoutUserInput
     athletes?: UserUncheckedCreateNestedManyWithoutOwnerInput
   }
@@ -19469,6 +30719,7 @@ export namespace Prisma {
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     blocks?: TrainingBlockUpdateManyWithoutUserNestedInput
+    nutritionPlans?: NutritionPlanUpdateManyWithoutUserNestedInput
     payments?: PaymentUpdateManyWithoutUserNestedInput
     owner?: UserUpdateOneWithoutAthletesNestedInput
     athletes?: UserUpdateManyWithoutOwnerNestedInput
@@ -19495,8 +30746,894 @@ export namespace Prisma {
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     blocks?: TrainingBlockUncheckedUpdateManyWithoutUserNestedInput
+    nutritionPlans?: NutritionPlanUncheckedUpdateManyWithoutUserNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutUserNestedInput
     athletes?: UserUncheckedUpdateManyWithoutOwnerNestedInput
+  }
+
+  export type FoodCreateWithoutFoodGroupInput = {
+    id?: string
+    name: string
+    state: string
+    calories?: number | null
+    protein?: number | null
+    fat?: number | null
+    carbohydrates?: number | null
+    water?: number | null
+    nitrogen?: number | null
+    vitaminA_ui?: number | null
+    vitaminB1_mcg?: number | null
+    vitaminB2_mcg?: number | null
+    vitaminC_mcg?: number | null
+    niacin_mcg?: number | null
+    sodium_mg?: number | null
+    potassium_mg?: number | null
+    calcium_mg?: number | null
+    magnesium_mg?: number | null
+    iron_mg?: number | null
+    copper_mg?: number | null
+    phosphorus_mg?: number | null
+    sulfur_mg?: number | null
+    chloride_mg?: number | null
+    phenylalanine_mg?: number | null
+    isoleucine_mg?: number | null
+    leucine_mg?: number | null
+    lysine_mg?: number | null
+    methionine_mg?: number | null
+    threonine_mg?: number | null
+    tryptophan_mg?: number | null
+    valine_mg?: number | null
+    acid?: number | null
+    alcal?: number | null
+    nutritionPlanMealOptionFoods?: NutritionPlanMealOptionFoodCreateNestedManyWithoutFoodInput
+  }
+
+  export type FoodUncheckedCreateWithoutFoodGroupInput = {
+    id?: string
+    name: string
+    state: string
+    calories?: number | null
+    protein?: number | null
+    fat?: number | null
+    carbohydrates?: number | null
+    water?: number | null
+    nitrogen?: number | null
+    vitaminA_ui?: number | null
+    vitaminB1_mcg?: number | null
+    vitaminB2_mcg?: number | null
+    vitaminC_mcg?: number | null
+    niacin_mcg?: number | null
+    sodium_mg?: number | null
+    potassium_mg?: number | null
+    calcium_mg?: number | null
+    magnesium_mg?: number | null
+    iron_mg?: number | null
+    copper_mg?: number | null
+    phosphorus_mg?: number | null
+    sulfur_mg?: number | null
+    chloride_mg?: number | null
+    phenylalanine_mg?: number | null
+    isoleucine_mg?: number | null
+    leucine_mg?: number | null
+    lysine_mg?: number | null
+    methionine_mg?: number | null
+    threonine_mg?: number | null
+    tryptophan_mg?: number | null
+    valine_mg?: number | null
+    acid?: number | null
+    alcal?: number | null
+    nutritionPlanMealOptionFoods?: NutritionPlanMealOptionFoodUncheckedCreateNestedManyWithoutFoodInput
+  }
+
+  export type FoodCreateOrConnectWithoutFoodGroupInput = {
+    where: FoodWhereUniqueInput
+    create: XOR<FoodCreateWithoutFoodGroupInput, FoodUncheckedCreateWithoutFoodGroupInput>
+  }
+
+  export type FoodCreateManyFoodGroupInputEnvelope = {
+    data: FoodCreateManyFoodGroupInput | FoodCreateManyFoodGroupInput[]
+  }
+
+  export type FoodUpsertWithWhereUniqueWithoutFoodGroupInput = {
+    where: FoodWhereUniqueInput
+    update: XOR<FoodUpdateWithoutFoodGroupInput, FoodUncheckedUpdateWithoutFoodGroupInput>
+    create: XOR<FoodCreateWithoutFoodGroupInput, FoodUncheckedCreateWithoutFoodGroupInput>
+  }
+
+  export type FoodUpdateWithWhereUniqueWithoutFoodGroupInput = {
+    where: FoodWhereUniqueInput
+    data: XOR<FoodUpdateWithoutFoodGroupInput, FoodUncheckedUpdateWithoutFoodGroupInput>
+  }
+
+  export type FoodUpdateManyWithWhereWithoutFoodGroupInput = {
+    where: FoodScalarWhereInput
+    data: XOR<FoodUpdateManyMutationInput, FoodUncheckedUpdateManyWithoutFoodGroupInput>
+  }
+
+  export type FoodScalarWhereInput = {
+    AND?: FoodScalarWhereInput | FoodScalarWhereInput[]
+    OR?: FoodScalarWhereInput[]
+    NOT?: FoodScalarWhereInput | FoodScalarWhereInput[]
+    id?: StringFilter<"Food"> | string
+    name?: StringFilter<"Food"> | string
+    state?: StringFilter<"Food"> | string
+    foodGroupId?: StringFilter<"Food"> | string
+    calories?: FloatNullableFilter<"Food"> | number | null
+    protein?: FloatNullableFilter<"Food"> | number | null
+    fat?: FloatNullableFilter<"Food"> | number | null
+    carbohydrates?: FloatNullableFilter<"Food"> | number | null
+    water?: FloatNullableFilter<"Food"> | number | null
+    nitrogen?: FloatNullableFilter<"Food"> | number | null
+    vitaminA_ui?: FloatNullableFilter<"Food"> | number | null
+    vitaminB1_mcg?: FloatNullableFilter<"Food"> | number | null
+    vitaminB2_mcg?: FloatNullableFilter<"Food"> | number | null
+    vitaminC_mcg?: FloatNullableFilter<"Food"> | number | null
+    niacin_mcg?: FloatNullableFilter<"Food"> | number | null
+    sodium_mg?: FloatNullableFilter<"Food"> | number | null
+    potassium_mg?: FloatNullableFilter<"Food"> | number | null
+    calcium_mg?: FloatNullableFilter<"Food"> | number | null
+    magnesium_mg?: FloatNullableFilter<"Food"> | number | null
+    iron_mg?: FloatNullableFilter<"Food"> | number | null
+    copper_mg?: FloatNullableFilter<"Food"> | number | null
+    phosphorus_mg?: FloatNullableFilter<"Food"> | number | null
+    sulfur_mg?: FloatNullableFilter<"Food"> | number | null
+    chloride_mg?: FloatNullableFilter<"Food"> | number | null
+    phenylalanine_mg?: FloatNullableFilter<"Food"> | number | null
+    isoleucine_mg?: FloatNullableFilter<"Food"> | number | null
+    leucine_mg?: FloatNullableFilter<"Food"> | number | null
+    lysine_mg?: FloatNullableFilter<"Food"> | number | null
+    methionine_mg?: FloatNullableFilter<"Food"> | number | null
+    threonine_mg?: FloatNullableFilter<"Food"> | number | null
+    tryptophan_mg?: FloatNullableFilter<"Food"> | number | null
+    valine_mg?: FloatNullableFilter<"Food"> | number | null
+    acid?: FloatNullableFilter<"Food"> | number | null
+    alcal?: FloatNullableFilter<"Food"> | number | null
+  }
+
+  export type FoodGroupCreateWithoutFoodsInput = {
+    id?: string
+    name: string
+  }
+
+  export type FoodGroupUncheckedCreateWithoutFoodsInput = {
+    id?: string
+    name: string
+  }
+
+  export type FoodGroupCreateOrConnectWithoutFoodsInput = {
+    where: FoodGroupWhereUniqueInput
+    create: XOR<FoodGroupCreateWithoutFoodsInput, FoodGroupUncheckedCreateWithoutFoodsInput>
+  }
+
+  export type NutritionPlanMealOptionFoodCreateWithoutFoodInput = {
+    id?: string
+    quantity?: number | null
+    nutritionPlanMealOption: NutritionPlanMealOptionCreateNestedOneWithoutFoodsInput
+  }
+
+  export type NutritionPlanMealOptionFoodUncheckedCreateWithoutFoodInput = {
+    id?: string
+    nutritionPlanMealOptionId: string
+    quantity?: number | null
+  }
+
+  export type NutritionPlanMealOptionFoodCreateOrConnectWithoutFoodInput = {
+    where: NutritionPlanMealOptionFoodWhereUniqueInput
+    create: XOR<NutritionPlanMealOptionFoodCreateWithoutFoodInput, NutritionPlanMealOptionFoodUncheckedCreateWithoutFoodInput>
+  }
+
+  export type NutritionPlanMealOptionFoodCreateManyFoodInputEnvelope = {
+    data: NutritionPlanMealOptionFoodCreateManyFoodInput | NutritionPlanMealOptionFoodCreateManyFoodInput[]
+  }
+
+  export type FoodGroupUpsertWithoutFoodsInput = {
+    update: XOR<FoodGroupUpdateWithoutFoodsInput, FoodGroupUncheckedUpdateWithoutFoodsInput>
+    create: XOR<FoodGroupCreateWithoutFoodsInput, FoodGroupUncheckedCreateWithoutFoodsInput>
+    where?: FoodGroupWhereInput
+  }
+
+  export type FoodGroupUpdateToOneWithWhereWithoutFoodsInput = {
+    where?: FoodGroupWhereInput
+    data: XOR<FoodGroupUpdateWithoutFoodsInput, FoodGroupUncheckedUpdateWithoutFoodsInput>
+  }
+
+  export type FoodGroupUpdateWithoutFoodsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type FoodGroupUncheckedUpdateWithoutFoodsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type NutritionPlanMealOptionFoodUpsertWithWhereUniqueWithoutFoodInput = {
+    where: NutritionPlanMealOptionFoodWhereUniqueInput
+    update: XOR<NutritionPlanMealOptionFoodUpdateWithoutFoodInput, NutritionPlanMealOptionFoodUncheckedUpdateWithoutFoodInput>
+    create: XOR<NutritionPlanMealOptionFoodCreateWithoutFoodInput, NutritionPlanMealOptionFoodUncheckedCreateWithoutFoodInput>
+  }
+
+  export type NutritionPlanMealOptionFoodUpdateWithWhereUniqueWithoutFoodInput = {
+    where: NutritionPlanMealOptionFoodWhereUniqueInput
+    data: XOR<NutritionPlanMealOptionFoodUpdateWithoutFoodInput, NutritionPlanMealOptionFoodUncheckedUpdateWithoutFoodInput>
+  }
+
+  export type NutritionPlanMealOptionFoodUpdateManyWithWhereWithoutFoodInput = {
+    where: NutritionPlanMealOptionFoodScalarWhereInput
+    data: XOR<NutritionPlanMealOptionFoodUpdateManyMutationInput, NutritionPlanMealOptionFoodUncheckedUpdateManyWithoutFoodInput>
+  }
+
+  export type NutritionPlanMealOptionFoodScalarWhereInput = {
+    AND?: NutritionPlanMealOptionFoodScalarWhereInput | NutritionPlanMealOptionFoodScalarWhereInput[]
+    OR?: NutritionPlanMealOptionFoodScalarWhereInput[]
+    NOT?: NutritionPlanMealOptionFoodScalarWhereInput | NutritionPlanMealOptionFoodScalarWhereInput[]
+    id?: StringFilter<"NutritionPlanMealOptionFood"> | string
+    nutritionPlanMealOptionId?: StringFilter<"NutritionPlanMealOptionFood"> | string
+    foodId?: StringFilter<"NutritionPlanMealOptionFood"> | string
+    quantity?: FloatNullableFilter<"NutritionPlanMealOptionFood"> | number | null
+  }
+
+  export type UserCreateWithoutNutritionPlansInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    username: string
+    email: string
+    password?: string | null
+    passwordRefreshToken?: string | null
+    isocode?: string | null
+    lastVisitedWeek?: string | null
+    registrationDate?: Date | string
+    hidingDate?: Date | string | null
+    subscriptionAmount?: number | null
+    subscriptionFrequency?: string | null
+    role?: $Enums.Role
+    hidden?: boolean
+    lastOKLogin?: Date | string | null
+    lastKOLogin?: Date | string | null
+    sex?: $Enums.Sex | null
+    blocks?: TrainingBlockCreateNestedManyWithoutUserInput
+    payments?: PaymentCreateNestedManyWithoutUserInput
+    measurements?: MeasurementCreateNestedManyWithoutUserInput
+    owner?: UserCreateNestedOneWithoutAthletesInput
+    athletes?: UserCreateNestedManyWithoutOwnerInput
+  }
+
+  export type UserUncheckedCreateWithoutNutritionPlansInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    username: string
+    email: string
+    password?: string | null
+    passwordRefreshToken?: string | null
+    isocode?: string | null
+    lastVisitedWeek?: string | null
+    registrationDate?: Date | string
+    hidingDate?: Date | string | null
+    subscriptionAmount?: number | null
+    subscriptionFrequency?: string | null
+    role?: $Enums.Role
+    hidden?: boolean
+    lastOKLogin?: Date | string | null
+    lastKOLogin?: Date | string | null
+    sex?: $Enums.Sex | null
+    ownerId?: string | null
+    blocks?: TrainingBlockUncheckedCreateNestedManyWithoutUserInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutUserInput
+    measurements?: MeasurementUncheckedCreateNestedManyWithoutUserInput
+    athletes?: UserUncheckedCreateNestedManyWithoutOwnerInput
+  }
+
+  export type UserCreateOrConnectWithoutNutritionPlansInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutNutritionPlansInput, UserUncheckedCreateWithoutNutritionPlansInput>
+  }
+
+  export type NutritionPlanDayCreateWithoutNutritionPlanInput = {
+    id?: string
+    dayNumber: number
+    meals?: NutritionPlanMealCreateNestedManyWithoutNutritionPlanDayInput
+  }
+
+  export type NutritionPlanDayUncheckedCreateWithoutNutritionPlanInput = {
+    id?: string
+    dayNumber: number
+    meals?: NutritionPlanMealUncheckedCreateNestedManyWithoutNutritionPlanDayInput
+  }
+
+  export type NutritionPlanDayCreateOrConnectWithoutNutritionPlanInput = {
+    where: NutritionPlanDayWhereUniqueInput
+    create: XOR<NutritionPlanDayCreateWithoutNutritionPlanInput, NutritionPlanDayUncheckedCreateWithoutNutritionPlanInput>
+  }
+
+  export type NutritionPlanDayCreateManyNutritionPlanInputEnvelope = {
+    data: NutritionPlanDayCreateManyNutritionPlanInput | NutritionPlanDayCreateManyNutritionPlanInput[]
+  }
+
+  export type UserUpsertWithoutNutritionPlansInput = {
+    update: XOR<UserUpdateWithoutNutritionPlansInput, UserUncheckedUpdateWithoutNutritionPlansInput>
+    create: XOR<UserCreateWithoutNutritionPlansInput, UserUncheckedCreateWithoutNutritionPlansInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutNutritionPlansInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutNutritionPlansInput, UserUncheckedUpdateWithoutNutritionPlansInput>
+  }
+
+  export type UserUpdateWithoutNutritionPlansInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    isocode?: NullableStringFieldUpdateOperationsInput | string | null
+    lastVisitedWeek?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    hidingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    subscriptionFrequency?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    hidden?: BoolFieldUpdateOperationsInput | boolean
+    lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
+    blocks?: TrainingBlockUpdateManyWithoutUserNestedInput
+    payments?: PaymentUpdateManyWithoutUserNestedInput
+    measurements?: MeasurementUpdateManyWithoutUserNestedInput
+    owner?: UserUpdateOneWithoutAthletesNestedInput
+    athletes?: UserUpdateManyWithoutOwnerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutNutritionPlansInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    isocode?: NullableStringFieldUpdateOperationsInput | string | null
+    lastVisitedWeek?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    hidingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    subscriptionFrequency?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    hidden?: BoolFieldUpdateOperationsInput | boolean
+    lastOKLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    blocks?: TrainingBlockUncheckedUpdateManyWithoutUserNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutUserNestedInput
+    measurements?: MeasurementUncheckedUpdateManyWithoutUserNestedInput
+    athletes?: UserUncheckedUpdateManyWithoutOwnerNestedInput
+  }
+
+  export type NutritionPlanDayUpsertWithWhereUniqueWithoutNutritionPlanInput = {
+    where: NutritionPlanDayWhereUniqueInput
+    update: XOR<NutritionPlanDayUpdateWithoutNutritionPlanInput, NutritionPlanDayUncheckedUpdateWithoutNutritionPlanInput>
+    create: XOR<NutritionPlanDayCreateWithoutNutritionPlanInput, NutritionPlanDayUncheckedCreateWithoutNutritionPlanInput>
+  }
+
+  export type NutritionPlanDayUpdateWithWhereUniqueWithoutNutritionPlanInput = {
+    where: NutritionPlanDayWhereUniqueInput
+    data: XOR<NutritionPlanDayUpdateWithoutNutritionPlanInput, NutritionPlanDayUncheckedUpdateWithoutNutritionPlanInput>
+  }
+
+  export type NutritionPlanDayUpdateManyWithWhereWithoutNutritionPlanInput = {
+    where: NutritionPlanDayScalarWhereInput
+    data: XOR<NutritionPlanDayUpdateManyMutationInput, NutritionPlanDayUncheckedUpdateManyWithoutNutritionPlanInput>
+  }
+
+  export type NutritionPlanDayScalarWhereInput = {
+    AND?: NutritionPlanDayScalarWhereInput | NutritionPlanDayScalarWhereInput[]
+    OR?: NutritionPlanDayScalarWhereInput[]
+    NOT?: NutritionPlanDayScalarWhereInput | NutritionPlanDayScalarWhereInput[]
+    id?: StringFilter<"NutritionPlanDay"> | string
+    nutritionPlanId?: StringFilter<"NutritionPlanDay"> | string
+    dayNumber?: IntFilter<"NutritionPlanDay"> | number
+  }
+
+  export type NutritionPlanCreateWithoutDaysInput = {
+    id?: string
+    name: string
+    description?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutNutritionPlansInput
+  }
+
+  export type NutritionPlanUncheckedCreateWithoutDaysInput = {
+    id?: string
+    userId: string
+    name: string
+    description?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type NutritionPlanCreateOrConnectWithoutDaysInput = {
+    where: NutritionPlanWhereUniqueInput
+    create: XOR<NutritionPlanCreateWithoutDaysInput, NutritionPlanUncheckedCreateWithoutDaysInput>
+  }
+
+  export type NutritionPlanMealCreateWithoutNutritionPlanDayInput = {
+    id?: string
+    mealIndex: number
+    name: string
+    description?: string | null
+    mealOptions?: NutritionPlanMealOptionCreateNestedManyWithoutNutritionPlanMealInput
+  }
+
+  export type NutritionPlanMealUncheckedCreateWithoutNutritionPlanDayInput = {
+    id?: string
+    mealIndex: number
+    name: string
+    description?: string | null
+    mealOptions?: NutritionPlanMealOptionUncheckedCreateNestedManyWithoutNutritionPlanMealInput
+  }
+
+  export type NutritionPlanMealCreateOrConnectWithoutNutritionPlanDayInput = {
+    where: NutritionPlanMealWhereUniqueInput
+    create: XOR<NutritionPlanMealCreateWithoutNutritionPlanDayInput, NutritionPlanMealUncheckedCreateWithoutNutritionPlanDayInput>
+  }
+
+  export type NutritionPlanMealCreateManyNutritionPlanDayInputEnvelope = {
+    data: NutritionPlanMealCreateManyNutritionPlanDayInput | NutritionPlanMealCreateManyNutritionPlanDayInput[]
+  }
+
+  export type NutritionPlanUpsertWithoutDaysInput = {
+    update: XOR<NutritionPlanUpdateWithoutDaysInput, NutritionPlanUncheckedUpdateWithoutDaysInput>
+    create: XOR<NutritionPlanCreateWithoutDaysInput, NutritionPlanUncheckedCreateWithoutDaysInput>
+    where?: NutritionPlanWhereInput
+  }
+
+  export type NutritionPlanUpdateToOneWithWhereWithoutDaysInput = {
+    where?: NutritionPlanWhereInput
+    data: XOR<NutritionPlanUpdateWithoutDaysInput, NutritionPlanUncheckedUpdateWithoutDaysInput>
+  }
+
+  export type NutritionPlanUpdateWithoutDaysInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutNutritionPlansNestedInput
+  }
+
+  export type NutritionPlanUncheckedUpdateWithoutDaysInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NutritionPlanMealUpsertWithWhereUniqueWithoutNutritionPlanDayInput = {
+    where: NutritionPlanMealWhereUniqueInput
+    update: XOR<NutritionPlanMealUpdateWithoutNutritionPlanDayInput, NutritionPlanMealUncheckedUpdateWithoutNutritionPlanDayInput>
+    create: XOR<NutritionPlanMealCreateWithoutNutritionPlanDayInput, NutritionPlanMealUncheckedCreateWithoutNutritionPlanDayInput>
+  }
+
+  export type NutritionPlanMealUpdateWithWhereUniqueWithoutNutritionPlanDayInput = {
+    where: NutritionPlanMealWhereUniqueInput
+    data: XOR<NutritionPlanMealUpdateWithoutNutritionPlanDayInput, NutritionPlanMealUncheckedUpdateWithoutNutritionPlanDayInput>
+  }
+
+  export type NutritionPlanMealUpdateManyWithWhereWithoutNutritionPlanDayInput = {
+    where: NutritionPlanMealScalarWhereInput
+    data: XOR<NutritionPlanMealUpdateManyMutationInput, NutritionPlanMealUncheckedUpdateManyWithoutNutritionPlanDayInput>
+  }
+
+  export type NutritionPlanMealScalarWhereInput = {
+    AND?: NutritionPlanMealScalarWhereInput | NutritionPlanMealScalarWhereInput[]
+    OR?: NutritionPlanMealScalarWhereInput[]
+    NOT?: NutritionPlanMealScalarWhereInput | NutritionPlanMealScalarWhereInput[]
+    id?: StringFilter<"NutritionPlanMeal"> | string
+    nutritionPlanDayId?: StringFilter<"NutritionPlanMeal"> | string
+    mealIndex?: IntFilter<"NutritionPlanMeal"> | number
+    name?: StringFilter<"NutritionPlanMeal"> | string
+    description?: StringNullableFilter<"NutritionPlanMeal"> | string | null
+  }
+
+  export type NutritionPlanDayCreateWithoutMealsInput = {
+    id?: string
+    dayNumber: number
+    nutritionPlan: NutritionPlanCreateNestedOneWithoutDaysInput
+  }
+
+  export type NutritionPlanDayUncheckedCreateWithoutMealsInput = {
+    id?: string
+    nutritionPlanId: string
+    dayNumber: number
+  }
+
+  export type NutritionPlanDayCreateOrConnectWithoutMealsInput = {
+    where: NutritionPlanDayWhereUniqueInput
+    create: XOR<NutritionPlanDayCreateWithoutMealsInput, NutritionPlanDayUncheckedCreateWithoutMealsInput>
+  }
+
+  export type NutritionPlanMealOptionCreateWithoutNutritionPlanMealInput = {
+    id?: string
+    optionIndex: number
+    name: string
+    description?: string | null
+    foods?: NutritionPlanMealOptionFoodCreateNestedManyWithoutNutritionPlanMealOptionInput
+  }
+
+  export type NutritionPlanMealOptionUncheckedCreateWithoutNutritionPlanMealInput = {
+    id?: string
+    optionIndex: number
+    name: string
+    description?: string | null
+    foods?: NutritionPlanMealOptionFoodUncheckedCreateNestedManyWithoutNutritionPlanMealOptionInput
+  }
+
+  export type NutritionPlanMealOptionCreateOrConnectWithoutNutritionPlanMealInput = {
+    where: NutritionPlanMealOptionWhereUniqueInput
+    create: XOR<NutritionPlanMealOptionCreateWithoutNutritionPlanMealInput, NutritionPlanMealOptionUncheckedCreateWithoutNutritionPlanMealInput>
+  }
+
+  export type NutritionPlanMealOptionCreateManyNutritionPlanMealInputEnvelope = {
+    data: NutritionPlanMealOptionCreateManyNutritionPlanMealInput | NutritionPlanMealOptionCreateManyNutritionPlanMealInput[]
+  }
+
+  export type NutritionPlanDayUpsertWithoutMealsInput = {
+    update: XOR<NutritionPlanDayUpdateWithoutMealsInput, NutritionPlanDayUncheckedUpdateWithoutMealsInput>
+    create: XOR<NutritionPlanDayCreateWithoutMealsInput, NutritionPlanDayUncheckedCreateWithoutMealsInput>
+    where?: NutritionPlanDayWhereInput
+  }
+
+  export type NutritionPlanDayUpdateToOneWithWhereWithoutMealsInput = {
+    where?: NutritionPlanDayWhereInput
+    data: XOR<NutritionPlanDayUpdateWithoutMealsInput, NutritionPlanDayUncheckedUpdateWithoutMealsInput>
+  }
+
+  export type NutritionPlanDayUpdateWithoutMealsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dayNumber?: IntFieldUpdateOperationsInput | number
+    nutritionPlan?: NutritionPlanUpdateOneRequiredWithoutDaysNestedInput
+  }
+
+  export type NutritionPlanDayUncheckedUpdateWithoutMealsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nutritionPlanId?: StringFieldUpdateOperationsInput | string
+    dayNumber?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type NutritionPlanMealOptionUpsertWithWhereUniqueWithoutNutritionPlanMealInput = {
+    where: NutritionPlanMealOptionWhereUniqueInput
+    update: XOR<NutritionPlanMealOptionUpdateWithoutNutritionPlanMealInput, NutritionPlanMealOptionUncheckedUpdateWithoutNutritionPlanMealInput>
+    create: XOR<NutritionPlanMealOptionCreateWithoutNutritionPlanMealInput, NutritionPlanMealOptionUncheckedCreateWithoutNutritionPlanMealInput>
+  }
+
+  export type NutritionPlanMealOptionUpdateWithWhereUniqueWithoutNutritionPlanMealInput = {
+    where: NutritionPlanMealOptionWhereUniqueInput
+    data: XOR<NutritionPlanMealOptionUpdateWithoutNutritionPlanMealInput, NutritionPlanMealOptionUncheckedUpdateWithoutNutritionPlanMealInput>
+  }
+
+  export type NutritionPlanMealOptionUpdateManyWithWhereWithoutNutritionPlanMealInput = {
+    where: NutritionPlanMealOptionScalarWhereInput
+    data: XOR<NutritionPlanMealOptionUpdateManyMutationInput, NutritionPlanMealOptionUncheckedUpdateManyWithoutNutritionPlanMealInput>
+  }
+
+  export type NutritionPlanMealOptionScalarWhereInput = {
+    AND?: NutritionPlanMealOptionScalarWhereInput | NutritionPlanMealOptionScalarWhereInput[]
+    OR?: NutritionPlanMealOptionScalarWhereInput[]
+    NOT?: NutritionPlanMealOptionScalarWhereInput | NutritionPlanMealOptionScalarWhereInput[]
+    id?: StringFilter<"NutritionPlanMealOption"> | string
+    nutritionPlanMealId?: StringFilter<"NutritionPlanMealOption"> | string
+    optionIndex?: IntFilter<"NutritionPlanMealOption"> | number
+    name?: StringFilter<"NutritionPlanMealOption"> | string
+    description?: StringNullableFilter<"NutritionPlanMealOption"> | string | null
+  }
+
+  export type NutritionPlanMealCreateWithoutMealOptionsInput = {
+    id?: string
+    mealIndex: number
+    name: string
+    description?: string | null
+    nutritionPlanDay: NutritionPlanDayCreateNestedOneWithoutMealsInput
+  }
+
+  export type NutritionPlanMealUncheckedCreateWithoutMealOptionsInput = {
+    id?: string
+    nutritionPlanDayId: string
+    mealIndex: number
+    name: string
+    description?: string | null
+  }
+
+  export type NutritionPlanMealCreateOrConnectWithoutMealOptionsInput = {
+    where: NutritionPlanMealWhereUniqueInput
+    create: XOR<NutritionPlanMealCreateWithoutMealOptionsInput, NutritionPlanMealUncheckedCreateWithoutMealOptionsInput>
+  }
+
+  export type NutritionPlanMealOptionFoodCreateWithoutNutritionPlanMealOptionInput = {
+    id?: string
+    quantity?: number | null
+    food: FoodCreateNestedOneWithoutNutritionPlanMealOptionFoodsInput
+  }
+
+  export type NutritionPlanMealOptionFoodUncheckedCreateWithoutNutritionPlanMealOptionInput = {
+    id?: string
+    foodId: string
+    quantity?: number | null
+  }
+
+  export type NutritionPlanMealOptionFoodCreateOrConnectWithoutNutritionPlanMealOptionInput = {
+    where: NutritionPlanMealOptionFoodWhereUniqueInput
+    create: XOR<NutritionPlanMealOptionFoodCreateWithoutNutritionPlanMealOptionInput, NutritionPlanMealOptionFoodUncheckedCreateWithoutNutritionPlanMealOptionInput>
+  }
+
+  export type NutritionPlanMealOptionFoodCreateManyNutritionPlanMealOptionInputEnvelope = {
+    data: NutritionPlanMealOptionFoodCreateManyNutritionPlanMealOptionInput | NutritionPlanMealOptionFoodCreateManyNutritionPlanMealOptionInput[]
+  }
+
+  export type NutritionPlanMealUpsertWithoutMealOptionsInput = {
+    update: XOR<NutritionPlanMealUpdateWithoutMealOptionsInput, NutritionPlanMealUncheckedUpdateWithoutMealOptionsInput>
+    create: XOR<NutritionPlanMealCreateWithoutMealOptionsInput, NutritionPlanMealUncheckedCreateWithoutMealOptionsInput>
+    where?: NutritionPlanMealWhereInput
+  }
+
+  export type NutritionPlanMealUpdateToOneWithWhereWithoutMealOptionsInput = {
+    where?: NutritionPlanMealWhereInput
+    data: XOR<NutritionPlanMealUpdateWithoutMealOptionsInput, NutritionPlanMealUncheckedUpdateWithoutMealOptionsInput>
+  }
+
+  export type NutritionPlanMealUpdateWithoutMealOptionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    mealIndex?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    nutritionPlanDay?: NutritionPlanDayUpdateOneRequiredWithoutMealsNestedInput
+  }
+
+  export type NutritionPlanMealUncheckedUpdateWithoutMealOptionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nutritionPlanDayId?: StringFieldUpdateOperationsInput | string
+    mealIndex?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type NutritionPlanMealOptionFoodUpsertWithWhereUniqueWithoutNutritionPlanMealOptionInput = {
+    where: NutritionPlanMealOptionFoodWhereUniqueInput
+    update: XOR<NutritionPlanMealOptionFoodUpdateWithoutNutritionPlanMealOptionInput, NutritionPlanMealOptionFoodUncheckedUpdateWithoutNutritionPlanMealOptionInput>
+    create: XOR<NutritionPlanMealOptionFoodCreateWithoutNutritionPlanMealOptionInput, NutritionPlanMealOptionFoodUncheckedCreateWithoutNutritionPlanMealOptionInput>
+  }
+
+  export type NutritionPlanMealOptionFoodUpdateWithWhereUniqueWithoutNutritionPlanMealOptionInput = {
+    where: NutritionPlanMealOptionFoodWhereUniqueInput
+    data: XOR<NutritionPlanMealOptionFoodUpdateWithoutNutritionPlanMealOptionInput, NutritionPlanMealOptionFoodUncheckedUpdateWithoutNutritionPlanMealOptionInput>
+  }
+
+  export type NutritionPlanMealOptionFoodUpdateManyWithWhereWithoutNutritionPlanMealOptionInput = {
+    where: NutritionPlanMealOptionFoodScalarWhereInput
+    data: XOR<NutritionPlanMealOptionFoodUpdateManyMutationInput, NutritionPlanMealOptionFoodUncheckedUpdateManyWithoutNutritionPlanMealOptionInput>
+  }
+
+  export type NutritionPlanMealOptionCreateWithoutFoodsInput = {
+    id?: string
+    optionIndex: number
+    name: string
+    description?: string | null
+    nutritionPlanMeal: NutritionPlanMealCreateNestedOneWithoutMealOptionsInput
+  }
+
+  export type NutritionPlanMealOptionUncheckedCreateWithoutFoodsInput = {
+    id?: string
+    nutritionPlanMealId: string
+    optionIndex: number
+    name: string
+    description?: string | null
+  }
+
+  export type NutritionPlanMealOptionCreateOrConnectWithoutFoodsInput = {
+    where: NutritionPlanMealOptionWhereUniqueInput
+    create: XOR<NutritionPlanMealOptionCreateWithoutFoodsInput, NutritionPlanMealOptionUncheckedCreateWithoutFoodsInput>
+  }
+
+  export type FoodCreateWithoutNutritionPlanMealOptionFoodsInput = {
+    id?: string
+    name: string
+    state: string
+    calories?: number | null
+    protein?: number | null
+    fat?: number | null
+    carbohydrates?: number | null
+    water?: number | null
+    nitrogen?: number | null
+    vitaminA_ui?: number | null
+    vitaminB1_mcg?: number | null
+    vitaminB2_mcg?: number | null
+    vitaminC_mcg?: number | null
+    niacin_mcg?: number | null
+    sodium_mg?: number | null
+    potassium_mg?: number | null
+    calcium_mg?: number | null
+    magnesium_mg?: number | null
+    iron_mg?: number | null
+    copper_mg?: number | null
+    phosphorus_mg?: number | null
+    sulfur_mg?: number | null
+    chloride_mg?: number | null
+    phenylalanine_mg?: number | null
+    isoleucine_mg?: number | null
+    leucine_mg?: number | null
+    lysine_mg?: number | null
+    methionine_mg?: number | null
+    threonine_mg?: number | null
+    tryptophan_mg?: number | null
+    valine_mg?: number | null
+    acid?: number | null
+    alcal?: number | null
+    foodGroup: FoodGroupCreateNestedOneWithoutFoodsInput
+  }
+
+  export type FoodUncheckedCreateWithoutNutritionPlanMealOptionFoodsInput = {
+    id?: string
+    name: string
+    state: string
+    foodGroupId: string
+    calories?: number | null
+    protein?: number | null
+    fat?: number | null
+    carbohydrates?: number | null
+    water?: number | null
+    nitrogen?: number | null
+    vitaminA_ui?: number | null
+    vitaminB1_mcg?: number | null
+    vitaminB2_mcg?: number | null
+    vitaminC_mcg?: number | null
+    niacin_mcg?: number | null
+    sodium_mg?: number | null
+    potassium_mg?: number | null
+    calcium_mg?: number | null
+    magnesium_mg?: number | null
+    iron_mg?: number | null
+    copper_mg?: number | null
+    phosphorus_mg?: number | null
+    sulfur_mg?: number | null
+    chloride_mg?: number | null
+    phenylalanine_mg?: number | null
+    isoleucine_mg?: number | null
+    leucine_mg?: number | null
+    lysine_mg?: number | null
+    methionine_mg?: number | null
+    threonine_mg?: number | null
+    tryptophan_mg?: number | null
+    valine_mg?: number | null
+    acid?: number | null
+    alcal?: number | null
+  }
+
+  export type FoodCreateOrConnectWithoutNutritionPlanMealOptionFoodsInput = {
+    where: FoodWhereUniqueInput
+    create: XOR<FoodCreateWithoutNutritionPlanMealOptionFoodsInput, FoodUncheckedCreateWithoutNutritionPlanMealOptionFoodsInput>
+  }
+
+  export type NutritionPlanMealOptionUpsertWithoutFoodsInput = {
+    update: XOR<NutritionPlanMealOptionUpdateWithoutFoodsInput, NutritionPlanMealOptionUncheckedUpdateWithoutFoodsInput>
+    create: XOR<NutritionPlanMealOptionCreateWithoutFoodsInput, NutritionPlanMealOptionUncheckedCreateWithoutFoodsInput>
+    where?: NutritionPlanMealOptionWhereInput
+  }
+
+  export type NutritionPlanMealOptionUpdateToOneWithWhereWithoutFoodsInput = {
+    where?: NutritionPlanMealOptionWhereInput
+    data: XOR<NutritionPlanMealOptionUpdateWithoutFoodsInput, NutritionPlanMealOptionUncheckedUpdateWithoutFoodsInput>
+  }
+
+  export type NutritionPlanMealOptionUpdateWithoutFoodsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    optionIndex?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    nutritionPlanMeal?: NutritionPlanMealUpdateOneRequiredWithoutMealOptionsNestedInput
+  }
+
+  export type NutritionPlanMealOptionUncheckedUpdateWithoutFoodsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nutritionPlanMealId?: StringFieldUpdateOperationsInput | string
+    optionIndex?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FoodUpsertWithoutNutritionPlanMealOptionFoodsInput = {
+    update: XOR<FoodUpdateWithoutNutritionPlanMealOptionFoodsInput, FoodUncheckedUpdateWithoutNutritionPlanMealOptionFoodsInput>
+    create: XOR<FoodCreateWithoutNutritionPlanMealOptionFoodsInput, FoodUncheckedCreateWithoutNutritionPlanMealOptionFoodsInput>
+    where?: FoodWhereInput
+  }
+
+  export type FoodUpdateToOneWithWhereWithoutNutritionPlanMealOptionFoodsInput = {
+    where?: FoodWhereInput
+    data: XOR<FoodUpdateWithoutNutritionPlanMealOptionFoodsInput, FoodUncheckedUpdateWithoutNutritionPlanMealOptionFoodsInput>
+  }
+
+  export type FoodUpdateWithoutNutritionPlanMealOptionFoodsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    state?: StringFieldUpdateOperationsInput | string
+    calories?: NullableFloatFieldUpdateOperationsInput | number | null
+    protein?: NullableFloatFieldUpdateOperationsInput | number | null
+    fat?: NullableFloatFieldUpdateOperationsInput | number | null
+    carbohydrates?: NullableFloatFieldUpdateOperationsInput | number | null
+    water?: NullableFloatFieldUpdateOperationsInput | number | null
+    nitrogen?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminA_ui?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminB1_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminB2_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminC_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    niacin_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    sodium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    potassium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    calcium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    magnesium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    iron_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    copper_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    phosphorus_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    sulfur_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    chloride_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    phenylalanine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    isoleucine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    leucine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    lysine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    methionine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    threonine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    tryptophan_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    valine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    acid?: NullableFloatFieldUpdateOperationsInput | number | null
+    alcal?: NullableFloatFieldUpdateOperationsInput | number | null
+    foodGroup?: FoodGroupUpdateOneRequiredWithoutFoodsNestedInput
+  }
+
+  export type FoodUncheckedUpdateWithoutNutritionPlanMealOptionFoodsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    state?: StringFieldUpdateOperationsInput | string
+    foodGroupId?: StringFieldUpdateOperationsInput | string
+    calories?: NullableFloatFieldUpdateOperationsInput | number | null
+    protein?: NullableFloatFieldUpdateOperationsInput | number | null
+    fat?: NullableFloatFieldUpdateOperationsInput | number | null
+    carbohydrates?: NullableFloatFieldUpdateOperationsInput | number | null
+    water?: NullableFloatFieldUpdateOperationsInput | number | null
+    nitrogen?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminA_ui?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminB1_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminB2_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminC_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    niacin_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    sodium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    potassium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    calcium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    magnesium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    iron_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    copper_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    phosphorus_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    sulfur_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    chloride_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    phenylalanine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    isoleucine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    leucine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    lysine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    methionine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    threonine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    tryptophan_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    valine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    acid?: NullableFloatFieldUpdateOperationsInput | number | null
+    alcal?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type TrainingWeekCreateManyBlockInput = {
@@ -19819,6 +31956,15 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type NutritionPlanCreateManyUserInput = {
+    id?: string
+    name: string
+    description?: string | null
+    active?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type PaymentCreateManyUserInput = {
     id?: string
     dueDate: Date | string
@@ -19884,6 +32030,35 @@ export namespace Prisma {
     blockNumber?: IntFieldUpdateOperationsInput | number
     description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NutritionPlanUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    days?: NutritionPlanDayUpdateManyWithoutNutritionPlanNestedInput
+  }
+
+  export type NutritionPlanUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    days?: NutritionPlanDayUncheckedUpdateManyWithoutNutritionPlanNestedInput
+  }
+
+  export type NutritionPlanUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PaymentUpdateWithoutUserInput = {
@@ -19966,6 +32141,7 @@ export namespace Prisma {
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     blocks?: TrainingBlockUpdateManyWithoutUserNestedInput
+    nutritionPlans?: NutritionPlanUpdateManyWithoutUserNestedInput
     payments?: PaymentUpdateManyWithoutUserNestedInput
     measurements?: MeasurementUpdateManyWithoutUserNestedInput
     athletes?: UserUpdateManyWithoutOwnerNestedInput
@@ -19991,6 +32167,7 @@ export namespace Prisma {
     lastKOLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sex?: NullableEnumSexFieldUpdateOperationsInput | $Enums.Sex | null
     blocks?: TrainingBlockUncheckedUpdateManyWithoutUserNestedInput
+    nutritionPlans?: NutritionPlanUncheckedUpdateManyWithoutUserNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutUserNestedInput
     measurements?: MeasurementUncheckedUpdateManyWithoutUserNestedInput
     athletes?: UserUncheckedUpdateManyWithoutOwnerNestedInput
@@ -20087,6 +32264,282 @@ export namespace Prisma {
     trainerNotes?: NullableStringFieldUpdateOperationsInput | string | null
     athleteUserRead?: BoolFieldUpdateOperationsInput | boolean
     modifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type FoodCreateManyFoodGroupInput = {
+    id?: string
+    name: string
+    state: string
+    calories?: number | null
+    protein?: number | null
+    fat?: number | null
+    carbohydrates?: number | null
+    water?: number | null
+    nitrogen?: number | null
+    vitaminA_ui?: number | null
+    vitaminB1_mcg?: number | null
+    vitaminB2_mcg?: number | null
+    vitaminC_mcg?: number | null
+    niacin_mcg?: number | null
+    sodium_mg?: number | null
+    potassium_mg?: number | null
+    calcium_mg?: number | null
+    magnesium_mg?: number | null
+    iron_mg?: number | null
+    copper_mg?: number | null
+    phosphorus_mg?: number | null
+    sulfur_mg?: number | null
+    chloride_mg?: number | null
+    phenylalanine_mg?: number | null
+    isoleucine_mg?: number | null
+    leucine_mg?: number | null
+    lysine_mg?: number | null
+    methionine_mg?: number | null
+    threonine_mg?: number | null
+    tryptophan_mg?: number | null
+    valine_mg?: number | null
+    acid?: number | null
+    alcal?: number | null
+  }
+
+  export type FoodUpdateWithoutFoodGroupInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    state?: StringFieldUpdateOperationsInput | string
+    calories?: NullableFloatFieldUpdateOperationsInput | number | null
+    protein?: NullableFloatFieldUpdateOperationsInput | number | null
+    fat?: NullableFloatFieldUpdateOperationsInput | number | null
+    carbohydrates?: NullableFloatFieldUpdateOperationsInput | number | null
+    water?: NullableFloatFieldUpdateOperationsInput | number | null
+    nitrogen?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminA_ui?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminB1_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminB2_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminC_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    niacin_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    sodium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    potassium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    calcium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    magnesium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    iron_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    copper_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    phosphorus_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    sulfur_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    chloride_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    phenylalanine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    isoleucine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    leucine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    lysine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    methionine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    threonine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    tryptophan_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    valine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    acid?: NullableFloatFieldUpdateOperationsInput | number | null
+    alcal?: NullableFloatFieldUpdateOperationsInput | number | null
+    nutritionPlanMealOptionFoods?: NutritionPlanMealOptionFoodUpdateManyWithoutFoodNestedInput
+  }
+
+  export type FoodUncheckedUpdateWithoutFoodGroupInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    state?: StringFieldUpdateOperationsInput | string
+    calories?: NullableFloatFieldUpdateOperationsInput | number | null
+    protein?: NullableFloatFieldUpdateOperationsInput | number | null
+    fat?: NullableFloatFieldUpdateOperationsInput | number | null
+    carbohydrates?: NullableFloatFieldUpdateOperationsInput | number | null
+    water?: NullableFloatFieldUpdateOperationsInput | number | null
+    nitrogen?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminA_ui?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminB1_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminB2_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminC_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    niacin_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    sodium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    potassium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    calcium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    magnesium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    iron_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    copper_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    phosphorus_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    sulfur_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    chloride_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    phenylalanine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    isoleucine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    leucine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    lysine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    methionine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    threonine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    tryptophan_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    valine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    acid?: NullableFloatFieldUpdateOperationsInput | number | null
+    alcal?: NullableFloatFieldUpdateOperationsInput | number | null
+    nutritionPlanMealOptionFoods?: NutritionPlanMealOptionFoodUncheckedUpdateManyWithoutFoodNestedInput
+  }
+
+  export type FoodUncheckedUpdateManyWithoutFoodGroupInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    state?: StringFieldUpdateOperationsInput | string
+    calories?: NullableFloatFieldUpdateOperationsInput | number | null
+    protein?: NullableFloatFieldUpdateOperationsInput | number | null
+    fat?: NullableFloatFieldUpdateOperationsInput | number | null
+    carbohydrates?: NullableFloatFieldUpdateOperationsInput | number | null
+    water?: NullableFloatFieldUpdateOperationsInput | number | null
+    nitrogen?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminA_ui?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminB1_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminB2_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    vitaminC_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    niacin_mcg?: NullableFloatFieldUpdateOperationsInput | number | null
+    sodium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    potassium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    calcium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    magnesium_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    iron_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    copper_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    phosphorus_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    sulfur_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    chloride_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    phenylalanine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    isoleucine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    leucine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    lysine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    methionine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    threonine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    tryptophan_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    valine_mg?: NullableFloatFieldUpdateOperationsInput | number | null
+    acid?: NullableFloatFieldUpdateOperationsInput | number | null
+    alcal?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type NutritionPlanMealOptionFoodCreateManyFoodInput = {
+    id?: string
+    nutritionPlanMealOptionId: string
+    quantity?: number | null
+  }
+
+  export type NutritionPlanMealOptionFoodUpdateWithoutFoodInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    nutritionPlanMealOption?: NutritionPlanMealOptionUpdateOneRequiredWithoutFoodsNestedInput
+  }
+
+  export type NutritionPlanMealOptionFoodUncheckedUpdateWithoutFoodInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nutritionPlanMealOptionId?: StringFieldUpdateOperationsInput | string
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type NutritionPlanMealOptionFoodUncheckedUpdateManyWithoutFoodInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nutritionPlanMealOptionId?: StringFieldUpdateOperationsInput | string
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type NutritionPlanDayCreateManyNutritionPlanInput = {
+    id?: string
+    dayNumber: number
+  }
+
+  export type NutritionPlanDayUpdateWithoutNutritionPlanInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dayNumber?: IntFieldUpdateOperationsInput | number
+    meals?: NutritionPlanMealUpdateManyWithoutNutritionPlanDayNestedInput
+  }
+
+  export type NutritionPlanDayUncheckedUpdateWithoutNutritionPlanInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dayNumber?: IntFieldUpdateOperationsInput | number
+    meals?: NutritionPlanMealUncheckedUpdateManyWithoutNutritionPlanDayNestedInput
+  }
+
+  export type NutritionPlanDayUncheckedUpdateManyWithoutNutritionPlanInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dayNumber?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type NutritionPlanMealCreateManyNutritionPlanDayInput = {
+    id?: string
+    mealIndex: number
+    name: string
+    description?: string | null
+  }
+
+  export type NutritionPlanMealUpdateWithoutNutritionPlanDayInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    mealIndex?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    mealOptions?: NutritionPlanMealOptionUpdateManyWithoutNutritionPlanMealNestedInput
+  }
+
+  export type NutritionPlanMealUncheckedUpdateWithoutNutritionPlanDayInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    mealIndex?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    mealOptions?: NutritionPlanMealOptionUncheckedUpdateManyWithoutNutritionPlanMealNestedInput
+  }
+
+  export type NutritionPlanMealUncheckedUpdateManyWithoutNutritionPlanDayInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    mealIndex?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type NutritionPlanMealOptionCreateManyNutritionPlanMealInput = {
+    id?: string
+    optionIndex: number
+    name: string
+    description?: string | null
+  }
+
+  export type NutritionPlanMealOptionUpdateWithoutNutritionPlanMealInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    optionIndex?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    foods?: NutritionPlanMealOptionFoodUpdateManyWithoutNutritionPlanMealOptionNestedInput
+  }
+
+  export type NutritionPlanMealOptionUncheckedUpdateWithoutNutritionPlanMealInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    optionIndex?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    foods?: NutritionPlanMealOptionFoodUncheckedUpdateManyWithoutNutritionPlanMealOptionNestedInput
+  }
+
+  export type NutritionPlanMealOptionUncheckedUpdateManyWithoutNutritionPlanMealInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    optionIndex?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type NutritionPlanMealOptionFoodCreateManyNutritionPlanMealOptionInput = {
+    id?: string
+    foodId: string
+    quantity?: number | null
+  }
+
+  export type NutritionPlanMealOptionFoodUpdateWithoutNutritionPlanMealOptionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    food?: FoodUpdateOneRequiredWithoutNutritionPlanMealOptionFoodsNestedInput
+  }
+
+  export type NutritionPlanMealOptionFoodUncheckedUpdateWithoutNutritionPlanMealOptionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    foodId?: StringFieldUpdateOperationsInput | string
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type NutritionPlanMealOptionFoodUncheckedUpdateManyWithoutNutritionPlanMealOptionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    foodId?: StringFieldUpdateOperationsInput | string
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
 

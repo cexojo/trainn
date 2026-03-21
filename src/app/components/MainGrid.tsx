@@ -11,6 +11,7 @@ import FollowUpBlocksPanel from "./FollowUpBlocksPanel";
 import ManageBlocks from "@/app/components/ManageBlocks";
 import TrainingPanel from "./TrainingPanel";
 import MeasurementsPanel from "@/app/components/MeasurementsPanel";
+import NutritionPlanSummary from "@/app/components/NutritionPlanSummary";
 
 export default function MainGrid({
   section,
@@ -83,6 +84,17 @@ export default function MainGrid({
       {section === "measurements" && userRole === 'athlete' && (
         <Box sx={{ mt: 3, mb: 3 }}>
           <MeasurementsPanel />
+        </Box>
+      )}
+      {section === "nutrition-plan" && userRole === 'athlete' && (
+        <Box sx={{ mt: 3, mb: 3, width: "100%", maxWidth: 740 }}>
+          <Typography variant="h5" sx={{ mb: 2 }}>
+            {translations[lang].nutritionTab}
+          </Typography>
+          <NutritionPlanSummary
+            userId={typeof window !== "undefined" && window.localStorage.getItem("userId") ? window.localStorage.getItem("userId")! : ""}
+            lang={lang}
+          />
         </Box>
       )}
       {section === "exercises" && userRole === 'admin' && (

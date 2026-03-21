@@ -13,14 +13,15 @@ import AnalyticsRoundedIcon from '@mui/icons-material/AnalyticsRounded';
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
 import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
-import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
-import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import FitnessCenterRoundedIcon from '@mui/icons-material/FitnessCenterRounded';
 import ViewModuleRoundedIcon from '@mui/icons-material/ViewModuleRounded';
+import RestaurantRoundedIcon from '@mui/icons-material/RestaurantRounded';
+import RestaurantMenuRoundedIcon from '@mui/icons-material/RestaurantMenuRounded';
+import EggAltRoundedIcon from '@mui/icons-material/EggAltRounded';
+import ScienceRoundedIcon from '@mui/icons-material/ScienceRounded';
 
 import { translations } from '../i18n';
 import type { Lang } from '../i18n';
-import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { useRouter } from 'next/navigation';
 
 // Default to Spanish; adapt as needed for language support.
@@ -58,6 +59,7 @@ export default function MenuContent({
     ...mainHome,
     { text: translations[lang].trainingTab, icon: <FitnessCenterRoundedIcon />, section: "training" },
     { text: translations[lang].measurementsMenu, icon: <AnalyticsRoundedIcon />, section: "measurements" },
+    { text: translations[lang].nutritionTab, icon: <RestaurantMenuRoundedIcon />, section: "nutrition-plan" }
   ];
 
   const adminListItems = [
@@ -66,7 +68,7 @@ export default function MenuContent({
     { 
       text: translations[lang].followup,
       icon: <AnalyticsRoundedIcon />, 
-      section: "seguimiento-parent",
+      section: "followup-parent",
       children: [
         { text: translations[lang].followupActivity, icon: <AssignmentRoundedIcon />, section: "followup-activity" },
         { text: translations[lang].followupBlock, icon: <ViewModuleRoundedIcon />, section: "followup-block" }
@@ -82,6 +84,15 @@ export default function MenuContent({
       ]
     },
     { text: translations[lang].adminMenuExercises, icon: <FitnessCenterRoundedIcon />, section: "exercises" },
+    { 
+      text: translations[lang].nutritionMenu, 
+      icon: <RestaurantRoundedIcon />, 
+      section: "nutrition-parent",
+      children: [
+        { text: translations[lang].nutrientsMenu, icon: <ScienceRoundedIcon />, section: "nutrients" },
+        { text: "Plan nutricional", icon: <RestaurantMenuRoundedIcon />, section: "nutrition-plan-wizard" },
+      ]
+    },
   ];
 
   const secondaryActionsList = [
@@ -94,7 +105,10 @@ export default function MenuContent({
     selectedSection === "create-block" || selectedSection === "manage-blocks"
   );
   const [seguimientoOpen, setSeguimientoOpen] = React.useState(
-    selectedSection === "seguimiento-actividad"
+    selectedSection === "followup-activity"
+  );
+  const [nutritionOpen, setNutritionOpen] = React.useState(
+    selectedSection === "nutrients" || selectedSection === "nutrition-plans"
   );
 
   return (
@@ -150,7 +164,38 @@ export default function MenuContent({
               </React.Fragment>
             );
           }
-          if (item.section === "seguimiento-parent") {
+          if (item.section === "nutrition-parent") {
+            return (
+              <React.Fragment key={index}>
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton onClick={() => setNutritionOpen((o) => !o)}>
+                    <ListItemIcon>{item.icon}</ListItemIcon>
+                    <ListItemText primary={item.text} />
+                    {nutritionOpen ? <ExpandLess /> : <ExpandMore />}
+                  </ListItemButton>
+                </ListItem>
+                <Collapse in={nutritionOpen} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding dense>
+                    {(item.children as any[]).map((child: any, cidx: number) => (
+                      <ListItem key={child.section} disablePadding sx={{ pl: 4 }}>
+                        <ListItemButton
+                          onClick={() => {
+                            setSection(child.section);
+                            if (onMenuItemClick) onMenuItemClick();
+                          }}
+                          selected={selectedSection === child.section}
+                        >
+                          <ListItemIcon>{child.icon}</ListItemIcon>
+                          <ListItemText primary={child.text} />
+                        </ListItemButton>
+                      </ListItem>
+                    ))}
+                  </List>
+                </Collapse>
+              </React.Fragment>
+            );
+          }
+          if (item.section === "followup-parent") {
             return (
               <React.Fragment key={index}>
                 <ListItem disablePadding sx={{ display: 'block' }}>

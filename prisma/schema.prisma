@@ -105,6 +105,7 @@ model User {
   subscriptionAmount  Float?
   subscriptionFrequency String?
   blocks            TrainingBlock[]
+  nutritionPlans    NutritionPlan[]
   role              Role     @default(athlete)
   payments          Payment[]
   measurements      Measurement[]
@@ -175,4 +176,111 @@ model Measurement {
   hip        Float?
   thigh      Float?
   calfMuscle Float?
+}
+
+model FoodGroup {
+  id   String @id @default(uuid())
+  name String @unique
+  foods Food[]
+}
+
+model Food {
+  id            String     @id @default(uuid())
+  name          String
+  state         String
+  foodGroup     FoodGroup  @relation(fields: [foodGroupId], references: [id])
+  foodGroupId   String
+
+  // Composition per 100g (units as seen in table)
+  calories      Float?     // CAL (kcal)
+  protein       Float?     // PR (g)
+  fat           Float?     // GR (g)
+  carbohydrates Float?     // HC (g)
+  water         Float?     // H2O (g)
+  nitrogen      Float?     // NE (g)
+
+  // Vitamins per 100g
+  vitaminA_ui   Float?     // A, u.i.x/100g
+  vitaminB1_mcg Float?
+  vitaminB2_mcg Float?
+  vitaminC_mcg  Float?
+  niacin_mcg    Float?
+
+  // Minerals per 100g, mg
+  sodium_mg     Float?
+  potassium_mg  Float?
+  calcium_mg    Float?
+  magnesium_mg  Float?
+  iron_mg       Float?
+  copper_mg     Float?
+  phosphorus_mg Float?
+  sulfur_mg     Float?
+  chloride_mg   Float?
+
+  // Amino acids, mg per 100g
+  phenylalanine_mg Float?
+  isoleucine_mg    Float?
+  leucine_mg       Float?
+  lysine_mg        Float?
+  methionine_mg    Float?
+  threonine_mg     Float?
+  tryptophan_mg    Float?
+  valine_mg        Float?
+
+  acid          Float?
+  alcal         Float?
+
+  nutritionPlanMealOptionFoods NutritionPlanMealOptionFood[]
+}
+
+// -------- Nutrition Plan Data Models --------
+
+model NutritionPlan {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  name      String
+  description String?
+  active     Boolean  @default(false)
+  days      NutritionPlanDay[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model NutritionPlanDay {
+  id               String           @id @default(uuid())
+  nutritionPlan    NutritionPlan    @relation(fields: [nutritionPlanId], references: [id])
+  nutritionPlanId  String
+  dayNumber        Int              // 0=Sunday, 1=Monday, etc. or sequential, up to how UI wants
+  meals            NutritionPlanMeal[]
+}
+
+model NutritionPlanMeal {
+  id                   String                  @id @default(uuid())
+  nutritionPlanDay     NutritionPlanDay        @relation(fields: [nutritionPlanDayId], references: [id])
+  nutritionPlanDayId   String
+  mealIndex            Int                     // 0=breakfast, 1=mid-morning, etc.
+  name                 String
+  description          String?
+  mealOptions          NutritionPlanMealOption[]
+}
+
+model NutritionPlanMealOption {
+  id                String     @id @default(uuid())
+  nutritionPlanMeal NutritionPlanMeal @relation(fields: [nutritionPlanMealId], references: [id])
+  nutritionPlanMealId String
+  optionIndex        Int
+  name                 String
+  description          String?
+  foods              NutritionPlanMealOptionFood[]
+}
+
+model NutritionPlanMealOptionFood {
+  // Many-to-many linking MealOption to Foods, with optional quantity
+  id                  String                 @id @default(uuid())
+  nutritionPlanMealOption NutritionPlanMealOption @relation(fields: [nutritionPlanMealOptionId], references: [id])
+  nutritionPlanMealOptionId String
+  food                Food                   @relation(fields: [foodId], references: [id])
+  foodId              String
+  quantity            Float? // e.g. grams
 }

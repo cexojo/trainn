@@ -11,6 +11,8 @@ import Stack from '@mui/material/Stack';
 import AppNavbar from '../components/AppNavbar';
 import Header from '../components/Header';
 import MainGrid from '../components/MainGrid';
+import Nutrients from '../components/Nutrients';
+import NutritionPlanWizard from '../components/NutritionPlanWizard';
 import SideMenu from '../components/SideMenu';
 import AppTheme from '../theme/AppTheme';
 import {
@@ -116,18 +118,24 @@ export default function DashboardClient(props: { disableCustomTheme?: boolean })
           >
             <Header showBreadcrumbs={false} showSearchAndAlerts={false} />
             {/* Pass selection state to training panel for lifting */}
-            <MainGrid
-              section={currentSection}
-              userRole={userRole}
-              selectedBlock={selectedBlock}
-              setSelectedBlock={setSelectedBlock}
-              selectedWeek={selectedWeek}
-              setSelectedWeek={setSelectedWeek}
-              selectedDay={selectedDay}
-              setSelectedDay={setSelectedDay}
-              exerciseDefs={exerciseDefs}
-              setExerciseDefs={setExerciseDefs}
-            />
+            {currentSection === "nutrients" ? (
+              <Nutrients />
+            ) : currentSection === "nutrition-plan-wizard" ? (
+              <NutritionPlanWizard lang={lang} />
+            ) : (
+              <MainGrid
+                section={currentSection}
+                userRole={userRole}
+                selectedBlock={selectedBlock}
+                setSelectedBlock={setSelectedBlock}
+                selectedWeek={selectedWeek}
+                setSelectedWeek={setSelectedWeek}
+                selectedDay={selectedDay}
+                setSelectedDay={setSelectedDay}
+                exerciseDefs={exerciseDefs}
+                setExerciseDefs={setExerciseDefs}
+              />
+            )}
           </Stack>
         </Box>
       </Box>

@@ -24,12 +24,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 7.2.0
- * Query Engine version: 0c8ef2ce45c83248ab3df073180d5eda9e8be7a3
+ * Prisma Client JS version: 7.5.0
+ * Query Engine version: 280c870be64f457428992c43c1f6d557fab6e29e
  */
 Prisma.prismaVersion = {
-  client: "7.2.0",
-  engine: "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3"
+  client: "7.5.0",
+  engine: "280c870be64f457428992c43c1f6d557fab6e29e"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -246,6 +246,87 @@ exports.Prisma.MeasurementScalarFieldEnum = {
   calfMuscle: 'calfMuscle'
 };
 
+exports.Prisma.FoodGroupScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+};
+
+exports.Prisma.FoodScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  state: 'state',
+  foodGroupId: 'foodGroupId',
+  calories: 'calories',
+  protein: 'protein',
+  fat: 'fat',
+  carbohydrates: 'carbohydrates',
+  water: 'water',
+  nitrogen: 'nitrogen',
+  vitaminA_ui: 'vitaminA_ui',
+  vitaminB1_mcg: 'vitaminB1_mcg',
+  vitaminB2_mcg: 'vitaminB2_mcg',
+  vitaminC_mcg: 'vitaminC_mcg',
+  niacin_mcg: 'niacin_mcg',
+  sodium_mg: 'sodium_mg',
+  potassium_mg: 'potassium_mg',
+  calcium_mg: 'calcium_mg',
+  magnesium_mg: 'magnesium_mg',
+  iron_mg: 'iron_mg',
+  copper_mg: 'copper_mg',
+  phosphorus_mg: 'phosphorus_mg',
+  sulfur_mg: 'sulfur_mg',
+  chloride_mg: 'chloride_mg',
+  phenylalanine_mg: 'phenylalanine_mg',
+  isoleucine_mg: 'isoleucine_mg',
+  leucine_mg: 'leucine_mg',
+  lysine_mg: 'lysine_mg',
+  methionine_mg: 'methionine_mg',
+  threonine_mg: 'threonine_mg',
+  tryptophan_mg: 'tryptophan_mg',
+  valine_mg: 'valine_mg',
+  acid: 'acid',
+  alcal: 'alcal'
+};
+
+exports.Prisma.NutritionPlanScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  description: 'description',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.NutritionPlanDayScalarFieldEnum = {
+  id: 'id',
+  nutritionPlanId: 'nutritionPlanId',
+  dayNumber: 'dayNumber'
+};
+
+exports.Prisma.NutritionPlanMealScalarFieldEnum = {
+  id: 'id',
+  nutritionPlanDayId: 'nutritionPlanDayId',
+  mealIndex: 'mealIndex',
+  name: 'name',
+  description: 'description'
+};
+
+exports.Prisma.NutritionPlanMealOptionScalarFieldEnum = {
+  id: 'id',
+  nutritionPlanMealId: 'nutritionPlanMealId',
+  optionIndex: 'optionIndex',
+  name: 'name',
+  description: 'description'
+};
+
+exports.Prisma.NutritionPlanMealOptionFoodScalarFieldEnum = {
+  id: 'id',
+  nutritionPlanMealOptionId: 'nutritionPlanMealOptionId',
+  foodId: 'foodId',
+  quantity: 'quantity'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -280,7 +361,14 @@ exports.Prisma.ModelName = {
   DayExercise: 'DayExercise',
   DayExerciseSeries: 'DayExerciseSeries',
   Payment: 'Payment',
-  Measurement: 'Measurement'
+  Measurement: 'Measurement',
+  FoodGroup: 'FoodGroup',
+  Food: 'Food',
+  NutritionPlan: 'NutritionPlan',
+  NutritionPlanDay: 'NutritionPlanDay',
+  NutritionPlanMeal: 'NutritionPlanMeal',
+  NutritionPlanMealOption: 'NutritionPlanMealOption',
+  NutritionPlanMealOptionFood: 'NutritionPlanMealOptionFood'
 };
 
 /**

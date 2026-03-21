@@ -10,7 +10,6 @@ function TrainingTab({ userId, lang }: { userId: string, lang: Lang }) {
   const [trainingDays, setTrainingDays] = React.useState<any[]>([]);
   const [exerciseSeries, setExerciseSeries] = React.useState<any[]>([]);
   const [weekDialog, setWeekDialog] = React.useState<{open: boolean, week: any | null}>({ open: false, week: null });
-  const [notesPopover, setNotesPopover] = React.useState<{ anchorEl: HTMLElement | null, notes: string }>({ anchorEl: null, notes: "" });
   const [loadingBlocks, setLoadingBlocks] = React.useState(true);
   const [loadingBlockDetails, setLoadingBlockDetails] = React.useState(false);
 
@@ -58,99 +57,105 @@ function TrainingTab({ userId, lang }: { userId: string, lang: Lang }) {
             <Typography variant="body1">{translations[lang].loadingBlocks}</Typography>
           </Box>
         ) : (
-          <FormControl size="small" fullWidth>
-            <InputLabel id="block-selector-label">{translations[lang].block}</InputLabel>
-            <Select
-              labelId="block-selector-label"
-              label={translations[lang].block}
-              value={selectedBlock ? selectedBlock.id : ""}
-              onChange={e => {
-                const blk = blocks.find(b => String(b.id) === String(e.target.value));
-                setSelectedBlock(blk || null);
-              }}
-              MenuProps={{
-                PaperProps: {
-                  style: { minWidth: 250 }
-                }
-              }}
-            >
-              {blocks
-                .slice()
-                .sort((a, b) => b.blockNumber - a.blockNumber)
-                .map(b => {
-                  const weeks = Array.isArray(b.weeks) ? b.weeks : [];
-                  let totalCompleted = 0;
-                  let totalSeries = 0;
-                  weeks.forEach((w: { numExerciseSeriesCompleted?: number, numExerciseSeriesTotal?: number }) => {
-                    totalCompleted += Number(w.numExerciseSeriesCompleted || 0);
-                    totalSeries += Number(w.numExerciseSeriesTotal || 0);
-                  });
-                  const percent = totalSeries > 0 ? Math.round((totalCompleted / totalSeries) * 100) : 0;
-                  return (
-                    <MenuItem key={b.id} value={b.id} divider>
-                      <Box sx={{
-                        width: "100%",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1.3,
-                      }}>
+          blocks.length === 0 ? (
+            <Typography variant="body1" color="text.secondary" sx={{ width: "100%", py: 3, textAlign: "center" }}>
+              {translations[lang].noBlocksForAthlete}
+            </Typography>
+          ) : (
+            <FormControl size="small" fullWidth>
+              <InputLabel id="block-selector-label">{translations[lang].block}</InputLabel>
+              <Select
+                labelId="block-selector-label"
+                label={translations[lang].block}
+                value={selectedBlock ? selectedBlock.id : ""}
+                onChange={e => {
+                  const blk = blocks.find(b => String(b.id) === String(e.target.value));
+                  setSelectedBlock(blk || null);
+                }}
+                MenuProps={{
+                  PaperProps: {
+                    style: { minWidth: 250 }
+                  }
+                }}
+              >
+                {blocks
+                  .slice()
+                  .sort((a, b) => b.blockNumber - a.blockNumber)
+                  .map(b => {
+                    const weeks = Array.isArray(b.weeks) ? b.weeks : [];
+                    let totalCompleted = 0;
+                    let totalSeries = 0;
+                    weeks.forEach((w: { numExerciseSeriesCompleted?: number, numExerciseSeriesTotal?: number }) => {
+                      totalCompleted += Number(w.numExerciseSeriesCompleted || 0);
+                      totalSeries += Number(w.numExerciseSeriesTotal || 0);
+                    });
+                    const percent = totalSeries > 0 ? Math.round((totalCompleted / totalSeries) * 100) : 0;
+                    return (
+                      <MenuItem key={b.id} value={b.id} divider>
                         <Box sx={{
-                          fontWeight: 500,
-                          minWidth: 70,
-                          flex: "none",
-                          whiteSpace: "nowrap",
-                        }}>
-                          {translations[lang].block} {b.blockNumber}
-                        </Box>
-                        <Box sx={{
-                          position: "relative",
-                          height: 13,
-                          width: 88,
-                          minWidth: 66,
-                          maxWidth: 125,
-                          bgcolor: "#eee",
-                          borderRadius: 1,
-                          overflow: "hidden",
-                          mx: 0.5,
-                          flex: "0 0 88px"
+                          width: "100%",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 1.3,
                         }}>
                           <Box sx={{
-                            width: `${percent}%`,
-                            height: "100%",
-                            background: "#4caf50",
-                            borderRadius: 1,
-                            transition: "width 0.35s"
-                          }} />
-                          <Box sx={{
-                            position: "absolute", left: 0, top: 0, width: "100%", height: "100%",
-                            display: "flex", alignItems: "center", justifyContent: "center",
-                            color: percent > 45 ? "#fff" : "#333",
-                            fontSize: "0.89em",
-                            fontWeight: 600,
-                            pointerEvents: "none",
-                            zIndex: 1,
-                            textShadow: percent > 40 ? "0 1px 2px rgba(0,0,0,0.27)" : "none"
+                            fontWeight: 500,
+                            minWidth: 70,
+                            flex: "none",
+                            whiteSpace: "nowrap",
                           }}>
-                            {percent}{translations[lang].percentLabel}
+                            {translations[lang].block} {b.blockNumber}
+                          </Box>
+                          <Box sx={{
+                            position: "relative",
+                            height: 13,
+                            width: 88,
+                            minWidth: 66,
+                            maxWidth: 125,
+                            bgcolor: "#eee",
+                            borderRadius: 1,
+                            overflow: "hidden",
+                            mx: 0.5,
+                            flex: "0 0 88px"
+                          }}>
+                            <Box sx={{
+                              width: `${percent}%`,
+                              height: "100%",
+                              background: "#4caf50",
+                              borderRadius: 1,
+                              transition: "width 0.35s"
+                            }} />
+                            <Box sx={{
+                              position: "absolute", left: 0, top: 0, width: "100%", height: "100%",
+                              display: "flex", alignItems: "center", justifyContent: "center",
+                              color: percent > 45 ? "#fff" : "#333",
+                              fontSize: "0.89em",
+                              fontWeight: 600,
+                              pointerEvents: "none",
+                              zIndex: 1,
+                              textShadow: percent > 40 ? "0 1px 2px rgba(0,0,0,0.27)" : "none"
+                            }}>
+                              {percent}{translations[lang].percentLabel}
+                            </Box>
+                          </Box>
+                          <Box sx={{
+                            fontSize: "0.87em",
+                            minWidth: 36,
+                            color: percent > 60 ? "#168C1f" : "#444",
+                            fontWeight: 500,
+                            textAlign: "right",
+                            flex: "none",
+                            whiteSpace: "nowrap"
+                          }}>
+                            {totalCompleted}/{totalSeries}
                           </Box>
                         </Box>
-                        <Box sx={{
-                          fontSize: "0.87em",
-                          minWidth: 36,
-                          color: percent > 60 ? "#168C1f" : "#444",
-                          fontWeight: 500,
-                          textAlign: "right",
-                          flex: "none",
-                          whiteSpace: "nowrap"
-                        }}>
-                          {totalCompleted}/{totalSeries}
-                        </Box>
-                      </Box>
-                    </MenuItem>
-                  );
-                })}
-            </Select>
-          </FormControl>
+                      </MenuItem>
+                    );
+                  })}
+              </Select>
+            </FormControl>
+          )
         )}
       </Box>
       <Box sx={{ minHeight: 220 }}>

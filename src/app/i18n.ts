@@ -9,10 +9,39 @@ export type Lang = "en" | "es";
 
 export type Translations = {
   [K in Lang]: {
+    finish: string;
+    loadingNutritionPlan: string;
+    noActiveNutritionPlan: string;
+    noBlocksForAthlete: string;
+    optionsLabel: string;
+    athlete: string;
+    planTitle: string;
+    mealsPerDay: string;
+    optionName: string;
+    optionDescription: string;
+    addOption: string;
+    removeOption: string;
+    foodsCaption: string;
+    addFood: string;
+    selectOrSearchFood: string;
+    grams: string;
+    weekdays: string[];
+    nutritionWizardStep1: string;
+    nutritionWizardStep2: string;
+    nutritionWizardStep3: string;
+    nutritionWizardStep4: string;
+    nutritionWizardStep5: string;
+    nutritionWizardRestrictionHint: string;
+    nutritionWizardAthleteStepHint: string;
+    weeklyPlanHint: string;
     deleteDayExerciseTitle: string;
     deleteDayExerciseConfirm: string;
     deleteDayExerciseWarning: string;
     remove: string;
+    // NutritionPlanWizard: Plan Duplication
+    activePlanExistsTitle: string;
+    activePlanExistsText: string;
+    confirm: string;
     loadingBlocks: string;
     loadingBlockDetails: string;
     followup: string;
@@ -232,6 +261,7 @@ export type Translations = {
     infoTab: string;
     paymentsTab: string;
     blocksTab: string;
+    nutritionTab: string;
     addPaymentDialogTitle: string;
     addPaymentDialogDate: string;
     addPaymentDialogAmount: string;
@@ -292,6 +322,9 @@ export type Translations = {
     adminMenuTrainingBlocks: string;
     adminMenuCreateBlock: string;
     adminMenuManageBlocks: string;
+    nutritionMenu: string;
+    nutrientsMenu: string;
+    elaborations: string;
     editFieldTooltip: string;
     wizardAddExercise: string;
     wizardNoExercises: string;
@@ -408,12 +441,81 @@ export type Translations = {
     weeklyProgressTitle: string;
     followUpInfoBox: string;
     logout: string;
+
+    // ---- Nutrient group and nutrient field translations
+    nutrientGroupComposition: string;
+    nutrientGroupVitamins: string;
+    nutrientGroupMinerals: string;
+    nutrientGroupAminoAcids: string;
+    nutrientGroupAlkalinity: string;
+
+    nutrientCalories: string;
+    nutrientProtein: string;
+    nutrientFat: string;
+    nutrientCarbohydrates: string;
+    nutrientWater: string;
+    nutrientNitrogen: string;
+
+    nutrientVitaminA_ui: string;
+    nutrientVitaminB1_mcg: string;
+    nutrientVitaminB2_mcg: string;
+    nutrientVitaminC_mcg: string;
+    nutrientNiacin_mcg: string;
+
+    nutrientSodium_mg: string;
+    nutrientPotassium_mg: string;
+    nutrientCalcium_mg: string;
+    nutrientMagnesium_mg: string;
+    nutrientIron_mg: string;
+    nutrientCopper_mg: string;
+    nutrientPhosphorus_mg: string;
+    nutrientSulfur_mg: string;
+    nutrientChloride_mg: string;
+
+    nutrientPhenylalanine_mg: string;
+    nutrientIsoleucine_mg: string;
+    nutrientLeucine_mg: string;
+    nutrientLysine_mg: string;
+    nutrientMethionine_mg: string;
+    nutrientThreonine_mg: string;
+    nutrientTryptophan_mg: string;
+    nutrientValine_mg: string;
+
+    nutrientAcid: string;
+    nutrientAlcal: string;
+
+    nutritionPlan: string;
+    back: string;
+    next: string;
   };
 };
 
 export const translations: Translations = {
   en: {
+    activePlanExistsTitle: "Active Plan Detected",
+    activePlanExistsText: "This athlete already has an active nutrition plan. The current plan will be archived, do you want to continue?",
+    confirm: "Confirm",
+    finish: "Finish",
+    optionsLabel: "Options:",
+    athlete: "Athlete",
+    planTitle: "Plan title",
+    mealsPerDay: "Meals per day",
+    optionName: "Option name",
+    optionDescription: "Option description",
+    mealLabel: "Meal",
+    addMeal: "Add meal",
+    removeMeal: "Remove meal",
+    addOption: "Add option",
+    removeOption: "Remove option",
+    foodsCaption: "Foods",
+    addFood: "Add food",
+    selectOrSearchFood: "Select or search food",
+    grams: "Grams",
+    weekdays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
     loadingBlocks: "Loading blocks...",
+    loadingNutritionPlan: "Loading nutrition plan...",
+    noBlocksForAthlete: "No blocks found for this athlete.",
+    weeklyPlanHint: "Copy your template day to the week, then edit specific days if needed.",
     loadingBlockDetails: "Loading block details...",
     followup: "Follow-up",
     followupActivity: "Activity",
@@ -465,6 +567,7 @@ export const translations: Translations = {
     sexFemale: "Female",
     sexOther: "Other",
     manageUsersQuickFilterNoPlan: "No plan",
+    noActiveNutritionPlan: "No active nutrition plan found for this athlete.",
     manageUsersQuickFilterNoPassword: "Users without password",
     noExercisesForDay: "No exercises for this day.",
     // Password page translations (new)
@@ -635,6 +738,7 @@ export const translations: Translations = {
     infoTab: "Info",
     paymentsTab: "Payments",
     blocksTab: "Blocks",
+    nutritionTab: "Nutritional plan",
     addPaymentDialogTitle: "New Payment",
     addPaymentDialogDate: "Due Date",
     addPaymentDialogAmount: "Amount (€)",
@@ -694,6 +798,9 @@ export const translations: Translations = {
     adminMenuTrainingBlocks: "Training Blocks",
     adminMenuCreateBlock: "Create Block",
     adminMenuManageBlocks: "Manage Blocks",
+    nutritionMenu: "Nutrition",
+    nutrientsMenu: "Nutritional values",
+    elaborations: "Elaborations",
     editFieldTooltip: "Click to edit",
     wizardAddExercise: "Add exercise",
     wizardNoExercises: "No exercises assigned.",
@@ -811,10 +918,86 @@ export const translations: Translations = {
     deleteDayExerciseTitle: "Eliminar ejercicio del día",
     deleteDayExerciseConfirm: "¿Seguro que quieres eliminar este ejercicio?",
     deleteDayExerciseWarning: "Toda la información introducida para este ejercicio y todas sus series de este día, incluyendo los datos introducidos por el atleta, se eliminará permanentemente.",
-    remove: ""
+    remove: "",
+    nutrientGroupComposition: "Composition",
+    nutrientGroupVitamins: "Vitamins",
+    nutrientGroupMinerals: "Minerals",
+    nutrientGroupAminoAcids: "Amino acids",
+    nutrientGroupAlkalinity: "Alkalinity / Acidity",
+
+    nutrientCalories: "Energy",
+    nutrientProtein: "Protein",
+    nutrientFat: "Fat",
+    nutrientCarbohydrates: "Carbohydrates",
+    nutrientWater: "Water",
+    nutrientNitrogen: "Nitrogen",
+
+    nutrientVitaminA_ui: "Vitamin A",
+    nutrientVitaminB1_mcg: "Vitamin B1",
+    nutrientVitaminB2_mcg: "Vitamin B2",
+    nutrientVitaminC_mcg: "Vitamin C",
+    nutrientNiacin_mcg: "Niacin",
+
+    nutrientSodium_mg: "Sodium",
+    nutrientPotassium_mg: "Potassium",
+    nutrientCalcium_mg: "Calcium",
+    nutrientMagnesium_mg: "Magnesium",
+    nutrientIron_mg: "Iron",
+    nutrientCopper_mg: "Copper",
+    nutrientPhosphorus_mg: "Phosphorus",
+    nutrientSulfur_mg: "Sulfur",
+    nutrientChloride_mg: "Chloride",
+
+    nutrientPhenylalanine_mg: "Phenylalanine",
+    nutrientIsoleucine_mg: "Isoleucine",
+    nutrientLeucine_mg: "Leucine",
+    nutrientLysine_mg: "Lysine",
+    nutrientMethionine_mg: "Methionine",
+    nutrientThreonine_mg: "Threonine",
+    nutrientTryptophan_mg: "Tryptophan",
+    nutrientValine_mg: "Valine",
+
+    nutrientAcid: "Acidity",
+    nutrientAlcal: "Alkalinity",
+
+    // Nutrition wizard steps
+    nutritionPlan: "Nutrition Plan",
+    back: "Back",
+    next: "Next",
+    nutritionWizardStep1: "Select athlete & meals/day",
+    nutritionWizardStep2: "Nutrient restrictions",
+    nutritionWizardStep3: "Template day",
+    nutritionWizardStep4: "Weekly plan",
+    nutritionWizardStep5: "Confirmation",
+    nutritionWizardRestrictionHint: "If the athlete has any nutritional restrictions for daily intake, specify them here to help control the nutritional planning process.",
+    nutritionWizardAthleteStepHint: "Select the athlete for whom to create the nutrition plan and the number of daily meals."
   },
+
   es: {
+    activePlanExistsTitle: "Ya existe un plan activo",
+    activePlanExistsText: "Este atleta ya tiene un plan nutricional activo. El plan actual será archivado, ¿quieres continuar?",
+    confirm: "Confirmar",
+    finish: "Finalizar",
+    optionsLabel: "Opciones:",
+    athlete: "Atleta",
+    planTitle: "Título del plan",
+    mealsPerDay: "Comidas por día",
+    optionName: "Nombre de opción",
+    optionDescription: "Descripción de la opción",
+    mealLabel: "Comida",
+    addMeal: "Añadir comida",
+    removeMeal: "Eliminar comida",
+    addOption: "Añadir opción",
+    removeOption: "Quitar opción",
+    foodsCaption: "Alimentos",
+    addFood: "Añadir alimento",
+    selectOrSearchFood: "Selecciona o busca alimento",
+    grams: "Gramos",
+    weekdays: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"],
     loadingBlocks: "Cargando bloques...",
+    loadingNutritionPlan: "Cargando plan nutricional...",
+    noBlocksForAthlete: "No se encontraron bloques para este atleta.",
+    weeklyPlanHint: "Plan semanal elaborado a partir del día plantilla, puedes editar días concretos si es necesario.",
     loadingBlockDetails: "Cargando detalles de bloque...",
     followup: "Seguimiento",
     followupActivity: "Actividad",
@@ -866,6 +1049,7 @@ export const translations: Translations = {
     sexFemale: "Mujer",
     sexOther: "Otro",
     manageUsersQuickFilterNoPlan: "Sin planificación",
+    noActiveNutritionPlan: "No hay planes nutricionales activos para este atleta.",
     manageUsersQuickFilterNoPassword: "Usuarios sin contraseña",
     noExercisesForDay: "Ningún ejercicio para este día.",
     // Password page translations (new)
@@ -1046,6 +1230,7 @@ export const translations: Translations = {
     infoTab: "Información",
     paymentsTab: "Pagos",
     blocksTab: "Bloques",
+    nutritionTab: "Plan nutricional",
     addPaymentDialogTitle: "Nuevo pago",
     addPaymentDialogDate: "Fecha",
     addPaymentDialogAmount: "Importe (€)",
@@ -1105,6 +1290,9 @@ export const translations: Translations = {
     adminMenuTrainingBlocks: "Bloques de entrenamiento",
     adminMenuCreateBlock: "Crear bloque",
     adminMenuManageBlocks: "Gestionar bloques",
+    nutritionMenu: "Nutrición",
+    nutrientsMenu: "Valores nutricionales",
+    elaborations: "Elaboraciones",
     editFieldTooltip: "Haz clic para editar",
     createAthlete: "Crear atleta",
     blockVisibilityLabel: "Visibilidad del bloque",
@@ -1212,6 +1400,59 @@ export const translations: Translations = {
     deleteDayExerciseTitle: "Eliminar ejercicio del día",
     deleteDayExerciseConfirm: "¿Seguro que quieres eliminar este ejercicio?",
     deleteDayExerciseWarning: "Toda la información introducida para este ejercicio y todas sus series de este día, incluyendo los datos introducidos por el atleta, se eliminará permanentemente.",
-    remove: ""
+    remove: "",
+
+    nutrientGroupComposition: "Composición",
+    nutrientGroupVitamins: "Vitaminas",
+    nutrientGroupMinerals: "Minerales",
+    nutrientGroupAminoAcids: "Aminoácidos",
+    nutrientGroupAlkalinity: "Alcalinidad / Acidez",
+
+    nutrientCalories: "Energía",
+    nutrientProtein: "Proteína",
+    nutrientFat: "Grasa",
+    nutrientCarbohydrates: "Hidratos de carbono",
+    nutrientWater: "Agua",
+    nutrientNitrogen: "Nitrógeno",
+
+    nutrientVitaminA_ui: "Vitamina A",
+    nutrientVitaminB1_mcg: "Vitamina B1",
+    nutrientVitaminB2_mcg: "Vitamina B2",
+    nutrientVitaminC_mcg: "Vitamina C",
+    nutrientNiacin_mcg: "Niacina",
+
+    nutrientSodium_mg: "Sodio",
+    nutrientPotassium_mg: "Potasio",
+    nutrientCalcium_mg: "Calcio",
+    nutrientMagnesium_mg: "Magnesio",
+    nutrientIron_mg: "Hierro",
+    nutrientCopper_mg: "Cobre",
+    nutrientPhosphorus_mg: "Fósforo",
+    nutrientSulfur_mg: "Azufre",
+    nutrientChloride_mg: "Cloruro",
+
+    nutrientPhenylalanine_mg: "Fenilalanina",
+    nutrientIsoleucine_mg: "Isoleucina",
+    nutrientLeucine_mg: "Leucina",
+    nutrientLysine_mg: "Lisina",
+    nutrientMethionine_mg: "Metionina",
+    nutrientThreonine_mg: "Treonina",
+    nutrientTryptophan_mg: "Triptófano",
+    nutrientValine_mg: "Valina",
+
+    nutrientAcid: "Acidez",
+    nutrientAlcal: "Alcalinidad",
+
+    // Nutrition wizard steps
+    nutritionPlan: "Plan nutricional",
+    back: "Atrás",
+    next: "Siguiente",
+    nutritionWizardStep1: "Selecciona atleta y comidas/día",
+    nutritionWizardStep2: "Restricciones de nutrientes",
+    nutritionWizardStep3: "Día plantilla",
+    nutritionWizardStep4: "Plan semanal",
+    nutritionWizardStep5: "Confirmación",
+    nutritionWizardRestrictionHint: "Si el atleta tiene alguna restricción nutricional diaria, especifícala aquí para controlar el proceso de planificación nutricional.",
+    nutritionWizardAthleteStepHint: "Selecciona el atleta para el cual elaborar el plan nutricional y la cantidad de comidas diarias."
   }
-};
+}

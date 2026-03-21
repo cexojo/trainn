@@ -1,19 +1,14 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
 import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import { Box, Typography, Button, IconButton, Tooltip, Dialog, DialogTitle, DialogContent, Tabs, Tab, CircularProgress, TextField, Select, MenuItem, Menu, Switch, FormControl, InputLabel, Popover } from "@mui/material";
+import { Box, Typography, Button, IconButton, Tooltip, Dialog, DialogTitle, DialogContent, Tabs, Tab, CircularProgress, TextField, Select, MenuItem, Menu, Switch } from "@mui/material";
 import { translations, type Lang } from "@/app/i18n";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import NotificationSnackbar from "./NotificationSnackbar";
-import MeasurementsTable from "./MeasurementsTable";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import EuroIcon from "@mui/icons-material/Euro";
-import MuscleGroupBadges from "./MuscleGroupBadges";
-import StatCard from "./StatCard";
-import SlidingStatCard from "./SlidingStatCard";
-import BlockPerformanceStats from "./BlockPerformanceStats";
 import AddPaymentDialog from "./AddPaymentDialog";
 import TrainingTab from "./TrainingTab";
 import EditableDropdownField from "./EditableDropdownField";
@@ -24,7 +19,8 @@ import MarkEmailUnreadOutlinedIcon from '@mui/icons-material/MarkEmailUnreadOutl
 
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { useRef } from "react";
+
+import NutritionPlanSummary from "./NutritionPlanSummary";
 
 
 
@@ -50,7 +46,7 @@ export default function UserTable({
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<any | null>(null);
-  const [modalTab, setModalTab] = useState<"info" | "payments" | "measurements" | "blocks">("info");
+  const [modalTab, setModalTab] = useState<"info" | "payments" | "measurements" | "blocks" | "nutrition">("info");
   const [searchTerm, setSearchTerm] = useState("");
   const [quickFilter, setQuickFilter] = useState<"active" | "all" | "hidden" | "due" | "nofuture" | "noplan" | "nopassword">("active");
   const [internalRefreshKey, setInternalRefreshKey] = useState(0);
@@ -407,6 +403,7 @@ export default function UserTable({
               <Tab value="payments" label={translations[lang].paymentsTab} />
               <Tab value="measurements" label={translations[lang].measurementsTab} />
               <Tab value="blocks" label={translations[lang].blocksTab} />
+              <Tab value="nutrition" label={translations[lang].nutritionTab} />
             </Tabs>
             {modalTab === "info" && selected && (
               <Box sx={{ mt: 2 }}>
@@ -807,10 +804,17 @@ export default function UserTable({
               <MeasurementsTab userId={selected.id} lang={lang} />
             )}
             {modalTab === "blocks" && selected && (
-              <TrainingTab userId={selected.id} lang={lang} />
+              <TrainingTab
+                userId={selected.id}
+                lang={lang}
+              />
+            )}
+            {modalTab === "nutrition" && selected && (
+              <NutritionPlanSummary userId={selected.id} lang={lang} />
             )}
           </DialogContent>
         </Dialog>
+
         {(loading || actionLoading) && (
           <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", position: "absolute", width: "100%", height: "100%", top: 0, left: 0, background: "rgba(255,255,255,0.5)", zIndex: 1999 }}>
             <CircularProgress />
