@@ -15,10 +15,7 @@ export async function GET(req: NextRequest) {
   let userId = searchParams.get("userId");
 
   if (!userId) {
-    // fallback to demo user "John Doe"
-    const demo = await prisma.user.findFirst({ where: { firstName: "John", lastName: "Doe" } });
-    if (!demo) return NextResponse.json({}, { status: 404 });
-    userId = demo.id;
+    return NextResponse.json({ error: "userId is required" }, { status: 400 });
   }
 
   // Find all day exercise series for the user, expanding links
