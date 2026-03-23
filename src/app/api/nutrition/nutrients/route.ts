@@ -64,7 +64,14 @@ type FoodGroup = {
 export async function GET(_req: NextRequest) {
   // Try Redis cache first
   try {
-    const cache = await redis.get(NUTRIENTS_CACHE_KEY);
+    let cache = await redis.get(NUTRIENTS_CACHE_KEY);
+    if (typeof cache === "string") {
+      try {
+        cache = JSON.parse(cache);
+      } catch {
+        cache = null;
+      }
+    }
     if (
       cache &&
       typeof cache === "object" &&

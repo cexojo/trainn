@@ -6,7 +6,7 @@ import { translations, type Lang } from "@/app/i18n";
 export default function NutritionPlanSummary({ userId, lang }: { userId: string; lang: Lang }) {
   const [effectiveUserId, setEffectiveUserId] = React.useState<string>(userId);
   const [plan, setPlan] = React.useState<any>(null);
-  const [foodsLookup, setFoodsLookup] = React.useState<Record<string, { name: string, state: string, group: string }> | null>(null);
+  const [foodsLookup, setFoodsLookup] = React.useState<Record<string, { name: string, state: string, group: string }>>({});
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -42,8 +42,30 @@ export default function NutritionPlanSummary({ userId, lang }: { userId: string;
       });
   }, [effectiveUserId]);
 
-  // Fetch foods nutrients lookup
+  // Fetch foods nutrients lookup only if there are foods in the plan
   React.useEffect(() => {
+    if (!plan) return;
+
+    // Helper to check for at least one food in the plan structure
+    function hasAnyFood(p: any): boolean {
+      if (!p || !Array.isArray(p.days)) return false;
+      for (const day of p.days) {
+        if (!Array.isArray(day.meals)) continue;
+        for (const meal of day.meals) {
+          if (!Array.isArray(meal.mealOptions)) continue;
+          for (const opt of meal.mealOptions) {
+            if (Array.isArray(opt.foods) && opt.foods.length > 0) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
+    if (!hasAnyFood(plan)) {
+      setFoodsLookup({});
+      return;
+    }
     fetch("/api/nutrition/nutrients")
       .then(r => r.json())
       .then(data => {
@@ -68,9 +90,9 @@ export default function NutritionPlanSummary({ userId, lang }: { userId: string;
         }
         setFoodsLookup(lookup);
       });
-  }, []);
+  }, [plan]);
 
-  if (!effectiveUserId || loading || !foodsLookup) return <Box sx={{ py: 3, display: "flex", alignItems: "center" }}><CircularProgress size={24} sx={{ mr: 1 }} /> <Typography>{translations[lang].loadingNutritionPlan}</Typography></Box>;
+  if (!effectiveUserId || loading) return <Box sx={{ py: 3, display: "flex", alignItems: "center" }}><CircularProgress size={24} sx={{ mr: 1 }} /> <Typography>{translations[lang].loadingNutritionPlan}</Typography></Box>;
   if (error) return <Typography color="error">{error}</Typography>;
 
   // Handle the case where plan is an array of plans
@@ -201,13 +223,13 @@ export default function NutritionPlanSummary({ userId, lang }: { userId: string;
                                     <React.Fragment>
                                       <Box component="ul" sx={{ pl: 2, mb: 0 }}>
                                         {opt.foods.map((f: any, fIdx: number) => {
-                                          const foodMeta = foodsLookup[f.foodId] || {};
+                                          const foodMeta = foodsLookup?.[f.foodId] || {};
                                           return (
                                             <li key={f.foodId || fIdx}>
                                               <Typography variant="body2" sx={{ fontSize: "0.73em", color: "#444" }}>
-                                                {foodMeta.name || "Food"}{" "}
-                                                {foodMeta.state && <span>({foodMeta.state})</span>}{" "}
-                                                <span style={{ color: "#444" }}>{foodMeta.group ? `- ${foodMeta.group}` : ""}</span>
+                                                {foodMeta.name || "Food"}
+                                                {foodMeta.state && <> ({foodMeta.state})</>}
+                                                {foodMeta.group && <span style={{ color: "#444" }}>{` - ${foodMeta.group}`}</span>}
                                                 {typeof f.quantity === "number" ? ` - ${f.quantity}g` : ""}
                                               </Typography>
                                             </li>
