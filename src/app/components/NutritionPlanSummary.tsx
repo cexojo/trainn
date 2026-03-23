@@ -186,6 +186,17 @@ export default function NutritionPlanSummary({ userId, lang }: { userId: string;
                                   >
                                     {opt.optionName || opt.name || `Option ${optIdx + 1}`}
                                   </Typography>
+                                  {opt.description && (
+                                    <Typography variant="body2" sx={{
+                                      fontStyle: "italic",
+                                      color: "#cfcfd5",
+                                      mb: 0.5,
+                                      pb: 0,
+                                      pl: 0.5,
+                                    }}>
+                                      {opt.description}
+                                    </Typography>
+                                  )}
                                   {Array.isArray(opt.foods) && opt.foods.length > 0 && (
                                     <React.Fragment>
                                       <Box component="ul" sx={{ pl: 2, mb: 0 }}>
