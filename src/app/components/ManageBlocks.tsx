@@ -552,7 +552,6 @@ exercisesForWeek.forEach((ex: any) => {
       )}
       {/* Actions Bar */}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', mb: 2, px: 1, gap: 1 }}>
-        {/* Block delete icon */}
         <Tooltip title={translations[lang].deleteBlockTooltip}>
           <IconButton
             size="small"
@@ -562,17 +561,15 @@ exercisesForWeek.forEach((ex: any) => {
             <DeleteOutlineIcon fontSize="small" />
           </IconButton>
         </Tooltip>
-        {typeof block.isVisible === 'boolean' && onRequestBlockVisibility && (
-          <Tooltip title={block.isVisible ? translations[lang].hideBlock : translations[lang].publishBlock}>
-            <IconButton
-              color={block.isVisible ? "warning" : "success"}
-              size="small"
-              onClick={() => onRequestBlockVisibility(!block.isVisible)}
-            >
-              {block.isVisible ? <VisibilityOffIcon /> : <VisibilityIcon />}
-            </IconButton>
-          </Tooltip>
-        )}
+        <Tooltip title={block && block.isVisible === true ? translations[lang].hideBlock : translations[lang].publishBlock}>
+          <IconButton
+            color={block && block.isVisible === true ? "warning" : "success"}
+            size="small"
+            onClick={() => onRequestBlockVisibility?.(!(block && block.isVisible === true))}
+          >
+            {block && block.isVisible === true ? <VisibilityOffIcon /> : <VisibilityIcon />}
+          </IconButton>
+        </Tooltip>
       </Box>
       <Tabs
         value={weekId}
@@ -1585,11 +1582,6 @@ export default function ManageBlocks() {
     }
   }, [selectedAthlete]);
 
-  const handleBlockVisibilityChange = (checked: boolean) => {
-    setNextVisible(checked);
-    setOpenDialog(true);
-  };
-
   const handleConfirmVisibility = async () => {
     if (!selectedBlock) return;
     await fetch("/api/blocks", {
@@ -1597,28 +1589,28 @@ export default function ManageBlocks() {
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({ blockId: selectedBlock.id, visible: nextVisible }),
     });
+    // Locally update selectedBlock's isVisible, and update blocks state for consistency
+    setSelectedBlock(block => (block ? { ...block, isVisible: nextVisible! } : block));
+    setBlocks(blocksArr =>
+      blocksArr.map(b =>
+        b.id === selectedBlock.id ? { ...b, isVisible: nextVisible! } : b
+      )
+    );
     setOpenDialog(false);
     setNextVisible(null);
     setDialogMode(null);
-    if (selectedAthlete) {
-      setBlocksLoading(true);
-      fetch(`/api/blocks?userId=${selectedAthlete.id}`)
-        .then(r => r.json())
-        .then(resp => {
-          if (Array.isArray(resp.blocks)) {
-            const sortedBlocks = resp.blocks.sort((a: Block, b: Block) => b.blockNumber - a.blockNumber);
-            setBlocks(sortedBlocks);
-            if (sortedBlocks.length) {
-              const stillThere = sortedBlocks.find((b: Block) => b.id === selectedBlock.id);
-              setSelectedBlock(stillThere || sortedBlocks[0]);
-            } else setSelectedBlock(null);
-          } else {
-            setBlocks([]);
-            setSelectedBlock(null);
-          }
-        })
-        .finally(() => setBlocksLoading(false));
-    }
+    // Optionally, re-fetch blocks but do NOT reset selectedBlock here to avoid hiding detail from admin
+    // If you want to background sync blocks list for new blocks, do so here but never unset selectedBlock
+    // (left intentionally as a comment)
+    // if (selectedAthlete) {
+    //   fetch(`/api/blocks?userId=${selectedAthlete.id}`)
+    //     .then(r => r.json())
+    //     .then(resp => {
+    //       if (Array.isArray(resp.blocks)) {
+    //         setBlocks(resp.blocks);
+    //       }
+    //     });
+    // }
   };
 
   return (
@@ -1735,7 +1727,7 @@ export default function ManageBlocks() {
           athleteId={selectedAthlete.id}
           blockId={selectedBlock.id}
           lang={lang}
-          block={blockWithWeeks}
+          block={{ ...blockWithWeeks, isVisible: selectedBlock?.isVisible }}
           onWeeksReordered={(newWeeks) => setBlockWithWeeks({...blockWithWeeks, weeks: newWeeks})}
           onRequestBlockVisibility={(visible: boolean) => {
             setNextVisible(visible);

@@ -6,13 +6,12 @@ import { getTokenPayload } from "../utils/auth";
 // GET /api/blocks?userId=...
 export async function GET(req: NextRequest) {
   try {
-    const payload = getTokenPayload(req);
-    if (!payload || payload.role !== "admin") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("userId");
+    const payload = getTokenPayload(req);
+    if (!payload || (payload.role !== "admin" && payload.userId !== userId)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
     if (!userId) {
       return NextResponse.json({ error: "No userId provided" }, { status: 400 });
     }

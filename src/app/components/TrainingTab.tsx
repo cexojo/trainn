@@ -1,5 +1,7 @@
 import React from "react";
-import { Box, Typography, CircularProgress, FormControl, InputLabel, Select, MenuItem, Dialog, DialogTitle, DialogContent } from "@mui/material";
+import { Box, Typography, CircularProgress, FormControl, InputLabel, Select, MenuItem, Dialog, DialogTitle, DialogContent, Tooltip, IconButton } from "@mui/material";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import MuscleGroupBadges from "./MuscleGroupBadges";
 import BlockWeeklyProgress from "./BlockWeeklyProgress";
 import { translations, type Lang } from "@/app/i18n";
@@ -50,7 +52,7 @@ function TrainingTab({ userId, lang }: { userId: string, lang: Lang }) {
 
   return (
     <Box sx={{ p: 2 }}>
-      <Box sx={{ maxWidth: 320, minHeight: 56, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <Box sx={{ maxWidth: 350, minHeight: 56, display: "flex", alignItems: "center", justifyContent: "center" }}>
         {loadingBlocks ? (
           <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 2, py: 2 }}>
             <CircularProgress size={22} />
@@ -62,9 +64,10 @@ function TrainingTab({ userId, lang }: { userId: string, lang: Lang }) {
               {translations[lang].noBlocksForAthlete}
             </Typography>
           ) : (
-            <FormControl size="small" fullWidth>
-              <InputLabel id="block-selector-label">{translations[lang].block}</InputLabel>
-              <Select
+            <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+              <FormControl size="small" fullWidth>
+                <InputLabel id="block-selector-label">{translations[lang].block}</InputLabel>
+                <Select
                 labelId="block-selector-label"
                 label={translations[lang].block}
                 value={selectedBlock ? selectedBlock.id : ""}
@@ -74,7 +77,7 @@ function TrainingTab({ userId, lang }: { userId: string, lang: Lang }) {
                 }}
                 MenuProps={{
                   PaperProps: {
-                    style: { minWidth: 250 }
+                    style: { minWidth: 300 }
                   }
                 }}
               >
@@ -149,12 +152,53 @@ function TrainingTab({ userId, lang }: { userId: string, lang: Lang }) {
                           }}>
                             {totalCompleted}/{totalSeries}
                           </Box>
+                          <Box sx={{ ml: 0.5, display: "flex", alignItems: "center" }}>
+                            {b.isVisible ?
+                              <Tooltip title="">
+                                <svg width={18} height={18} style={{ color: "#26a69a", verticalAlign: "middle" }} viewBox="0 0 24 24"><path fill="currentColor" d="M12 4.5C7.305 4.5 3.223 7.546 1.5 12c1.723 4.454 5.805 7.5 10.5 7.5s8.777-3.046 10.5-7.5C20.777 7.546 16.695 4.5 12 4.5zm0 13c-2.482 0-4.5-2.018-4.5-4.5s2.018-4.5 4.5-4.5 4.5 2.018 4.5 4.5-2.018 4.5-4.5 4.5zm0-7.5A3 3 0 0 0 9 12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
+                              </Tooltip>
+                              :
+                              <Tooltip title="">
+                                <svg width={18} height={18} style={{ color: "#bbb", verticalAlign: "middle" }} viewBox="0 0 24 24"><path fill="currentColor" d="M12 6.5C8.399 6.5 5.132 8.723 3.488 12c1.644 3.277 4.911 5.5 8.512 5.5 3.601 0 6.868-2.223 8.512-5.5-1.644-3.277-4.911-5.5-8.512-5.5m0-2C16.588 4.5 20.672 7.544 22.5 12c-1.828 4.456-5.912 7.5-10.5 7.5S3.328 16.456 1.5 12C3.328 7.544 7.411 4.5 12 4.5zm0 4A3.5 3.5 0 1 1 8.5 12 3.5 3.5 0 0 1 12 8.5z"/><path fill="currentColor" d="M2 2L22 22" stroke="currentColor" strokeWidth="2"/></svg>
+                              </Tooltip>
+                            }
+                          </Box>
                         </Box>
                       </MenuItem>
                     );
                   })}
               </Select>
-            </FormControl>
+              </FormControl>
+              {selectedBlock && (
+                <IconButton
+                  size="small"
+                  sx={{ ml: 1 }}
+                  onClick={async (e) => {
+                    e.stopPropagation();
+                    await fetch('/api/blocks', {
+                      method: 'PATCH',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        blockId: selectedBlock.id,
+                        visible: !selectedBlock.isVisible,
+                      })
+                    });
+                    // Refetch blocks (ensure update)
+                    setLoadingBlocks(true);
+                    const data = await fetch(`/api/training-data?userId=${userId}`).then(r => r.json());
+                    if (Array.isArray(data.blocks)) {
+                      setBlocks(data.blocks);
+                      // Try to re-select the same block (by id), fallback to latest
+                      setSelectedBlock((bs: any) => data.blocks.find((block: any) => block.id === (bs?.id || selectedBlock.id)) || (data.blocks.length > 0 ? data.blocks[0] : null));
+                    }
+                    setLoadingBlocks(false);
+                  }}
+                  title={selectedBlock.isVisible ? translations[lang].hideBlock : translations[lang].publishBlock}
+                >
+                  {selectedBlock.isVisible ? <VisibilityOffIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
+                </IconButton>
+              )}
+            </Box>
           )
         )}
       </Box>

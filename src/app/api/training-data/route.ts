@@ -38,9 +38,9 @@ export async function GET(req: NextRequest) {
     const blocks = await prisma.trainingBlock.findMany({
       where: {
         userId,
-        ...(user?.role === "athlete" ? { isVisible: true } : {})
+        ...(tokenPayload.role === "athlete" && tokenPayload.id === userId ? { isVisible: true } : {})
       },
-      orderBy: { blockNumber: "asc" },
+      orderBy: { blockNumber: "desc" },
       include: {
         weeks: {
           orderBy: { weekNumber: "asc" },
@@ -359,6 +359,7 @@ export async function GET(req: NextRequest) {
       id: b.id,
       blockNumber: b.blockNumber,
       description: b.description,
+      isVisible: b.isVisible,
       weeks: b.weeks.map((w: any) => {
         const stats = weekStats[String(w.id)] || { total: 0, completed: 0 };
         return {
