@@ -40,6 +40,11 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [notification, setNotification] = useState<NotificationProps["notification"]>(null);
+  // -- New for edit/reuse logic --
+  const [existingPlan, setExistingPlan] = useState<any | null>(null);
+  const [wizardMode, setWizardMode] = useState<"new" | "edit" | null>(null); // null = no choice yet
+  const [showPlanChoiceDialog, setShowPlanChoiceDialog] = useState(false);
+  const [userSelectionLocked, setUserSelectionLocked] = useState(false);
   // I18n translations are always present per codebase convention
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const { translations } = require("../i18n");
@@ -107,11 +112,37 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
 
   const [activeStep, setActiveStep] = useState(0);
 
+  // Weekly plan async loading spinner state (for edit)
+  const [weeklyPlanLoading, setWeeklyPlanLoading] = useState(false); 
+
   // Step 1: athlete and meals per day
   const [selectedAthlete, setSelectedAthlete] = useState<Athlete | null>(null);
   const [athleteOptions, setAthleteOptions] = useState<Athlete[]>([]);
   const [athleteLoading, setAthleteLoading] = useState(false);
   const [mealsPerDay, setMealsPerDay] = useState<number>(3);
+
+  // --- New: Load plan if athlete changes
+  useEffect(() => {
+    if (selectedAthlete && !userSelectionLocked) {
+      // On user change, reset mode choice and get their active plan if any
+      setWizardMode(null);
+      setExistingPlan(null);
+      setShowPlanChoiceDialog(false);
+
+      fetch("/api/nutrition/plan?athleteId=" + selectedAthlete.id + "&active=true")
+        .then(r => r.json())
+        .then(plans => {
+          if (Array.isArray(plans) && plans.length > 0) {
+            setExistingPlan(plans[0]);
+            setShowPlanChoiceDialog(true);
+          } else {
+            setExistingPlan(null);
+            setWizardMode("new");
+          }
+        });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedAthlete]);
 
   // Step 2: Nutrient restrictions
   const [nutrientRestrictions, setNutrientRestrictions] = useState<Record<string, { min?: number; max?: number }>>({});
@@ -135,9 +166,9 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
 
   // --- Effects ---
 
-  // When entering Step 4, initialize weeklyMeals from templateMeals if not already populated
+  // When entering Step 4, initialize weeklyMeals from templateMeals if creating a NEW plan only.
   useEffect(() => {
-    if (activeStep === 3) {
+    if (activeStep === 3 && wizardMode === "new") {
       setWeeklyMeals(
         Array.from({ length: 7 }, () =>
           templateMeals.map(meal => JSON.parse(JSON.stringify(meal)) as Meal)
@@ -145,7 +176,7 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeStep]);
+  }, [activeStep, wizardMode]);
 
   // Fetch athletes on mount
   useEffect(() => {
@@ -304,7 +335,7 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
             <Autocomplete
               fullWidth
               autoHighlight
-              disabled={athleteLoading}
+              disabled={athleteLoading || userSelectionLocked}
               options={athleteOptions}
               getOptionLabel={option =>
                 option
@@ -318,14 +349,25 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
               isOptionEqualToValue={(option, value) => option && value && option.id === value.id}
               value={selectedAthlete}
               onChange={(_, value) => {
-                setSelectedAthlete(value);
-                if (value && !planTitle) {
-                  const fullName =
-                    value.firstName && value.lastName
-                      ? `${value.firstName} ${value.lastName}`
-                      : value.firstName || value.lastName || value.username || value.name || "";
-                  const dateStr = new Date().toLocaleDateString("es-ES");
-                  setPlanTitle(`Plan nutricional para ${fullName} - ${dateStr}`);
+                // Reset everything on athlete change, unless locked due to editing
+                if (!userSelectionLocked) {
+                  setSelectedAthlete(value);
+                  setWizardMode(null);
+                  setExistingPlan(null);
+                  setMealsPerDay(3);
+                  setPlanTitle("");
+                  setPlanDescription("");
+                  setWeeklyMeals([]);
+                  setNutrientRestrictions({});
+                  setTemplateMeals([]);
+                  if (value && !planTitle) {
+                    const fullName =
+                      value.firstName && value.lastName
+                        ? `${value.firstName} ${value.lastName}`
+                        : value.firstName || value.lastName || value.username || value.name || "";
+                    const dateStr = new Date().toLocaleDateString("es-ES");
+                    setPlanTitle(`Plan nutricional para ${fullName} - ${dateStr}`);
+                  }
                 }
               }}
               renderOption={(props, option) => {
@@ -389,7 +431,7 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
               sx={{ mb: 2 }}
             />
             {/* Plan Description */}
-            <DefaultTemplate ref={planDescRef} placeholder="Describe el plan nutricional aquí" />            
+            <DefaultTemplate ref={planDescRef} placeholder={translations[lang].describePlanPlaceholder} />            
           </Box>
         );
       case 1:
@@ -464,28 +506,42 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
         );
       case 3:
         return (
-          <Box>
-            <Alert severity="warning" sx={{ mb: 2 }}>
-              {translations[lang].weeklyPlanHint}
-            </Alert>
-            <Tabs value={activeDayTab} onChange={(_, idx) => setActiveDayTab(idx)}>
-              {translations[lang].weekdays.map((day: string, i: number) => (
-                <Tab label={day} key={i} />
-              ))}
-            </Tabs>
-            <Box sx={{ p: 2, maxHeight: "calc(80vh - 180px)", overflowY: "auto" }}>
-              <MealEditor
-                meals={weeklyMeals[activeDayTab] || []}
-                setMeals={(newMeals: Meal[]) => {
-                  const updated = [...weeklyMeals];
-                  updated[activeDayTab] = newMeals;
-                  setWeeklyMeals(updated);
+          <Box sx={{ position: "relative", minHeight: 250 }}>
+            {weeklyPlanLoading ? (
+              <Box
+                sx={{
+                  position: "absolute", left: 0, top: 0, width: "100%", height: "100%",
+                  display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10,
+                  bgcolor: "rgba(255,255,255,0.66)"
                 }}
-                foodStates={foodStates}
-                InfoIconWithNutrients={InfoIconWithNutrients}
-                translations={translations[lang]}
-              />
-            </Box>
+              >
+                <CircularProgress size={62} thickness={5} />
+              </Box>
+            ) : (
+              <>
+                <Alert severity="warning" sx={{ mb: 2 }}>
+                  {translations[lang].weeklyPlanHint}
+                </Alert>
+                <Tabs value={activeDayTab} onChange={(_, idx) => setActiveDayTab(idx)}>
+                  {translations[lang].weekdays.map((day: string, i: number) => (
+                    <Tab label={day} key={i} />
+                  ))}
+                </Tabs>
+                <Box sx={{ p: 2, maxHeight: "calc(80vh - 180px)", overflowY: "auto" }}>
+                  <MealEditor
+                    meals={weeklyMeals[activeDayTab] || []}
+                    setMeals={(newMeals: Meal[]) => {
+                      const updated = [...weeklyMeals];
+                      updated[activeDayTab] = newMeals;
+                      setWeeklyMeals(updated);
+                    }}
+                    foodStates={foodStates}
+                    InfoIconWithNutrients={InfoIconWithNutrients}
+                    translations={translations[lang]}
+                  />
+                </Box>
+              </>
+            )}
           </Box>
         );
       case 4:
@@ -502,7 +558,7 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
                   }
                 </Typography>
                 <Typography variant="h6" sx={{ mb: 1, fontWeight: 700 }}>
-                  {planTitle || "—"}
+                  {planTitle || translations[lang].emptyValue}
                 </Typography>
                 {planDescription?.trim() !== "" && (
                   <>
@@ -532,7 +588,7 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
                     {day}
                   </Typography>
                   {(weeklyMeals[dIdx] || []).length === 0 ? (
-                    <Typography variant="body2" color="text.secondary">—</Typography>
+                    <Typography variant="body2" color="text.secondary">{translations[lang].emptyValue}</Typography>
                   ) : (
                     (weeklyMeals[dIdx] || []).map((meal, mIdx) => (
                       <Box key={mIdx} sx={{ mb: 2 }}>
@@ -586,7 +642,7 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
                                   const fs = foodStates.find(f => f.id === food.foodId);
                                   return (
                                     <li key={fIdx} style={{ fontWeight: 400, fontSize: "0.72rem" }}>
-                                      {fs ? fs.label : (food.foodId || <span style={{ color: "#aaa" }}>—</span>)}:&nbsp;
+                                      {fs ? fs.label : (food.foodId || <span style={{ color: "#aaa" }}>{translations[lang].emptyValue}</span>)}:&nbsp;
                                       <span style={{ fontWeight: 400 }}>{food.quantity}g</span>
                                     </li>
                                   );
@@ -653,16 +709,16 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
       if (resp.ok && result?.success) {
         setNotification({
           type: "success",
-          message: translations[lang].planSavedSuccess || "Plan nutricional guardado exitosamente."
+          message: translations[lang].planSavedSuccess
         });
         setSaving(false);
         setTimeout(() => { window.location.reload(); }, 3500); // match TrainingBlocksWizard
       } else {
-        setNotification({ type: "error", message: (translations[lang].planSaveError || "Error al guardar el plan") + (result?.error ? ": " + result.error : "") });
+        setNotification({ type: "error", message: translations[lang].planSaveError + (result?.error ? ": " + result.error : "") });
         setSaving(false);
       }
     } catch (e) {
-      setNotification({ type: "error", message: translations[lang].planSaveError || "Error al guardar el plan: " + (e && e.toString ? e.toString() : "") });
+      setNotification({ type: "error", message: translations[lang].planSaveError + (e && e.toString ? `: ${e.toString()}` : "") });
       setSaving(false);
     }
   }
@@ -719,7 +775,10 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
               (!selectedAthlete ||
                 typeof mealsPerDay !== "number" ||
                 isNaN(mealsPerDay) ||
-                mealsPerDay < 1)) ||
+                mealsPerDay < 1 ||
+                wizardMode === null // block Next until user decides edit/new if dialog offered, or no info
+              )
+            ) ||
             (activeStep === 2 &&
               (
                 templateMeals.some(meal => !meal.name.trim()) ||
@@ -744,7 +803,7 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
         </DialogTitle>
         <DialogContent>
           <Typography sx={{ mb: 2 }}>
-            {translations[lang].activePlanExistsText}
+            {translations[lang].activePlanReplacementText}
           </Typography>
           <Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end" }}>
             <Button variant="outlined" onClick={() => setShowArchiveDialog(false)}>
@@ -761,6 +820,94 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
             >
               {translations[lang].confirm}
             </Button>
+          </Box>
+        </DialogContent>
+      </Dialog>
+
+      {/* Choose between edit or create new plan */}
+      <Dialog open={showPlanChoiceDialog} onClose={() => setShowPlanChoiceDialog(false)}>
+        <DialogTitle>
+          {translations[lang].activePlanExistsTitle}
+        </DialogTitle>
+        <DialogContent>
+          <Typography sx={{ mb: 2 }}>
+            {translations[lang].activePlanExistsText}
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 2, justifyContent: "flex-end" }}>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                // Create new plan, allow normal flow
+                setWizardMode("new");
+                setShowPlanChoiceDialog(false);
+                // reset non-user fields
+                setPlanTitle("");
+                setPlanDescription("");
+                setWeeklyMeals([]);
+                setTemplateMeals([]);
+                setNutrientRestrictions({});
+                setMealsPerDay(3);
+              }}
+            >{translations[lang].newPlan}</Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={async () => {
+                if (!selectedAthlete?.id) return;
+                setWeeklyPlanLoading(true);
+                try {
+                  const resp = await fetch(`/api/nutrition/plan?athleteId=${encodeURIComponent(selectedAthlete.id)}&active=true`);
+                  const plans = await resp.json();
+                  const planData = Array.isArray(plans) && plans.length > 0 ? plans[0] : null;
+                  if (!planData) { setWeeklyPlanLoading(false); return; }
+
+                  setPlanTitle(planData.name || "");
+                  setPlanDescription(planData.description || "");
+                  setMealsPerDay(
+                    Array.isArray(planData.days) && planData.days.length > 0 && planData.days[0].meals
+                      ? planData.days[0].meals.length
+                      : 3
+                  );
+                  // Parse weeklyMeals (7 days, each with current meals)
+                  const weekly: Meal[][] = [];
+                  for (let d = 0; d < 7; ++d) {
+                    // Get day by .dayNumber
+                    const dayObj = Array.isArray(planData.days) && planData.days.find((day: any) => day.dayNumber === d);
+                    if (!dayObj) { weekly.push([]); continue; }
+                    const mealsOut = [];
+                    for (const meal of dayObj.meals || []) {
+                      mealsOut.push({
+                        name: meal.name,
+                        description: meal.description,
+                        options: (meal.mealOptions || []).map((opt: any) => ({
+                          optionName: opt.name,
+                          description: opt.description,
+                          foods: (opt.foods || []).map((food: any) => ({
+                            foodId: food.foodId,
+                            quantity: food.quantity ?? 0
+                          }))
+                        }))
+                      });
+                    }
+                    weekly.push(mealsOut);
+                  }
+                  setWeeklyMeals(weekly);
+                  // Optionally fill in restrictions, etc. from API if present
+                  if (planData.nutrientRestrictions) setNutrientRestrictions(planData.nutrientRestrictions);
+                  setWizardMode("edit");
+                  setShowPlanChoiceDialog(false);
+                  setUserSelectionLocked(true);
+                  setActiveStep(3); // jump to weekly plan
+                } catch (err) {
+                  setNotification({
+                    type: "error",
+                    message: (err && err.toString) ? err.toString() : "Could not load the nutrition plan data."
+                  });
+                  setShowPlanChoiceDialog(false);
+                }
+                setWeeklyPlanLoading(false);
+              }}
+            >{translations[lang].editPlan}</Button>
           </Box>
         </DialogContent>
       </Dialog>
@@ -846,7 +993,7 @@ function MealEditor({ meals, setMeals, foodStates, InfoIconWithNutrients, transl
             sx={{ mb: 1 }}
           />
           <TextField
-            label="Descripción de la comida"
+            label={translations.mealDescriptionLabel}
             value={meal.description ?? ""}
             onChange={(e) => {
               const newMeals = [...meals];

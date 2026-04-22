@@ -110,6 +110,13 @@ export default function MeasurementsPanel() {
         loading={loading}
         columns={columns.filter((col) => col.id !== "actions")}
         t={t}
+        onRowClick={(row: any) => {
+          setFormData({
+            ...row,
+            date: row.date ? new Date(row.date).toISOString().slice(0, 10) : "",
+          });
+          setOpen(true);
+        }}
       />
       <TablePagination
         component="div"
@@ -134,7 +141,9 @@ export default function MeasurementsPanel() {
           position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
           bgcolor: "background.paper", borderRadius: 2, boxShadow: 24, p: 4, minWidth: 340
         }}>
-          <Typography variant="h6" mb={2}>{t.measurementsModalTitle}</Typography>
+          <Typography variant="h6" mb={2}>
+            {formData.id ? t.measurementsEditTitle : t.measurementsModalTitle}
+          </Typography>
           <form
             onSubmit={async (e) => {
               e.preventDefault();
@@ -160,8 +169,15 @@ export default function MeasurementsPanel() {
                     body[key] = sanitized === "" ? null : parseFloat(sanitized);
                   }
                 });
-                const res = await fetch("/api/measurements", {
-                  method: "POST",
+                // If formData.id is present, update instead of create
+                let url = "/api/measurements";
+                let method: "POST" | "PATCH" = "POST";
+                if (formData.id) {
+                  url = `/api/measurements/${formData.id}`;
+                  method = "PATCH";
+                }
+                const res = await fetch(url, {
+                  method,
                   headers: {
                     "Content-Type": "application/json",
                   },
@@ -243,6 +259,43 @@ export default function MeasurementsPanel() {
               </Typography>
             )}
             <Box mt={2} textAlign="right" display="flex" justifyContent="flex-end" gap={1}>
+              {formData.id && (
+                <Button
+                  color="error"
+                  variant="outlined"
+                  disabled={formLoading}
+                  onClick={async () => {
+                    if (!formData.id) return;
+                    setFormLoading(true);
+                    setFormError("");
+                    try {
+                      const res = await fetch(`/api/measurements/${formData.id}`, { method: "DELETE" });
+                      if (!res.ok) {
+                        const r = await res.json();
+                        setFormError(r.error || t.measurementsDeleteError || "Failed to delete measurement");
+                        setFormLoading(false);
+                        return;
+                      }
+                      setOpen(false);
+                      setFormError("");
+                      setFormLoading(false);
+                      setFormData(defaultFormData);
+                      setSnackbar({
+                        open: true,
+                        message: t.measurementsDeleted || "Measurement removed.",
+                        severity: "success"
+                      });
+                      fetchMeasurements();
+                    } catch (err) {
+                      setFormError(t.measurementsDeleteError || "Failed to delete measurement");
+                      setFormLoading(false);
+                    }
+                  }}
+                  sx={{ mr: 1 }}
+                >
+                  {t.measurementsDelete || "Remove"}
+                </Button>
+              )}
               <Button onClick={() => { setOpen(false); setFormError(""); }} disabled={formLoading}>
                 {t.measurementsModalCancel}
               </Button>
@@ -252,7 +305,12 @@ export default function MeasurementsPanel() {
                 color="primary"
                 disabled={formLoading}
               >
-                {formLoading ? t.measurementsSaving : t.measurementsAdd}
+                {formLoading
+                  ? t.measurementsSaving
+                  : (formData.id
+                    ? t.measurementsSave
+                    : t.measurementsAdd)
+                }
               </Button>
             </Box>
           </form>

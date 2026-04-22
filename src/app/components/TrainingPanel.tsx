@@ -515,7 +515,7 @@ export default function TrainingPanel({
     }
   };
 
-  const handleBlockChange = (blockId: string) => {
+  const handleBlockChange = async (blockId: string) => {
     const block = blockOpts.find(b => String(b.id) === String(blockId));
     if (block && block.weeks && block.weeks.length > 0) {
       setSelectedBlock(block);
@@ -524,6 +524,13 @@ export default function TrainingPanel({
       setWeekId(String(firstWeek.id));
       setSelectedDay?.(null);
       setFocusedExerciseKey(null);
+      if (userInfo?.id && firstWeek?.id) {
+        await fetch("/api/get-user-id", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: userInfo.id, lastVisitedWeek: firstWeek.id })
+        });
+      }
     }
   };
 

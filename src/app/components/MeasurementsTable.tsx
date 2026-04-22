@@ -11,13 +11,15 @@ export default function MeasurementsTable({
   loading,
   columns,
   t,
-  enableChart = false
+  enableChart = false,
+  onRowClick
 }: {
   measurements: any[];
   loading: boolean;
   columns: { id: string; label: string }[];
   t: any;
   enableChart?: boolean;
+  onRowClick?: (measurement: any) => void;
 }) {
   const [openGraph, setOpenGraph] = useState(false);
   const [graphField, setGraphField] = useState<string | null>(null);
@@ -135,7 +137,7 @@ export default function MeasurementsTable({
               </TableRow>
             ) : (
               measurements.map((m: any) => (
-                <TableRow key={m.id}>
+                <TableRow key={m.id} hover style={{ cursor: "pointer" }} onClick={() => onRowClick && onRowClick(m)}>
                   <TableCell sx={{ padding: "4px 8px" }}>
                     {m.date ? (() => {
                       const d = new Date(m.date);

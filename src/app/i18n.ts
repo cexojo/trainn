@@ -44,6 +44,7 @@ export type Translations = {
     // NutritionPlanWizard: Plan Duplication
     activePlanExistsTitle: string;
     activePlanExistsText: string;
+    activePlanReplacementText: string;
     confirm: string;
     loadingBlocks: string;
     loadingBlockDetails: string;
@@ -419,6 +420,19 @@ export type Translations = {
     measurementsDeleteError: string;
     measurementsDelete: string;
     measurementsSaveError: string;
+    measurementsEditTitle: string;
+    measurementsAddTitle: string;
+    measurementsSave: string;
+    measurementsModalAdd: string;
+    selectAthlete: string;
+    newPlan: string;
+    editPlan: string;
+    planSavedSuccess: string;
+    planSaveError: string;
+    confirmPlanTitle: string;
+    describePlanPlaceholder: string;
+    composeTemplateDay: string;
+    mealDescriptionLabel: string;
 
     // Muscle group translations
     muscleGroupQuadriceps: string;
@@ -496,7 +510,8 @@ export type Translations = {
 export const translations: Translations = {
   en: {
     activePlanExistsTitle: "Active Plan Detected",
-    activePlanExistsText: "This athlete already has an active nutrition plan. The current plan will be archived, do you want to continue?",
+    activePlanExistsText: "This athlete already has an active nutrition plan. Do you want to edit the current plan or create a new one?",
+    activePlanReplacementText: "This athlete already has an active nutrition plan. The current plan will be replaced.",
     confirm: "Confirm",
     finish: "Finish",
     optionsLabel: "Options:",
@@ -893,6 +908,19 @@ export const translations: Translations = {
     measurementsDeleteError: "Error deleting measurement",
     measurementsDelete: "Delete",
     measurementsSaveError: "Error saving measurement",
+    measurementsEditTitle: "Edit Measurement",
+    measurementsAddTitle: "New Measurement",
+    measurementsSave: "Update",
+    measurementsModalAdd: "Add",
+    selectAthlete: "Select athlete",
+    newPlan: "Create new plan",
+    editPlan: "Edit existing plan",
+    planSavedSuccess: "Nutrition plan saved successfully.",
+    planSaveError: "Error saving nutrition plan",
+    confirmPlanTitle: "Plan Summary and Confirmation",
+    describePlanPlaceholder: "Describe the nutrition plan here",
+    composeTemplateDay: "Template day: add meals, options, and foods",
+    mealDescriptionLabel: "Meal description",
 
     // Muscle group translation keys
     muscleGroupQuadriceps: "Quadriceps",
@@ -978,7 +1006,8 @@ export const translations: Translations = {
 
   es: {
     activePlanExistsTitle: "Ya existe un plan activo",
-    activePlanExistsText: "Este atleta ya tiene un plan nutricional activo. El plan actual será archivado, ¿quieres continuar?",
+    activePlanExistsText: "Este atleta ya tiene un plan nutricional activo. ¿Quieres crear un plan nuevo o editar el plan existente?",
+    activePlanReplacementText: "Este atleta ya tiene un plan nutricional activo. El actual plan será reemplazado.",
     confirm: "Confirmar",
     finish: "Finalizar",
     optionsLabel: "Opciones:",
@@ -1375,6 +1404,19 @@ export const translations: Translations = {
     measurementsDeleteError: "Error al borrar la medición",
     measurementsDelete: "Borrar",
     measurementsSaveError: "Error al guardar la medida",
+    measurementsEditTitle: "Editar Medida",
+    measurementsAddTitle: "Nueva Medida",
+    measurementsSave: "Actualizar",
+    measurementsModalAdd: "Añadir",
+    selectAthlete: "Selecciona atleta",
+    newPlan: "Crear plan nuevo",
+    editPlan: "Editar plan existente",
+    planSavedSuccess: "Plan nutricional guardado exitosamente.",
+    planSaveError: "Error al guardar el plan nutricional",
+    confirmPlanTitle: "Resumen y confirmación del plan",
+    describePlanPlaceholder: "Describe el plan nutricional aquí",
+    composeTemplateDay: "Día plantilla: añade comidas, opciones y alimentos",
+    mealDescriptionLabel: "Descripción de la comida",
 
     // Muscle group translation keys
     muscleGroupQuadriceps: "Cuádriceps",

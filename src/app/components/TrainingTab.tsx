@@ -23,7 +23,7 @@ function TrainingTab({ userId, lang }: { userId: string, lang: Lang }) {
       .then((data) => {
         if (Array.isArray(data.blocks)) {
           setBlocks(data.blocks);
-          setSelectedBlock(data.blocks.length > 0 ? data.blocks[data.blocks.length - 1] : null);
+          setSelectedBlock(data.blocks.length > 0 ? data.blocks[0] : null);
         }
       })
       .finally(() => setLoadingBlocks(false));

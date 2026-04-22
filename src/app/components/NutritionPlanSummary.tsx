@@ -6,7 +6,7 @@ import { translations, type Lang } from "@/app/i18n";
 export default function NutritionPlanSummary({ userId, lang }: { userId: string; lang: Lang }) {
   const [effectiveUserId, setEffectiveUserId] = React.useState<string>(userId);
   const [plan, setPlan] = React.useState<any>(null);
-  const [foodsLookup, setFoodsLookup] = React.useState<Record<string, { name: string, state: string, group: string }>>({});
+  const [foodsLookup, setFoodsLookup] = React.useState<Record<string, { label: string, name: string, state: string, group: string }>>({});
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -26,7 +26,7 @@ export default function NutritionPlanSummary({ userId, lang }: { userId: string;
     if (!effectiveUserId) return;
     setLoading(true);
     setError(null);
-    fetch(`/api/nutrition/plan?athleteId=${effectiveUserId}`)
+    fetch(`/api/nutrition/plan?athleteId=${effectiveUserId}&active=true`)
       .then(r => {
         if (!r.ok) throw new Error("Request failed");
         return r.json();
@@ -42,34 +42,12 @@ export default function NutritionPlanSummary({ userId, lang }: { userId: string;
       });
   }, [effectiveUserId]);
 
-  // Fetch foods nutrients lookup only if there are foods in the plan
+  // Always fetch all foods/label lookup from /api/nutrition/nutrients, so we can resolve all foodIds to their real label
   React.useEffect(() => {
-    if (!plan) return;
-
-    // Helper to check for at least one food in the plan structure
-    function hasAnyFood(p: any): boolean {
-      if (!p || !Array.isArray(p.days)) return false;
-      for (const day of p.days) {
-        if (!Array.isArray(day.meals)) continue;
-        for (const meal of day.meals) {
-          if (!Array.isArray(meal.mealOptions)) continue;
-          for (const opt of meal.mealOptions) {
-            if (Array.isArray(opt.foods) && opt.foods.length > 0) {
-              return true;
-            }
-          }
-        }
-      }
-      return false;
-    }
-    if (!hasAnyFood(plan)) {
-      setFoodsLookup({});
-      return;
-    }
     fetch("/api/nutrition/nutrients")
       .then(r => r.json())
       .then(data => {
-        const lookup: Record<string, { name: string, state: string, group: string }> = {};
+        const lookup: Record<string, { label: string, name: string, state: string, group: string }> = {};
         if (Array.isArray(data?.groups)) {
           for (const group of data.groups) {
             const groupName = group.name;
@@ -78,6 +56,7 @@ export default function NutritionPlanSummary({ userId, lang }: { userId: string;
                 if (Array.isArray(comp.states)) {
                   for (const state of comp.states) {
                     lookup[state.id] = {
+                      label: state.label,
                       name: comp.name,
                       state: state.state,
                       group: groupName
@@ -90,7 +69,7 @@ export default function NutritionPlanSummary({ userId, lang }: { userId: string;
         }
         setFoodsLookup(lookup);
       });
-  }, [plan]);
+  }, []);
 
   if (!effectiveUserId || loading) return <Box sx={{ py: 3, display: "flex", alignItems: "center" }}><CircularProgress size={24} sx={{ mr: 1 }} /> <Typography>{translations[lang].loadingNutritionPlan}</Typography></Box>;
   if (error) return <Typography color="error">{error}</Typography>;
@@ -227,9 +206,9 @@ export default function NutritionPlanSummary({ userId, lang }: { userId: string;
                                           return (
                                             <li key={f.foodId || fIdx}>
                                               <Typography variant="body2" sx={{ fontSize: "0.73em", color: "#444" }}>
-                                                {foodMeta.name || "Food"}
-                                                {foodMeta.state && <> ({foodMeta.state})</>}
-                                                {foodMeta.group && <span style={{ color: "#444" }}>{` - ${foodMeta.group}`}</span>}
+                                                {foodMeta?.label || foodMeta?.name || "-"}
+                                                {foodMeta?.state && <> ({foodMeta.state})</>}
+                                                {foodMeta?.group && <span style={{ color: "#444" }}>{` - ${foodMeta.group}`}</span>}
                                                 {typeof f.quantity === "number" ? ` - ${f.quantity}g` : ""}
                                               </Typography>
                                             </li>
