@@ -95,7 +95,7 @@ export async function PATCH(request: NextRequest) {
 }
 
  
- // GET: Return current user's measurements (athlete) or all (admin)
+ // GET: Return current user's measurements (athlete) or another user if admin
 export async function GET(request: NextRequest) {
   try {
     const tokenPayload = getTokenPayload(request);
@@ -103,7 +103,17 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     const isAdmin = tokenPayload.role === "admin";
-    const where = isAdmin ? {} : { userId: tokenPayload.id };
+    // Parse userId query parameter
+    const { searchParams } = new URL(request.url);
+    const queryUserId = searchParams.get('userId');
+    let where: any = {};
+
+    if (isAdmin && queryUserId) {
+      where = { userId: queryUserId };
+    } else if (!isAdmin) {
+      where = { userId: tokenPayload.id };
+    } // else admin without userId: show all
+
     const measurements = await prisma.measurement.findMany({
       where,
       orderBy: { date: "desc" },

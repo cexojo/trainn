@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box } from "@mui/material";
+import { Box, Dialog, DialogTitle, DialogContent, TextField, Button } from "@mui/material";
 import MeasurementsTable from "./MeasurementsTable";
 import { translations, type Lang } from "@/app/i18n";
 
@@ -31,7 +31,7 @@ export default function MeasurementsTab({ userId, lang }: MeasurementsTabProps) 
     async function fetchUserMeasurements() {
       setLoading(true);
       try {
-        const res = await fetch(`/api/measurements/${userId}`);
+        const res = await fetch(`/api/measurements?userId=${userId}`);
         if (res.ok) {
           const data = await res.json();
           if (active) setMeasurements(Array.isArray(data) ? data : []);
@@ -55,7 +55,15 @@ export default function MeasurementsTab({ userId, lang }: MeasurementsTabProps) 
 
   function handleOpenEdit(measurement: any) {
     setEditingMeasurement(measurement);
-    setFormData({ ...measurement });
+    // Format date as YYYY-MM-DD if possible
+    let date = "";
+    if (measurement.date) {
+      const d = new Date(measurement.date);
+      if (!isNaN(d.getTime())) {
+        date = d.toISOString().slice(0, 10);
+      }
+    }
+    setFormData({ ...measurement, date });
     setModalOpen(true);
   }
   function handleOpenAdd() {
@@ -75,13 +83,27 @@ export default function MeasurementsTab({ userId, lang }: MeasurementsTabProps) 
     setFormData(null);
     // Refresh
     setLoading(true);
-    const res = await fetch(`/api/measurements/${userId}`);
+    const res = await fetch(`/api/measurements?userId=${userId}`);
     setMeasurements(res.ok ? await res.json() : []);
     setLoading(false);
   }
   async function handleSave() {
     // PATCH if editing, POST if adding
+    const numFields = ["weight", "neck", "arm", "waist", "abdomen", "hip", "thigh", "calfMuscle"];
     const body = { ...formData };
+
+    // Convert all numFields to number or null
+    numFields.forEach((k) => {
+      if (body[k] === "" || body[k] == null) {
+        body[k] = null;
+      } else {
+        // Allow comma or dot for decimals, always send as number
+        const val = typeof body[k] === "string" ? body[k].replace(",", ".") : body[k];
+        const n = Number(val);
+        body[k] = isNaN(n) ? null : n;
+      }
+    });
+
     let ok = false;
     if (editingMeasurement) {
       const resp = await fetch(`/api/measurements/${editingMeasurement.id}`, {
@@ -103,7 +125,7 @@ export default function MeasurementsTab({ userId, lang }: MeasurementsTabProps) 
     setFormData(null);
     // Refresh
     setLoading(true);
-    const res = await fetch(`/api/measurements/${userId}`);
+    const res = await fetch(`/api/measurements?userId=${userId}`);
     setMeasurements(res.ok ? await res.json() : []);
     setLoading(false);
   }
@@ -130,68 +152,77 @@ export default function MeasurementsTab({ userId, lang }: MeasurementsTabProps) 
         onRowClick={handleOpenEdit}
       />
       {/* Measurement Modal */}
-      {modalOpen && (
-        <Box sx={{
-          position: "fixed", zIndex: 9999, top: 0, left: 0, width: "100vw", height: "100vh",
-          bgcolor: "rgba(0,0,0,0.22)", display: "flex", alignItems: "center", justifyContent: "center"
-        }}>
-          <Box sx={{
-            background: "#fff", borderRadius: 3, boxShadow: 3, p: 3, minWidth: 340, maxWidth: 380
-          }}>
-            <h2 style={{ marginTop: 0, fontWeight: 600 }}>
-              {editingMeasurement ? (t.measurementsEditTitle ?? "Edit Measurement") : (t.measurementsAddTitle ?? "New Measurement")}
-            </h2>
-            <form onSubmit={e => { e.preventDefault(); handleSave(); }}>
-              <div>
-                <label style={{ fontWeight: 500, display: "inline-block", width: 88 }}>{t.measurementsColumnDate}:</label>
-                <input
-                  type="date"
-                  value={formData?.date || ""}
-                  onChange={e => setFormData((f: any) => ({ ...f, date: e.target.value }))}
-                  required
-                  style={{ marginBottom: 10, width: 150 }}
-                />
-              </div>
+      <Dialog open={modalOpen} onClose={() => { setModalOpen(false); setEditingMeasurement(null); setFormData(null); }} maxWidth="xs" fullWidth>
+        <DialogTitle>
+          {editingMeasurement ? (t.measurementsEditTitle ?? "Edit Measurement") : (t.measurementsAddTitle ?? "New Measurement")}
+        </DialogTitle>
+        <DialogContent>
+          <form onSubmit={e => { e.preventDefault(); handleSave(); }}>
+            <Box display="flex" flexDirection="column" gap={2} mt={1}>
+              <TextField
+                label={t.measurementsColumnDate}
+                type="date"
+                size="small"
+                value={formData?.date || ""}
+                onChange={e => setFormData((f: any) => ({ ...f, date: e.target.value }))}
+                required
+                InputLabelProps={{ shrink: true }}
+                sx={{ width: 1 }}
+              />
               {["weight", "neck", "arm", "waist", "abdomen", "hip", "thigh", "calfMuscle"].map(k => (
-                <div key={k}>
-                  <label style={{ fontWeight: 500, display: "inline-block", width: 88 }}>{(t as any)["measurementsColumn" + k.charAt(0).toUpperCase() + k.slice(1)]}:</label>
-                  <input
-                    type="number"
-                    step="any"
-                    value={formData?.[k] ?? ""}
-                    onChange={e => setFormData((f: any) => ({ ...f, [k]: e.target.value }))}
-                    style={{ marginBottom: 10, width: 90 }}
-                  />
-                </div>
+                <TextField
+                  key={k}
+                  label={(t as any)["measurementsColumn" + k.charAt(0).toUpperCase() + k.slice(1)]}
+                  type="text"
+                  inputMode="decimal"
+                  size="small"
+                  value={formData?.[k] ?? ""}
+                  onChange={e => setFormData((f: any) => ({ ...f, [k]: e.target.value }))}
+                  onBlur={e => {
+                    let raw = e.target.value;
+                    if (raw === "" || raw == null) {
+                      setFormData((f: any) => ({ ...f, [k]: "" }));
+                      return;
+                    }
+                    raw = raw.replace(",", ".").trim();
+                    // Remove trailing . or , if present
+                    raw = raw.replace(/[.,]$/, "");
+                    let n = Number(raw);
+                    // Accept null/empty if invalid or negative
+                    if (isNaN(n) || n < 0) {
+                      setFormData((f: any) => ({ ...f, [k]: "" }));
+                    } else {
+                      // Only keep up to one decimal (no rounding to int!)
+                      n = Math.floor(n * 10) / 10;
+                      setFormData((f: any) => ({ ...f, [k]: String(n) }));
+                    }
+                  }}
+                  sx={{ width: 1 }}
+                />
               ))}
-              <Box mt={2} display="flex" gap={2} justifyContent="flex-end">
+              <Box display="flex" gap={2} justifyContent="flex-end">
                 {editingMeasurement && (
-                  <button
-                    type="button"
-                    style={{
-                      background: "#e53935", color: "#fff", border: "none", borderRadius: 3, padding: "7px 15px", fontWeight: 500, cursor: "pointer"
-                    }}
+                  <Button
+                    variant="contained"
+                    color="error"
                     onClick={handleDelete}
-                  >{t.measurementsDelete ?? "Delete"}</button>
+                  >{t.measurementsDelete ?? "Delete"}</Button>
                 )}
-                <button
-                  type="button"
-                  style={{
-                    background: "#eee", color: "#222", border: "none", borderRadius: 3, padding: "7px 15px", fontWeight: 500, cursor: "pointer"
-                  }}
+                <Button
                   onClick={() => { setModalOpen(false); setEditingMeasurement(null); setFormData(null); }}
-                >{t.measurementsModalCancel ?? "Cancel"}</button>
-                <button
+                  color="inherit"
+                  variant="outlined"
+                >{t.measurementsModalCancel ?? "Cancel"}</Button>
+                <Button
                   type="submit"
-                  style={{
-                    background: "#1976d2", color: "#fff", border: "none", borderRadius: 3, padding: "7px 15px", fontWeight: 500, cursor: "pointer"
-                  }}
-                >{editingMeasurement ? (t.measurementsSave ?? "Update") : (t.measurementsModalAdd ?? "Add")}</button>
+                  variant="contained"
+                  color="primary"
+                >{editingMeasurement ? (t.measurementsSave ?? "Update") : (t.measurementsModalAdd ?? "Add")}</Button>
               </Box>
-            </form>
-          </Box>
-        </Box>
-      )}
+            </Box>
+          </form>
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 }
