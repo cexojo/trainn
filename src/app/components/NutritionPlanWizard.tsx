@@ -7,8 +7,6 @@ import {
   Box,
   Typography,
   TextField,
-  Tabs,
-  Tab,
   Paper,
   Divider,
   CircularProgress,
@@ -36,6 +34,30 @@ type Food = { id: string; name: string; kcal: number; [key: string]: any };
 
 import { NUTRIENT_GROUPS } from "../utils/nutrients";
 
+function createTemplateMeals(mealsPerDay: number): Meal[] {
+  return Array.from({ length: mealsPerDay }, (_, i) => ({
+    name: `Comida ${i + 1}`,
+    options: [
+      {
+        optionName: "",
+        foods: []
+      }
+    ]
+  }));
+}
+
+function getAthleteDisplayName(athlete: Athlete): string {
+  return athlete.firstName && athlete.lastName
+    ? `${athlete.firstName} ${athlete.lastName}`
+    : athlete.firstName || athlete.lastName || athlete.username || athlete.name || "";
+}
+
+function createDefaultPlanTitle(athlete: Athlete): string {
+  const fullName = getAthleteDisplayName(athlete);
+  const dateStr = new Date().toLocaleDateString("es-ES");
+  return `Plan nutricional para ${fullName} - ${dateStr}`;
+}
+
 function NutritionPlanWizard({ lang }: { lang: Lang }) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
@@ -52,7 +74,6 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
     translations[lang].nutritionWizardStep1,
     translations[lang].nutritionWizardStep2,
     translations[lang].nutritionWizardStep3,
-    translations[lang].nutritionWizardStep4,
     translations[lang].nutritionWizardStep5,
   ];
   // Wizard state
@@ -112,9 +133,6 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
 
   const [activeStep, setActiveStep] = useState(0);
 
-  // Weekly plan async loading spinner state (for edit)
-  const [weeklyPlanLoading, setWeeklyPlanLoading] = useState(false); 
-
   // Step 1: athlete and meals per day
   const [selectedAthlete, setSelectedAthlete] = useState<Athlete | null>(null);
   const [athleteOptions, setAthleteOptions] = useState<Athlete[]>([]);
@@ -157,26 +175,10 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
   const [planTitle, setPlanTitle] = useState<string>("");
   // e.g. [{name: "Comida 1", options: [{optionName: "", foods: [{foodId, quantity}]}]}]
 
-  // Step 4: Weekly plan (copy template, allow specific edits)
-  const [weeklyMeals, setWeeklyMeals] = useState<Meal[][]>([]); // Meals[] for each weekday/tab
-  const [activeDayTab, setActiveDayTab] = useState<number>(0);
-
-  // Step 5: Confirmation
+  // Step 4: Confirmation
   // You might display a summary state object
 
   // --- Effects ---
-
-  // When entering Step 4, initialize weeklyMeals from templateMeals if creating a NEW plan only.
-  useEffect(() => {
-    if (activeStep === 3 && wizardMode === "new") {
-      setWeeklyMeals(
-        Array.from({ length: 7 }, () =>
-          templateMeals.map(meal => JSON.parse(JSON.stringify(meal)) as Meal)
-        )
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeStep, wizardMode]);
 
   // Fetch athletes on mount
   useEffect(() => {
@@ -191,25 +193,9 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
 
   useEffect(() => {
     // On selecting meal count, (re)init the template meals
-    setTemplateMeals(
-      Array.from({ length: mealsPerDay }, (_, i) => ({
-        name: `Comida ${i + 1}`,
-        options: [
-          {
-            optionName: "",
-            foods: []
-          }
-        ]
-      }))
-    );
-  }, [mealsPerDay]);
-
-  // Logic for copying base day across week for step 4
-  const handleCopyToWeek = () => {
-    setWeeklyMeals(Array.from({ length: 7 }, () =>
-      templateMeals.map(meal => JSON.parse(JSON.stringify(meal)) as Meal)
-    ));
-  };
+    if (wizardMode === "edit") return;
+    setTemplateMeals(createTemplateMeals(mealsPerDay));
+  }, [mealsPerDay, wizardMode]);
 
   function InfoIconWithNutrients({ mealIdx, optIdx, option, foodStates }: any) {
     const [open, setOpen] = React.useState(false);
@@ -357,17 +343,9 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
                   setMealsPerDay(3);
                   setPlanTitle("");
                   setPlanDescription("");
-                  setWeeklyMeals([]);
                   setNutrientRestrictions({});
-                  setTemplateMeals([]);
-                  if (value && !planTitle) {
-                    const fullName =
-                      value.firstName && value.lastName
-                        ? `${value.firstName} ${value.lastName}`
-                        : value.firstName || value.lastName || value.username || value.name || "";
-                    const dateStr = new Date().toLocaleDateString("es-ES");
-                    setPlanTitle(`Plan nutricional para ${fullName} - ${dateStr}`);
-                  }
+                  setTemplateMeals(createTemplateMeals(3));
+                  if (value) setPlanTitle(createDefaultPlanTitle(value));
                 }
               }}
               renderOption={(props, option) => {
@@ -506,46 +484,6 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
         );
       case 3:
         return (
-          <Box sx={{ position: "relative", minHeight: 250 }}>
-            {weeklyPlanLoading ? (
-              <Box
-                sx={{
-                  position: "absolute", left: 0, top: 0, width: "100%", height: "100%",
-                  display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10,
-                  bgcolor: "rgba(255,255,255,0.66)"
-                }}
-              >
-                <CircularProgress size={62} thickness={5} />
-              </Box>
-            ) : (
-              <>
-                <Alert severity="warning" sx={{ mb: 2 }}>
-                  {translations[lang].weeklyPlanHint}
-                </Alert>
-                <Tabs value={activeDayTab} onChange={(_, idx) => setActiveDayTab(idx)}>
-                  {translations[lang].weekdays.map((day: string, i: number) => (
-                    <Tab label={day} key={i} />
-                  ))}
-                </Tabs>
-                <Box sx={{ p: 2, maxHeight: "calc(80vh - 180px)", overflowY: "auto" }}>
-                  <MealEditor
-                    meals={weeklyMeals[activeDayTab] || []}
-                    setMeals={(newMeals: Meal[]) => {
-                      const updated = [...weeklyMeals];
-                      updated[activeDayTab] = newMeals;
-                      setWeeklyMeals(updated);
-                    }}
-                    foodStates={foodStates}
-                    InfoIconWithNutrients={InfoIconWithNutrients}
-                    translations={translations[lang]}
-                  />
-                </Box>
-              </>
-            )}
-          </Box>
-        );
-      case 4:
-        return (
           <Box>
             <Typography variant="h6">{translations[lang].confirmPlanTitle}</Typography>
             <Box sx={{ mt: 2 }}>
@@ -574,88 +512,86 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
                   </>
                 )}
               </Paper>
-              {translations[lang].weekdays.map((day: string, dIdx: number) => (
-                <Paper key={dIdx} sx={{ p: 2, mb: 2 }}>
-                  <Typography
-                    sx={{
-                      fontWeight: 700,
-                      fontSize: "1.35rem",
-                      lineHeight: 1.18,
-                      mb: 0.5
-                    }}
-                    gutterBottom
-                  >
-                    {day}
-                  </Typography>
-                  {(weeklyMeals[dIdx] || []).length === 0 ? (
-                    <Typography variant="body2" color="text.secondary">{translations[lang].emptyValue}</Typography>
-                  ) : (
-                    (weeklyMeals[dIdx] || []).map((meal, mIdx) => (
-                      <Box key={mIdx} sx={{ mb: 2 }}>
-                        <Typography sx={{ fontWeight: 500 }}>
-                          {meal.name}
+              <Paper sx={{ p: 2, mb: 2 }}>
+                <Typography
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: "1.35rem",
+                    lineHeight: 1.18,
+                    mb: 0.5
+                  }}
+                  gutterBottom
+                >
+                  {translations[lang].nutritionWizardStep3}
+                </Typography>
+                {templateMeals.length === 0 ? (
+                  <Typography variant="body2" color="text.secondary">{translations[lang].emptyValue}</Typography>
+                ) : (
+                  templateMeals.map((meal, mIdx) => (
+                    <Box key={mIdx} sx={{ mb: 2 }}>
+                      <Typography sx={{ fontWeight: 500 }}>
+                        {meal.name}
+                      </Typography>
+                      {meal.description && (
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{ mb: 0.5, fontWeight: 400, fontStyle: "italic" }}
+                        >
+                          {meal.description}
                         </Typography>
-                        {meal.description && (
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{ mb: 0.5, fontWeight: 400, fontStyle: "italic" }}
-                          >
-                            {meal.description}
+                      )}
+                      {meal.options.length > 0 && (
+                        <Typography
+                          variant="subtitle2"
+                          sx={{
+                            fontWeight: 700,
+                            fontSize: "0.98rem",
+                            mt: 1,
+                            mb: 0.4,
+                            color: "text.secondary",
+                          }}
+                        >
+                          {translations[lang].optionsLabel}
+                        </Typography>
+                      )}
+                      {meal.options.map((option, oIdx) => (
+                        <Box key={oIdx} sx={{ pl: 2, mb: 1, borderLeft: "2px solid #ececec" }}>
+                          <Typography variant="subtitle2" sx={{ fontWeight: 700, fontSize: "1rem" }}>
+                            {option.optionName || translations[lang].optionName}
                           </Typography>
-                        )}
-                        {meal.options.length > 0 && (
-                          <Typography
-                            variant="subtitle2"
-                            sx={{
-                              fontWeight: 700,
-                              fontSize: "0.98rem",
-                              mt: 1,
-                              mb: 0.4,
-                              color: "text.secondary",
-                            }}
-                          >
-                            {translations[lang].optionsLabel}
-                          </Typography>
-                        )}
-                        {meal.options.map((option, oIdx) => (
-                          <Box key={oIdx} sx={{ pl: 2, mb: 1, borderLeft: "2px solid #ececec" }}>
-                            <Typography variant="subtitle2" sx={{ fontWeight: 700, fontSize: "1rem" }}>
-                              {option.optionName || translations[lang].optionName}
+                          {option.description && (
+                            <Typography
+                              sx={{
+                                fontWeight: 700,
+                                fontStyle: "italic",
+                                fontSize: "0.82rem",
+                                color: "text.secondary",
+                                mb: 0.5
+                              }}
+                            >
+                              {option.description}
                             </Typography>
-                            {option.description && (
-                              <Typography
-                                sx={{
-                                  fontWeight: 700,
-                                  fontStyle: "italic",
-                                  fontSize: "0.82rem",
-                                  color: "text.secondary",
-                                  mb: 0.5
-                                }}
-                              >
-                                {option.description}
-                              </Typography>
-                            )}
-                            {option.foods.length > 0 && (
-                              <ul style={{ margin: 0, paddingLeft: 16 }}>
-                                {option.foods.map((food, fIdx) => {
-                                  const fs = foodStates.find(f => f.id === food.foodId);
-                                  return (
-                                    <li key={fIdx} style={{ fontWeight: 400, fontSize: "0.72rem" }}>
-                                      {fs ? fs.label : (food.foodId || <span style={{ color: "#aaa" }}>{translations[lang].emptyValue}</span>)}:&nbsp;
-                                      <span style={{ fontWeight: 400 }}>{food.quantity}g</span>
-                                    </li>
-                                  );
-                                })}
-                              </ul>
-                            )}
-                          </Box>
-                        ))}
-                      </Box>
-                    ))
-                  )}
-                </Paper>
-              ))}
+                          )}
+                          {option.foods.length > 0 && (
+                            <ul style={{ margin: 0, paddingLeft: 16 }}>
+                              {option.foods.map((food, fIdx) => {
+                                const fs = foodStates.find(f => f.id === food.foodId);
+                                return (
+                                  <li key={fIdx} style={{ fontWeight: 400, fontSize: "0.72rem" }}>
+                                    {fs ? fs.label : (food.foodId || <span style={{ color: "#aaa" }}>{translations[lang].emptyValue}</span>)}:&nbsp;
+                                    <span style={{ fontWeight: 400 }}>{food.quantity}g</span>
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          )}
+                        </Box>
+                      ))}
+                    </Box>
+                  ))
+                )}
+              </Paper>
             </Box>
           </Box>
         );
@@ -669,13 +605,25 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
   const submitPayloadRef = useRef<any>(null);
 
   async function handleSubmit() {
+    const resolvedTitle = planTitle.trim() || (selectedAthlete ? createDefaultPlanTitle(selectedAthlete) : "");
+    if (!selectedAthlete?.id || !resolvedTitle) {
+      setNotification({
+        type: "error",
+        message: `${translations[lang].planSaveError}: Missing required fields`
+      });
+      return;
+    }
+    if (resolvedTitle !== planTitle) {
+      setPlanTitle(resolvedTitle);
+    }
+
     const payload = {
-      athleteId: selectedAthlete?.id,
-      title: planTitle,
+      athleteId: selectedAthlete.id,
+      title: resolvedTitle,
       description: planDescription,
       nutrientRestrictions,
       templateMeals,
-      weeklyMeals,
+      weeklyMeals: [templateMeals],
     };
     // Check if athlete already has an active nutrition plan
     if (payload.athleteId) {
@@ -841,12 +789,13 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
                 setWizardMode("new");
                 setShowPlanChoiceDialog(false);
                 // reset non-user fields
-                setPlanTitle("");
+                if (selectedAthlete) {
+                  setPlanTitle(createDefaultPlanTitle(selectedAthlete));
+                }
                 setPlanDescription("");
-                setWeeklyMeals([]);
-                setTemplateMeals([]);
                 setNutrientRestrictions({});
                 setMealsPerDay(3);
+                setTemplateMeals(createTemplateMeals(3));
               }}
             >{translations[lang].newPlan}</Button>
             <Button
@@ -854,32 +803,30 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
               color="primary"
               onClick={async () => {
                 if (!selectedAthlete?.id) return;
-                setWeeklyPlanLoading(true);
+                setSaving(true);
                 try {
                   const resp = await fetch(`/api/nutrition/plan?athleteId=${encodeURIComponent(selectedAthlete.id)}&active=true`);
                   const plans = await resp.json();
                   const planData = Array.isArray(plans) && plans.length > 0 ? plans[0] : null;
-                  if (!planData) { setWeeklyPlanLoading(false); return; }
+                  if (!planData) { setSaving(false); return; }
 
-                  setPlanTitle(planData.name || "");
+                  setPlanTitle(planData.name || createDefaultPlanTitle(selectedAthlete));
                   setPlanDescription(planData.description || "");
-                  setMealsPerDay(
-                    Array.isArray(planData.days) && planData.days.length > 0 && planData.days[0].meals
-                      ? planData.days[0].meals.length
-                      : 3
-                  );
-                  // Parse weeklyMeals (7 days, each with current meals)
-                  const weekly: Meal[][] = [];
-                  for (let d = 0; d < 7; ++d) {
-                    // Get day by .dayNumber
-                    const dayObj = Array.isArray(planData.days) && planData.days.find((day: any) => day.dayNumber === d);
-                    if (!dayObj) { weekly.push([]); continue; }
-                    const mealsOut = [];
-                    for (const meal of dayObj.meals || []) {
-                      mealsOut.push({
-                        name: meal.name,
-                        description: meal.description,
-                        options: (meal.mealOptions || []).map((opt: any) => ({
+                  const dayObj = Array.isArray(planData.days)
+                    ? [...planData.days]
+                        .sort((a: any, b: any) => (a.dayNumber ?? 0) - (b.dayNumber ?? 0))
+                        [0]
+                    : null;
+                  const mealsOut: Meal[] = (dayObj?.meals || [])
+                    .slice()
+                    .sort((a: any, b: any) => (a.mealIndex ?? 0) - (b.mealIndex ?? 0))
+                    .map((meal: any) => ({
+                      name: meal.name,
+                      description: meal.description,
+                      options: (meal.mealOptions || [])
+                        .slice()
+                        .sort((a: any, b: any) => (a.optionIndex ?? 0) - (b.optionIndex ?? 0))
+                        .map((opt: any) => ({
                           optionName: opt.name,
                           description: opt.description,
                           foods: (opt.foods || []).map((food: any) => ({
@@ -887,17 +834,15 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
                             quantity: food.quantity ?? 0
                           }))
                         }))
-                      });
-                    }
-                    weekly.push(mealsOut);
-                  }
-                  setWeeklyMeals(weekly);
+                    }));
+                  setTemplateMeals(mealsOut.length > 0 ? mealsOut : createTemplateMeals(3));
+                  setMealsPerDay(mealsOut.length > 0 ? mealsOut.length : 3);
                   // Optionally fill in restrictions, etc. from API if present
                   if (planData.nutrientRestrictions) setNutrientRestrictions(planData.nutrientRestrictions);
                   setWizardMode("edit");
                   setShowPlanChoiceDialog(false);
                   setUserSelectionLocked(true);
-                  setActiveStep(3); // jump to weekly plan
+                  setActiveStep(2); // jump to template day
                 } catch (err) {
                   setNotification({
                     type: "error",
@@ -905,7 +850,7 @@ function NutritionPlanWizard({ lang }: { lang: Lang }) {
                   });
                   setShowPlanChoiceDialog(false);
                 }
-                setWeeklyPlanLoading(false);
+                setSaving(false);
               }}
             >{translations[lang].editPlan}</Button>
           </Box>

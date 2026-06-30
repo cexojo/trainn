@@ -91,6 +91,12 @@ export default function NutritionPlanSummary({ userId, lang }: { userId: string;
     return <Typography sx={{ py: 2 }}>{translations[lang].noActiveNutritionPlan}</Typography>;
   }
 
+  const sortedDays = Array.isArray(selectedPlan.days)
+    ? [...selectedPlan.days].sort((a: any, b: any) => (a.dayNumber ?? 0) - (b.dayNumber ?? 0))
+    : [];
+  const displayDays = sortedDays.slice(0, 1);
+  const isTemplateOnlyPlan = displayDays.length === 1;
+
   return (
     <Box sx={{ mt: 2 }}>
       <Typography>
@@ -105,29 +111,26 @@ export default function NutritionPlanSummary({ userId, lang }: { userId: string;
       {/* Display meals per day, if available */}
       <Typography>
         <strong>{translations[lang].mealsPerDay}:</strong>{" "}
-        {Array.isArray(selectedPlan.days)
-          ? Math.max(
-              ...selectedPlan.days.map((d: any) => Array.isArray(d.meals) ? d.meals.length : 0),
-              0
-            )
+        {displayDays.length > 0
+          ? Array.isArray(displayDays[0].meals) ? displayDays[0].meals.length : 0
           : "-"}
       </Typography>
       {/* Render days and meals */}
-      {Array.isArray(selectedPlan.days) && (
+      {displayDays.length > 0 && (
         <Box sx={{
           mt: 1,
           display: "flex",
           flexDirection: "column",
           gap: 2
         }}>
-          {[0,1,2,3,4,5,6].map(dayIdx => {
-            const dayObj = selectedPlan.days.find((d: any) => d.dayNumber === dayIdx);
-            const localizedDay = Array.isArray(translations[lang].weekdays) && translations[lang].weekdays[dayIdx]
-              ? translations[lang].weekdays[dayIdx]
+          {displayDays.map((dayObj: any, dayIdx: number) => {
+            const weekdayIndex = dayObj.dayNumber ?? dayIdx;
+            const localizedDay = Array.isArray(translations[lang].weekdays) && translations[lang].weekdays[weekdayIndex]
+              ? translations[lang].weekdays[weekdayIndex]
               : `Día ${dayIdx+1}`;
             return (
               <Box
-                key={dayIdx}
+                key={dayObj.id || dayIdx}
                 sx={{
                   backgroundColor: "#97999c",
                   borderRadius: 2,
@@ -141,7 +144,9 @@ export default function NutritionPlanSummary({ userId, lang }: { userId: string;
                   flexDirection: "column"
                 }}
               >
-                <Typography sx={{ fontWeight: 700, mb: 1, fontSize: "1.08rem", color: "#254" }}>{localizedDay}</Typography>
+                {!isTemplateOnlyPlan && (
+                  <Typography sx={{ fontWeight: 700, mb: 1, fontSize: "1.08rem", color: "#254" }}>{localizedDay}</Typography>
+                )}
                 {dayObj && Array.isArray(dayObj.meals) && dayObj.meals.length > 0 ? (
                   <Box
                     sx={{
