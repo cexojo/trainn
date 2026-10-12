@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
-  Box, Stepper, Step, StepLabel, Button, Typography, TextField, Autocomplete, CircularProgress, Alert, IconButton, Paper, Checkbox, Tooltip, Dialog, Snackbar
+  Box, Stepper, Step, StepLabel, Button, Typography, TextField, Autocomplete, CircularProgress, Alert, IconButton, Paper, Checkbox, Tooltip, Dialog, Snackbar, Backdrop
 } from "@mui/material";
 import { AddCircleOutline, DeleteOutline } from "@mui/icons-material";
 import { translations, type Lang } from "../i18n";
@@ -49,9 +49,17 @@ type ExerciseConfig = {
   exercise: Exercise;
   sets: number;
   config: SeriesConfig[];
+  trainerNotes?: string;
   hasDropsetSeries?: boolean; // New field for dropset at exercise level
   dropsetTrainerNotes?: string; // Notes for dropset row
 };
+
+type BlockOption = { id: string; blockNumber: number; description: string; createdAt: string };
+type TemplateDay = { dayExercises: {
+  exercise: Exercise;
+  trainerNotes: string | null;
+  series: { minReps: number | null; maxReps: number | null; minRir: number | null; maxRir: number | null; isDropset: boolean; trainerNotes: string | null }[];
+}[] };
 
 function SortableExerciseRow({ exCfg, exIdx, dayIdx, children, sensors, setExercisesPerDay, translations, lang }: any) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: exCfg.id });
@@ -218,6 +226,10 @@ export default function TrainingBlocksWizard() {
   const [weeks, setWeeks] = useState<number>(6);
   const [daysPerWeek, setDaysPerWeek] = useState<number>(3);
   const [visible, setVisible] = useState<boolean>(true);
+  const [blocks, setBlocks] = useState<BlockOption[]>([]);
+  const [copyBlock, setCopyBlock] = useState(false);
+  const [selectedBlock, setSelectedBlock] = useState<BlockOption | null>(null);
+  const [copyLoading, setCopyLoading] = useState(false);
 
   // Fetch athletes for step 1 (on mount)
   useEffect(() => {
@@ -229,6 +241,22 @@ export default function TrainingBlocksWizard() {
       })
       .finally(() => setAthleteLoading(false));
   }, []);
+
+  useEffect(() => {
+    setBlocks([]);
+    setSelectedBlock(null);
+    setCopyBlock(false);
+    setExercisesPerDay([]);
+    if (!selectedAthlete) return;
+    const controller = new AbortController();
+    fetch(`/api/blocks?userId=${encodeURIComponent(selectedAthlete.id)}`, { signal: controller.signal })
+      .then(r => r.json())
+      .then(data => setBlocks(Array.isArray(data.blocks)
+        ? (data.blocks as BlockOption[]).sort((a, b) => b.createdAt.localeCompare(a.createdAt) || b.blockNumber - a.blockNumber)
+        : []))
+      .catch(() => {});
+    return () => controller.abort();
+  }, [selectedAthlete]);
 
   // Step 2 state
   const [exercisesPerDay, setExercisesPerDay] = useState<ExerciseConfig[][]>([]);
@@ -332,6 +360,9 @@ export default function TrainingBlocksWizard() {
 
   return (
     <Box sx={{ width: '100%', mt: 3 }}>
+      <Backdrop open={copyLoading} sx={{ color: "#fff", zIndex: theme => theme.zIndex.modal + 1 }}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <Stepper activeStep={activeStep} alternativeLabel>
         {steps(lang).map(label => (
           <Step key={label}><StepLabel>{label}</StepLabel></Step>
@@ -418,6 +449,8 @@ export default function TrainingBlocksWizard() {
                 label={translations[lang].createBlockWizardDaysPerWeekLabel}
                 value={daysPerWeek}
                 onChange={e => setDaysPerWeek(Math.max(1, Math.min(7, Number(e.target.value))))}
+                disabled={copyBlock}
+                helperText={copyBlock ? translations[lang].createBlockWizardCopiedDays : undefined}
                 fullWidth
               />
             </Box>
@@ -448,6 +481,34 @@ export default function TrainingBlocksWizard() {
                 </label>
               </Box>
             </Box>
+            {blocks.length > 0 && (
+              <Box mb={3}>
+                <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                  {translations[lang].createBlockWizardCreateAs}
+                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                  <label>
+                    <input type="radio" name="createAs" checked={!copyBlock} onChange={() => { setCopyBlock(false); setExercisesPerDay([]); }} />
+                    {translations[lang].createBlockWizardNewBlock}
+                  </label>
+                  <label>
+                    <input type="radio" name="createAs" checked={copyBlock} onChange={() => setCopyBlock(true)} />
+                    {translations[lang].createBlockWizardCopyBlock}
+                  </label>
+                </Box>
+                {copyBlock && (
+                  <Autocomplete
+                    sx={{ mt: 2, width: "fit-content", minWidth: 280, maxWidth: "100%" }}
+                    options={blocks}
+                    value={selectedBlock}
+                    onChange={(_, block) => { setSelectedBlock(block); setExercisesPerDay([]); }}
+                    getOptionLabel={block => `${translations[lang].blockNumberLabel}${block.blockNumber} - ${translations[lang].blockCreatedAtLabel} ${new Date(block.createdAt).toLocaleDateString(lang === "es" ? "es-ES" : "en-US")}`}
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                    renderInput={params => <TextField {...params} label={translations[lang].createBlockWizardSelectBlock} />}
+                  />
+                )}
+              </Box>
+            )}
           </Box>
         )}
         {activeStep === 1 && (
@@ -1098,12 +1159,38 @@ export default function TrainingBlocksWizard() {
         <Box sx={{ flex: "1 1 auto" }} />
         <Button
           disabled={
-            finalizeLoading ||
-            (activeStep === 0 && (!selectedAthlete || weeks < 1 || daysPerWeek < 1)) ||
+            finalizeLoading || copyLoading ||
+            (activeStep === 0 && (!selectedAthlete || weeks < 1 || daysPerWeek < 1 || (copyBlock && !selectedBlock))) ||
             (activeStep === 1 && exercisesPerDay.some(day => day.length === 0))
           }
           onClick={async () => {
-            if (activeStep < steps(lang).length - 1) {
+            if (activeStep === 0 && copyBlock && selectedBlock) {
+              setCopyLoading(true);
+              try {
+                const response = await fetch(`/api/blocks/copy?userId=${encodeURIComponent(selectedAthlete.id)}&blockId=${encodeURIComponent(selectedBlock.id)}`);
+                if (!response.ok) throw new Error();
+                const { days }: { days: TemplateDay[] } = await response.json();
+                setDaysPerWeek(days.length);
+                setExercisesPerDay(days.map(day => day.dayExercises.map(({ exercise, series, trainerNotes }) => ({
+                  id: uuidv4(), exercise, trainerNotes: trainerNotes ?? "", sets: series.length,
+                  config: series.filter(ser => !ser.isDropset).map(ser => ({
+                    id: uuidv4(), dropset: false,
+                    minReps: ser.minReps ?? "", maxReps: ser.maxReps ?? "",
+                    minRIR: ser.minRir ?? "", maxRIR: ser.maxRir ?? "",
+                    trainerNotes: ser.trainerNotes ?? "",
+                  })),
+                  hasDropsetSeries: series.some(ser => ser.isDropset),
+                  dropsetTrainerNotes: series.find(ser => ser.isDropset)?.trainerNotes ?? "",
+                }))));
+                setActiveStep(1);
+              } catch {
+                setBannerMessage(translations[lang].createBlockWizardCopyError);
+                setBannerSeverity("error");
+                setBannerOpen(true);
+              } finally {
+                setCopyLoading(false);
+              }
+            } else if (activeStep < steps(lang).length - 1) {
               setActiveStep((s) => s + 1);
             } else {
               setFinalizeLoading(true);
@@ -1113,7 +1200,7 @@ export default function TrainingBlocksWizard() {
                   dayArr.map((exCfg, exIdx) => ({
                     exerciseId: exCfg.exercise.id,
                     exerciseNumber: exIdx + 1,
-                    trainerNotes: "", // Add field if needed
+                    trainerNotes: exCfg.trainerNotes ?? "",
                     series: [
                       ...exCfg.config.map((ser, sIdx) => ({
                         minReps: ser.minReps === "" ? undefined : ser.minReps,

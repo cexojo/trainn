@@ -359,6 +359,12 @@ export type Translations = {
     createBlockWizardFinishButton: string;
     createBlockWizardNextButton: string;
     createBlockWizardStep1Info: string;
+    createBlockWizardCreateAs: string;
+    createBlockWizardCopyBlock: string;
+    createBlockWizardNewBlock: string;
+    createBlockWizardSelectBlock: string;
+    createBlockWizardCopyError: string;
+    createBlockWizardCopiedDays: string;
     blockVisibilityLabel: string;
     blockVisibilityImmediately: string;
     blockVisibilityNotYet: string;
@@ -849,6 +855,12 @@ export const translations: Translations = {
     createBlockWizardFinishButton: "Finish",
     createBlockWizardNextButton: "Next",
     createBlockWizardStep1Info: "To start creating the block, select the athlete, the block duration in weeks, and how many days per week the athlete will train.",
+    createBlockWizardCreateAs: "Create as...",
+    createBlockWizardCopyBlock: "Copy of another block",
+    createBlockWizardNewBlock: "New block",
+    createBlockWizardSelectBlock: "Select block to copy",
+    createBlockWizardCopyError: "Could not load the selected block",
+    createBlockWizardCopiedDays: "Days per week will match the copied block",
     blockVisibilityLabel: "Block visibility",
     blockVisibilityImmediately: "Publish the block for the athlete immediately",
     blockVisibilityNotYet: "Do not publish yet, I will do it later",
@@ -1359,6 +1371,12 @@ export const translations: Translations = {
     createBlockWizardFinishButton: "Finalizar",
     createBlockWizardNextButton: "Siguiente",
     createBlockWizardStep1Info: "Para empezar a crear el bloque, selecciona el atleta, la duración en semanas del bloque y cuántos días a la semana entrenará el atleta",
+    createBlockWizardCreateAs: "Crear como...",
+    createBlockWizardCopyBlock: "Copia de otro bloque",
+    createBlockWizardNewBlock: "Nuevo bloque",
+    createBlockWizardSelectBlock: "Seleccionar bloque para copiar",
+    createBlockWizardCopyError: "No se pudo cargar el bloque seleccionado",
+    createBlockWizardCopiedDays: "Los días por semana serán los del bloque copiado",
     dropsetAbbr: "DS",
     repsMin: "Mín. Reps",
     repsMax: "Máx. Reps",
